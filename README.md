@@ -1,2 +1,1 @@
-# Client Panel
-
+# TRAD admin panel
