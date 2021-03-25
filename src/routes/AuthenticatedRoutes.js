@@ -2,10 +2,10 @@ import { Redirect, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getAuthTokenLocalStorage } from '../helpers/LocalStorageHelper';
 import Dashboard from '../common/Dashboard/Dashboard';
-import ClientList from '../screens/Clients/ClientList/ClientList';
-import ViewClient from '../screens/Clients/ViewClient/ViewClient';
+import CreditLimitsList from '../screens/CreditLimits/CreditLimitsList/CreditLimitsList';
 import ApplicationList from '../screens/Application/ApplicationList/ApplicationList';
 import GenerateApplication from '../screens/Application/GenerateApplication/GenerateApplication';
+import EmployeeList from "../screens/Employee/EmployeeList/EmployeeList";
 
 export const AuthenticatedRoute = ({ component, ...options }) => {
   const isLoggedIn = getAuthTokenLocalStorage();
@@ -44,11 +44,11 @@ export const AllAuthenticatedRoutes = () => {
         path="/applications/application/:action/"
         component={GenerateApplication}
       />
-      <AuthenticatedRoute exact path="/debtors" component={null} />
+      <AuthenticatedRoute exact path="/debtor" component={null} />
       <AuthenticatedRoute exact path="/claims" component={null} />
       <AuthenticatedRoute exact path="/over-dues" component={null} />
-      <AuthenticatedRoute exact path="/clients" component={ClientList} />
-      <AuthenticatedRoute exact path="/clients/client/:action/:id" component={ViewClient} />
+      <AuthenticatedRoute exact path="/credit-limits" component={CreditLimitsList} />
+      <AuthenticatedRoute exact path="/employee" component={EmployeeList} />
     </Dashboard>
   );
 };

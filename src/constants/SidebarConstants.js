@@ -1,8 +1,7 @@
 export const SIDEBAR_NAMES = {
   DASHBOARD: 'dashboard',
   APPLICATION: 'application',
-  CLIENT: 'client',
-  CREDIT_LIMITS: 'credit_limits',
+  CREDIT_LIMITS: 'credit-limits',
   CLAIM: 'claim',
   OVERDUE: 'overdue',
   COMPANY_PROFILE: 'company_profile',
@@ -29,7 +28,7 @@ export const SIDEBAR_URLS = [
     label: 'Credit Limits',
     title: 'Credit Limits',
     icon: 'account_circle',
-    url: '/creditLimits',
+    url: '/credit-limits',
     name: SIDEBAR_NAMES.CREDIT_LIMITS,
   },
   {

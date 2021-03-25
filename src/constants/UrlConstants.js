@@ -32,35 +32,10 @@ export const APPLICATION_URLS = {
   },
 };
 
-export const CLIENT_URLS = {
-  CLIENT_LIST_URL: `${BASE_URL}client/`,
-  CLIENT_BY_ID_URL: `${BASE_URL}client/`,
-  CLIENT_COLUMN_NAME_LIST_URL: `${BASE_URL}client/column-name`,
-  UPDATE_CLIENT_COLUMN_NAME_LIST_URL: `${BASE_URL}client/column-name`,
-  CLIENT_FILTER_LIST_URL: `${BASE_URL}client/user-list`,
-  SYNC_CLIENT_DATA_URL: `${BASE_URL}client/sync-from-crm/`,
-  GET_DATA_FROM_CRM_URL: `${BASE_URL}client/search-from-crm`,
-
-  CONTACT: {
-    CONTACT_LIST: `${BASE_URL}client/user/`,
-    COLUMN_NAME_LIST_URL: `${BASE_URL}client/user/column-name/`,
-    SYNC_CLIENT_CONTACT_DATA_URL: `${BASE_URL}client/user/sync-from-crm/`,
-  },
-
-  POLICIES: {
-    POLICIES_LIST: `${BASE_URL}policy/`,
-    COLUMN_NAME_LIST_URL: `${BASE_URL}policy/column-name/`,
-    SYNC_CLIENT_POLICIES_DATA_URL: `${BASE_URL}policy/client/sync-from-crm/`,
-  },
-
-  NOTES: {
-    NOTES_LIST: `${BASE_URL}note/`,
-  },
-  DOCUMENTS: {
-    DOCUMENTS_LIST: `${BASE_URL}document/`,
-    COLUMN_NAME_LIST_URL: `${BASE_URL}document/column-name/`,
-    GET_DOCUMENT_TYPE_URL: `${BASE_URL}settings/document-type/`,
-    UPLOAD_DOCUMENT_URL: `${BASE_URL}document/upload/`,
-    DOWNLOAD_DOCUMENTS_URL: `${BASE_URL}document/download`,
-  },
+export const CREDIT_LIMITS_URLS = {
+  CREDIT_LIMITS_LIST_URL: `${BASE_URL}debtor/`,
 };
+
+export const EMPLOYEE_URLS = {
+  EMPLOYEE_LIST_URL: `${BASE_URL}client/user/`
+}

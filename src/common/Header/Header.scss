@@ -130,6 +130,7 @@
   box-shadow: 0px 10px 10px -1px #3D3D3D29;
   -webkit-box-shadow: 0px 10px 10px -1px #3D3D3D29;
   -moz-box-shadow: 0px 10px 13px -1px #3D3D3D29;
+  z-index: 20;
   > div {
     color: $placeholder-color;
   }

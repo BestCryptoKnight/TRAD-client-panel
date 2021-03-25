@@ -1,21 +1,19 @@
 import { combineReducers } from 'redux';
 import { loggedUser } from '../screens/auth/login/redux/LoginReducer';
 import {
-  clientManagement,
-  clientManagementColumnList,
-  clientManagementFilterList,
-  syncClientWithCrm,
-} from '../screens/Clients/redux/ClientReducer';
+  creditLimits,
+  creditLimitsColumnList,
+} from '../screens/CreditLimits/redux/CreditLimitsReducer';
 import { application } from '../screens/Application/redux/ApplicationReducer';
 import { loggedUserProfile } from '../common/Header/redux/HeaderReducer';
+import {employee} from "../screens/Employee/redux/EmployeeReducer";
 
 const rootReducer = combineReducers({
   loggedUser,
-  clientManagement,
-  clientManagementColumnList,
-  clientManagementFilterList,
+  creditLimits,
+  creditLimitsColumnList,
   loggedUserProfile,
-  syncClientWithCrm,
   application,
+  employee
 });
 export default rootReducer;
