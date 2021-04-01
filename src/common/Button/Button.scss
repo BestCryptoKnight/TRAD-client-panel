@@ -86,3 +86,7 @@
   background-color: $primary-color-1-variant-color;
   border-color: $primary-color-1-variant-color;
 }
+
+.primary-button.icon-button, .secondary-button.icon-button {
+  border: 1px solid white;
+}

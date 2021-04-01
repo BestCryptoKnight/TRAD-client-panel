@@ -18,13 +18,13 @@ const EmployeeList = () => {
     },[])
     return <>
         <div className="page-header">
-            <div className="page-header-name">Credit Limit List</div>
+            <div className="page-header-name">Employee List</div>
             <div className="page-header-button-container">
                 <IconButton
                         buttonType="secondary"
                         title="filter_list"
                         className="mr-10"
-                        buttonTitle="Click to apply filters on credit limit list"
+                        buttonTitle="Click to apply filters on employee list"
                 />
                 <IconButton
                         buttonType="primary"

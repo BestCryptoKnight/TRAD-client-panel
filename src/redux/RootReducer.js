@@ -7,6 +7,7 @@ import {
 import { application } from '../screens/Application/redux/ApplicationReducer';
 import { loggedUserProfile } from '../common/Header/redux/HeaderReducer';
 import {employee} from "../screens/Employee/redux/EmployeeReducer";
+import {companyProfile} from "../screens/CompanyProfile/redux/CompanyProfileReducer";
 
 const rootReducer = combineReducers({
   loggedUser,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   creditLimitsColumnList,
   loggedUserProfile,
   application,
-  employee
+  employee,
+  companyProfile
 });
 export default rootReducer;

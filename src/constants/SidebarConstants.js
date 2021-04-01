@@ -4,9 +4,9 @@ export const SIDEBAR_NAMES = {
   CREDIT_LIMITS: 'credit-limits',
   CLAIM: 'claim',
   OVERDUE: 'overdue',
-  COMPANY_PROFILE: 'company_profile',
+  COMPANY_PROFILE: 'company-profile',
   EMPLOYEE: 'employee',
-  SUPPORT: 'support',
+  SUPPORT : 'support',
 };
 
 export const SIDEBAR_URLS = [
@@ -46,10 +46,10 @@ export const SIDEBAR_URLS = [
     name: SIDEBAR_NAMES.OVERDUE,
   },
   {
-    label: 'Company Profiles',
-    title: 'Company Profiles',
+    label: 'Company Profile',
+    title: 'Company Profile',
     icon: 'contact_page',
-    url: '/companyProfiles',
+    url: '/company-profile',
     name: SIDEBAR_NAMES.COMPANY_PROFILE,
   },
   {

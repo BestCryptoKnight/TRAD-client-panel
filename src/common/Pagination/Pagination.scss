@@ -12,9 +12,12 @@
   }
 }
 
-.no-per-page-select {
+.react-dropdown-select.no-per-page-select {
   height: 35px;
   width: 80px!important;
+  .react-dropdown-select-content {
+    font: $title $font-medium;
+  }
 }
 
 .records-per-page-container {
@@ -53,6 +56,10 @@
   :disabled {
     cursor: not-allowed!important;
   }
+}
+
+.page-number {
+  color: $field-color;
 }
 
 .pagination-button-disabled {

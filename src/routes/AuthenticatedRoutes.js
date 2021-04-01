@@ -6,6 +6,7 @@ import CreditLimitsList from '../screens/CreditLimits/CreditLimitsList/CreditLim
 import ApplicationList from '../screens/Application/ApplicationList/ApplicationList';
 import GenerateApplication from '../screens/Application/GenerateApplication/GenerateApplication';
 import EmployeeList from "../screens/Employee/EmployeeList/EmployeeList";
+import CompanyProfile from "../screens/CompanyProfile/CompanyProfile";
 
 export const AuthenticatedRoute = ({ component, ...options }) => {
   const isLoggedIn = getAuthTokenLocalStorage();
@@ -49,6 +50,7 @@ export const AllAuthenticatedRoutes = () => {
       <AuthenticatedRoute exact path="/over-dues" component={null} />
       <AuthenticatedRoute exact path="/credit-limits" component={CreditLimitsList} />
       <AuthenticatedRoute exact path="/employee" component={EmployeeList} />
+      <AuthenticatedRoute exact path="/company-profile" component={CompanyProfile} />
     </Dashboard>
   );
 };

@@ -1,0 +1,3 @@
+export const CLIENT_REDUX_CONSTANTS = {
+    CLIENT_DATA: 'CLIENT_DATA'
+}
