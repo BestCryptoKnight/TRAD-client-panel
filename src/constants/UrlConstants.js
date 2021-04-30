@@ -1,5 +1,4 @@
-export const BASE_URL = 'https://client.trad.dev.gradlesol.com/app/cp/';
-// export const BASE_URL = 'https://client.trad.test.humanpixel.com.au/app/cp/';
+export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const AUTH_URLS = {
   LOGIN_URL: `${BASE_URL}auth/login/`,
@@ -29,6 +28,13 @@ export const APPLICATION_URLS = {
     SEARCH_APPLICATION_BY_DEBTOR_DETAILS: `${BASE_URL}debtor/details/`,
     SEARCH_APPLICATION_BY_ABN_ACN_DETAILS: `${BASE_URL}application/search-entity/`,
     SEARCH_APPLICATION_ENTITY_TYPE: `${BASE_URL}application/search-entity-list/`,
+    DELETE_APPLICATION_ENTITY_TYPE: `${BASE_URL}/debtor/stakeholder/`,
+  },
+  DOCUMENTS: {
+    DOCUMENTS_LIST: `${BASE_URL}document/`,
+    GET_DOCUMENT_TYPE_LIST_URL: `${BASE_URL}settings/document-type/`,
+    UPLOAD_DOCUMENT_URL: `${BASE_URL}document/upload/`,
+    APPLICATION_DELETE_DOCUMENT: `${BASE_URL}document/`,
   },
 };
 

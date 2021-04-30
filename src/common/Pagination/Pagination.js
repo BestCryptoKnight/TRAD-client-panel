@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import './Pagination.scss';
 import PropTypes from 'prop-types';
 import ReactSelect from 'react-dropdown-select';
@@ -17,8 +17,7 @@ const Pagination = props => {
   const paginationClass = `pagination-container ${className}`;
 
   const [recordLimit, setRecordLimit] = useState([{ label: '15', value: 15 }]);
-
-  const fromRecordCount = useMemo(() => (page - 1) * limit + 1, [page, limit, total]);
+  const fromRecordCount = useMemo(() => (page - 1) * limit + 1, [page, limit]);
   const toRecordCount = useMemo(() => (total < page * limit ? total : page * limit), [
     page,
     limit,
@@ -29,10 +28,10 @@ const Pagination = props => {
   const onPrevClick = () => (page > 1 ? pageActionClick(page - 1) : null);
   const onFirstClick = () => pageActionClick(1);
   const onLastClick = () => pageActionClick(pages);
-  const onChangeLimit = e => {
+  const onChangeLimit = useCallback(e => {
     setRecordLimit(e);
     onSelectLimit(e[0].value);
-  };
+  },[setRecordLimit,onSelectLimit]);
 
   useEffect(() => {
     const found = noPerPage.find(e => e.value === limit);
@@ -42,7 +41,7 @@ const Pagination = props => {
       value = found;
     }
     setRecordLimit([value]);
-  }, [limit]);
+  }, [limit, setRecordLimit]);
 
   if (total === 0) {
     return null;
@@ -62,8 +61,7 @@ const Pagination = props => {
           searchable={false}
         />
         <span className="ml-10">
-          {' '}
-          Records {fromRecordCount} to {toRecordCount} of {total}
+          {`Records ${fromRecordCount} to ${toRecordCount} of ${total}`}
         </span>
       </div>
       <div className="pagination">

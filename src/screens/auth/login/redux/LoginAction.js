@@ -5,6 +5,7 @@ import {
   saveAuthTokenLocalStorage,
   saveTokenToSession,
 } from '../../../../helpers/LocalStorageHelper';
+import {getLoggedUserDetails} from "../../../../common/Header/redux/HeaderAction";
 
 export const loginUser = ({ email, password }, rememberMe) => {
   return async dispatch => {
@@ -25,8 +26,9 @@ export const loginUser = ({ email, password }, rememberMe) => {
         } else {
           saveTokenToSession(token);
         }
-
         successNotification('Login successfully.');
+
+        await dispatch(getLoggedUserDetails());
       }
     } catch (e) {
       if (e.response && e.response.data) {

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Stepper from '../../../common/Stepper/Stepper';
@@ -8,8 +8,17 @@ import ApplicationCreditLimitStep from './component/ApplicationCreditLimitStep/A
 import ApplicationDocumentStep from './component/ApplicationDocumentsStep/ApplicationDocumentStep';
 import ApplicationConfirmationStep from './component/ApplicationConfirmationStep/ApplicationConfirmationStep';
 import { applicationCompanyStepValidations } from './component/ApplicationCompanyStep/validations/ApplicationCompanyStepValidations';
-import { addPersonDetail, changeEditApplicationFieldValue } from '../redux/ApplicationAction';
-import { applicationCreditStepValidations } from './component/ApplicationCreditLimitStep/validations/ApplicationCreditStepValidations';
+import {
+  addPersonDetail,
+  changeEditApplicationFieldValue,
+  resetEditApplicationFieldValue
+} from '../redux/ApplicationAction';
+// import { applicationCreditStepValidations } from './component/ApplicationCreditLimitStep/validations/ApplicationCreditStepValidations';
+import {useQueryParams} from "../../../hooks/GetQueryParamHook";
+import {applicationCreditStepValidations} from "./component/ApplicationCreditLimitStep/validations/ApplicationCreditStepValidations";
+import {applicationPersonStepValidation} from "./component/ApplicationPersonStep/validations/ApplicationPersonStepValidations";
+import {applicationDocumentsStepValidations} from "./component/ApplicationDocumentsStep/validations/ApplicationDocumentStepValidations";
+import {applicationConfirmationStepValidations} from "./component/ApplicationConfirmationStep/validations/ApplicationConfirmationStepValidation";
 
 const STEP_COMPONENT = [
   <ApplicationCompanyStep />,
@@ -23,22 +32,22 @@ const steps = [
   {
     icon: 'local_police',
     text: 'Company',
-    name: 'companyStep',
+    name: 'company',
   },
   {
     icon: 'admin_panel_settings',
     text: 'Person',
-    name: 'personStep',
+    name: 'partners',
   },
   {
     icon: 'request_quote',
     text: 'Credit Limit',
-    name: 'creditLimitStep',
+    name: 'creditLimit',
   },
   {
     icon: 'description',
     text: 'Documents',
-    name: 'documentStep',
+    name: 'documents',
   },
   {
     icon: 'list_alt',
@@ -50,16 +59,71 @@ const steps = [
 const GenerateApplication = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { currentStepIndex: stepIndex, ...editApplicationData } = useSelector(
-    ({ application }) => application.editApplication
+  const { applicationStage, ...editApplicationData } = useSelector(
+    ({ application }) => application?.editApplication ?? {}
   );
+  const { applicationId } = useQueryParams();
+
+  // for stepper components
+  const FILTERED_STEP_COMPONENT = useMemo(() => {
+    let finalSteps = STEP_COMPONENT;
+    if (
+            editApplicationData?.company?.entityType?.[0]?.value !== 'PARTNERSHIP' &&
+            editApplicationData?.company?.entityType?.[0]?.value !== 'TRUST'
+    ) {
+      finalSteps = finalSteps.filter(step => step?.type?.name !== 'ApplicationPersonStep');
+    }
+    return finalSteps;
+  }, [editApplicationData?.company?.entityType, STEP_COMPONENT]);
+
+  // for stepper headings
+
+  const FILTERED_STEPS = useMemo(() => {
+    let finalSteps = [...steps];
+    const entityType = editApplicationData?.company?.entityType?.[0]?.value ?? '';
+
+    if (!['PARTNERSHIP', 'TRUST'].includes(entityType)) {
+      finalSteps = finalSteps.filter(step => step?.text !== 'Person');
+    } else {
+      finalSteps = finalSteps.map(step => {
+        if (step.text === 'Person')
+          return {
+            ...step,
+            text: editApplicationData?.company?.entityType?.[0]?.label ?? '',
+          };
+        return step;
+      });
+    }
+
+    return finalSteps;
+  }, [editApplicationData?.company?.entityType, steps]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetEditApplicationFieldValue);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (editApplicationData && editApplicationData._id) {
+      const params = {
+        applicationId: editApplicationData._id,
+      };
+      const url = Object.entries(params)
+              .filter(arr => arr[1] !== undefined)
+              .map(([k, v]) => `${k}=${v}`)
+              .join('&');
+
+      history.replace(`${history.location.pathname}?${url}`);
+    }
+  }, [editApplicationData._id, history]);
 
   const backToApplication = useCallback(() => {
     history.replace('/applications');
   }, [history]);
 
   const onChangeIndex = useCallback(newIndex => {
-    dispatch(changeEditApplicationFieldValue('currentStepIndex', newIndex));
+    dispatch(changeEditApplicationFieldValue('applicationStage', newIndex));
   }, []);
 
   const addStepClick = useCallback(() => {
@@ -67,22 +131,22 @@ const GenerateApplication = () => {
   }, []);
 
   const onNextClick = useCallback(() => {
-    switch (stepIndex) {
-      case 0:
-        return applicationCompanyStepValidations(
-          dispatch,
-          editApplicationData[steps[stepIndex].name]
-        );
-      case 2:
-        return applicationCreditStepValidations(
-          dispatch,
-          editApplicationData[steps[stepIndex].name]
-        );
-
+    const data = editApplicationData[FILTERED_STEPS[applicationStage].name];
+    switch (FILTERED_STEPS[applicationStage].name) {
+      case 'company':
+        return applicationCompanyStepValidations(dispatch, data, editApplicationData);
+      case 'partners':
+        return applicationPersonStepValidation(dispatch, data, editApplicationData);
+      case 'creditLimit':
+        return applicationCreditStepValidations(dispatch, data, editApplicationData);
+      case 'documents':
+        return applicationDocumentsStepValidations(dispatch, data, editApplicationData);
+      case 'confirmationStep':
+        return applicationConfirmationStepValidations(dispatch, data, editApplicationData, history);
       default:
         return false;
     }
-  }, [editApplicationData, stepIndex]);
+  }, [editApplicationData, applicationStage, FILTERED_STEPS]);
 
   return (
     <>
@@ -95,17 +159,18 @@ const GenerateApplication = () => {
       </div>
       <Stepper
         className="mt-10"
-        steps={steps}
-        stepIndex={stepIndex}
+        steps={FILTERED_STEPS}
+        stepIndex={applicationStage}
         onChangeIndex={onChangeIndex}
         canGoNext
         nextClick={onNextClick}
         addStepClick={addStepClick}
       >
-        {STEP_COMPONENT[stepIndex]}
+        {FILTERED_STEP_COMPONENT[applicationStage]}
       </Stepper>
     </>
   );
 };
 
 export default GenerateApplication;
+

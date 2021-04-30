@@ -1,24 +1,24 @@
-import { Redirect, Route } from 'react-router-dom';
+import {Redirect, Route} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { getAuthTokenLocalStorage } from '../helpers/LocalStorageHelper';
 import Dashboard from '../common/Dashboard/Dashboard';
 import CreditLimitsList from '../screens/CreditLimits/CreditLimitsList/CreditLimitsList';
 import ApplicationList from '../screens/Application/ApplicationList/ApplicationList';
 import GenerateApplication from '../screens/Application/GenerateApplication/GenerateApplication';
 import EmployeeList from "../screens/Employee/EmployeeList/EmployeeList";
 import CompanyProfile from "../screens/CompanyProfile/CompanyProfile";
+import {useSelector} from "react-redux";
 
 export const AuthenticatedRoute = ({ component, ...options }) => {
-  const isLoggedIn = getAuthTokenLocalStorage();
+    const loggedUserDetails = useSelector(({ loggedUserProfile }) => loggedUserProfile);
 
-  if (!isLoggedIn) {
+  if (!loggedUserDetails?.email) {
     return (
       <Route {...options}>
         <Redirect to="/login" />
       </Route>
     );
   }
-  if (!component) {
+  if (loggedUserDetails?.email && !component) {
     return (
       <Route {...options}>
         <Redirect to="/dashboard" />

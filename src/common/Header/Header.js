@@ -98,7 +98,7 @@ const Header = () => {
 
   const onLogoutClick = async () => {
     try {
-      await logoutUser();
+      await dispatch(logoutUser());
       history.replace('/login');
       toggleUserSettings(false);
     } catch (e) {
@@ -214,7 +214,11 @@ const Header = () => {
   );
 
   useEffect(() => {
-    dispatch(getLoggedUserDetails());
+    try {
+      dispatch(getLoggedUserDetails());
+    } catch (e) {
+      /**/
+    }
   }, []);
 
   const handleChange = e => {

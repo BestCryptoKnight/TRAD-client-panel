@@ -18,6 +18,11 @@
     width: 70%;
     min-width: 170px;
   }
+  .radio-container {
+    display: flex;
+    align-items: center;
+    grid-column: 1/span 4;
+  }
 
   .grid-checkbox, .title, .main-title, .horizontal-line, .radio-title {
     grid-column: 1 / span 4;
@@ -49,6 +54,7 @@
     color: $field-color;
     background-color: $border-color;
     border-radius: 5px;
+    min-height: 28px;
   }
 
   .radio-buttons {

@@ -9,7 +9,7 @@ import {getCreditLimitsList} from "../redux/CreditLimitsAction";
 
 const CreditLimitsList = () => {
   const dispatch = useDispatch();
-  const creditLimitListWithPageData = useSelector(({ creditLimits }) => creditLimits.creditLimitList);
+  const creditLimitListWithPageData = useSelector(({ creditLimits }) => creditLimits?.creditLimitList ?? {});
   const { total, pages, page, limit, docs, headers } = useMemo(() => creditLimitListWithPageData, [
     creditLimitListWithPageData,
   ]);

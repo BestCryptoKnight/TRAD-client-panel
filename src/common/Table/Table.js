@@ -6,6 +6,7 @@ import { processTableDataByType } from '../../helpers/TableDataProcessHelper';
 import TableApiService from './TableApiService';
 import Checkbox from '../Checkbox/Checkbox';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import moment from "moment";
 
 export const TABLE_ROW_ACTIONS = {
   EDIT_ROW: 'EDIT_ROW',
@@ -350,6 +351,18 @@ Row.defaultProps = {
 
 function TableLinkDrawer(props) {
   const { drawerState, closeDrawer } = props;
+  const checkValue = row => {
+    switch (row.type) {
+      case 'dollar':
+        return row.value ? `$ ${row.value}` : '-';
+      case 'percent':
+        return row.value ? `${row.value} %` : '-';
+      case 'date':
+        return row.value ? moment(row.value).format('DD-MMM-YYYY') : '-';
+      default:
+        return row.value || '-';
+    }
+  };
 
   return (
     <Drawer header="Contact Details" drawerState={drawerState.visible} closeDrawer={closeDrawer}>
@@ -357,7 +370,7 @@ function TableLinkDrawer(props) {
         {drawerState.data.map(row => (
           <>
             <div className="title">{row.label}</div>
-            <div>{row.value}</div>
+            <div>{checkValue(row)}</div>
           </>
         ))}
       </div>

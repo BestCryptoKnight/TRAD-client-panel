@@ -10,34 +10,21 @@ import ForbiddenAccessPage from '../common/ForbiddenAccessPage/ForbiddenAccessPa
 import SetPassword from '../screens/auth/setPassword/SetPassword';
 
 function Routes() {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  //
   useEffect(() => {
     saveTokenFromLocalStorageToSession();
-    //   if (SESSION_STORAGE.USER_TOKEN) {
-    //     setIsLoggedIn(true);
-    //   }
   }, []);
 
   return (
     <Router>
       <Switch>
-        {/* {isLoggedIn ? ( */}
-        {/*  <> */}
-        {/*  </> */}
-        {/* ) : ( */}
-        {/*  <> */}
         <Route exact path="/login" component={LoginScreen} />
         <Route exact path="/forgot-password" component={ForgotPassword} />
         <Route exact path="/set-password" component={SetPassword} />
         <Route exact path="/reset-password" component={ResetPassword} />
         <Route exact path="/verify-otp" component={VerifyOtp} />
-        <Route exact path="/verify-otp" component={VerifyOtp} />
         <Route exact path="/forbidden-access" component={ForbiddenAccessPage} />
         <AuthenticatedRoute exact path="/" />
         <AllAuthenticatedRoutes />
-        {/* </> */}
-        {/* )} */}
       </Switch>
     </Router>
   );
