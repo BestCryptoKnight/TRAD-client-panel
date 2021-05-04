@@ -22,6 +22,7 @@ export const APPLICATION_URLS = {
   APPLICATION_COLUMN_NAME_LIST_UPDATE_URL: `${BASE_URL}application/column-name/`,
   APPLICATION_SAVE_STEP_DATA: `${BASE_URL}application/`,
   APPLICATION_FILTER_LIST_URL: `${BASE_URL}application/entity-list`,
+  GET_APPLICATION_DETAILS_URL: `${BASE_URL}application/details/`,
 
   COMPANY: {
     DROP_DOWN_DATA_URL: `${BASE_URL}application/entity-list/`,
@@ -32,7 +33,7 @@ export const APPLICATION_URLS = {
   },
   DOCUMENTS: {
     DOCUMENTS_LIST: `${BASE_URL}document/`,
-    GET_DOCUMENT_TYPE_LIST_URL: `${BASE_URL}settings/document-type/`,
+    GET_DOCUMENT_TYPE_LIST_URL: `${BASE_URL}document/type-list`,
     UPLOAD_DOCUMENT_URL: `${BASE_URL}document/upload/`,
     APPLICATION_DELETE_DOCUMENT: `${BASE_URL}document/`,
   },

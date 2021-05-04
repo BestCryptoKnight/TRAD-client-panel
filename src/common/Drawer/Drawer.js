@@ -8,31 +8,32 @@ const Drawer = props => {
   const drawerMenuRef = useRef();
   useOnClickOutside(drawerMenuRef, () => closeDrawer());
 
-  const drawerClasses = `drawer-container ${drawerState && 'drawer-opened'} ${className}`;
+  const drawerClasses = `drawer-container ${drawerState ? 'drawer-opened' : ''} ${className}`;
+
   return (
-    <>
-      <div className={drawerState && 'drawer-overlay'} />
-      <div className={drawerClasses} {...restProps} ref={drawerMenuRef}>
-        <div className="drawer-wrapper">
-          <div className="drawer-header-container">
-            {header}
-            <span
-              className="material-icons-round close-drawer"
-              title="Close drawer"
-              onClick={closeDrawer}
-            >
+          <>
+            <div className={drawerState ? 'drawer-overlay' : ''} />
+            <div className={drawerClasses} {...restProps} ref={drawerMenuRef}>
+              <div className="drawer-wrapper">
+                <div className="drawer-header-container">
+                  {header}
+                  <span
+                          className="material-icons-round close-drawer"
+                          title="Close drawer"
+                          onClick={closeDrawer}
+                  >
               close
             </span>{' '}
-          </div>
-          <div className="drawer-content">{children}</div>
-        </div>
-      </div>
-    </>
+                </div>
+                <div className="drawer-content">{children}</div>
+              </div>
+            </div>
+          </>
   );
 };
 
 Drawer.propTypes = {
-  header: PropTypes.element,
+  header: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   className: PropTypes.string,
   children: PropTypes.element,
   drawerState: PropTypes.bool,

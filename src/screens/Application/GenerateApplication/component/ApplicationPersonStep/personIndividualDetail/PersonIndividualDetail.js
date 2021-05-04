@@ -328,7 +328,6 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                 updateSinglePersonState(data[0]?.name, data);
                 if (data[0]?.name === 'country') {
                     let showDropDownInput = true;
-
                     switch (data[0]?.value) {
                         case 'AUS':
                             updateSinglePersonState('state', []);
@@ -457,7 +456,6 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
             },
             [updateSinglePersonState]
     );
-  console.log('index',index)
     const getComponentFromType = useCallback(
             input => {
                 let component = null;

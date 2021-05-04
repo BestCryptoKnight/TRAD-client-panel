@@ -70,8 +70,8 @@ const ApplicationList = () => {
     ]);
 
     const {dropdownData} = useSelector(({application}) => application?.applicationFilterList ?? {});
-
     const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
+
     const {
         entity,
         clientId,
@@ -288,8 +288,9 @@ const ApplicationList = () => {
     const onClickResetDefaultColumnSelection = useCallback(async () => {
         await dispatch(saveApplicationColumnNameList({isReset: true}));
         dispatch(getApplicationColumnNameList());
+        getApplicationsByFilter();
         toggleCustomField();
-    }, [dispatch, toggleCustomField]);
+    }, [toggleCustomField, getApplicationsByFilter]);
 
     const onClickCloseColumnSelection = useCallback(() => {
         dispatch({
@@ -439,9 +440,13 @@ const ApplicationList = () => {
         return foundValue ? [foundValue]:[];
     }, [status, dropdownData]);
 
-    /*   const viewApplicationOnSelectRecord = useCallback(_id => {
-           history.push(`/applications/detail/view/${_id}`);
-       }, []); */
+       const viewApplicationOnSelectRecord = useCallback((id,data) => {
+           if(data?.status === 'DRAFT'){
+               history.push(`/applications/application/generate/?applicationId=${id}`);
+           }else {
+               history.push(`/applications/detail/view/${id}`);
+           }
+       }, [history]);
 
     useEffect(() => {
         dispatch(getApplicationFilter());
@@ -479,10 +484,8 @@ const ApplicationList = () => {
                                         tableClass="main-list-table"
                                         data={docs}
                                         headers={headers}
-                                        recordSelected={() => console.log('Record selected')}
-                                        recordActionClick={() => console.log('Record action clicked')}
+                                        recordSelected={viewApplicationOnSelectRecord}
                                         rowClass="cursor-pointer"
-                                        haveActions
                                 />
                             </div>
                             <Pagination
@@ -514,18 +517,6 @@ const ApplicationList = () => {
                                         options={dropdownData?.entityType}
                                         values={entityTypeSelectedValue}
                                         onChange={handleEntityTypeFilterChange}
-                                        searchable={false}
-                                />
-                            </div>
-                            <div className="filter-modal-row">
-                                <div className="form-title">Client Name</div>
-                                <ReactSelect
-                                        className="filter-select"
-                                        placeholder="Select"
-                                        name="role"
-                                        options={dropdownData?.clients}
-                                        values={clientIdSelectedValue}
-                                        onChange={handleClientIdFilterChange}
                                         searchable={false}
                                 />
                             </div>

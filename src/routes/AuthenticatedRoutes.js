@@ -7,6 +7,7 @@ import GenerateApplication from '../screens/Application/GenerateApplication/Gene
 import EmployeeList from "../screens/Employee/EmployeeList/EmployeeList";
 import CompanyProfile from "../screens/CompanyProfile/CompanyProfile";
 import {useSelector} from "react-redux";
+import ViewApplication from "../screens/Application/ViewApplication/ViewApplication";
 
 export const AuthenticatedRoute = ({ component, ...options }) => {
     const loggedUserDetails = useSelector(({ loggedUserProfile }) => loggedUserProfile);
@@ -45,6 +46,11 @@ export const AllAuthenticatedRoutes = () => {
         path="/applications/application/:action/"
         component={GenerateApplication}
       />
+        <AuthenticatedRoute
+                exact
+                path="/applications/detail/:action/:id"
+                component={ViewApplication}
+        />
       <AuthenticatedRoute exact path="/debtor" component={null} />
       <AuthenticatedRoute exact path="/claims" component={null} />
       <AuthenticatedRoute exact path="/over-dues" component={null} />

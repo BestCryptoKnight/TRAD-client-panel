@@ -181,7 +181,6 @@ export const getApplicationDetail = applicationId => {
         } else if (e.response.data.status === 'ERROR') {
           errorNotification('It seems like server is down, Please try again later.');
         }
-        throw Error();
       }
     }
   };
@@ -216,11 +215,10 @@ export const getApplicationCompanyDropDownData = () => {
   };
 };
 
-export const getApplicationCompanyDataFromDebtor = async (id, params) => {
+export const getApplicationCompanyDataFromDebtor = async (id) => {
   try {
     const response = await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromDebtor(
-            id,
-            params
+            id
     );
 
     if (response.data.status === 'SUCCESS') {
@@ -576,7 +574,6 @@ export const resetApplicationDetail = () => {
 
 // document
 export const getApplicationDocumentDataList = (id, params = { page: 1, limit: 15 }) => {
-  console.log('getApplicationDocumentDataList',id)
   return async dispatch => {
     try {
       const updateParams = {

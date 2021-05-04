@@ -4,8 +4,7 @@ import ReactSelect from 'react-dropdown-select';
 import Input from '../../../../../common/Input/Input';
 import './ApplicationCompanyStep.scss';
 import {
-    getApplicationCompanyDataFromABNOrACN,
-    getApplicationCompanyDataFromDebtor,
+    getApplicationCompanyDataFromABNOrACN, getApplicationCompanyDataFromDebtor,
     getApplicationCompanyDropDownData,
     searchApplicationCompanyEntityName,
     updateEditApplicationData,
@@ -80,16 +79,14 @@ const ApplicationCompanyStep = () => {
     );
 
     useEffect(() => {
-        if (
-                companyState?.country?.[0]?.value==='AUS' ||
-                companyState?.country?.[0]?.value==='NZL'
-        ) {
+        if (companyState?.country?.value === 'AUS' || companyState?.country?.value === 'NZL') {
             setIsAusOrNew(true);
+            setStateValue(companyState?.country?.value === 'AUS' ? australianStates : newZealandStates);
         }
     }, [companyState]);
 
     useEffect(() => {
-        setSelectedDebtorId(companyState?.debtorId?.[0]?.value);
+         setSelectedDebtorId(companyState?.debtorId?.[0]?.value);
     }, [companyState?.debtorId]);
 
     const changeEntityType = useMemo(
@@ -280,7 +277,7 @@ const ApplicationCompanyStep = () => {
                             break;
                     }
                     setIsAusOrNew(showDropDownInput);
-                } else if (data[0]?.name==='entityType' && partners.length!==0) {
+                } else if (data[0]?.name ==='entityType' && partners.length!==0) {
                     setShowConfirmModal(true);
                 } else {
                     dispatch(updateEditApplicationField('company', data[0]?.name, data));
@@ -294,6 +291,20 @@ const ApplicationCompanyStep = () => {
                 australianStates,
                 setIsAusOrNew,
             ]
+    );
+    const handleDebtorSelectChange = useCallback(
+            async data => {
+                try {
+                    handleSelectInputChange(data);
+                    const response = await getApplicationCompanyDataFromDebtor(data[0]?.value);
+                    if (response) {
+                        updateCompanyState(response);
+                    }
+                } catch (e) {
+                    /**/
+                }
+            },
+            [companyState, handleSelectInputChange, updateCompanyState]
     );
 
     const handleSearchTextInputKeyDown = useCallback(
@@ -414,6 +425,10 @@ const ApplicationCompanyStep = () => {
                         );
                         break;
                     case 'select': {
+                        let handleOnChange = handleSelectInputChange;
+                        if (input.name === 'debtorId') {
+                            handleOnChange = handleDebtorSelectChange;
+                        }
                         component = (
                                 <ReactSelect
                                         placeholder={input.placeholder}
@@ -421,7 +436,7 @@ const ApplicationCompanyStep = () => {
                                         options={input.data}
                                         searchable
                                         values={companyState[input.name]}
-                                        onChange={handleSelectInputChange}
+                                        onChange={handleOnChange}
                                 />
                         );
                         break;
@@ -446,6 +461,7 @@ const ApplicationCompanyStep = () => {
                 handleSelectInputChange,
                 handleTextInputChange,
                 isAusOrNew,
+                handleDebtorSelectChange
             ]
     );
 

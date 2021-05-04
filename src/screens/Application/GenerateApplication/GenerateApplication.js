@@ -10,7 +10,7 @@ import ApplicationConfirmationStep from './component/ApplicationConfirmationStep
 import { applicationCompanyStepValidations } from './component/ApplicationCompanyStep/validations/ApplicationCompanyStepValidations';
 import {
   addPersonDetail,
-  changeEditApplicationFieldValue,
+  changeEditApplicationFieldValue, getApplicationDetail,
   resetEditApplicationFieldValue
 } from '../redux/ApplicationAction';
 // import { applicationCreditStepValidations } from './component/ApplicationCreditLimitStep/validations/ApplicationCreditStepValidations';
@@ -66,15 +66,17 @@ const GenerateApplication = () => {
 
   // for stepper components
   const FILTERED_STEP_COMPONENT = useMemo(() => {
-    let finalSteps = STEP_COMPONENT;
+    let finalSteps = [...STEP_COMPONENT];
     if (
-            editApplicationData?.company?.entityType?.[0]?.value !== 'PARTNERSHIP' &&
-            editApplicationData?.company?.entityType?.[0]?.value !== 'TRUST'
+            !['PARTNERSHIP', 'TRUST'].includes(editApplicationData?.company?.entityType?.[0]?.value ?? '')
     ) {
-      finalSteps = finalSteps.filter(step => step?.type?.name !== 'ApplicationPersonStep');
+      delete finalSteps[1];
+      finalSteps = finalSteps.filter(step => step);
     }
+
     return finalSteps;
   }, [editApplicationData?.company?.entityType, STEP_COMPONENT]);
+
 
   // for stepper headings
 
@@ -83,7 +85,8 @@ const GenerateApplication = () => {
     const entityType = editApplicationData?.company?.entityType?.[0]?.value ?? '';
 
     if (!['PARTNERSHIP', 'TRUST'].includes(entityType)) {
-      finalSteps = finalSteps.filter(step => step?.text !== 'Person');
+      delete finalSteps[1];
+      finalSteps = finalSteps.filter(step => step);
     } else {
       finalSteps = finalSteps.map(step => {
         if (step.text === 'Person')
@@ -99,15 +102,21 @@ const GenerateApplication = () => {
   }, [editApplicationData?.company?.entityType, steps]);
 
   useEffect(() => {
+    if (applicationId) {
+      dispatch(getApplicationDetail(applicationId));
+    }
+  }, [applicationId]);
+
+  useEffect(() => {
     return () => {
       dispatch(resetEditApplicationFieldValue);
     };
   }, []);
 
   useEffect(() => {
-    if (editApplicationData && editApplicationData._id) {
+    if (editApplicationData?._id) {
       const params = {
-        applicationId: editApplicationData._id,
+        applicationId: editApplicationData?._id,
       };
       const url = Object.entries(params)
               .filter(arr => arr[1] !== undefined)
@@ -116,7 +125,7 @@ const GenerateApplication = () => {
 
       history.replace(`${history.location.pathname}?${url}`);
     }
-  }, [editApplicationData._id, history]);
+  }, [editApplicationData?._id, history]);
 
   const backToApplication = useCallback(() => {
     history.replace('/applications');
@@ -131,8 +140,8 @@ const GenerateApplication = () => {
   }, []);
 
   const onNextClick = useCallback(() => {
-    const data = editApplicationData[FILTERED_STEPS[applicationStage].name];
-    switch (FILTERED_STEPS[applicationStage].name) {
+    const data = editApplicationData[FILTERED_STEPS[applicationStage ?? 0].name];
+    switch (FILTERED_STEPS[applicationStage ?? 0].name) {
       case 'company':
         return applicationCompanyStepValidations(dispatch, data, editApplicationData);
       case 'partners':
@@ -146,7 +155,7 @@ const GenerateApplication = () => {
       default:
         return false;
     }
-  }, [editApplicationData, applicationStage, FILTERED_STEPS]);
+  }, [editApplicationData, applicationStage, FILTERED_STEPS,dispatch, history]);
 
   return (
     <>
@@ -160,13 +169,13 @@ const GenerateApplication = () => {
       <Stepper
         className="mt-10"
         steps={FILTERED_STEPS}
-        stepIndex={applicationStage}
+        stepIndex={applicationStage ?? 0}
         onChangeIndex={onChangeIndex}
         canGoNext
         nextClick={onNextClick}
         addStepClick={addStepClick}
       >
-        {FILTERED_STEP_COMPONENT[applicationStage]}
+        {FILTERED_STEP_COMPONENT[applicationStage ?? 0]}
       </Stepper>
     </>
   );

@@ -64,10 +64,11 @@ const initialApplicationList = {
       isPassedOverdueAmount: false,
       passedOverdueDetails: '',
       creditLimit: '',
+      note: '',
       errors: {},
     },
     documents: {
-      documentTypeList: { docs: [], total: 1, limit: 15, page: 1, pages: 1 },
+      documentTypeList: [],
       uploadDocumentApplicationData: [],
     },
     partners: [],
@@ -217,7 +218,7 @@ export const application = (state = initialApplicationList, action) => {
 
           // Company step
     case APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_DROP_DOWN_DATA: {
-      const dropdownData = { ...state.companyData.dropdownData };
+      const dropdownData = { ...state?.companyData?.dropdownData };
       Object.entries(action.data).forEach(([key, value]) => {
         dropdownData[key] = value.data.map(entity => ({
           label: entity.name,

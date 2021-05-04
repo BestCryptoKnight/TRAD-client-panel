@@ -371,13 +371,12 @@ const ApplicationConfirmationStep = () => {
       data: getDocumentStepData,
     },
   ];
-  console.table(confirmationDetails)
- if(partners?.length === 0 ) {
+  if(partners?.length === 0 || partners === undefined ) {
    delete confirmationDetails[28]
    delete confirmationDetails[29]
     confirmationDetails?.filter(e=>e);
- }
-  if(documents?.uploadDocumentApplicationData?.length === 0 ) {
+  }
+  if(documents?.length === 0 ) {
     delete confirmationDetails[31]
     confirmationDetails?.filter(e=>e);
   }
