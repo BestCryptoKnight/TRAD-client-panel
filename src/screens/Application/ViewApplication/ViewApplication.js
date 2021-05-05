@@ -1,7 +1,7 @@
 import React from 'react';
 import './ViewApplication.scss';
 import { useHistory } from 'react-router-dom';
-import ReactSelect from 'react-dropdown-select';
+import ReactSelect from 'react-select';
 import Accordion from '../../../common/Accordion/Accordion';
 import AccordionItem from '../../../common/Accordion/AccordionItem';
 import Checkbox from '../../../common/Checkbox/Checkbox';
@@ -119,7 +119,7 @@ const ViewApplication = () => {
           <div className="common-white-container">
             <div className="">Status</div>
             <div className="view-application-status">
-              <ReactSelect placeholder="Status" searchable={false} />
+              <ReactSelect placeholder="Status" isSearchable={false} />
             </div>
             <div className="application-details-grid">
               {applicationDetails.map(detail => (

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import './CompanyProfile.scss';
 import Button from "../../common/Button/Button";
-import ReactSelect from "react-dropdown-select";
+import ReactSelect from "react-select";
 import Input from "../../common/Input/Input";
 import BigInput from "../../common/BigInput/BigInput";
 import IconButton from "../../common/IconButton/IconButton";
@@ -17,78 +17,78 @@ const CompanyProfile = () => {
         dispatch(getClientDetails())
     },[])
 
-    const clientData = useSelector(({companyProfile}) => companyProfile.clientDetail);
+    const clientData = useSelector(({companyProfile}) => companyProfile?.clientDetail ?? {});
 
     const INPUTS = useMemo(() => [
         {
             label: 'Name',
-            placeholder: 'Please enter name',
+            placeholder: '-',
             type: 'text',
             name: 'name',
             data: clientData?.name,
         },
         {
             label: 'Address',
-            placeholder: 'Please enter address',
+            placeholder: '-',
             type: 'text',
             name: 'address',
             data: `${clientData?.address?.addressLine}, ${clientData?.address?.city}`,
         },
         {
             label: 'ABN',
-            placeholder: 'Please enter ABN',
+            placeholder: '-',
             type: 'text',
             name: 'abn',
             data: clientData?.abn,
         },
         {
             label: 'Phone',
-            placeholder: 'Please phone number',
+            placeholder: '-',
             type: 'text',
             name: 'phone',
             data: clientData?.contactNumber,
         },
         {
             label: 'Sales Person',
-            placeholder: 'Please enter sales person name..',
+            placeholder: '-',
             type: 'text',
             name: 'salesPerson',
             data: clientData?.salesPerson,
         },
         {
             label: 'ACN',
-            placeholder: 'Please enter ACN',
+            placeholder: '-',
             type: 'text',
             name: 'acn',
             data: clientData?.acn,
         },
         {
             label: 'Risk Person',
-            placeholder: 'Please select risk person name',
-            type: 'select',
-            name: 'riskPerson',
-            data: 'riskPerson',
+            placeholder: '-',
+            type: 'text',
+            name: 'riskAnalyst',
+            data: clientData?.riskAnalystId?.name
         },
         {
             label: 'Trading As',
-            placeholder: 'Please enter value',
+            placeholder: '-',
             type: 'text',
             name: 'tradingAs',
             data: 'tradingAs',
         },
         {
             label: 'Website',
-            placeholder: 'Please enter website',
+            placeholder: '-',
             type: 'text',
             name: 'website',
             data: clientData?.website,
         },
         {
             label: 'Service Person',
-            placeholder: 'Please select service person',
-            type: 'select',
-            name: 'servicePerson',
-            data: 'servicePerson',
+            placeholder: '-',
+            type: 'text',
+            name: 'serviceManager',
+            data: clientData?.serviceManagerId?.name
         }
     ],[clientData])
 
@@ -103,17 +103,20 @@ const CompanyProfile = () => {
                                         name={input.name}
                                         placeholder={input.placeholder}
                                         value={input.data}
+                                        readOnly
                                 />
                         );
                         break;
                     case 'select': {
                         component = (
                                 <ReactSelect
+                                        className="react-select-container"
+                                        classNamePrefix="react-select"
                                         placeholder={input.placeholder}
                                         name={input.name}
+                                        value={input.value}
                                         options={input.data}
-                                        searchable={false}
-
+                                        isSearchable={false}
                                 />
                         );
                         break;
@@ -138,7 +141,6 @@ const CompanyProfile = () => {
         <div className="page-header-name">
             Company Profile
         </div>
-        <Button buttonType='primary' title="Edit"/>
     </div>
         <div className="common-white-container company-profile-container">
             {INPUTS.map(getComponentFromType)}
@@ -149,7 +151,6 @@ const CompanyProfile = () => {
                 <div className="buttons-row">
                     <BigInput prefix="search" prefixClass="font-placeholder" placeholder="Search here" className="search"/>
                     <IconButton buttonType="primary" title="format_line_spacing"/>
-                    <Button buttonType="secondary" title="Sync With CRM"/>
                 </div>
             </div>
             <div className="common-list-container">

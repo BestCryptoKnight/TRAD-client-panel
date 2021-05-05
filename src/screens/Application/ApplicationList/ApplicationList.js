@@ -25,14 +25,14 @@ import '../ViewApplication/ViewApplication.scss';
 import {APPLICATION_COLUMN_LIST_REDUX_CONSTANTS} from "../redux/ApplicationReduxConstants";
 
 const initialFilterState = {
-    entity: '',
-    clientId: '',
-    debtorId: '',
-    status: '',
-    minCreditLimit: '',
-    maxCreditLimit: '',
-    startDate: null,
-    endDate: null,
+  entity: '',
+  clientId: '',
+  debtorId: '',
+  applicationStatus: '',
+  minCreditLimit: '',
+  maxCreditLimit: '',
+  startDate: null,
+  endDate: null,
 };
 
 const APPLICATION_FILTER_REDUCER_ACTIONS = {

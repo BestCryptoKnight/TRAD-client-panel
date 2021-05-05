@@ -9,8 +9,8 @@ import {getEmployeeList} from "../redux/EmployeeAction";
 
 const EmployeeList = () => {
     const dispatch = useDispatch();
-    const employeeListWithPageData = useSelector(({ employee }) => employee.employeeList);
-    const { total, pages, page, limit, docs, headers } = useMemo(() => employeeListWithPageData, [
+    const employeeListWithPageData = useSelector(({ employee }) => employee?.employeeList ?? {});
+    const { total, pages, page, limit, docs, headers, isLoading } = useMemo(() => employeeListWithPageData, [
         employeeListWithPageData,
     ]);
     useEffect(() => {
@@ -19,22 +19,25 @@ const EmployeeList = () => {
     return <>
         <div className="page-header">
             <div className="page-header-name">Employee List</div>
-            <div className="page-header-button-container">
-                <IconButton
-                        buttonType="secondary"
-                        title="filter_list"
-                        className="mr-10"
-                        buttonTitle="Click to apply filters on employee list"
-                />
-                <IconButton
-                        buttonType="primary"
-                        title="format_line_spacing"
-                        className="mr-10"
-                        buttonTitle="Click to select custom fields"
-                />
-            </div>
+            {isLoading && docs && (
+                    <div className="page-header-button-container">
+                        <IconButton
+                                buttonType="secondary"
+                                title="filter_list"
+                                className="mr-10"
+                                buttonTitle="Click to apply filters on employee list"
+                        />
+                        <IconButton
+                                buttonType="primary"
+                                title="format_line_spacing"
+                                className="mr-10"
+                                buttonTitle="Click to select custom fields"
+                        />
+                    </div>
+
+            )}
         </div>
-        {docs ? (
+        {docs && !isLoading ? (docs.length > 0 ?
                 <>
                     <div className="common-list-container">
                         <Table
@@ -56,7 +59,7 @@ const EmployeeList = () => {
                             page={page}
                             limit={limit}
                     />
-                </>
+                </> : <div className="no-record-found">No record found</div>
         ) : (
                 <Loader />
         )}

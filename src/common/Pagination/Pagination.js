@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import './Pagination.scss';
 import PropTypes from 'prop-types';
-import ReactSelect from 'react-dropdown-select';
+import ReactSelect from 'react-select';
 
 const noPerPage = [
   { label: '5', value: 5 },
@@ -30,7 +30,7 @@ const Pagination = props => {
   const onLastClick = () => pageActionClick(pages);
   const onChangeLimit = useCallback(e => {
     setRecordLimit(e);
-    onSelectLimit(e[0].value);
+    onSelectLimit(e.value);
   },[setRecordLimit,onSelectLimit]);
 
   useEffect(() => {
@@ -48,53 +48,56 @@ const Pagination = props => {
   }
 
   return (
-    <div className={paginationClass}>
-      <div className="records-per-page-container">
-        <span className="font-field mr-10">Show</span>
-        <ReactSelect
-          options={noPerPage}
-          onChange={onChangeLimit}
-          values={recordLimit}
-          placeholder="Select"
-          className="no-per-page-select"
-          dropdownPosition="top"
-          searchable={false}
-        />
-        <span className="ml-10">
-          {`Records ${fromRecordCount} to ${toRecordCount} of ${total}`}
+          <div className={paginationClass}>
+            <div className="records-per-page-container">
+              <span className="font-field mr-10">Show</span>
+              <ReactSelect
+                      options={noPerPage}
+                      onChange={onChangeLimit}
+                      value={recordLimit}
+                      placeholder="Select"
+                      className="no-per-page-select react-select-container"
+                      classNamePrefix="react-select"
+                      dropdownPosition="auto"
+                      isSearchable={false}
+                      menuPlacement="auto"
+              />
+              <span className="ml-10">
+          {' '}
+                Records {fromRecordCount} to {toRecordCount} of {total}
         </span>
-      </div>
-      <div className="pagination">
-        <span className="mr-10">{pages} Pages</span>
-        <div className="page-handler">
-          <div
-            className={`first-page ${page === 1 && 'pagination-button-disabled'}`}
-            onClick={onFirstClick}
-          >
-            <span className="material-icons-round">double_arrow</span>
+            </div>
+            <div className="pagination">
+              <span className="mr-10">{pages} Pages</span>
+              <div className="page-handler">
+                <div
+                        className={`first-page ${page === 1 && 'pagination-button-disabled'}`}
+                        onClick={onFirstClick}
+                >
+                  <span className="material-icons-round">double_arrow</span>
+                </div>
+                <div
+                        className={`prev-page ${page === 1 && 'pagination-button-disabled'}`}
+                        onClick={onPrevClick}
+                >
+                  <span className="material-icons-round">arrow_back_ios</span>
+                </div>
+                <div className="page-number">{page}</div>
+                <div
+                        className={`next-page ${page === pages && 'pagination-button-disabled'}`}
+                        onClick={onNextClick}
+                >
+                  <span className="material-icons-round">arrow_forward_ios</span>
+                </div>
+                <div
+                        className={`last-page ${page === pages && 'pagination-button-disabled'}`}
+                        onClick={onLastClick}
+                >
+                  <span className="material-icons-round">double_arrow</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div
-            className={`prev-page ${page === 1 && 'pagination-button-disabled'}`}
-            onClick={onPrevClick}
-          >
-            <span className="material-icons-round">arrow_back_ios</span>
-          </div>
-          <div className="page-number">{page}</div>
-          <div
-            className={`next-page ${page === pages && 'pagination-button-disabled'}`}
-            onClick={onNextClick}
-          >
-            <span className="material-icons-round">arrow_forward_ios</span>
-          </div>
-          <div
-            className={`last-page ${page === pages && 'pagination-button-disabled'}`}
-            onClick={onLastClick}
-          >
-            <span className="material-icons-round">double_arrow</span>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };
 

@@ -1,0 +1,17 @@
+@import "../../index";
+
+.common-white-container.support-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+  padding: 30px;
+  font: $subtitle $font-regular;
+  color: $primary-color;
+  overflow: hidden;
+
+  .title {
+    font-family: $font-regular;
+    opacity: 50%;
+    color: $field-color;
+  }
+}

@@ -4,7 +4,7 @@ import {
 } from "./EmployeeReduxConstants";
 
 const initialEmployeeListState = {
-    employeeList: { docs: [], total: 0, limit: 0, page: 1, pages: 1}
+    employeeList: { docs: [], total: 0, limit: 0, page: 1, pages: 1, isLoading: true}
 }
 
 export const employee = (state = initialEmployeeListState, action) => {
@@ -12,7 +12,7 @@ export const employee = (state = initialEmployeeListState, action) => {
         case EMPLOYEE_REDUX_CONSTANTS.EMPLOYEE_LIST_USER_ACTION:
             return {
                 ...state,
-                employeeList: action.data
+                employeeList: {...action.data, isLoading: false}
             }
         case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION: return null;
         default: return state;

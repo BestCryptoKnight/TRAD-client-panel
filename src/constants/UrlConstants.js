@@ -41,6 +41,8 @@ export const APPLICATION_URLS = {
 
 export const CREDIT_LIMITS_URLS = {
   CREDIT_LIMITS_LIST_URL: `${BASE_URL}debtor/`,
+  CREDIT_LIMITS_COLUMN_LIST: `${BASE_URL}debtor/column-name/`,
+  CREDIT_LIMITS_FILTER: `${BASE_URL}debtor/entity-list/`
 };
 
 export const EMPLOYEE_URLS = {
@@ -49,4 +51,8 @@ export const EMPLOYEE_URLS = {
 
 export const COMPANY_PROFILE_URL = {
   COMPANY_PROFILE_URL: `${BASE_URL}client/`
+}
+
+export const SUPPORT_URLS = {
+  SUPPORT_URL: `${BASE_URL}organization/details/`
 }

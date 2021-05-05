@@ -74,8 +74,8 @@
 }
 
 .filter-modal {
-  width: 60vw;
-  max-width: 655px;
+  width: fit-content;
+  max-width: 900px;
   min-width: 650px;
 }
 
@@ -214,4 +214,35 @@
 .ui-state-error {
   margin-top: 5px;
   color: $error-color;
+}
+
+.drawer-date-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px 10px;
+  font: $subtitle $font-medium;
+  color: $primary-color;
+  padding: 20px;
+  overflow: hidden;
+
+  .title {
+    font-family: $font-regular;
+    color: $field-color;
+  }
+}
+
+
+.contacts-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px 10px;
+  font: $subtitle $font-medium;
+  color: $primary-color;
+  padding: 20px;
+  overflow: hidden;
+
+  .title {
+    font-family: $font-regular;
+    color: $field-color;
+  }
 }
