@@ -75,29 +75,29 @@ export const applicationCompanyStepValidations = (dispatch, data, editApplicatio
       wipeOutDetails,
     } = data;
 
-    delete country[0].name;
+    delete country?.name;
 
     const finalData = {
       stepper: 'company',
-      debtorId: debtorId[0]?.value,
+      debtorId: debtorId?.value,
       isActive: typeof isActive === 'string' ? isActive === 'Active' : isActive,
       abn,
       acn,
-      entityName: entityName[0]?.label,
+      entityName: entityName?.label,
       tradingName,
       contactNumber: phoneNumber,
       outstandingAmount,
-      entityType: entityType[0]?.value,
+      entityType: entityType?.value,
       wipeOutDetails,
       address: {
         property,
         unitNumber,
         streetNumber,
         streetName,
-        streetType: streetType?.[0]?.value,
+        streetType: streetType?.value,
         suburb,
-        state: state?.[0].value ?? state,
-        country: { name: country?.[0]?.label, code: country?.[0]?.value },
+        state: state?.value ?? state,
+        country: { name: country?.label, code: country?.value },
         postCode,
       },
       applicationId: editApplicationData?._id ?? '',

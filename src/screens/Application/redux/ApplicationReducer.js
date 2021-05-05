@@ -20,7 +20,6 @@ const initialApplicationList = {
 
   applicationFilterList: {
     dropdownData: {
-      clients: [],
       debtors: [],
       streetType: [],
       australianStates: [],
@@ -197,7 +196,7 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
     case APPLICATION_FILTER_LIST_REDUX_CONSTANTS.APPLICATION_FILTER_LIST_ACTION: {
-      const dropdownData = { ...state.applicationFilterList.dropdownData };
+      const dropdownData = { ...state?.applicationFilterList?.dropdownData };
       Object.entries(action.data).forEach(([key, value]) => {
         dropdownData[key] = value.data.map(entity => ({
           label: entity.name || entity.label,

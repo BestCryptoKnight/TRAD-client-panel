@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Stepper from '../../../common/Stepper/Stepper';
@@ -10,15 +10,15 @@ import ApplicationConfirmationStep from './component/ApplicationConfirmationStep
 import { applicationCompanyStepValidations } from './component/ApplicationCompanyStep/validations/ApplicationCompanyStepValidations';
 import {
   addPersonDetail,
-  changeEditApplicationFieldValue, getApplicationDetail,
-  resetEditApplicationFieldValue
+  changeEditApplicationFieldValue,
+  getApplicationDetail,
+  resetEditApplicationFieldValue,
 } from '../redux/ApplicationAction';
-// import { applicationCreditStepValidations } from './component/ApplicationCreditLimitStep/validations/ApplicationCreditStepValidations';
-import {useQueryParams} from "../../../hooks/GetQueryParamHook";
-import {applicationCreditStepValidations} from "./component/ApplicationCreditLimitStep/validations/ApplicationCreditStepValidations";
-import {applicationPersonStepValidation} from "./component/ApplicationPersonStep/validations/ApplicationPersonStepValidations";
-import {applicationDocumentsStepValidations} from "./component/ApplicationDocumentsStep/validations/ApplicationDocumentStepValidations";
-import {applicationConfirmationStepValidations} from "./component/ApplicationConfirmationStep/validations/ApplicationConfirmationStepValidation";
+import { applicationCreditStepValidations } from './component/ApplicationCreditLimitStep/validations/ApplicationCreditStepValidations';
+import { applicationPersonStepValidation } from './component/ApplicationPersonStep/validations/ApplicationPersonStepValidations';
+import { applicationDocumentsStepValidations } from './component/ApplicationDocumentsStep/validations/ApplicationDocumentStepValidations';
+import { applicationConfirmationStepValidations } from './component/ApplicationConfirmationStep/validations/ApplicationConfirmationStepValidation';
+import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 
 const STEP_COMPONENT = [
   <ApplicationCompanyStep />,
@@ -60,16 +60,14 @@ const GenerateApplication = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { applicationStage, ...editApplicationData } = useSelector(
-    ({ application }) => application?.editApplication ?? {}
+          ({ application }) => application?.editApplication ?? {}
   );
   const { applicationId } = useQueryParams();
 
   // for stepper components
   const FILTERED_STEP_COMPONENT = useMemo(() => {
     let finalSteps = [...STEP_COMPONENT];
-    if (
-            !['PARTNERSHIP', 'TRUST'].includes(editApplicationData?.company?.entityType?.[0]?.value ?? '')
-    ) {
+    if (!['PARTNERSHIP', 'TRUST'].includes(editApplicationData?.company?.entityType?.value ?? '')) {
       delete finalSteps[1];
       finalSteps = finalSteps.filter(step => step);
     }
@@ -77,12 +75,11 @@ const GenerateApplication = () => {
     return finalSteps;
   }, [editApplicationData?.company?.entityType, STEP_COMPONENT]);
 
-
   // for stepper headings
 
   const FILTERED_STEPS = useMemo(() => {
     let finalSteps = [...steps];
-    const entityType = editApplicationData?.company?.entityType?.[0]?.value ?? '';
+    const entityType = editApplicationData?.company?.entityType?.value ?? '';
 
     if (!['PARTNERSHIP', 'TRUST'].includes(entityType)) {
       delete finalSteps[1];
@@ -92,7 +89,7 @@ const GenerateApplication = () => {
         if (step.text === 'Person')
           return {
             ...step,
-            text: editApplicationData?.company?.entityType?.[0]?.label ?? '',
+            text: editApplicationData?.company?.entityType?.label ?? '',
           };
         return step;
       });
@@ -101,11 +98,9 @@ const GenerateApplication = () => {
     return finalSteps;
   }, [editApplicationData?.company?.entityType, steps]);
 
-  useEffect(() => {
-    if (applicationId) {
-      dispatch(getApplicationDetail(applicationId));
-    }
-  }, [applicationId]);
+  const onChangeIndex = useCallback(newIndex => {
+    dispatch(changeEditApplicationFieldValue('applicationStage', newIndex));
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -114,7 +109,13 @@ const GenerateApplication = () => {
   }, []);
 
   useEffect(() => {
-    if (editApplicationData?._id) {
+    if (applicationId) {
+      dispatch(getApplicationDetail(applicationId));
+    }
+  }, [applicationId]);
+
+  useEffect(() => {
+    if (editApplicationData && editApplicationData?._id) {
       const params = {
         applicationId: editApplicationData?._id,
       };
@@ -131,17 +132,13 @@ const GenerateApplication = () => {
     history.replace('/applications');
   }, [history]);
 
-  const onChangeIndex = useCallback(newIndex => {
-    dispatch(changeEditApplicationFieldValue('applicationStage', newIndex));
-  }, []);
-
   const addStepClick = useCallback(() => {
     dispatch(addPersonDetail('individual'));
   }, []);
 
   const onNextClick = useCallback(() => {
-    const data = editApplicationData[FILTERED_STEPS[applicationStage ?? 0].name];
-    switch (FILTERED_STEPS[applicationStage ?? 0].name) {
+    const data = editApplicationData?.[FILTERED_STEPS?.[applicationStage ?? 0]?.name];
+    switch (FILTERED_STEPS?.[applicationStage ?? 0]?.name) {
       case 'company':
         return applicationCompanyStepValidations(dispatch, data, editApplicationData);
       case 'partners':
@@ -152,34 +149,33 @@ const GenerateApplication = () => {
         return applicationDocumentsStepValidations(dispatch, data, editApplicationData);
       case 'confirmationStep':
         return applicationConfirmationStepValidations(dispatch, data, editApplicationData, history);
+
       default:
         return false;
     }
-  }, [editApplicationData, applicationStage, FILTERED_STEPS,dispatch, history]);
+  }, [editApplicationData, applicationStage, FILTERED_STEPS]);
 
   return (
-    <>
-      <div className="breadcrumb-button-row">
-        <div className="breadcrumb">
-          <span onClick={backToApplication}>Application List</span>
-          <span className="material-icons-round">navigate_next</span>
-          <span>Generate Application</span>
-        </div>
-      </div>
-      <Stepper
-        className="mt-10"
-        steps={FILTERED_STEPS}
-        stepIndex={applicationStage ?? 0}
-        onChangeIndex={onChangeIndex}
-        canGoNext
-        nextClick={onNextClick}
-        addStepClick={addStepClick}
-      >
-        {FILTERED_STEP_COMPONENT[applicationStage ?? 0]}
-      </Stepper>
-    </>
+          <>
+            <div className="breadcrumb-button-row">
+              <div className="breadcrumb">
+                <span onClick={backToApplication}>Application List</span>
+                <span className="material-icons-round">navigate_next</span>
+                <span>Generate Application</span>
+              </div>
+            </div>
+            <Stepper
+                    className="mt-10"
+                    steps={FILTERED_STEPS}
+                    stepIndex={applicationStage ?? 0}
+                    onChangeIndex={onChangeIndex}
+                    nextClick={onNextClick}
+                    addStepClick={addStepClick}
+            >
+              {FILTERED_STEP_COMPONENT[applicationStage ?? 0]}
+            </Stepper>
+          </>
   );
 };
 
 export default GenerateApplication;
-

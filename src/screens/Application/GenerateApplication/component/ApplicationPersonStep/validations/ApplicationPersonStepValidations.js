@@ -104,8 +104,8 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
                 type,
                 abn,
                 acn,
-                entityType: entityType?.[0]?.value,
-                entityName: entityName?.[0]?.value,
+                entityType: entityType?.value,
+                entityName: entityName?.value,
                 tradingName,
             };
         } else if (type === 'individual' && validated) {
@@ -130,11 +130,11 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
                 postCode,
                 allowToCheckCreditHistory,
             } = item;
-            delete country?.[0]?.name;
+            delete country?.name;
 
             preparedData = {
                 type,
-                title: title?.[0]?.value,
+                title: title?.value,
                 firstName,
                 middleName,
                 lastName,
@@ -148,10 +148,10 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
                     unitNumber,
                     streetNumber,
                     streetName,
-                    streetType: streetType?.[0]?.value,
+                    streetType: streetType?.value,
                     suburb,
-                    state: state?.[0]?.value ?? state,
-                    country: { name: country?.[0].label, code: country?.[0].value },
+                    state: state?.value ?? state,
+                    country: { name: country?.label, code: country?.value },
                     postCode,
                 },
                 allowToCheckCreditHistory,
@@ -165,18 +165,19 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
         const finalData = {
             stepper: 'person',
             applicationId: editApplicationData?._id,
-            entityType: editApplicationData?.company?.entityType?.[0].value,
+            entityType: editApplicationData?.company?.entityType?.value,
             partners,
         };
         try {
             if (
-                    editApplicationData?.company?.entityType?.[0].value === 'PARTNERSHIP' &&
+                    editApplicationData?.company?.entityType?.value === 'PARTNERSHIP' &&
                     partners.length < 2
             ) {
                 validated = false;
                 errorNotification('You have to add two partners at least');
             } else if (
-                    editApplicationData?.company?.entityType?.[0].value === 'SOLE_TRADER' &&
+                    //TODO CHECK IF SOLE TRADER WOULD COME HERE OR NOT
+                    editApplicationData?.company?.entityType?.value === 'SOLE_TRADER' &&
                     partners.length > 1
             ) {
                 validated = false;

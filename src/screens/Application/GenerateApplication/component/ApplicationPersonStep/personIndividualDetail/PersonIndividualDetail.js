@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactSelect from 'react-dropdown-select';
+import ReactSelect from 'react-select';
 import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -69,6 +69,7 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
     );
     const companyEntityType = useSelector(
             ({ application }) => application?.applicationFilterList?.dropdownData?.companyEntityType ?? []);
+
     const [stateValue, setStateValue] = useState([]);
     const [isAusOrNew, setIsAusOrNew] = useState(false);
 
@@ -76,12 +77,12 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
 
     useEffect(() => {
         if (
-                partners?.[index]?.country?.[0]?.value === 'AUS' ||
-                partners?.[index]?.country?.[0]?.value === 'NZL'
+                partners?.[index]?.country?.value === 'AUS' ||
+                partners?.[index]?.country?.value === 'NZL'
         ) {
             setIsAusOrNew(true);
         }
-    }, [partners[index].country]);
+    }, [partners?.[index]?.country]);
 
     useEffect(() => {
         dispatch(getApplicationFilter());
@@ -133,7 +134,7 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
             placeholder: 'Select',
             type: 'select',
             name: 'entityType',
-            data: companyEntityType,
+            data: companyEntityType ?? [],
         },
         {
             label: 'Entity Name*',
@@ -178,7 +179,7 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                     placeholder: 'Select',
                     type: 'select',
                     name: 'title',
-                    data: titleDropDown,
+                    data: titleDropDown ?? [],
                 },
                 {
                     label: 'First Name*',
@@ -257,7 +258,7 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                     placeholder: 'Select',
                     type: 'select',
                     name: 'streetType',
-                    data: streetType,
+                    data: streetType ?? [],
                 },
                 {
                     label: 'Suburb*',
@@ -325,10 +326,10 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
 
     const handleSelectInputChange = useCallback(
             data => {
-                updateSinglePersonState(data[0]?.name, data);
-                if (data[0]?.name === 'country') {
+                updateSinglePersonState(data?.name, data);
+                if (data?.name === 'country') {
                     let showDropDownInput = true;
-                    switch (data[0]?.value) {
+                    switch (data?.value) {
                         case 'AUS':
                             updateSinglePersonState('state', []);
                             setStateValue(australianStates);
@@ -468,12 +469,11 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                                         name={input.name}
                                         value={
                                             input.name === 'state'
-                                                    ? (!isAusOrNew && partners?.[index]?.[input.name]?.[0]?.label) ||
+                                                    ? (!isAusOrNew && partners?.[index]?.[input.name]?.label) ||
                                                     partners?.[index]?.[input?.name]
                                                     : partners?.[index]?.[input?.name]
                                         }
                                         onChange={handleTextInputChange}
-                                        disabled={partners?.[index]?.isDisabled ?? false}
                                 />
                         );
                         break;
@@ -484,7 +484,6 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                                         placeholder={input.placeholder}
                                         name={input.name}
                                         onChange={handleEmailChange}
-                                        disabled={partners?.[index]?.isDisabled ?? false}
                                 />
                         );
                         break;
@@ -497,23 +496,20 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                                         value={partners?.[index]?.[input?.name]}
                                         onKeyDown={handleSearchTextInputKeyDown}
                                         onChange={handleTextInputChange}
-                                        disabled={partners?.[index]?.isDisabled ?? false}
                                 />
                         );
                         break;
                     case 'select':
                         component = (
                                 <ReactSelect
+                                        className="react-select-container"
+                                        classNamePrefix="react-select"
+                                        isSearchable
                                         placeholder={input.placeholder}
                                         name={input.name}
                                         options={input.data}
-                                        // TODO need to check here ui crashing
-                                       /* values={
-                                             partners?.[index]?.[input?.name] ?? []} */
-                                        values={[]}
-                                        searchable
+                                        value={(partners && partners[index][input.name] && partners[index][input.name]) ?? []}
                                         onChange={handleSelectInputChange}
-                                        disabled={partners?.[index]?.isDisabled ?? false}
                                 />
                         );
                         break;
@@ -524,7 +520,6 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                                         name={input.name}
                                         title={input.label}
                                         onChange={handleCheckBoxEvent}
-                                        disabled={partners?.[index]?.isDisabled ?? false}
                                 />
                         );
                         break;
@@ -535,8 +530,7 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                                         name={input.name}
                                         placeholder={input.placeholder}
                                         onKeyDown={handleEntityNameSearch}
-                                        value={partners?.[index]?.entityName?.[0]?.label}
-                                        disabled={partners?.[index]?.isDisabled ?? false}
+                                        value={partners?.[index]?.entityName?.label}
                                         onChange={handleEntityChange}
                                 />
                         );
@@ -553,14 +547,13 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                                                     checked={partners?.[index]?.type === radio.value}
                                                     label={radio.label}
                                                     onChange={handleRadioButton}
-                                                    disabled={partners?.[index]?.isDisabled ?? false}
                                             />
                                     ))}
                                 </div>
                         );
                         break;
                     case 'main-title':
-                        component = <div className="main-title">{input.label}</div>;
+                        component = <div className="main-title">{input?.label}</div>;
                         break;
                     case 'blank':
                         component = (
@@ -576,9 +569,10 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
                                     <DatePicker
                                             dateFormat="dd/MM/yyyy"
                                             placeholderText={input.placeholder}
-                                            selected={partners?.[index]?.dateOfBirth && new Date(partners?.[index]?.dateOfBirth)}
+                                            selected={
+                                                partners?.[index]?.dateOfBirth && new Date(partners?.[index]?.dateOfBirth)
+                                            }
                                             onChange={date => onChangeDate(input.name, date)}
-                                            disabled={partners?.[index]?.isDisabled ?? false}
                                             showMonthDropdown
                                             showYearDropdown
                                             scrollableYearDropdown

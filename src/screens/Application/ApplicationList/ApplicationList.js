@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'reac
 import _ from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
-import ReactSelect from 'react-dropdown-select';
+import ReactSelect from 'react-select';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import IconButton from '../../../common/IconButton/IconButton';
@@ -15,7 +15,6 @@ import {
     getApplicationColumnNameList, getApplicationFilter,
     getApplicationsListByFilter, resetApplicationListPaginationData,
     saveApplicationColumnNameList,
-    // getApplicationFilter,
 } from '../redux/ApplicationAction';
 import {useQueryParams} from '../../../hooks/GetQueryParamHook';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
@@ -68,7 +67,6 @@ const ApplicationList = () => {
     const {total, pages, page, limit, docs, headers} = useMemo(() => applicationListWithPageData, [
         applicationListWithPageData,
     ]);
-
     const {dropdownData} = useSelector(({application}) => application?.applicationFilterList ?? {});
     const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
 
@@ -115,27 +113,18 @@ const ApplicationList = () => {
                 dispatchFilter({
                     type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
                     name: 'entity',
-                    value: event?.[0]?.value,
+                    value: event?.value,
                 });
             },
             [dispatchFilter]
     );
-    const handleClientIdFilterChange = useCallback(
-            event => {
-                dispatchFilter({
-                    type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-                    name: 'clientId',
-                    value: event?.[0]?.value,
-                });
-            },
-            [dispatchFilter]
-    );
+
     const handleDebtorIdFilterChange = useCallback(
             event => {
                 dispatchFilter({
                     type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
                     name: 'debtorId',
-                    value: event?.[0]?.value,
+                    value: event?.value,
                 });
             },
             [dispatchFilter]
@@ -145,7 +134,7 @@ const ApplicationList = () => {
                 dispatchFilter({
                     type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
                     name: 'status',
-                    value: event?.[0]?.value,
+                    value: event?.value,
                 });
             },
             [dispatchFilter]
@@ -369,11 +358,15 @@ const ApplicationList = () => {
         });
         getApplicationsByFilter({...params, ...filters});
         dispatch(getApplicationColumnNameList());
+
     }, []);
 
     const generateApplicationClick = useCallback(() => {
         history.push(`/applications/application/generate/`);
     }, []);
+    useEffect(()=>{
+        dispatch(getApplicationFilter());
+    },[])
 
     // for params in url
     useEffect(() => {
@@ -419,12 +412,6 @@ const ApplicationList = () => {
         return foundValue ? [foundValue]:[];
     }, [entity, dropdownData]);
 
-    const clientIdSelectedValue = useMemo(() => {
-        const foundValue = dropdownData?.clients?.find(e => {
-            return (e?.value ?? '')===clientId;
-        });
-        return foundValue ? [foundValue]:[];
-    }, [clientId, dropdownData]);
 
     const debtorIdSelectedValue = useMemo(() => {
         const foundValue = dropdownData?.debtors?.find(e => {
@@ -449,7 +436,6 @@ const ApplicationList = () => {
        }, [history]);
 
     useEffect(() => {
-        dispatch(getApplicationFilter());
         return dispatch(resetApplicationListPaginationData(page, pages, total, limit));
     }, []);
 
@@ -511,37 +497,40 @@ const ApplicationList = () => {
                             <div className="filter-modal-row">
                                 <div className="form-title">Entity Type</div>
                                 <ReactSelect
-                                        className="filter-select"
-                                        placeholder="Select"
+                                        className="filter-select react-select-container"
+                                        classNamePrefix="react-select"
+                                        placeholder="Select Entity Type"
                                         name="role"
                                         options={dropdownData?.entityType}
-                                        values={entityTypeSelectedValue}
+                                        value={entityTypeSelectedValue}
                                         onChange={handleEntityTypeFilterChange}
-                                        searchable={false}
+                                        isSearchble
                                 />
                             </div>
                             <div className="filter-modal-row">
                                 <div className="form-title">Debtor Name</div>
                                 <ReactSelect
-                                        className="filter-select"
-                                        placeholder="Select"
+                                        className="filter-select react-select-container"
+                                        classNamePrefix="react-select"
+                                        placeholder="Select Debtor"
                                         name="role"
                                         options={dropdownData?.debtors}
-                                        values={debtorIdSelectedValue}
+                                        value={debtorIdSelectedValue}
                                         onChange={handleDebtorIdFilterChange}
-                                        searchable={false}
+                                        isSearchble
                                 />
                             </div>
                             <div className="filter-modal-row">
                                 <div className="form-title">Application Status</div>
                                 <ReactSelect
-                                        className="filter-select"
-                                        placeholder="Select"
+                                        className="filter-select react-select-container"
+                                        classNamePrefix="react-select"
+                                        placeholder="Select Status"
                                         name="role"
                                         options={dropdownData?.applicationStatus}
-                                        values={applicationStatusSelectedValue}
+                                        value={applicationStatusSelectedValue}
                                         onChange={handleApplicationStatusFilterChange}
-                                        searchable={false}
+                                        isSearchble
                                 />
                             </div>
                             <div className="filter-modal-row">

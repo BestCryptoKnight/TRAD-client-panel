@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import './ApplicationDocumentStep.scss';
-import ReactSelect from 'react-dropdown-select';
-import {useDispatch, useSelector} from 'react-redux';
+import ReactSelect from 'react-select';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../../../../common/Input/Input';
 import IconButton from '../../../../../common/IconButton/IconButton';
 import Modal from '../../../../../common/Modal/Modal';
@@ -13,7 +13,7 @@ import {
     getDocumentTypeList,
     uploadDocument,
 } from '../../../redux/ApplicationAction';
-import {errorNotification} from '../../../../../common/Toast';
+import { errorNotification } from '../../../../../common/Toast';
 
 const initialApplicationDocumentState = {
     description: '',
@@ -40,15 +40,15 @@ function applicationDocumentReducer(state, action) {
                 ...action.data,
             };
         case APPLICATION_DOCUMENT_REDUCER_ACTIONS.RESET_STATE:
-            return {...initialApplicationDocumentState};
+            return { ...initialApplicationDocumentState };
         default:
             return state;
     }
 }
 
 const ApplicationDocumentStep = () => {
-    const {documentTypeList, uploadDocumentApplicationData} = useSelector(
-            ({application}) => application.editApplication?.documents ?? {}
+    const { documentTypeList, uploadDocumentApplicationData } = useSelector(
+            ({ application }) => application.editApplication?.documents
     );
     const documentData = useMemo(() => uploadDocumentApplicationData, [
         uploadDocumentApplicationData,
@@ -60,29 +60,33 @@ const ApplicationDocumentStep = () => {
     const [applicationDocId, setApplicationDocId] = useState('');
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const toggleConfirmationModal = useCallback(
-            value => setShowConfirmModal(value!==undefined ? value:e => !e),
+            value => setShowConfirmModal(value !== undefined ? value : e => !e),
             [setShowConfirmModal]
     );
 
+    /* const documentTypeList = useSelector(
+      ({ application }) => application.editApplication.documentStep.documentTypeList
+    );
+  */
     const [selectedApplicationDocuments, dispatchSelectedApplicationDocuments] = useReducer(
             applicationDocumentReducer,
             initialApplicationDocumentState
     );
 
-    const {documentType, description, isPublic} = useMemo(() => selectedApplicationDocuments, [
+    const { documentType, description, isPublic } = useMemo(() => selectedApplicationDocuments, [
         selectedApplicationDocuments,
     ]);
 
     const [uploadModel, setUploadModel] = useState(false);
     const toggleUploadModel = useCallback(
-            value => setUploadModel(value!==undefined ? value:e => !e),
+            value => setUploadModel(value !== undefined ? value : e => !e),
 
             [setUploadModel]
     );
 
     const documentTypeOptions = useMemo(() => {
         const finalData = documentTypeList ?? [];
-        return finalData?.map(e => ({
+        return finalData.map(e => ({
             name: 'documentType',
             label: e.documentTitle,
             value: e._id,
@@ -130,15 +134,13 @@ const ApplicationDocumentStep = () => {
                         'application/rtf',
                     ];
                     const checkExtension =
-                            fileExtension.indexOf(e.target.files[0].name.split('.').splice(-1)[0])!== -1;
-                    const checkMimeTypes = mimeType.indexOf(e.target.files[0].type)!== -1;
-                    const checkFileSize = e.target.files[0].size > 4194304;
+                            fileExtension.indexOf(e.target.files[0].name.split('.').splice(-1)[0]) !== -1;
+                    const checkMimeTypes = mimeType.indexOf(e.target.files[0].type) !== -1;
 
                     if (!(checkExtension || checkMimeTypes)) {
                         errorNotification('Only image and document type files are allowed');
-                    } else if (checkFileSize) {
-                        errorNotification('File size should be less than 4 mb');
-                    } else {
+                    }
+                    else {
                         setFileData(e.target.files[0]);
                         dispatchSelectedApplicationDocuments({
                             type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
@@ -159,17 +161,15 @@ const ApplicationDocumentStep = () => {
         toggleUploadModel();
     }, [toggleUploadModel, dispatchSelectedApplicationDocuments]);
 
-    const editApplication = useSelector(({application}) => application?.editApplication ?? {});
-
+    const editApplication = useSelector(({ application }) => application.editApplication);
     useEffect(() => {
-        if (editApplication && editApplication?._id) {
-
-            dispatch(getApplicationDocumentDataList(editApplication?._id));
+        if (editApplication && editApplication._id) {
+            dispatch(getApplicationDocumentDataList(editApplication._id));
         }
-    }, [editApplication?._id]);
+    }, [editApplication._id]);
 
     const onClickUploadDocument = useCallback(async () => {
-        if (selectedApplicationDocuments?.documentType?.length===0) {
+        if (selectedApplicationDocuments?.documentType?.length <= 0) {
             errorNotification('Please select document type');
         } else if (!selectedApplicationDocuments.description) {
             errorNotification('Description is required');
@@ -179,7 +179,7 @@ const ApplicationDocumentStep = () => {
             const formData = new FormData();
             formData.append('description', selectedApplicationDocuments.description);
             formData.append('isPublic', selectedApplicationDocuments.isPublic);
-            formData.append('documentType', selectedApplicationDocuments.documentType);
+            formData.append('documentType', selectedApplicationDocuments.documentType.value);
             formData.append('document', selectedApplicationDocuments.fileData);
             formData.append('entityId', editApplication?._id);
             formData.append('documentFor', 'application');
@@ -188,6 +188,7 @@ const ApplicationDocumentStep = () => {
                     'content-type': 'multipart/form-data',
                 },
             };
+            console.log('formData', formData);
             await dispatch(uploadDocument(formData, config));
             dispatchSelectedApplicationDocuments({
                 type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.RESET_STATE,
@@ -207,8 +208,8 @@ const ApplicationDocumentStep = () => {
 
     const uploadDocumentButton = useMemo(
             () => [
-                {title: 'Close', buttonType: 'primary-1', onClick: () => onCloseUploadDocumentButton()},
-                {title: 'Upload', buttonType: 'primary', onClick: onClickUploadDocument},
+                { title: 'Close', buttonType: 'primary-1', onClick: () => onCloseUploadDocumentButton() },
+                { title: 'Upload', buttonType: 'primary', onClick: onClickUploadDocument },
             ],
             [onCloseUploadDocumentButton, onClickUploadDocument]
     );
@@ -221,8 +222,8 @@ const ApplicationDocumentStep = () => {
             newValue => {
                 dispatchSelectedApplicationDocuments({
                     type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
-                    name: newValue[0].name,
-                    value: newValue[0].value,
+                    name: newValue.name,
+                    value: newValue,
                 });
             },
             [dispatchSelectedApplicationDocuments]
@@ -255,7 +256,7 @@ const ApplicationDocumentStep = () => {
 
     const deleteDocumentButtons = useMemo(
             () => [
-                {title: 'Close', buttonType: 'primary-1', onClick: () => toggleConfirmationModal()},
+                { title: 'Close', buttonType: 'primary-1', onClick: () => toggleConfirmationModal() },
                 {
                     title: 'Delete',
                     buttonType: 'danger',
@@ -295,20 +296,20 @@ const ApplicationDocumentStep = () => {
                 <div className="font-secondary f-14 mb-10">Upload Documents</div>
                 <div className="if-yes-row">
                     <span className="font-primary mr-15">Upload your documents here</span>
-                    <IconButton buttonType="primary" title="cloud_upload" onClick={() => toggleUploadModel()}/>
+                    <IconButton buttonType="primary" title="cloud_upload" onClick={() => toggleUploadModel()} />
                 </div>
                 <table className="documents-table">
                     <tbody>
                     <tr>
                         <th align="left">Document Type</th>
                         <th align="left">Description</th>
-                        <th/>
+                        <th />
                     </tr>
                     {documentData &&
                     documentData?.map(document => (
                             <tr>
-                                <td>{document?.documentTypeId}</td>
-                                <td>{document?.description}</td>
+                                <td>{document.documentTypeId}</td>
+                                <td>{document.description}</td>
                                 <td align="right">
                   <span
                           className="material-icons-round font-danger cursor-pointer"
@@ -331,16 +332,17 @@ const ApplicationDocumentStep = () => {
                             <div className="document-upload-popup-container">
                                 <span>Document Type</span>
                                 <ReactSelect
+                                        className="react-select-container"
+                                        classNamePrefix="react-select"
                                         placeholder="Select"
                                         options={documentTypeOptions}
                                         value={documentType}
                                         onChange={handleDocumentChange}
-                                        searchable={false}
                                 />
                                 <span>Please upload your documents here</span>
                                 <FileUpload
                                         isProfile={false}
-                                        fileName={fileData?.name ?? 'Browse'}
+                                        fileName={fileData.name ?? 'Browse'}
                                         handleChange={onUploadClick}
                                 />
                                 <span>Description</span>

@@ -1,4 +1,5 @@
 import { Provider } from 'react-redux';
+import 'react-datepicker/dist/react-datepicker.css';
 import Notifications from 'react-notify-toast';
 import ReactTooltip from 'react-tooltip';
 import { PersistGate } from 'redux-persist/integration/react';

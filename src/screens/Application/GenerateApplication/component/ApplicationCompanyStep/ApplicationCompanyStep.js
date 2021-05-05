@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import ReactSelect from 'react-dropdown-select';
+import ReactSelect from 'react-select';
 import Input from '../../../../../common/Input/Input';
 import './ApplicationCompanyStep.scss';
 import {
@@ -86,7 +86,7 @@ const ApplicationCompanyStep = () => {
     }, [companyState]);
 
     useEffect(() => {
-         setSelectedDebtorId(companyState?.debtorId?.[0]?.value);
+         setSelectedDebtorId(companyState?.debtorId?.value);
     }, [companyState?.debtorId]);
 
     const changeEntityType = useMemo(
@@ -258,11 +258,11 @@ const ApplicationCompanyStep = () => {
 
     const handleSelectInputChange = useCallback(
             data => {
-                updateSingleCompanyState(data[0]?.name, data);
-                if (data[0]?.name==='country') {
+                updateSingleCompanyState(data?.name, data);
+                if (data?.name==='country') {
                     let showDropDownInput = true;
 
-                    switch (data[0]?.value) {
+                    switch (data?.value) {
                         case 'AUS':
                             dispatch(updateEditApplicationField('company', 'state', []));
                             setStateValue(australianStates);
@@ -277,10 +277,10 @@ const ApplicationCompanyStep = () => {
                             break;
                     }
                     setIsAusOrNew(showDropDownInput);
-                } else if (data[0]?.name ==='entityType' && partners.length!==0) {
+                } else if (data?.name ==='entityType' && partners.length!==0) {
                     setShowConfirmModal(true);
                 } else {
-                    dispatch(updateEditApplicationField('company', data[0]?.name, data));
+                    dispatch(updateEditApplicationField('company', data?.name, data));
                 }
             },
             [
@@ -296,7 +296,7 @@ const ApplicationCompanyStep = () => {
             async data => {
                 try {
                     handleSelectInputChange(data);
-                    const response = await getApplicationCompanyDataFromDebtor(data[0]?.value);
+                    const response = await getApplicationCompanyDataFromDebtor(data?.value);
                     if (response) {
                         updateCompanyState(response);
                     }
@@ -392,9 +392,9 @@ const ApplicationCompanyStep = () => {
                                         placeholder={input.placeholder}
                                         value={
                                             input.name==='state'
-                                                    ? (!isAusOrNew && companyState?.[input.name]?.[0]?.label) ||
-                                                    companyState[input.name]
-                                                    :companyState[input.name]
+                                                    ? (!isAusOrNew && companyState?.[input.name]?.label) ||
+                                                    companyState[input?.name]
+                                                    :companyState[input?.name]
                                         }
                                         onChange={handleTextInputChange}
                                 />
@@ -404,9 +404,9 @@ const ApplicationCompanyStep = () => {
                         component = (
                                 <Input
                                         type="text"
-                                        name={input.name}
+                                        name={input?.name}
                                         placeholder={input.placeholder}
-                                        value={companyState[input.name]}
+                                        value={companyState[input?.name]}
                                         onChange={handleTextInputChange}
                                         onKeyDown={handleSearchTextInputKeyDown}
                                 />
@@ -416,10 +416,10 @@ const ApplicationCompanyStep = () => {
                         component = (
                                 <Input
                                         type="text"
-                                        name={input.name}
+                                        name={input?.name}
                                         placeholder={input.placeholder}
                                         onKeyDown={handleEntityNameSearch}
-                                        value={companyState?.entityName?.[0]?.label}
+                                        value={companyState?.entityName?.label}
                                         onChange={handleEntityChange}
                                 />
                         );
@@ -431,11 +431,13 @@ const ApplicationCompanyStep = () => {
                         }
                         component = (
                                 <ReactSelect
+                                        className="react-select-container"
+                                        classNamePrefix="react-select"
                                         placeholder={input.placeholder}
-                                        name={input.name}
-                                        options={input.data}
-                                        searchable
-                                        values={companyState[input.name]}
+                                        name={input?.name}
+                                        options={input?.data}
+                                        isSearchable
+                                        value={companyState?.[input?.name]}
                                         onChange={handleOnChange}
                                 />
                         );
@@ -445,12 +447,12 @@ const ApplicationCompanyStep = () => {
                         return null;
                 }
                 return (
-                        <React.Fragment key={input.label}>
-                            <span>{input.label}</span>
+                        <React.Fragment key={input?.label}>
+                            <span>{input?.label}</span>
                             <div>
                                 {component}
-                                {companyState?.errors?.[input.name] && (
-                                        <div className="ui-state-error">{companyState?.errors?.[input.name]}</div>
+                                {companyState?.errors?.[input?.name] && (
+                                        <div className="ui-state-error">{companyState?.errors?.[input?.name]}</div>
                                 )}
                             </div>
                         </React.Fragment>
@@ -501,7 +503,7 @@ const ApplicationCompanyStep = () => {
                                             />
                                     )
                             )}
-                            {entityNameSearchDropDownData.error && (
+                            {entityNameSearchDropDownData?.error && (
                                     <>
                                         <div className="application-entity-name-modal-retry-button">
                                             {entityNameSearchDropDownData?.errorMessage}

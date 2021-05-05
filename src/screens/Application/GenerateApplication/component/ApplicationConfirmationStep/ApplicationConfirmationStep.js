@@ -394,7 +394,7 @@ const ApplicationConfirmationStep = () => {
                 return (
                         <>
                           <span>{detail?.title}</span>
-                          <span className="detail-value">{detail?.value[0]?.label}</span>
+                          <span className="detail-value">{detail?.value?.label}</span>
                         </>
                 );
               case 'ifYesText':
@@ -456,7 +456,7 @@ const ApplicationConfirmationStep = () => {
                         </>
                 );
               case 'array':
-                return detail.data.map(elem => elem.map(getConfirmationComponentFromType));
+                return detail?.data?.map(elem => elem.map(getConfirmationComponentFromType));
               default:
                 return null;
             }
