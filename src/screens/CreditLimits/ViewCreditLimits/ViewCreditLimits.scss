@@ -14,12 +14,10 @@
   }
 
   > .value {
-    display: flex;
-    align-items: center;
     width: 70%;
     min-height: 32px;
     min-width: 170px;
-    padding: 2px 5px 2px 8px;
+    padding: 6px 8px;
     word-break: break-all;
     border: 1px solid $border-color;
     border-radius: 5px;
