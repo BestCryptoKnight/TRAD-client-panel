@@ -30,6 +30,7 @@
   font: $h4 $font-medium;
   color: $primary-color;
   border-bottom: 1px solid $border-color;
+  text-transform: capitalize;
 
    > div {
     display: flex;

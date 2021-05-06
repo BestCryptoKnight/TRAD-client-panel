@@ -23,8 +23,8 @@
   color: $field-color;
   cursor: pointer;
 
-  >span:first-child {
-    opacity: 50%;
+  > span:first-child {
+    opacity: 0.5;
   }
 
   > span:last-child {

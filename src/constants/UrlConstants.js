@@ -46,7 +46,9 @@ export const CREDIT_LIMITS_URLS = {
 };
 
 export const EMPLOYEE_URLS = {
-  EMPLOYEE_LIST_URL: `${BASE_URL}client/user/`
+  EMPLOYEE_LIST_URL: `${BASE_URL}client/user/`,
+  EMPLOYEE_COLUMN_LIST: `${BASE_URL}client/user/column-name/`,
+  EMPLOYEE_UPDATE_COLUMN_LIST: `${BASE_URL}client/user/column-name/`
 }
 
 export const COMPANY_PROFILE_URL = {

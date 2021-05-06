@@ -40,15 +40,15 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
       }
 
     case CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_COLUMN_LIST_ACTION:
-     const temp = {
+     const columnList = {
        ...state?.creditLimitsColumnList
      };
      const {type, name, value} = action?.data;
-     temp[`${type}`] = temp[`${type}`].map(e =>
+     columnList[`${type}`] = columnList[`${type}`].map(e =>
      e.name === name ? {...e, isChecked: value} : e);
      return {
        ...state,
-       creditLimitsColumnList: temp
+       creditLimitsColumnList: columnList
      }
 
     case CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST_ACTION:

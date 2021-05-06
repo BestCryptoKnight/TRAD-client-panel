@@ -88,7 +88,6 @@ export const saveCreditLimitColumnList = ({creditLimitsColumnList = {}, isReset 
            data: creditLimitsColumnList
          })
           successNotification('Columns updated successfully.');
-
       }
     } catch (e) {
       if(e.response && e.response.data) {

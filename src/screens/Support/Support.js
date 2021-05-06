@@ -44,8 +44,8 @@ const Support = () => {
     ],[supportDetails])
     return(<>
             <div className="page-header-name mt-20">Support Details</div>
-        <div className="common-white-container support-grid">
-            {supportDetails ? INPUT.map(input => <><div className="title">{input.title}</div>
+        <div className={`common-white-container just-center ${Object.entries(supportDetails).length > 0 && 'support-grid'}`}>
+            {Object.entries(supportDetails).length > 0 ? INPUT.map(input => <><div className="title">{input.title}</div>
                 <div>{input.value ?? '-'}</div></>) : <Loader/> }
         </div>
     </>)
