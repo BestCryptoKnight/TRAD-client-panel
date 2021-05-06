@@ -117,3 +117,25 @@ export const getCreditLimitsFilter = () => {
     }
   }
 }
+
+export const getCreditLimitsDetails = id => {
+  return async dispatch => {
+    try {
+      const response = await CreditLimitsApiService.getCreditLimitsDetails(id);
+      if (response?.data?.status==='SUCCESS') {
+        dispatch({
+          type: CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA,
+          data: response.data.data
+        })
+      }
+    } catch (e) {
+      if(e.response && e.response.data) {
+        if(e.response.data.status === undefined) {
+          errorNotification('It seems like server is down, Please try again later.');
+        } else if(e.response.data.messageCode) {
+          errorNotification(e.response.data.message)
+        }
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ import Pagination from "../../../common/Pagination/Pagination";
 import Loader from "../../../common/Loader/Loader";
 import {
     changeCreditColumnList,
-    getCreditLimitColumnList, getCreditLimitsFilter,
+    getCreditLimitColumnList, getCreditLimitsDetails, getCreditLimitsFilter,
     getCreditLimitsList,
     saveCreditLimitColumnList
 } from "../redux/CreditLimitsAction";
@@ -238,12 +238,10 @@ const CreditLimitsList = () => {
 
     const onSelectCreditLimitRecord = useCallback(
             id => {
-                history.push(`/debtor/view/${id}`);
+               history.push(`credit-limits/details/${id}`)
             },
             [history]
     );
-
-    console.log({isLoading, docs, customFieldModal, filterModal});
 
     return <>
         <div className="page-header">
@@ -275,6 +273,8 @@ const CreditLimitsList = () => {
                                         tableClass="main-list-table"
                                         data={docs}
                                         headers={headers}
+                                        recordSelected={onSelectCreditLimitRecord}
+                                        recordActionClick={() => {}}
                                         rowClass="cursor-pointer"
                                         haveActions
                                 />

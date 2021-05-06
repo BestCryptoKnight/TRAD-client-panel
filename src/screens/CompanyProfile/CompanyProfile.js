@@ -1,14 +1,10 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import './CompanyProfile.scss';
-import Button from "../../common/Button/Button";
 import ReactSelect from "react-select";
 import Input from "../../common/Input/Input";
-import BigInput from "../../common/BigInput/BigInput";
-import IconButton from "../../common/IconButton/IconButton";
-import Table from "../../common/Table/Table";
-import Pagination from "../../common/Pagination/Pagination";
 import {useDispatch, useSelector} from "react-redux";
 import {getClientDetails} from "./redux/CompanyProfileAction";
+import Loader from "../../common/Loader/Loader";
 import CompanyProfilePolicies from "./CompanyProfilePolicies/CompanyProfilePolicies";
 
 const CompanyProfile = () => {
@@ -16,7 +12,7 @@ const CompanyProfile = () => {
 
     useEffect(() => {
         dispatch(getClientDetails())
-    },[])
+    }, [])
 
     const clientData = useSelector(({companyProfile}) => companyProfile?.clientDetail ?? {});
 
@@ -91,7 +87,7 @@ const CompanyProfile = () => {
             name: 'serviceManager',
             data: clientData?.serviceManagerId?.name
         }
-    ],[clientData])
+    ], [clientData])
 
     const getComponentFromType = useCallback(
             input => {
@@ -138,14 +134,22 @@ const CompanyProfile = () => {
     );
 
     return (<>
-    <div className="page-header">
-        <div className="page-header-name">
-            Company Profile
+        <div className="page-header">
+            <div className="page-header-name">
+                Company Profile
+            </div>
         </div>
-    </div>
-        <div className="common-white-container company-profile-container">
-            {INPUTS.map(getComponentFromType)}
-        </div>
+
+        {
+            Object.entries(clientData).length > 0 ?
+                    (
+                            <div className="common-white-container company-profile-container">
+                                {INPUTS.map(getComponentFromType)}
+                            </div>
+                    )
+                    :<Loader/>
+        }
+
         <CompanyProfilePolicies/>
     </>)
 }

@@ -6,6 +6,7 @@ import {
 
 const initialCreditLimitsListState = {
   creditLimitList: { docs: [], headers:[], total: 0, limit: 15, page: 1, pages: 1, isLoading: true },
+  selectedCreditLimitData: {},
   creditLimitsColumnList: {},
   creditLimitsDefaultColumnList: {},
   creditLimitsFilterList: {
@@ -18,7 +19,6 @@ const initialCreditLimitsListState = {
 export const creditLimits = (state = initialCreditLimitsListState, action) => {
   switch (action.type) {
     case CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION:
-      console.log(action.data);
       return {
         ...state,
         creditLimitList: {
@@ -67,6 +67,12 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
           ...state.creditLimitsFilterList,
           dropdownData
         }
+      }
+
+    case CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA:
+      return {
+        ...state,
+        selectedCreditLimitData: action.data
       }
 
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:

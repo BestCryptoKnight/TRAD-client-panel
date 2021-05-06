@@ -62,7 +62,8 @@ export const APPLICATION_URLS = {
 export const CREDIT_LIMITS_URLS = {
   CREDIT_LIMITS_LIST_URL: `${BASE_URL}debtor/`,
   CREDIT_LIMITS_COLUMN_LIST: `${BASE_URL}debtor/column-name/`,
-  CREDIT_LIMITS_FILTER: `${BASE_URL}debtor/entity-list/`
+  CREDIT_LIMITS_FILTER: `${BASE_URL}debtor/entity-list/`,
+  VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}debtor/details/`
 };
 
 export const EMPLOYEE_URLS = {
