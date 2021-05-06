@@ -146,8 +146,8 @@ const CompanyProfilePolicies = () => {
                                                     tableClass="white-header-table"
                                                     data={docs}
                                                     headers={headers}
-                                                    recordSelected={() => console.log('Record selected')}
-                                                    recordActionClick={() => console.log('Record action clicked')}
+                                                    recordSelected={() => {}}
+                                                    recordActionClick={() => {}}
                                                     haveActions/>
                                             </div>
                                             <Pagination
