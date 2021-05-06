@@ -136,11 +136,11 @@ const GenerateApplication = () => {
     dispatch(addPersonDetail('individual'));
   }, []);
 
-  const onNextClick = useCallback(() => {
+  const onNextClick = useCallback(async () => {
     const data = editApplicationData?.[FILTERED_STEPS?.[applicationStage ?? 0]?.name];
     switch (FILTERED_STEPS?.[applicationStage ?? 0]?.name) {
       case 'company':
-        return applicationCompanyStepValidations(dispatch, data, editApplicationData);
+        return await applicationCompanyStepValidations(dispatch, data, editApplicationData);
       case 'partners':
         return applicationPersonStepValidation(dispatch, data, editApplicationData);
       case 'creditLimit':

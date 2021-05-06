@@ -3,7 +3,7 @@ import {
   updateEditApplicationData,
 } from '../../../../redux/ApplicationAction';
 
-export const applicationCompanyStepValidations = (dispatch, data, editApplicationData) => {
+export const applicationCompanyStepValidations = async (dispatch, data, editApplicationData) => {
   const errors = {};
   let validated = true;
   if (!data.abn || data.abn.trim().length <= 0) {
@@ -18,7 +18,7 @@ export const applicationCompanyStepValidations = (dispatch, data, editApplicatio
     validated = false;
     errors.acn = 'Please enter valid ACN number before continue';
   }
-  if (!data.entityName || data.entityName?.[0]?.value?.length <= 0) {
+  if (!data.entityName || data.entityName?.value?.length <= 0) {
     validated = false;
     errors.entityName = 'Please enter entity name';
   }
@@ -83,7 +83,7 @@ export const applicationCompanyStepValidations = (dispatch, data, editApplicatio
       isActive: typeof isActive === 'string' ? isActive === 'Active' : isActive,
       abn,
       acn,
-      entityName: entityName?.label,
+      entityName: entityName?.label ?? entityName?.[0]?.value,
       tradingName,
       contactNumber: phoneNumber,
       outstandingAmount,
@@ -104,11 +104,13 @@ export const applicationCompanyStepValidations = (dispatch, data, editApplicatio
     };
 
     try {
-      dispatch(saveApplicationStepDataToBackend(finalData));
+     await dispatch(saveApplicationStepDataToBackend(finalData));
+     validated = true;
     } catch (e) {
+      console.log('in catch',e)
       /**/
+      validated = false;
     }
-    validated = true;
   }
   dispatch(updateEditApplicationData('company', { errors }));
   return validated;

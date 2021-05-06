@@ -4,6 +4,7 @@ import {
   CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS, CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
   CREDIT_LIMITS_REDUX_CONSTANTS,
 } from './CreditLimitsReduxConstants';
+import {displayErrors} from "../../../helpers/ErrorNotifyHelper";
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
@@ -16,13 +17,7 @@ export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
         });
       }
     } catch (e) {
-      if (e.response && e.response.data) {
-        if (e.response.data.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        } else {
-          errorNotification('Internal server error');
-        }
-      }
+     displayErrors(e)
     }
   };
 };

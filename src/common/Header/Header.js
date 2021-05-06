@@ -221,7 +221,7 @@ const Header = () => {
     }
   }, []);
 
-  const handleChange = e => {
+  const handleChange = useCallback(e => {
     e.persist();
     if (e.target.files && e.target.files.length > 0) {
       const fileExtension = ['jpeg', 'jpg', 'png'];
@@ -242,7 +242,7 @@ const Header = () => {
         setFile(e.target.files[0]);
       }
     }
-  };
+  }, [setFile, setFileName]);
 
   const [notificationDrawer, setNotificationDrawer] = useState(false);
   const openNotificationDrawer = useCallback(value =>

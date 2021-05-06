@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import './Accordion.scss';
+import {AccordionContext} from "./Accordion";
 
 const AccordionItem = props => {
   const {
+    index,
     className,
     headerClass,
     prefix,
@@ -20,13 +22,15 @@ const AccordionItem = props => {
   const prefixClassName = `material-icons-round ${prefixClass}`;
   const suffixClassName = `material-icons-round ${suffixClass}`;
   const accordionBodyClassName = `accordion-body-container ${accordionBodyClass}`;
-  const [activeAccordion, setActiveAccordion] = useState(false);
 
   const content = useRef(null);
+  const { openIndex, setOpenIndex } = React.useContext(AccordionContext);
+  const activeAccordion = React.useMemo(() => openIndex === index, [openIndex, index]);
+  const onClickAccordionItem = React.useCallback(() => setOpenIndex(!activeAccordion ? index : -1), [
+    activeAccordion,
+    setOpenIndex,
+  ]);
 
-  const onClickAccordionItem = () => {
-    setActiveAccordion(e => !e);
-  };
   return (
     <div className={accordionClass}>
       <div className={headerClassName} onClick={onClickAccordionItem}>

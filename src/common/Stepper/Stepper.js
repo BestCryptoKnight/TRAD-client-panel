@@ -12,7 +12,7 @@ const Stepper = props => {
   const applicationDetail = useSelector(({ application }) => application?.editApplication ?? {});
 
   const entityType = useMemo(
-          () => applicationDetail?.company?.entityType[0]?.value ?? 'PROPRIETARY_LIMITED',
+          () => applicationDetail?.company?.entityType?.value ?? 'PROPRIETARY_LIMITED',
           [applicationDetail?.company?.entityType]
   );
 
@@ -35,8 +35,9 @@ const Stepper = props => {
     backClick();
   }, [activeStep, setActiveStep, backClick]);
 
-  const onClickNextButton = useCallback(() => {
-    if (nextClick() && activeStep < steps.length - 1) {
+  const onClickNextButton = useCallback(async () => {
+    const canGoNext = await nextClick();
+    if (canGoNext && activeStep < steps.length - 1) {
       onChangeIndex(activeStep + 1);
       setActiveStep(prevState => prevState + 1);
     }

@@ -1,6 +1,7 @@
-import {errorNotification, successNotification} from '../../../common/Toast';
 import EmployeeApiService from '../services/EmployeeApiService'
+import {errorNotification, successNotification} from '../../../common/Toast';
 import {EMPLOYEE_COLUMN_LIST_REDUX_CONSTANTS, EMPLOYEE_REDUX_CONSTANTS} from "./EmployeeReduxConstants";
+import {displayErrors} from "../../../helpers/ErrorNotifyHelper";
 
 export const getEmployeeList = (params = {page: 1, limit: 15}) => {
     return async dispatch => {
@@ -12,14 +13,9 @@ export const getEmployeeList = (params = {page: 1, limit: 15}) => {
                     data: response.data.data
                 })
             }
-        } catch (e) {
-            if (e.response && e.response.data) {
-                if (e.response.data.status===undefined) {
-                    errorNotification('It seems like server is down, Please try again later')
-                } else {
-                    errorNotification('Internal server error')
-                }
-            }
+        }
+        catch (e) {
+           displayErrors(e)
         }
     }
 }

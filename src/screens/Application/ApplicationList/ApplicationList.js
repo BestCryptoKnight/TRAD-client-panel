@@ -64,7 +64,7 @@ const ApplicationList = () => {
     const applicationDefaultColumnNameList = useSelector(
             ({application}) => application?.applicationDefaultColumnNameList ?? {}
     );
-    const {total, pages, page, limit, docs, headers} = useMemo(() => applicationListWithPageData, [
+    const {total, pages, page, limit, docs, headers ,isLoading} = useMemo(() => applicationListWithPageData, [
         applicationListWithPageData,
     ]);
     const {dropdownData} = useSelector(({application}) => application?.applicationFilterList ?? {});
@@ -461,7 +461,8 @@ const ApplicationList = () => {
                         <Button title="Generate" buttonType="success" onClick={generateApplicationClick}/>
                     </div>
                 </div>
-                {docs ? (
+                {!isLoading && docs ? (
+                        docs?.length > 0 ? (
                         <>
                             <div className="common-list-container">
                                 <Table
@@ -483,7 +484,10 @@ const ApplicationList = () => {
                                     pageActionClick={pageActionClick}
                                     onSelectLimit={onSelectLimit}
                             />
-                        </>
+                        </>)
+                                : (
+                        <div className="no-record-found">No record found</div>
+                    )
                 ):(
                         <Loader/>
                 )}

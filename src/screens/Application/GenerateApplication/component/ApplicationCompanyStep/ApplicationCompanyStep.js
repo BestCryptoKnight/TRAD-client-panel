@@ -15,6 +15,7 @@ import Loader from '../../../../../common/Loader/Loader';
 import ApplicationEntityNameTable from '../components/ApplicationEntityNameTable/ApplicationEntityNameTable';
 import Modal from '../../../../../common/Modal/Modal';
 import IconButton from '../../../../../common/IconButton/IconButton';
+import {errorNotification} from "../../../../../common/Toast";
 
 export const DRAWER_ACTIONS = {
     SHOW_DRAWER: 'SHOW_DRAWER',
@@ -468,7 +469,9 @@ const ApplicationCompanyStep = () => {
     );
 
     useEffect(() => {
-        dispatch(getApplicationCompanyDropDownData());
+        dispatch(getApplicationCompanyDropDownData()).catch(e => {
+            errorNotification('Error during fetching data');
+        });
         return () => dispatch(updateEditApplicationData('company', {errors: {}}));
     }, []);
 

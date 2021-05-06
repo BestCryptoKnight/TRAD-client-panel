@@ -1,7 +1,7 @@
-import {errorNotification, successNotification} from "../../../common/Toast";
 import CompanyProfileApiService from "../services/CompanyProfileApiService";
+import {errorNotification, successNotification} from "../../../common/Toast";
 import {CLIENT_REDUX_CONSTANTS} from "./CompanyProfileReduxConstants";
-import {COMPANY_PROFILE_URL} from "../../../constants/UrlConstants";
+import {displayErrors} from "../../../helpers/ErrorNotifyHelper";
 
 export const getClientDetails =  () => {
     return async dispatch => {
@@ -14,13 +14,7 @@ export const getClientDetails =  () => {
             })
             }
         } catch (e) {
-            if(e.response && e.response.data) {
-                if(e.response.data.status === undefined) {
-                    errorNotification('It seems like server is down, Please try again later.');
-                } else {
-                    errorNotification('Internal server error.')
-                }
-            }
+           displayErrors(e)
         }
     }
 }
