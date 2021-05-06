@@ -3,10 +3,9 @@ import {
   CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS, CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
   CREDIT_LIMITS_REDUX_CONSTANTS,
 } from './CreditLimitsReduxConstants';
-import {object} from "prop-types";
 
 const initialCreditLimitsListState = {
-  creditLimitList: { docs: [], total: 0, limit: 15, page: 1, pages: 1, isLoading: true },
+  creditLimitList: { docs: [], headers:[], total: 0, limit: 15, page: 1, pages: 1, isLoading: true },
   creditLimitsColumnList: {},
   creditLimitsDefaultColumnList: {},
   creditLimitsFilterList: {
@@ -18,7 +17,8 @@ const initialCreditLimitsListState = {
 
 export const creditLimits = (state = initialCreditLimitsListState, action) => {
   switch (action.type) {
-    case CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_USER_ACTION:
+    case CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION:
+      console.log(action.data);
       return {
         ...state,
         creditLimitList: {

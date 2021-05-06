@@ -18,9 +18,6 @@ import {useQueryParams} from "../../../hooks/GetQueryParamHook";
 import Modal from "../../../common/Modal/Modal";
 import ReactSelect from "react-select";
 import {useHistory} from "react-router-dom";
-import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
-import {saveApplicationColumnNameList} from "../../Application/redux/ApplicationAction";
 import {CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS} from "../redux/CreditLimitsReduxConstants";
 
 const CreditLimitsList = () => {
@@ -246,6 +243,8 @@ const CreditLimitsList = () => {
             [history]
     );
 
+    console.log({isLoading, docs, customFieldModal, filterModal});
+
     return <>
         <div className="page-header">
             <div className="page-header-name">Credit Limit List</div>
@@ -276,8 +275,6 @@ const CreditLimitsList = () => {
                                         tableClass="main-list-table"
                                         data={docs}
                                         headers={headers}
-                                        recordSelected={() => onSelectCreditLimitRecord}
-                                        recordActionClick={() => console.log('Record action clicked')}
                                         rowClass="cursor-pointer"
                                         haveActions
                                 />

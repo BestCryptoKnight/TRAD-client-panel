@@ -50,7 +50,9 @@ export const EMPLOYEE_URLS = {
 }
 
 export const COMPANY_PROFILE_URL = {
-  COMPANY_PROFILE_URL: `${BASE_URL}client/`
+  COMPANY_PROFILE_URL: `${BASE_URL}client/`,
+  COMPANY_PROFILE_POLICY_LIST: `${BASE_URL}policy/`,
+  COMPANY_PROFILE_POLICY_COLUMN_LIST: `${BASE_URL}policy/column-name/`
 }
 
 export const SUPPORT_URLS = {

@@ -4,7 +4,6 @@ import {
   CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS, CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
   CREDIT_LIMITS_REDUX_CONSTANTS,
 } from './CreditLimitsReduxConstants';
-import ApiService from "../../../services/api-service/ApiService";
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
@@ -12,8 +11,8 @@ export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
       const response = await CreditLimitsApiService.getAllCreditLimitsList(params);
       if (response.data.status === 'SUCCESS') {
         dispatch({
-          type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_USER_ACTION,
-          data: response.data.data,
+          type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -55,7 +54,7 @@ export const getCreditLimitColumnList = () => {
 }
 
 export const changeCreditColumnList = data => {
-  return async dispatch => {
+  return dispatch => {
    dispatch({
      type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_COLUMN_LIST_ACTION,
      data
@@ -77,7 +76,6 @@ export const saveCreditLimitColumnList = ({creditLimitsColumnList = {}, isReset 
           columns: [...defaultFields, ...customFields],
           isReset: false
         }
-        console.log('data in if', data);
         if(data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
          throw Error()

@@ -9,6 +9,7 @@ import Table from "../../common/Table/Table";
 import Pagination from "../../common/Pagination/Pagination";
 import {useDispatch, useSelector} from "react-redux";
 import {getClientDetails} from "./redux/CompanyProfileAction";
+import CompanyProfilePolicies from "./CompanyProfilePolicies/CompanyProfilePolicies";
 
 const CompanyProfile = () => {
     const dispatch = useDispatch();
@@ -145,19 +146,7 @@ const CompanyProfile = () => {
         <div className="common-white-container company-profile-container">
             {INPUTS.map(getComponentFromType)}
         </div>
-        <div className="common-white-container">
-            <div className="page-header">
-                <div className="page-header-name">Policies</div>
-                <div className="buttons-row">
-                    <BigInput prefix="search" prefixClass="font-placeholder" placeholder="Search here" className="search"/>
-                    <IconButton buttonType="primary" title="format_line_spacing"/>
-                </div>
-            </div>
-            <div className="common-list-container">
-                <Table />
-                <Pagination/>
-            </div>
-        </div>
+        <CompanyProfilePolicies/>
     </>)
 }
 
