@@ -37,11 +37,11 @@ const ViewCreditLimits = (factory, deps) => {
         },
         {
             label: 'Brokers Commission',
-            value: ''
+            value: creditLimitsDetails?.commission
         },
         {
             label: 'Phone',
-            value: ''
+            value: creditLimitsDetails?.contactNumber
         },
         {
             label: 'ABN',
