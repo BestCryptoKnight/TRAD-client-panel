@@ -1,3 +1,4 @@
+
 @import "../../index";
 
 .table-class {
@@ -77,9 +78,9 @@
     right: 0;
     color: $placeholder-color;
 
-      .material-icons-round:hover {
-        color: $field-color;
-      }
+    .material-icons-round:hover {
+      color: $field-color;
+    }
   }
 
   .fixed-action-menu-clicked {
@@ -103,25 +104,63 @@
     background-color: $background-color;
   }
 }
-.contacts-grid {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 20px 10px;
-  font: $subtitle $font-medium;
-  color: $primary-color;
-  padding: 20px;
-  overflow: hidden;
-
-  .title {
-    font-family: $font-regular;
-    color: $field-color;
-  }
-}
-
 
 .white-header-table {
   overflow-x: auto;
   th {
     background-color: white;
   }
+}
+
+.task-row{
+  background-color: #ffffff !important;
+  border-bottom: 2px solid $border-color;
+}
+.task-completed-row{
+  background-color: $background-color !important;
+}
+.task-priority-URGENT{
+  width: max-content;
+  padding: 5px 12px;
+  border-radius: 5px;
+  background: #FEEBEB 0% 0% no-repeat padding-box;
+  opacity: 1;
+  color:$error-color !important;
+  font-size: 12px;
+}
+.task-priority-LOW{
+  width: max-content;
+  padding: 5px 12px;
+  border-radius: 5px;
+  background: #E2E9F0 0% 0% no-repeat padding-box;
+  opacity: 1;
+  color:$primary-color !important;
+  font-size: 12px;
+}
+.task-priority-HIGH{
+  width: max-content;
+  padding: 5px 12px;
+  border-radius: 5px;
+  background: #FDF0E4 0% 0% no-repeat padding-box;
+  opacity: 1;
+  color:$secondary-color !important;
+  font-size: 12px;
+}
+.completedTask{
+  background-color: $background-color !important;
+  border-bottom: 2px solid $primary-color-1;
+}
+
+.table-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  max-width: 100px;
+}
+
+.table-checkbox-header {
+  width: 100px;
+  max-width: 100px;
+  text-align: center;
 }
