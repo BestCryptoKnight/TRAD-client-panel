@@ -141,7 +141,7 @@ const CompanyProfile = () => {
         </div>
 
         {
-            Object.entries(clientData).length > 0 ?
+            Object.entries(clientData)?.length > 0 ?
                     (
                             <div className="common-white-container company-profile-container">
                                 {INPUTS.map(getComponentFromType)}

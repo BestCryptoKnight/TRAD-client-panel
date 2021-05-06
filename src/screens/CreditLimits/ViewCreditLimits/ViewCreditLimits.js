@@ -133,7 +133,7 @@ const ViewCreditLimits = (factory, deps) => {
         </div>
         {creditLimitsDetails && (
                 <div className="common-white-container">
-                    {Object.entries(creditLimitsDetails).length > 0 ? (
+                    {Object.entries(creditLimitsDetails)?.length > 0 ? (
                             <div className="credit-limits-details">{INPUTS.map(detail => (
                                     <>
                                         <div className="title">{detail.label}</div>
