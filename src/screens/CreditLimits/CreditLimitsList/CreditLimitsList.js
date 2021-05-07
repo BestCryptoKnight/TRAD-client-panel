@@ -7,7 +7,7 @@ import Pagination from "../../../common/Pagination/Pagination";
 import Loader from "../../../common/Loader/Loader";
 import {
     changeCreditColumnList,
-    getCreditLimitColumnList, getCreditLimitsDetails, getCreditLimitsFilter,
+    getCreditLimitColumnList, getCreditLimitsFilter,
     getCreditLimitsList,
     saveCreditLimitColumnList
 } from "../redux/CreditLimitsAction";
