@@ -319,12 +319,26 @@ const CreditLimitsDocumentsTab = () => {
         }
     }, [documentList, selectedCheckBoxData]);
 
+    // on record limit changed
+    const onSelectLimit = useCallback(
+            newLimit => {
+                getDocumentList({page: 1, limit: newLimit});
+            },
+            [getDocumentList]
+    );
+
+    // on pagination changed
+    const pageActionClick = useCallback(
+            newPage => {
+                getDocumentList({page: newPage, limit})
+            }, [getDocumentList, limit]);
+
     useEffect(() =>{
         getDocumentList();
         dispatch(getCreditLimitsDocumentsColumnNamesList());
         dispatch(getCreditLimitsDocumentTypeList());
     },[getDocumentList])
-console.log({docs, headers});
+
     return(<>
         <div className="tab-content-header-row">
             <div className="tab-content-header">Documents</div>
@@ -363,6 +377,12 @@ console.log({docs, headers});
                 </div>
                 <Pagination
                         className="common-list-pagination"
+                        total={total}
+                        pages={pages}
+                        page={page}
+                        limit={limit}
+                        pageActionClick={pageActionClick}
+                        onSelectLimit={onSelectLimit}
                 />
         </>: <div className="no-record-found">No record found</div> ) : <Loader/>}
 
