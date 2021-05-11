@@ -11,7 +11,6 @@ import RadioButton from '../../../../../../common/RadioButton/RadioButton';
 import {
     changePersonType,
     getApplicationCompanyDataFromABNOrACN,
-    getApplicationCompanyDropDownData,
     getApplicationFilter,
     removePersonDetail,
     searchApplicationCompanyEntityName,
@@ -56,7 +55,6 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
             },
             [index]
     );
-    /* const companyState = useSelector(({ application }) => application?.editApplication?.company ?? {}); */
 
     const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
     const entityNameSearchDropDownData = useSelector(
@@ -64,11 +62,8 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
     );
     const partners = useSelector(({ application }) => application?.editApplication?.partners ?? []);
 
-    const { streetType, australianStates, countryList, newZealandStates } = useSelector(
-            ({ application }) => application?.companyData?.dropdownData ?? {}
-    );
-    const companyEntityType = useSelector(
-            ({ application }) => application?.applicationFilterList?.dropdownData?.companyEntityType ?? []);
+    const {companyEntityType ,streetType, australianStates, countryList, newZealandStates }  = useSelector(
+            ({ application }) => application?.applicationFilterList?.dropdownData ?? []);
 
     const [stateValue, setStateValue] = useState([]);
     const [isAusOrNew, setIsAusOrNew] = useState(false);
@@ -85,8 +80,8 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
     }, [partners?.[index]?.country]);
 
     useEffect(() => {
+        console.log('in useEffect application filter list call')
         dispatch(getApplicationFilter());
-        dispatch(getApplicationCompanyDropDownData());
     }, []);
 
     const titleDropDown = useMemo(() => {
@@ -447,12 +442,11 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
     const handleEntityChange = useCallback(
             event => {
                 const { name, value } = event.target;
-                const data = [
+                const data =
                     {
                         label: value,
                         value,
-                    },
-                ];
+                    };
                 updateSinglePersonState(name, data);
             },
             [updateSinglePersonState]

@@ -493,13 +493,19 @@ export const getApplicationDetailById = applicationId => {
     return async dispatch => {
         try {
             const response = await ApplicationApiServices.getApplicationDetail(applicationId);
-            if (response.data.status==='SUCCESS') {
+            dispatch({
+                type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_REQUEST_ACTION,
+            });
+            if (response?.data?.status==='SUCCESS') {
                 dispatch({
                     type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_ACTION,
                     data: response.data.data,
                 });
             }
         } catch (e) {
+            dispatch({
+                type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_FAIL_ACTION,
+            });
             displayErrors(e)
         }
     };

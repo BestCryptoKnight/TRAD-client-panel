@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'reac
 import {useDispatch, useSelector} from 'react-redux';
 import ReactSelect from 'react-select';
 import Input from '../../../../../common/Input/Input';
+import _ from 'lodash';
 import './ApplicationCompanyStep.scss';
 import {
     getApplicationCompanyDataFromABNOrACN, getApplicationCompanyDataFromDebtor,
@@ -72,6 +73,8 @@ const ApplicationCompanyStep = () => {
     const [wipeOutDetails, setWipeOutDetails] = useState(false);
     const [selectedDebtorId, setSelectedDebtorId] = useState('');
 
+    const [wipeOuts, setWipeOuts] = useState('');
+
     const [searchedEntityNameValue, setSearchedEntityNameValue] = useState('');
 
     const toggleConfirmationModal = useCallback(
@@ -99,6 +102,7 @@ const ApplicationCompanyStep = () => {
                     onClick: async () => {
                         try {
                             await dispatch(wipeOutPersonsAsEntityChange(selectedDebtorId, []));
+                            updateSingleCompanyState(wipeOuts?.name, wipeOuts);
                             setWipeOutDetails(true);
                             toggleConfirmationModal();
                         } catch (e) {
@@ -107,7 +111,7 @@ const ApplicationCompanyStep = () => {
                     },
                 },
             ],
-            [toggleConfirmationModal, wipeOutDetails, selectedDebtorId]
+            [toggleConfirmationModal, wipeOutDetails, selectedDebtorId,wipeOuts]
     );
 
     const INPUTS = useMemo(
@@ -116,6 +120,7 @@ const ApplicationCompanyStep = () => {
                     label: 'Debtor',
                     placeholder: 'Select',
                     type: 'select',
+                    isOr:true,
                     name: 'debtorId',
                     data: debtors,
                 },
@@ -127,17 +132,33 @@ const ApplicationCompanyStep = () => {
                     data: countryList,
                 },
                 {
-                    label: 'Trading Name',
-                    placeholder: 'Trading Name',
-                    type: 'text',
-                    name: 'tradingName',
-                    data: [],
-                },
-                {
                     label: 'ABN*',
                     placeholder: '01234',
                     type: 'search',
+                    isOr:true,
                     name: 'abn',
+                    data: [],
+                },
+                {
+                    label: 'Phone Number',
+                    placeholder: '1234567890',
+                    type: 'text',
+                    name: 'phoneNumber',
+                    data: [],
+                },
+                {
+                    label: 'Entity Name*',
+                    placeholder: 'Enter Entity',
+                    type: 'entityName',
+                    isOr:true,
+                    name: 'entityName',
+                    data: {},
+                },
+                {
+                    label: 'Property',
+                    placeholder: 'Property',
+                    type: 'text',
+                    name: 'property',
                     data: [],
                 },
                 {
@@ -148,17 +169,10 @@ const ApplicationCompanyStep = () => {
                     data: [],
                 },
                 {
-                    label: 'Entity Name*',
-                    placeholder: 'Enter Entity',
-                    type: 'entityName',
-                    name: 'entityName',
-                    data: [],
-                },
-                {
-                    label: 'Phone Number',
-                    placeholder: '1234567890',
+                    label: 'Trading Name',
+                    placeholder: 'Trading Name',
                     type: 'text',
-                    name: 'phoneNumber',
+                    name: 'tradingName',
                     data: [],
                 },
                 {
@@ -173,13 +187,6 @@ const ApplicationCompanyStep = () => {
                     placeholder: '$0000',
                     type: 'text',
                     name: 'outstandingAmount',
-                    data: [],
-                },
-                {
-                    label: 'Property',
-                    placeholder: 'Property',
-                    type: 'text',
-                    name: 'property',
                     data: [],
                 },
                 {
@@ -259,8 +266,8 @@ const ApplicationCompanyStep = () => {
 
     const handleSelectInputChange = useCallback(
             data => {
-                updateSingleCompanyState(data?.name, data);
                 if (data?.name==='country') {
+                    updateSingleCompanyState(data?.name, data);
                     let showDropDownInput = true;
 
                     switch (data?.value) {
@@ -280,7 +287,9 @@ const ApplicationCompanyStep = () => {
                     setIsAusOrNew(showDropDownInput);
                 } else if (data?.name ==='entityType' && partners.length!==0) {
                     setShowConfirmModal(true);
+                    setWipeOuts(data);
                 } else {
+                    updateSingleCompanyState(data?.name, data);
                     dispatch(updateEditApplicationField('company', data?.name, data));
                 }
             },
@@ -291,6 +300,7 @@ const ApplicationCompanyStep = () => {
                 newZealandStates,
                 australianStates,
                 setIsAusOrNew,
+                setWipeOuts
             ]
     );
     const handleDebtorSelectChange = useCallback(
@@ -344,12 +354,10 @@ const ApplicationCompanyStep = () => {
 
     const handleEntityChange = useCallback(event => {
         const {name, value} = event.target;
-        const data = [
-            {
+        const data = {
                 label: value,
                 value,
-            },
-        ];
+            };
         dispatch(updateEditApplicationField('company', name, data));
     }, []);
 
@@ -406,10 +414,12 @@ const ApplicationCompanyStep = () => {
                                 <Input
                                         type="text"
                                         name={input?.name}
+                                        borderClass={input?.isOr && 'is-or-container'}
+                                        suffix={input?.name ==='abn' ?<span className="material-icons">search</span>:''}
                                         placeholder={input.placeholder}
                                         value={companyState[input?.name]}
                                         onChange={handleTextInputChange}
-                                        onKeyDown={handleSearchTextInputKeyDown}
+                                        onKeyDown={_.debounce(handleSearchTextInputKeyDown, 1000)}
                                 />
                         );
                         break;
@@ -418,7 +428,9 @@ const ApplicationCompanyStep = () => {
                                 <Input
                                         type="text"
                                         name={input?.name}
+                                        suffix={<span className="material-icons">search</span>}
                                         placeholder={input.placeholder}
+                                        borderClass={input?.isOr && 'is-or-container'}
                                         onKeyDown={handleEntityNameSearch}
                                         value={companyState?.entityName?.label}
                                         onChange={handleEntityChange}
@@ -432,7 +444,7 @@ const ApplicationCompanyStep = () => {
                         }
                         component = (
                                 <ReactSelect
-                                        className="react-select-container"
+                                        className={`${input?.isOr && 'is-or-container'} 'react-select-container'`}
                                         classNamePrefix="react-select"
                                         placeholder={input.placeholder}
                                         name={input?.name}

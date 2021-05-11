@@ -17,6 +17,7 @@ import ApplicationDocumentsAccordion from './component/ApplicationDocumentsAccor
 import ApplicationLogsAccordion from './component/ApplicationLogsAccordion';
 import {errorNotification} from '../../../common/Toast';
 import Loader from "../../../common/Loader/Loader";
+import {APPLICATION_REDUX_CONSTANTS} from "../redux/ApplicationReduxConstants";
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',
@@ -52,9 +53,13 @@ const ViewApplication = () => {
   );
   const { isLoading } = useSelector(({ application }) => application?.viewApplication ?? {})
 
-  useEffect(() => {
-    dispatch(getApplicationDetailById(id));
-    return () => dispatch(resetApplicationDetail());
+  useEffect( () => {
+     dispatch(getApplicationDetailById(id));
+    return () => {dispatch(resetApplicationDetail());
+      dispatch({
+        type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.VIEW_APPLICATION_DATA_RESET,
+      });
+    }
   }, []);
 
   const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);

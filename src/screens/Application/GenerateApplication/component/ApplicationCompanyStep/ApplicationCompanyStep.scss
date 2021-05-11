@@ -46,3 +46,26 @@
     cursor: default!important;
   }
 }
+.application-entity-name-modal-retry-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  font: $subtitle $font-regular;
+  color: $primary-color;
+}
+.is-or-container{
+  position: relative;
+}
+.is-or-container::after{
+  content: 'or';
+  position: absolute;
+  bottom: -16px;
+  left: calc(50% - 8px);
+  font: $subtitle $font-medium;
+  color: $primary-color;
+}
+.material-icons{
+  color: $placeholder-color;
+}

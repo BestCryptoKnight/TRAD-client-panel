@@ -23,6 +23,7 @@ const initialApplicationList = {
       debtors: [],
       streetType: [],
       australianStates: [],
+      newZealandStates: [],
       entityType: [],
       applicationStatus: [],
       companyEntityType: [],
@@ -274,8 +275,8 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
-          [action.stepName]: { ...state.editApplication[action.stepName], ...action.data },
+          ...state?.editApplication,
+          [action.stepName]: { ...state?.editApplication[action.stepName], ...action.data },
         },
       };
     }
@@ -418,6 +419,30 @@ export const application = (state = initialApplicationList, action) => {
     }
 
     // View Application
+
+    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_REQUEST_ACTION:
+      return {
+        ...state,
+        viewApplication: {
+          ...state?.viewApplication,
+          isLoading: true,
+        }
+      }
+    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_FAIL_ACTION:
+      return {
+        ...state,
+        viewApplication: {
+          ...state?.viewApplication,
+          isLoading: false,
+        },
+      };
+    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.VIEW_APPLICATION_DATA_RESET:
+      return {
+        ...state,
+        viewApplication: {
+          ...initialApplicationList.viewApplication,
+        },
+      };
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_ACTION:
       return {

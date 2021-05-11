@@ -287,7 +287,7 @@ const ApplicationList = () => {
             data: applicationDefaultColumnNameList,
         });
         toggleCustomField();
-    }, [toggleCustomField]);
+    }, [toggleCustomField,applicationDefaultColumnNameList]);
 
     const customFieldsModalButtons = useMemo(
             () => [
@@ -303,7 +303,7 @@ const ApplicationList = () => {
     );
 
     const {defaultFields, customFields} = useMemo(
-            () => applicationColumnNameList || {defaultFields: [], customFields: []},
+            () => applicationColumnNameList ?? {defaultFields: [], customFields: []},
             [applicationColumnNameList]
     );
 
@@ -358,7 +358,6 @@ const ApplicationList = () => {
         });
         getApplicationsByFilter({...params, ...filters});
         dispatch(getApplicationColumnNameList());
-
     }, []);
 
     const generateApplicationClick = useCallback(() => {
