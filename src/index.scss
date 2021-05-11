@@ -32,8 +32,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active  {
-  font: $title $font-regular;
-  transition: background-color 5000s;
+  font: $title $font-regular!important;
+  transition: background-color 5000s!important;
   -webkit-text-fill-color: $field-color !important;
 }
 

@@ -1,141 +1,562 @@
 import {errorNotification, successNotification} from '../../../common/Toast';
 import CreditLimitsApiService from '../services/CreditLimitsApiService';
 import {
-  CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS, CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
-  CREDIT_LIMITS_REDUX_CONSTANTS,
+    CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS,
+    CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS,
+    CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS,
+    CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
+    CREDIT_LIMITS_REDUX_CONSTANTS,
+    CREDIT_LIMITS_TASKS_REDUX_CONSTANTS,
 } from './CreditLimitsReduxConstants';
 import {displayErrors} from "../../../helpers/ErrorNotifyHelper";
 
-export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
-  return async dispatch => {
-    try {
-      const response = await CreditLimitsApiService.getAllCreditLimitsList(params);
-      if (response.data.status === 'SUCCESS') {
-        dispatch({
-          type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
-          data: response?.data?.data,
-        });
-      }
-    } catch (e) {
-     displayErrors(e)
-    }
-  };
+export const getCreditLimitsList = (params = {page: 1, limit: 15}) => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getAllCreditLimitsList(params);
+            if (response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
+                    data: response?.data?.data,
+                });
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    };
 };
 
 export const getCreditLimitColumnList = () => {
-  return async dispatch => {
-    try {
-      const response = await CreditLimitsApiService.getCreditLimitColumnList();
-      if(response.data.status === 'SUCCESS') {
-        dispatch({
-          type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST_ACTION,
-          data: response.data.data
-        });
-        dispatch({
-          type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_DEFAULT_COLUMN_LIST_ACTION,
-          data: response.data.data
-        })
-      }
-    } catch (e) {
-      if(e.response && e.response.data) {
-        if(e.response.data.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        } else if(e.response.data.messageCode) {
-          errorNotification(e.response.data.message)
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitColumnList();
+            if (response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST,
+                    data: response.data.data
+                });
+                dispatch({
+                    type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_DEFAULT_COLUMN_LIST,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
         }
-      }
     }
-  }
 }
 
 export const changeCreditColumnList = data => {
-  return dispatch => {
-   dispatch({
-     type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_COLUMN_LIST_ACTION,
-     data
-   })
-  }
+    return dispatch => {
+        dispatch({
+            type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_COLUMN_LIST,
+            data
+        })
+    }
 }
 
 export const saveCreditLimitColumnList = ({creditLimitsColumnList = {}, isReset = false}) => {
-  return async dispatch => {
-    try {
-      let data = {
-        columns: [],
-        isReset: true
-      };
-      if(!isReset) {
-        const defaultFields = creditLimitsColumnList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = creditLimitsColumnList.customFields.filter(e => e.isChecked).map(e => e.name);
-        data = {
-          columns: [...defaultFields, ...customFields],
-          isReset: false
+    return async dispatch => {
+        try {
+            let data = {
+                columns: [],
+                isReset: true
+            };
+            if (!isReset) {
+                const defaultFields = creditLimitsColumnList.defaultFields.filter(e => e.isChecked).map(e => e.name);
+                const customFields = creditLimitsColumnList.customFields.filter(e => e.isChecked).map(e => e.name);
+                data = {
+                    columns: [...defaultFields, ...customFields],
+                    isReset: false
+                }
+                if (data.columns.length < 1) {
+                    errorNotification('Please select at least one column to continue.');
+                    throw Error()
+                }
+            }
+            const response = await CreditLimitsApiService.updateCreditLimitsColumnList(data);
+            if (response && response.data && response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_DEFAULT_COLUMN_LIST,
+                    data: creditLimitsColumnList
+                })
+                successNotification('Columns updated successfully.');
+            }
+        } catch (e) {
+            displayErrors(e)
         }
-        if(data.columns.length < 1) {
-          errorNotification('Please select at least one column to continue.');
-         throw Error()
-        }
-      }
-      const response = await CreditLimitsApiService.updateCreditLimitsColumnList(data);
-        if (response && response.data && response.data.status === 'SUCCESS') {
-         dispatch({
-           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_DEFAULT_COLUMN_LIST_ACTION,
-           data: creditLimitsColumnList
-         })
-          successNotification('Columns updated successfully.');
-      }
-    } catch (e) {
-      if(e.response && e.response.data) {
-        if(e.response.data.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        } else if(e.response.data.messageCode) {
-          errorNotification(e.response.data.message)
-        }
-      }
     }
-  }
 }
 
 export const getCreditLimitsFilter = () => {
-  return async dispatch => {
-    try {
-      const response = await CreditLimitsApiService.getCreditLimitsFilterData();
-      if(response && response.data && response.data.status === 'SUCCESS') {
-        dispatch({
-          type: CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST_ACTION,
-          data: response.data.data
-        })
-      }
-    } catch (e) {
-      if(e.response && e.response.data) {
-        if(e.response.data.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        } else if(e.response.data.messageCode) {
-          errorNotification(e.response.data.message)
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsFilterData();
+            if (response && response.data && response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
         }
-      }
     }
-  }
 }
 
 export const getCreditLimitsDetails = id => {
-  return async dispatch => {
-    try {
-      const response = await CreditLimitsApiService.getCreditLimitsDetails(id);
-      if (response?.data?.status==='SUCCESS') {
-        dispatch({
-          type: CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA,
-          data: response.data.data
-        })
-      }
-    } catch (e) {
-      if(e.response && e.response.data) {
-        if(e.response.data.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        } else if(e.response.data.messageCode) {
-          errorNotification(e.response.data.message)
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsDetails(id);
+            if (response?.data?.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
         }
-      }
     }
+}
+
+export const getCreditLimitsApplicationList = (id, param) => {
+    return async dispatch => {
+        const params = {
+            listFor: 'debtor-application',
+            ...param
+        }
+        try {
+            dispatch({
+                type: CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMIT_APPLICATION_LIST_REQUEST
+            })
+            const response = await CreditLimitsApiService.getCreditLimitsApplicationList(id, params);
+            if (response?.data?.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMIT_APPLICATION_LIST_SUCCESS,
+                    data: response.data?.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    }
+}
+
+export const getCreditLimitsApplicationColumnList = () => {
+    return async dispatch => {
+        try {
+            const params = {
+                columnFor: 'debtor-application',
+            };
+            const response = await CreditLimitsApiService.getCreditLimitsApplicationColumnList(params);
+            if (response?.data?.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMITS_APPLICATION_COLUMN_LIST,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    }
+}
+
+export const changeCreditLimitsApplicationColumnList = data => {
+    return dispatch => {
+        dispatch({
+            type: CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_APPLICATION_COLUMN_LIST,
+            data
+        })
+    }
+}
+
+export const onSaveCreditLimitsApplicationColumnList = ({creditLimitsApplicationColumnList = {}, isReset = false}) => {
+    return async dispatch => {
+        try {
+            let data = {
+                columns: [],
+                isReset: true,
+                columnFor: 'debtor-application',
+            };
+            if (!isReset) {
+                const defaultFields = creditLimitsApplicationColumnList.defaultFields.filter(field => field.isChecked).map(field => field.name);
+                const customFields = creditLimitsApplicationColumnList.customFields.filter(field => field.isChecked).map(field => field.name);
+                data = {
+                    ...data,
+                    columns: [...defaultFields, ...customFields],
+                    isReset: false
+                }
+                if (data.columns.length < 1) {
+                    errorNotification('Please select at least one column to continue.');
+                    throw Error()
+                }
+            }
+            const response = await CreditLimitsApiService.updateCreditLimitsApplicationColumnList(data);
+            if (response?.data?.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMITS_APPLICATION_DEFAULT_COLUMN_LIST,
+                    data: creditLimitsApplicationColumnList
+                });
+                successNotification('Columns updated successfully.');
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    }
+}
+
+export const getCreditLimitsTasksLists = (id, param) => {
+    return async dispatch => {
+        const params = {
+            requestedEntityId: id,
+            columnFor: 'debtor-task',
+            ...param
+        }
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsTasksList(params);
+            if (response?.data?.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_LIST,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    }
+}
+
+export const getCreditLimitsTasksColumnList = () => {
+    return async dispatch => {
+        const params = {
+            columnFor: 'debtor-task'
+        }
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsTaskColumnList(params);
+            if (response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_COLUMN_LIST,
+                    data: response.data.data
+                });
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_DEFAULT_COLUMN_LIST,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    }
+}
+
+export const changeCreditLimitsTaskColumnList = data => {
+  console.log({data});
+  return dispatch => {
+    dispatch({
+      type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_TASK_COLUMN_LIST,
+      data
+    })
   }
 }
+
+export const onSaveCreditLimitsTaskColumnList = ({creditLimitsTaskColumnList={}, isReset= false}) => {
+return async dispatch => {
+  try {
+    let data = {
+      columns: [],
+      isReset: true,
+      columnFor: 'debtor-task'
+    }
+    if (!isReset) {
+      const defaultFields = creditLimitsTaskColumnList.defaultFields.filter(field => field.isChecked).map(field => field.name);
+      const customFields = creditLimitsTaskColumnList.customFields.filter(field => field.isChecked).map(field => field.name);
+      data = {
+        ...data,
+        columns: [...defaultFields, ...customFields],
+        isReset: false
+      }
+      if (data.columns.length < 1) {
+        errorNotification('Please select at least one column to continue.');
+        throw Error()
+      }
+    }
+    const response = await CreditLimitsApiService.updateCreditLimitsTaskColumnList(data);
+    if (response?.data?.status==='SUCCESS') {
+      dispatch({
+        type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_DEFAULT_COLUMN_LIST,
+        data: creditLimitsTaskColumnList
+      });
+      successNotification('Columns updated successfully.');
+    }
+  } catch (e) {
+    displayErrors(e)
+  }
+  }
+}
+
+export const getCreditLimitsTasksAssigneeDropDownData = () => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsTasksAssigneeDropDownData();
+            if (response.data.status === 'SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_ASSIGNEE_DROP_DOWN_DATA,
+                    data: response.data.data,
+                });
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+export const getCreditLimitsTasksEntityDropDownData = params => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsTasksEntityDropDownData(params);
+            if (response.data.status === 'SUCCESS' && response.data.data) {
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_ENTITY_DROP_DOWN_DATA,
+                    data: response.data.data,
+                });
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+export const getCreditLimitsTasksDefaultEntityDropDownData = params => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsTasksEntityDropDownData(params);
+            if (response.data.status === 'SUCCESS' && response.data.data) {
+                dispatch({
+                    type:
+                    CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK
+                            .DEFAULT_CREDIT_LIMITS_ENTITY_DROP_DOWN_DATA,
+                    data: response.data.data,
+                });
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+export const creditLimitsTasksUpdateAddTaskStateFields = (name, value) => {
+    return dispatch => {
+        dispatch({
+            type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_UPDATE_ADD_TASK_FIELD,
+            name,
+            value,
+        });
+    };
+};
+
+export const saveCreditLimitsTaskData = (data, cb) => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.addNewCreditLimitsTask(data);
+            if (response.data.status === 'SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_UPDATE_ADD_TASK_FIELD,
+                });
+                successNotification(response?.data?.message || 'Task created successfully');
+                cb();
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+export const getCreditLimitsTaskDetail = id => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.getCreditLimitsTaskDetailsById(id);
+            if (response.data.status === 'SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.EDIT_TASK.GET_CREDIT_LIMITS_TASK_DETAILS,
+                    data: response.data.data,
+                });
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+export const updateCreditLimitsTaskData = (id, data, cb) => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.updateCreditLimitsTask(id, data);
+            if (response.data.status === 'SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_RESET_ADD_TASK_STATE,
+                });
+                successNotification(response?.data?.message || 'Task updated successfully');
+                cb();
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+//Documents starts here
+
+export const getCreditLimitsDocumentsList = (id, params) => {
+    return async dispatch => {
+        const updatedParams = {
+            ...params,
+            documentFor: 'debtor',
+        }
+        try {
+            dispatch({
+                type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.REQUEST_CREDIT_LIMITS_DOCUMENTS_LIST
+            });
+            const response = await CreditLimitsApiService.getCreditLimitsDocumentsList(id, updatedParams);
+            if (response?.data?.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_LIST_SUCCESS,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    }
+}
+
+export const getCreditLimitsDocumentsColumnNamesList = () => {
+    return async dispatch => {
+        try {
+            const params = {
+                columnFor: 'client-document',
+            };
+
+            const response = await CreditLimitsApiService.getCreditLimitsDocumentsColumnNamesList(params);
+            if (response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_COLUMN_LIST,
+                    data: response.data.data,
+                });
+                dispatch({
+                    type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_DEFAULT_COLUMN_LIST,
+                    data: response.data.data,
+                });
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+export const changeCreditLimitsDocumentsColumnList = data => {
+    return dispatch => {
+        dispatch({
+            type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_DOCUMENTS_COLUMN_LIST,
+            data,
+        });
+    };
+};
+
+export const saveCreditLimitsDocumentsColumnList = ({
+                                                        creditLimitsDocumentColumnList = {},
+                                                        isReset = false,
+                                                    }) => {
+    return async dispatch => {
+        try {
+            let data = {
+                isReset: true,
+                columns: [],
+            };
+
+            if (!isReset) {
+                const defaultColumns = creditLimitsDocumentColumnList.defaultFields
+                        .filter(e => e.isChecked)
+                        .map(e => e.name);
+                const customFields = creditLimitsDocumentColumnList.customFields
+                        .filter(e => e.isChecked)
+                        .map(e => e.name);
+                data = {
+                    ...data,
+                    isReset: false,
+                    columns: [...defaultColumns, ...customFields],
+                };
+            }
+
+            if (!isReset && data.columns.length < 1) {
+                errorNotification('Please select at least one column to continue.');
+            } else {
+                const response = await CreditLimitsApiService.updateCreditLimitsDocumentColumnListName(data);
+
+                dispatch(getCreditLimitsDocumentsColumnNamesList());
+
+                if (response && response.data && response.data.status==='SUCCESS') {
+                    successNotification('Columns updated successfully.');
+                }
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+export const getCreditLimitsDocumentTypeList = () => {
+    return async dispatch => {
+        try {
+            const params = {
+                listFor: 'debtor'
+            }
+            const response = await CreditLimitsApiService.getCreditLimitsDocumentTypeList(params);
+            if (response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENT_TYPE_LIST,
+                    data: response.data.data
+                })
+            }
+        } catch (e) {
+            displayErrors(e)
+        }
+    }
+}
+
+export const creditLimitsUploadDocument = (data, config) => {
+    return async dispatch => {
+        try {
+            const response = await CreditLimitsApiService.uploadDocument(data, config);
+            if (response.data.status==='SUCCESS') {
+                dispatch({
+                    type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.UPLOAD_DOCUMENT_CREDIT_LIMITS,
+                    data: response.data.data,
+                });
+                successNotification(response.data.message || 'Document uploaded successfully');
+            }
+        } catch (e) {
+            displayErrors(e);
+        }
+    };
+};
+
+
+export const downloadCreditLimitsDocuments = async data => {
+    const str = data.toString();
+
+    try {
+        const config = {
+            documentIds: str,
+            action: 'download',
+        };
+
+        const response = await CreditLimitsApiService.downloadDocuments(config);
+        if (response.statusText==='OK') {
+            return response;
+        }
+    } catch (e) {
+        displayErrors(e);
+    }
+    return false;
+};

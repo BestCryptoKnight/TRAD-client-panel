@@ -121,7 +121,7 @@ const CreditLimitsList = () => {
 
     const onClickCloseCustomFieldModal = useCallback(() => {
         dispatch({
-            type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST_ACTION,
+            type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST,
             data: creditLimitsDefaultColumnList
         });
         toggleCustomField();
@@ -238,7 +238,7 @@ const CreditLimitsList = () => {
 
     const onSelectCreditLimitRecord = useCallback(
             id => {
-               history.push(`credit-limits/details/${id}`)
+               history.push(`credit-limits/${id}`)
             },
             [history]
     );

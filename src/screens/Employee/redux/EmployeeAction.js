@@ -4,6 +4,7 @@ import {EMPLOYEE_COLUMN_LIST_REDUX_CONSTANTS, EMPLOYEE_REDUX_CONSTANTS} from "./
 import {displayErrors} from "../../../helpers/ErrorNotifyHelper";
 
 export const getEmployeeList = (params = {page: 1, limit: 15}) => {
+    console.log({params});
     return async dispatch => {
         try {
             const response = await EmployeeApiService.getAllEmployeeList(params);

@@ -57,7 +57,7 @@ export const AllAuthenticatedRoutes = () => {
                 <AuthenticatedRoute exact path="/claims" component={null}/>
                 <AuthenticatedRoute exact path="/over-dues" component={null}/>
                 <AuthenticatedRoute exact path="/credit-limits" component={CreditLimitsList}/>
-                <AuthenticatedRoute exact path="/credit-limits/details/:id" component={ViewCreditLimits}/>
+                <AuthenticatedRoute exact path="/credit-limits/:id" component={ViewCreditLimits}/>
                 <AuthenticatedRoute exact path="/employee" component={EmployeeList}/>
                 <AuthenticatedRoute exact path="/company-profile" component={CompanyProfile}/>
                 <AuthenticatedRoute exact path="/support" component={Support}/>

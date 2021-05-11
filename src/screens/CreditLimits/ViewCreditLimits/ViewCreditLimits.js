@@ -12,7 +12,7 @@ import CreditLimitsClaimsTab from "../CreditLimitsTabs/CreditLimitsClaimsTab";
 import CreditLimitsDocumentsTab from "../CreditLimitsTabs/CreditLimitsDocumentsTab";
 import CreditLimitsNotesTab from "../CreditLimitsTabs/CreditLimitsNotesTab";
 
-const ViewCreditLimits = (factory, deps) => {
+const ViewCreditLimits = () => {
     const history = useHistory();
     const {id} = useParams();
     const dispatch = useDispatch();

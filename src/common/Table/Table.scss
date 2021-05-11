@@ -50,6 +50,9 @@
       color: $field-color;
       text-decoration: underline;
       cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 

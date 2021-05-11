@@ -159,7 +159,7 @@ const CompanyProfilePolicies = () => {
                                                     pageActionClick={pageActionClick}
                                                     onSelectLimit={onSelectLimit}
                                             />
-                                        </>):<div className="no-record-found">No record found</div>):<Loader/>}
+                                        </>):<div className="common-white-container"> <div className="no-record-found">No record found</div></div>):<Loader/>}
                     </div>
 
                 {customFieldModal && (

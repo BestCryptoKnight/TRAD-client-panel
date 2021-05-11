@@ -63,7 +63,38 @@ export const CREDIT_LIMITS_URLS = {
   CREDIT_LIMITS_LIST_URL: `${BASE_URL}debtor/`,
   CREDIT_LIMITS_COLUMN_LIST: `${BASE_URL}debtor/column-name/`,
   CREDIT_LIMITS_FILTER: `${BASE_URL}debtor/entity-list/`,
-  VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}debtor/details/`
+  VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}debtor/`,
+
+  APPLICATION: {
+    APPLICATION_LIST: `${BASE_URL}application/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
+    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
+  },
+
+  TASKS: {
+    TASKS_LIST: `${BASE_URL}task/`,
+    TASK_COLUMN_NAME_LIST_URL: `${BASE_URL}task/column-name`,
+    ADD_TASK: {
+      ASSIGNEE_DROP_DOWN_DATA: `${BASE_URL}task/user-list/`,
+      ENTITY_DROP_DOWN_DATA: `${BASE_URL}task/entity-list/`,
+      SAVE_NEW_TASK: `${BASE_URL}task/`,
+    },
+    EDIT_TASK: {
+      GET_CLIENT_TASK_DETAIL: `${BASE_URL}task/details/`,
+    },
+  },
+
+  DOCUMENTS: {
+    DOCUMENTS_LIST: `${BASE_URL}document/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}document/column-name/`,
+    GET_DOCUMENT_TYPE_URL: `${BASE_URL}document/type-list/`,
+    UPLOAD_DOCUMENT_URL: `${BASE_URL}document/upload/`,
+    DOWNLOAD_DOCUMENTS_URL: `${BASE_URL}document/download`,
+  },
+
+  NOTES: {
+    NOTES_LIST: `${BASE_URL}note/`
+  }
 };
 
 export const EMPLOYEE_URLS = {
