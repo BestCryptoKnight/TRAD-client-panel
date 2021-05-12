@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import './Accordion.scss';
-import {AccordionContext} from "./Accordion";
+import { AccordionContext } from './Accordion';
 
 const AccordionItem = props => {
   const {
@@ -26,10 +26,10 @@ const AccordionItem = props => {
   const content = useRef(null);
   const { openIndex, setOpenIndex } = React.useContext(AccordionContext);
   const activeAccordion = React.useMemo(() => openIndex === index, [openIndex, index]);
-  const onClickAccordionItem = React.useCallback(() => setOpenIndex(!activeAccordion ? index : -1), [
-    activeAccordion,
-    setOpenIndex,
-  ]);
+  const onClickAccordionItem = React.useCallback(
+    () => setOpenIndex(!activeAccordion ? index : -1),
+    [activeAccordion, setOpenIndex]
+  );
 
   return (
     <div className={accordionClass}>
@@ -68,6 +68,7 @@ const AccordionItem = props => {
 };
 
 AccordionItem.propTypes = {
+  index: PropTypes.number.isRequired,
   className: PropTypes.string,
   headerClass: PropTypes.string,
   header: PropTypes.array.isRequired,

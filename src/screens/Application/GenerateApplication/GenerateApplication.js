@@ -60,7 +60,7 @@ const GenerateApplication = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { applicationStage, ...editApplicationData } = useSelector(
-          ({ application }) => application?.editApplication ?? {}
+    ({ application }) => application?.editApplication ?? {}
   );
   const { applicationId } = useQueryParams();
 
@@ -120,9 +120,9 @@ const GenerateApplication = () => {
         applicationId: editApplicationData?._id,
       };
       const url = Object.entries(params)
-              .filter(arr => arr[1] !== undefined)
-              .map(([k, v]) => `${k}=${v}`)
-              .join('&');
+        .filter(arr => arr[1] !== undefined)
+        .map(([k, v]) => `${k}=${v}`)
+        .join('&');
 
       history.replace(`${history.location.pathname}?${url}`);
     }
@@ -140,7 +140,7 @@ const GenerateApplication = () => {
     const data = editApplicationData?.[FILTERED_STEPS?.[applicationStage ?? 0]?.name];
     switch (FILTERED_STEPS?.[applicationStage ?? 0]?.name) {
       case 'company':
-        return await applicationCompanyStepValidations(dispatch, data, editApplicationData);
+        return applicationCompanyStepValidations(dispatch, data, editApplicationData);
       case 'partners':
         return applicationPersonStepValidation(dispatch, data, editApplicationData);
       case 'creditLimit':
@@ -156,25 +156,25 @@ const GenerateApplication = () => {
   }, [editApplicationData, applicationStage, FILTERED_STEPS]);
 
   return (
-          <>
-            <div className="breadcrumb-button-row">
-              <div className="breadcrumb">
-                <span onClick={backToApplication}>Application List</span>
-                <span className="material-icons-round">navigate_next</span>
-                <span>Generate Application</span>
-              </div>
-            </div>
-            <Stepper
-                    className="mt-10"
-                    steps={FILTERED_STEPS}
-                    stepIndex={applicationStage ?? 0}
-                    onChangeIndex={onChangeIndex}
-                    nextClick={onNextClick}
-                    addStepClick={addStepClick}
-            >
-              {FILTERED_STEP_COMPONENT[applicationStage ?? 0]}
-            </Stepper>
-          </>
+    <>
+      <div className="breadcrumb-button-row">
+        <div className="breadcrumb">
+          <span onClick={backToApplication}>Application List</span>
+          <span className="material-icons-round">navigate_next</span>
+          <span>Generate Application</span>
+        </div>
+      </div>
+      <Stepper
+        className="mt-10"
+        steps={FILTERED_STEPS}
+        stepIndex={applicationStage ?? 0}
+        onChangeIndex={onChangeIndex}
+        nextClick={onNextClick}
+        addStepClick={addStepClick}
+      >
+        {FILTERED_STEP_COMPONENT[applicationStage ?? 0]}
+      </Stepper>
+    </>
   );
 };
 

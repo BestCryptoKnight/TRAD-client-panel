@@ -3,28 +3,45 @@ import {
   CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS,
   CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS,
   CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS,
-  CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS, CREDIT_LIMITS_NOTES_REDUX_CONSTANTS,
+  CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
+  CREDIT_LIMITS_NOTES_REDUX_CONSTANTS,
   CREDIT_LIMITS_REDUX_CONSTANTS,
   CREDIT_LIMITS_TASKS_REDUX_CONSTANTS,
 } from './CreditLimitsReduxConstants';
 
 const initialCreditLimitsListState = {
-  creditLimitList: { docs: [], headers:[], total: 0, limit: 15, page: 1, pages: 1, isLoading: true },
+  creditLimitList: {
+    docs: [],
+    headers: [],
+    total: 0,
+    limit: 15,
+    page: 1,
+    pages: 1,
+    isLoading: true,
+  },
   selectedCreditLimitData: {},
   creditLimitsColumnList: {},
   creditLimitsDefaultColumnList: {},
   creditLimitsFilterList: {
     dropdownData: {
-      entityType: []
-    }
+      entityType: [],
+    },
   },
   application: {
-    applicationList: {docs: [], headers:[], total: 0, limit: 15, page: 1, pages: 1, isLoading: false},
+    applicationList: {
+      docs: [],
+      headers: [],
+      total: 0,
+      limit: 15,
+      page: 1,
+      pages: 1,
+      isLoading: false,
+    },
     applicationColumnList: {},
-    applicationDefaultColumnList: {}
+    applicationDefaultColumnList: {},
   },
   tasks: {
-    tasksList: {docs: [], headers:[], total: 0, limit: 15, page: 1, pages: 1, isLoading: false},
+    tasksList: { docs: [], headers: [], total: 0, limit: 15, page: 1, pages: 1, isLoading: false },
     tasksColumnList: {},
     tasksDefaultColumnList: {},
     addTask: {
@@ -44,11 +61,22 @@ const initialCreditLimitsListState = {
     },
   },
   documents: {
-    documentList: {docs: [], headers:[], total: 0, limit: 15, page: 1, pages: 1, isLoading: false},
+    documentList: {
+      docs: [],
+      headers: [],
+      total: 0,
+      limit: 15,
+      page: 1,
+      pages: 1,
+      isLoading: false,
+    },
     documentTypeList: [],
     documentColumnList: {},
-    documentDefaultColumnList: {}
-  }
+    documentDefaultColumnList: {},
+  },
+  notes: {
+    noteList: { docs: [], headers: [], total: 0, limit: 15, page: 1, pages: 1, isLoading: false },
+  },
 };
 
 export const creditLimits = (state = initialCreditLimitsListState, action) => {
@@ -58,37 +86,38 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
         ...state,
         creditLimitList: {
           isLoading: false,
-          ...action.data
+          ...action.data,
         },
       };
 
     case CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST:
       return {
         ...state,
-        creditLimitsColumnList: action.data
-      }
+        creditLimitsColumnList: action.data,
+      };
 
     case CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_DEFAULT_COLUMN_LIST:
       return {
         ...state,
-        creditLimitsDefaultColumnList: action.data
-      }
+        creditLimitsDefaultColumnList: action.data,
+      };
 
     case CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_COLUMN_LIST: {
       const columnList = {
-        ...state?.creditLimitsColumnList
+        ...state?.creditLimitsColumnList,
       };
-      const {type, name, value} = action?.data;
+      const { type, name, value } = action?.data;
       columnList[`${type}`] = columnList[`${type}`].map(e =>
-              e.name===name ? {...e, isChecked: value}:e);
+        e.name === name ? { ...e, isChecked: value } : e
+      );
       return {
         ...state,
-        creditLimitsColumnList: columnList
-      }
+        creditLimitsColumnList: columnList,
+      };
     }
 
-    case CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST:
-      const dropdownData = {...state?.creditLimitsFilterList?.dropdownData};
+    case CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST: {
+      const dropdownData = { ...state?.creditLimitsFilterList?.dropdownData };
       Object.entries(action?.data)?.forEach(([key, value]) => {
         dropdownData[key] = value?.map(entity => ({
           label: entity?.name ?? entity.label,
@@ -101,15 +130,16 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
         ...state,
         creditLimitsFilterList: {
           ...state.creditLimitsFilterList,
-          dropdownData
-        }
-      }
+          dropdownData,
+        },
+      };
+    }
 
     case CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA:
       return {
         ...state,
-        selectedCreditLimitData: action.data
-      }
+        selectedCreditLimitData: action.data,
+      };
 
     case CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMIT_APPLICATION_LIST_REQUEST:
       return {
@@ -118,10 +148,10 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
           ...state?.application,
           applicationList: {
             isLoading: true,
-            ...state?.application?.applicationList
-          }
-        }
-      }
+            ...state?.application?.applicationList,
+          },
+        },
+      };
 
     case CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMIT_APPLICATION_LIST_SUCCESS:
       return {
@@ -130,46 +160,50 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
           ...state?.application,
           applicationList: {
             isLoading: false,
-            ...action.data
-          }
-        }
-      }
+            ...action.data,
+          },
+        },
+      };
 
     case CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMITS_APPLICATION_COLUMN_LIST:
       return {
         ...state,
         application: {
           ...state?.application,
-          applicationColumnList: action.data
-        }
-    }
+          applicationColumnList: action.data,
+        },
+      };
 
     case CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMITS_APPLICATION_DEFAULT_COLUMN_LIST: {
       return {
         ...state,
         application: {
           ...state?.application,
-          applicationDefaultColumnList: action.data
-        }
-      }
+          applicationDefaultColumnList: action.data,
+        },
+      };
     }
 
     case CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_APPLICATION_COLUMN_LIST: {
       const applicationColumnList = {
-        ...state.application.applicationColumnList
-      }
-      const {type, name, value} = action?.data;
-      applicationColumnList[`${type}`] = applicationColumnList?.[`${type}`]?.map(field => field.name === name ? {
-        ...field,
-        isChecked: value
-      } : field);
+        ...state.application.applicationColumnList,
+      };
+      const { type, name, value } = action?.data;
+      applicationColumnList[`${type}`] = applicationColumnList?.[`${type}`]?.map(field =>
+        field.name === name
+          ? {
+              ...field,
+              isChecked: value,
+            }
+          : field
+      );
       return {
         ...state,
         application: {
           ...state?.application,
-          applicationColumnList: applicationColumnList
-        }
-      }
+          applicationColumnList,
+        },
+      };
     }
 
     // task starts here
@@ -180,10 +214,10 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
           ...state?.tasks,
           tasksList: {
             isLoading: false,
-            ...action.data
-          }
-        }
-      }
+            ...action.data,
+          },
+        },
+      };
     }
 
     case CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_COLUMN_LIST:
@@ -191,34 +225,35 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
         ...state,
         tasks: {
           ...state?.tasks,
-          tasksColumnList: action?.data
-        }
-      }
+          tasksColumnList: action?.data,
+        },
+      };
 
     case CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_DEFAULT_COLUMN_LIST:
       return {
         ...state,
         tasks: {
           ...state?.tasks,
-          tasksDefaultColumnList: action?.data
-        }
-      }
+          tasksDefaultColumnList: action?.data,
+        },
+      };
 
     case CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_TASK_COLUMN_LIST: {
       const columnList = {
-       ...state?.tasks?.tasksColumnList
+        ...state?.tasks?.tasksColumnList,
       };
-      const {type, name, value} = action?.data;
+      const { type, name, value } = action?.data;
       columnList[`${type}`] = columnList[`${type}`].map(field =>
-              field.name === name ? {...field, isChecked: value} : field);
+        field.name === name ? { ...field, isChecked: value } : field
+      );
       console.log(columnList[`${type}`]);
       return {
         ...state,
         tasks: {
           ...state?.tasks,
-          tasksColumnList: columnList
-        }
-      }
+          tasksColumnList: columnList,
+        },
+      };
     }
 
     case CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_UPDATE_ADD_TASK_FIELD:
@@ -305,8 +340,7 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
         },
       };
 
-
-          //task ends here
+    // task ends here
 
     // documents starts here
     case CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.REQUEST_CREDIT_LIMITS_DOCUMENTS_LIST:
@@ -316,10 +350,10 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
           ...state?.documents,
           documentList: {
             isLoading: true,
-            ...state?.documents?.documentList
-          }
-        }
-      }
+            ...state?.documents?.documentList,
+          },
+        },
+      };
 
     case CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_LIST_SUCCESS:
       return {
@@ -328,19 +362,19 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
           ...state?.documents,
           documentList: {
             isLoading: false,
-            ...action.data
-          }
-        }
-      }
+            ...action.data,
+          },
+        },
+      };
 
     case CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_COLUMN_LIST: {
       return {
         ...state,
         documents: {
           ...state?.documents,
-          documentColumnList: action.data
-        }
-      }
+          documentColumnList: action.data,
+        },
+      };
     }
 
     case CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_DEFAULT_COLUMN_LIST: {
@@ -348,24 +382,31 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
         ...state,
         documents: {
           ...state?.documents,
-          documentDefaultColumnList: action.data
-        }
-      }
+          documentDefaultColumnList: action.data,
+        },
+      };
     }
 
     case CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_DOCUMENTS_COLUMN_LIST: {
       const columnList = {
-        ...state?.documents?.documentColumnList
+        ...state?.documents?.documentColumnList,
       };
-      const {type, name, value} = action?.data;
-      columnList[`${type}`] = columnList[`${type}`].map(field => field.name === name ? {...field, isChecked: value} : field);
+      const { type, name, value } = action?.data;
+      columnList[`${type}`] = columnList[`${type}`].map(field =>
+        field.name === name
+          ? {
+              ...field,
+              isChecked: value,
+            }
+          : field
+      );
       return {
         ...state,
         documents: {
           ...state?.documents,
-          documentColumnList: columnList
-        }
-      }
+          documentColumnList: columnList,
+        },
+      };
     }
 
     case CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENT_TYPE_LIST:
@@ -376,16 +417,32 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
           documentTypeList: action?.data,
         },
       };
-      // documents ends here
+    // documents ends here
 
-
-          //notes starts here
-
+    // notes starts here
     case CREDIT_LIMITS_NOTES_REDUX_CONSTANTS.REQUEST_CREDIT_LIMITS_NOTES_LIST: {
       return {
-
-      }
+        ...state,
+        notes: {
+          ...state?.notes,
+          noteList: {
+            isLoading: true,
+            ...state?.notes?.noteList,
+          },
+        },
+      };
     }
+
+    case CREDIT_LIMITS_NOTES_REDUX_CONSTANTS.CREDIT_LIMITS_NOTES_LIST_SUCCESS: {
+      return {
+        ...state,
+        notes: {
+          ...state?.notes,
+          noteList: { isLoading: false, ...action?.data },
+        },
+      };
+    }
+
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:
       return null;
 
@@ -393,5 +450,3 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
       return state;
   }
 };
-
-

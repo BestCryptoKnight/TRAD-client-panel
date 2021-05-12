@@ -10,7 +10,6 @@ import {
   changeEditProfileData,
   uploadProfilePicture,
 } from './redux/HeaderAction';
-import BigInput from '../BigInput/BigInput';
 import dummy from '../../assets/images/dummy.svg';
 import IconButton from '../IconButton/IconButton';
 import Modal from '../Modal/Modal';
@@ -221,28 +220,31 @@ const Header = () => {
     }
   }, []);
 
-  const handleChange = useCallback(e => {
-    e.persist();
-    if (e.target.files && e.target.files.length > 0) {
-      const fileExtension = ['jpeg', 'jpg', 'png'];
-      const mimeType = ['image/jpeg', 'image/jpg', 'image/png'];
+  const handleChange = useCallback(
+    e => {
+      e.persist();
+      if (e.target.files && e.target.files.length > 0) {
+        const fileExtension = ['jpeg', 'jpg', 'png'];
+        const mimeType = ['image/jpeg', 'image/jpg', 'image/png'];
 
-      const checkExtension =
-        fileExtension.indexOf(e.target.files[0].name.split('.').splice(-1)[0]) !== -1;
-      const checkMimeTypes = mimeType.indexOf(e.target.files[0].type) !== -1;
+        const checkExtension =
+          fileExtension.indexOf(e.target.files[0].name.split('.').splice(-1)[0]) !== -1;
+        const checkMimeTypes = mimeType.indexOf(e.target.files[0].type) !== -1;
 
-      if (!(checkExtension || checkMimeTypes)) {
-        errorNotification('Only image file allowed');
+        if (!(checkExtension || checkMimeTypes)) {
+          errorNotification('Only image file allowed');
+        }
+        const checkFileSize = e.target.files[0].size > 4194304;
+        if (checkFileSize) {
+          errorNotification('File size should be less than 4 mb');
+        } else {
+          setFileName(e.target.files[0].name ? e.target.files[0].name : 'Browse...');
+          setFile(e.target.files[0]);
+        }
       }
-      const checkFileSize = e.target.files[0].size > 4194304;
-      if (checkFileSize) {
-        errorNotification('File size should be less than 4 mb');
-      } else {
-        setFileName(e.target.files[0].name ? e.target.files[0].name : 'Browse...');
-        setFile(e.target.files[0]);
-      }
-    }
-  }, [setFile, setFileName]);
+    },
+    [setFile, setFileName]
+  );
 
   const [notificationDrawer, setNotificationDrawer] = useState(false);
   const openNotificationDrawer = useCallback(value =>
@@ -271,34 +273,41 @@ const Header = () => {
   };
   const headerSearchResults = () => {
     setSearchStart(true);
-    setHeaderSearchFocused(true)
-  }
+    setHeaderSearchFocused(true);
+  };
   return (
     <div className="header-container">
       <div className="screen-title">{headerTitle}</div>
       <div className="header-right-part">
         <div
-                ref={headerSearchRef}
-                className={`header-search-container ${
-                        headerSearchFocused && 'header-search-container-focused'
-                } ${searchStart && 'got-search-results'}`}
+          ref={headerSearchRef}
+          className={`header-search-container ${
+            headerSearchFocused && 'header-search-container-focused'
+          } ${searchStart && 'got-search-results'}`}
         >
           <div>
             <input
-                    type="text"
-                    placeholder="Search Here"
-                    onFocus={searchOnFocus}
-                    onKeyDown={onSearchEnterKeyPress}
+              type="text"
+              placeholder="Search Here"
+              onFocus={searchOnFocus}
+              onKeyDown={onSearchEnterKeyPress}
             />
-            <span className="material-icons-round" onClick={headerSearchResults}>search</span>
+            <span className="material-icons-round" onClick={headerSearchResults}>
+              search
+            </span>
           </div>
-          {searchStart && <div className="header-search-results">
-            <div> A B Companies <span className="ml-5 tag primary-tag">Redux</span> </div>
-            <div> A B Companies</div>
-            <div> A B Companies</div>
-            <div> A B Companies</div>
-            <div> A B Companies</div>
-          </div>}
+          {searchStart && (
+            <div className="header-search-results">
+              <div>
+                {' '}
+                A B Companies <span className="ml-5 tag primary-tag">Redux</span>{' '}
+              </div>
+              <div> A B Companies</div>
+              <div> A B Companies</div>
+              <div> A B Companies</div>
+              <div> A B Companies</div>
+            </div>
+          )}
         </div>
         <IconButton
           title="notifications_active"

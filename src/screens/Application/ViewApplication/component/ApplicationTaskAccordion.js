@@ -49,7 +49,7 @@ const ApplicationTaskAccordion = props => {
   );
 
   const getTaskList = useCallback(() => {
-     dispatch(getApplicationTaskList(applicationId));
+    dispatch(getApplicationTaskList(applicationId));
   }, [applicationId]);
 
   const handleTaskCheckbox = useCallback(
@@ -369,6 +369,7 @@ const ApplicationTaskAccordion = props => {
                 isSearchable={false}
                 value={selectedValues}
                 onChange={handleSelectInputChange}
+                menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               />
             </>
           );
@@ -391,6 +392,7 @@ const ApplicationTaskAccordion = props => {
                   }
                   onChange={date => handleDateChange(input.name, new Date(date).toISOString())}
                   minDate={new Date()}
+                  popperProps={{ positionFixed: true }}
                 />
                 <span className="material-icons-round">event_available</span>
               </div>

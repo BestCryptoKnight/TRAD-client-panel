@@ -27,7 +27,7 @@ const Modal = props => {
   useOnClickOutside(modalRef, () => hideModal(false));
 
   return (
-    <div className="modal">
+    <div id="modal" className="modal">
       <div className={dialogContentClass} ref={modalRef} {...restProps}>
         <div className={dialogHeaderClass}>
           <div className={`d-flex align-center ${closeIcon ? 'just-bet' : 'just-center'}`}>

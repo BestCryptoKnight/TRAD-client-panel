@@ -10,11 +10,12 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.abn = 'Please enter ABN number before continue';
   }
-  if (data?.abn && data?.abn.trim().length < 11 && isNaN(data?.abn)) {
+  if (data?.abn && data?.abn.trim().length < 11 && Number.isNaN(data?.abn)) {
     validated = false;
     errors.abn = 'Please enter valid ABN number before continue';
   }
-  if (data?.acn && data.acn?.trim().length < 9 && isNaN(data?.acn)) {
+
+  if (data?.acn && data.acn?.trim().length < 9 && Number.isNaN(data?.acn)) {
     validated = false;
     errors.acn = 'Please enter valid ACN number before continue';
   }
@@ -34,8 +35,7 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.streetNumber = 'Please enter street number before continue';
   }
-  // eslint-disable-next-line no-restricted-globals
-  if (data?.streetNumber && isNaN(data?.streetNumber)) {
+  if (data?.streetNumber && Number.isNaN(data?.streetNumber)) {
     validated = false;
     errors.streetNumber = 'Street number should be number';
   }
@@ -47,12 +47,11 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.postCode = 'Please enter post code before continue';
   }
-  // eslint-disable-next-line no-restricted-globals
-  if (data?.postCode && isNaN(data?.postCode)) {
+  if (data?.postCode && Number.isNaN(data?.postCode)) {
     validated = false;
     errors.postCode = 'Post code should be number';
   }
-  if(data?.phoneNumber && isNaN(data?.phoneNumber)){
+  if (data?.phoneNumber && Number.isNaN(data?.phoneNumber)) {
     validated = false;
     errors.phoneNumber = 'Phone number should be number';
   }
@@ -108,10 +107,10 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     };
 
     try {
-     await dispatch(saveApplicationStepDataToBackend(finalData));
-     validated = true;
+      await dispatch(saveApplicationStepDataToBackend(finalData));
+      validated = true;
     } catch (e) {
-      console.log('in catch',e)
+      console.log('in catch', e);
       /**/
       validated = false;
     }

@@ -93,7 +93,7 @@ export const CREDIT_LIMITS_URLS = {
   },
 
   NOTES: {
-    NOTES_LIST: `${BASE_URL}note/`
+    NOTES_LIST: `${BASE_URL}note/`,
   }
 };
 
