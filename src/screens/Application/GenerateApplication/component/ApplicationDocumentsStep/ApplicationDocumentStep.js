@@ -187,7 +187,6 @@ const ApplicationDocumentStep = () => {
           'content-type': 'multipart/form-data',
         },
       };
-      console.log('formData', formData);
       await dispatch(uploadDocument(formData, config));
       dispatchSelectedApplicationDocuments({
         type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.RESET_STATE,
@@ -337,7 +336,6 @@ const ApplicationDocumentStep = () => {
               options={documentTypeOptions}
               value={documentType}
               onChange={handleDocumentChange}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
             />
             <span>Please upload your documents here</span>
             <FileUpload

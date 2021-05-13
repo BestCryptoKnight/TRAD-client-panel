@@ -257,7 +257,6 @@ const CreditLimitsTasksTab = () => {
                 isSearchable={false}
                 value={selectedValues}
                 onChange={handleOnChange}
-                menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               />
             </>
           );
@@ -622,7 +621,7 @@ const CreditLimitsTasksTab = () => {
 
       {showConfirmModal && (
         <Modal header="Delete Task" buttons={deleteTaskButtons} hideModal={toggleConfirmationModal}>
-          <span className="confirmation-message">Are you sure you want to delete this Task?</span>
+          <span className="confirmation-message">Are you sure you want to delete this task?</span>
         </Modal>
       )}
 
@@ -643,7 +642,7 @@ const CreditLimitsTasksTab = () => {
           buttons={addTaskModalButton}
           hideModal={toggleAddTaskModal}
         >
-          <div className="common-white-container my-work-add-task-container">
+          <div className="common-white-container add-task-container">
             {INPUTS.map(getComponentFromType)}
           </div>
         </Modal>
@@ -656,7 +655,7 @@ const CreditLimitsTasksTab = () => {
           buttons={editTaskModalButton}
           hideModal={toggleEditTaskModal}
         >
-          <div className="common-white-container my-work-add-task-container">
+          <div className="common-white-container add-task-container">
             {INPUTS.map(getComponentFromType)}
           </div>
         </Modal>

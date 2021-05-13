@@ -1,17 +1,16 @@
-export const downloadAll = urls => {
-  console.log({ urls });
+export const downloadAll = response => {
+  const blob = new Blob([response.data], { type: response.headers['content-type'] });
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
 
-  link.setAttribute('download', null);
+  const fileName = response?.headers?.['content-disposition']?.split('filename=')[1];
+
+  link.setAttribute('download', fileName);
   link.setAttribute('target', '__blank');
   link.style.display = 'none';
 
   document.body.appendChild(link);
 
-  urls.forEach(url => {
-    link.setAttribute('href', url);
-    link.click();
-  });
-
-  // document.body.removeChild(link);
+  link.setAttribute('href', url);
+  link.click();
 };

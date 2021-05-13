@@ -31,6 +31,7 @@ export const getCreditLimitColumnList = () => {
   return async dispatch => {
     try {
       const response = await CreditLimitsApiService.getCreditLimitColumnList();
+      console.log(response.data.data);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST,
@@ -79,6 +80,8 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
           throw Error();
         }
       }
+      console.log({ creditLimitsColumnList });
+      console.log({ data });
       const response = await CreditLimitsApiService.updateCreditLimitsColumnList(data);
       if (response && response.data && response.data.status === 'SUCCESS') {
         dispatch({
@@ -394,11 +397,11 @@ export const saveCreditLimitsTaskData = (data, cb) => {
 export const getCreditLimitsTaskDetail = id => {
   return async dispatch => {
     try {
-      const response = await CreditLimitsApiService.getCreditLimitsTaskDetailsById(id);
-      if (response.data.status === 'SUCCESS') {
+      const response = await CreditLimitsApiService?.getCreditLimitsTaskDetailsById(id);
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.EDIT_TASK.GET_CREDIT_LIMITS_TASK_DETAILS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -587,8 +590,8 @@ export const downloadCreditLimitsDocuments = async data => {
       action: 'download',
     };
 
-    const response = await CreditLimitsApiService.downloadDocuments(config);
-    if (response.statusText === 'OK') {
+    const response = await CreditLimitsApiService?.downloadDocuments(config);
+    if (response?.statusText === 'OK') {
       return response;
     }
   } catch (e) {
@@ -599,7 +602,7 @@ export const downloadCreditLimitsDocuments = async data => {
 
 export const deleteCreditLimitsDocumentAction = async (docId, cb) => {
   try {
-    const response = await CreditLimitsApiService.deleteCreditLimitsDocument(docId);
+    const response = await CreditLimitsApiService?.deleteCreditLimitsDocument(docId);
     if (response.data.status === 'SUCCESS') {
       successNotification(response?.data?.message || 'Document deleted successfully.');
       if (cb) {

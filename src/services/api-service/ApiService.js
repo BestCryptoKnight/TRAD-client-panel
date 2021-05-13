@@ -27,12 +27,12 @@ instance.interceptors.response.use(
     return response;
   },
   error => {
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       clearAuthToken();
       window.location.href = '/login';
       return false;
     }
-    if (error.response.status === 403) {
+    if (error?.response?.status === 403) {
       window.location.href = '/forbidden-access';
       return false;
     }

@@ -64,7 +64,6 @@ const Pagination = props => {
           dropdownPosition="auto"
           isSearchable={false}
           menuPlacement="auto"
-          menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
         />
         <span className="ml-10">
           {' '}

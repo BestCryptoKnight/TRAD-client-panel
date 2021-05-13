@@ -15,7 +15,6 @@ function SetPassword() {
 
   const history = useHistory();
   const { token } = useQueryParams();
-  console.log('token->', token);
   const onChangePassword = e => {
     const changedPassword = e.target.value;
     setMakePassword(changedPassword);
@@ -42,6 +41,12 @@ function SetPassword() {
     }
   };
 
+  const onEnterKeyPress = async e => {
+    if (e.keyCode === 13) {
+      await onClickSetPassword();
+    }
+  };
+
   return (
     <AuthScreenContainer>
       <div className="login-field-name">Set Password</div>
@@ -49,18 +54,20 @@ function SetPassword() {
         prefix="lock_open"
         prefixClass="login-input-icon"
         type="password"
-        placeholder="Enter New password"
+        placeholder="Enter new password"
         value={makePassword}
         onChange={onChangePassword}
+        onKeyDown={onEnterKeyPress}
       />
-      <div className="login-field-name">Re Enter password</div>
+      <div className="login-field-name">Re Enter Password</div>
       <BigInput
         prefix="lock_open"
         prefixClass="login-input-icon"
         type="password"
-        placeholder="Re Enter password"
+        placeholder="Re enter password"
         value={confirmPassword}
         onChange={onChangeConfirmPassword}
+        onKeyDown={onEnterKeyPress}
       />
       <Button
         title="Set Password"

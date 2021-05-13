@@ -110,7 +110,6 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       await dispatch(saveApplicationStepDataToBackend(finalData));
       validated = true;
     } catch (e) {
-      console.log('in catch', e);
       /**/
       validated = false;
     }

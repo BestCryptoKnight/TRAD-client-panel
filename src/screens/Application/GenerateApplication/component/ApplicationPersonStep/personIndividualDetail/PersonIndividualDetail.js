@@ -85,7 +85,6 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
   }, [partners?.[index]?.country]);
 
   useEffect(() => {
-    console.log('in useEffect application filter list call');
     dispatch(getApplicationFilter());
   }, []);
 
@@ -509,7 +508,6 @@ const PersonIndividualDetail = ({ itemHeader, hasRadio, index, entityTypeFromCom
               options={input.data}
               value={(partners && partners[index][input.name] && partners[index][input.name]) ?? []}
               onChange={handleSelectInputChange}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
             />
           );
           break;

@@ -186,7 +186,6 @@ const CompanyProfilePolicies = () => {
                     headers={headers}
                     recordSelected={() => {}}
                     recordActionClick={() => {}}
-                    haveActions
                   />
                 </div>
                 <Pagination

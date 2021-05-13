@@ -294,7 +294,6 @@ const EmployeeList = () => {
                   data={docs}
                   headers={headers}
                   rowClass="cursor-pointer"
-                  haveActions
                 />
               </div>
               <Pagination
@@ -331,7 +330,6 @@ const EmployeeList = () => {
               options={filterDropdownData}
               value={decisionMakingTypeSelected}
               onChange={handleDecisionMakingTypeFilterChange}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               isSearchble
             />
           </div>

@@ -4,7 +4,6 @@ import { errorNotification, successNotification } from '../../../../common/Toast
 export const setPassword = async (token, password, cb) => {
   try {
     const data = { token, password };
-    console.log('data : ', data);
     const response = await AuthApiService.setPassword(data);
 
     if (response.data.status === 'SUCCESS') {

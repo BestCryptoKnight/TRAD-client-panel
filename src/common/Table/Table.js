@@ -399,12 +399,12 @@ function Row(props) {
             width={10}
             align={align}
             valign={valign}
-            style={{ position: 'sticky', right: 0 }}
-            className={
+            className={`${
               data?.isCompleted?.props?.children?.props?.checked
                 ? `completedTask ${rowClass}`
                 : rowClass
-            }
+            } 
+            fixed-action-menu`}
           >
             {element(data)}
           </td>

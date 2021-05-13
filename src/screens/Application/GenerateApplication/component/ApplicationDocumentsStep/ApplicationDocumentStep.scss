@@ -19,6 +19,7 @@ background-color: #ffffff;
 }
 .document-upload-popup-container {
   display: grid;
+  align-items: center;
   grid-template-columns: 180px 2fr;
   gap: 15px 5px;
 

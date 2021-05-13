@@ -110,7 +110,7 @@ const CreditLimitsList = () => {
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
     await dispatch(saveCreditLimitColumnList({ isReset: true }));
-    dispatchFilter(getCreditLimitColumnList());
+    dispatch(getCreditLimitColumnList());
     toggleCustomField();
     await getCreditLimitListByFilter();
   }, [toggleCustomField, getCreditLimitListByFilter]);
@@ -298,7 +298,6 @@ const CreditLimitsList = () => {
                   recordSelected={onSelectCreditLimitRecord}
                   recordActionClick={() => {}}
                   rowClass="cursor-pointer"
-                  haveActions
                 />
               </div>
               <Pagination
@@ -335,7 +334,6 @@ const CreditLimitsList = () => {
               options={dropdownData?.entityType}
               value={entityTypeSelectedValue}
               onChange={handleEntityTypeFilterChange}
-              menuPortalTarget={document.getElementById('modal')}
               isSearchble
             />
           </div>

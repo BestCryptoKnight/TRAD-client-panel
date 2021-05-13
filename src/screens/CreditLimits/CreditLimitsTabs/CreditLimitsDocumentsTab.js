@@ -24,7 +24,6 @@ import { errorNotification } from '../../../common/Toast';
 import Modal from '../../../common/Modal/Modal';
 import FileUpload from '../../../common/Header/component/FileUpload';
 import Input from '../../../common/Input/Input';
-import Switch from '../../../common/Switch/Switch';
 import { downloadAll } from '../../../helpers/DownloadHelper';
 
 const CreditLimitsDocumentsTab = () => {
@@ -78,7 +77,7 @@ const CreditLimitsDocumentsTab = () => {
     creditLimitsDocumentReducer,
     initialCreditLimitsDocumentState
   );
-  const { documentType, isPublic, description } = useMemo(() => selectedCreditLimitsDocument, [
+  const { documentType, description } = useMemo(() => selectedCreditLimitsDocument, [
     selectedCreditLimitsDocument,
   ]);
   const documentList = useSelector(
@@ -216,14 +215,6 @@ const CreditLimitsDocumentsTab = () => {
       type: CREDIT_LIMITS_DOCUMENT_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
       name: e.target.name,
       value: e.target.value,
-    });
-  }, []);
-
-  const onChangeDocumentSwitch = useCallback(e => {
-    dispatchSelectedCreditLimitsDocument({
-      type: CREDIT_LIMITS_DOCUMENT_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
-      name: e.target.name,
-      value: e.target.checked,
     });
   }, []);
 
@@ -469,13 +460,13 @@ const CreditLimitsDocumentsTab = () => {
                 <Table
                   align="left"
                   valign="center"
-                  tableClass="white-header-table"
-                  rowClass="task-row"
                   data={docs}
                   headers={headers}
+                  tableClass="white-header-table"
                   extraColumns={deleteDocumentAction}
-                  refreshData={getDocumentList}
+                  showCheckbox
                   onChangeRowSelection={data => setSelectedCheckBoxData(data)}
+                  refreshData={getDocumentList}
                 />
               </div>
               <Pagination
@@ -522,7 +513,6 @@ const CreditLimitsDocumentsTab = () => {
               value={documentType}
               onChange={handleDocumentChange}
               isSearchable={false}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
             />
             <span>Please upload your documents here</span>
             <FileUpload
@@ -538,13 +528,6 @@ const CreditLimitsDocumentsTab = () => {
               type="text"
               value={description}
               onChange={onchangeDocumentDescription}
-            />
-            <span>Private/Public</span>
-            <Switch
-              id="document-type"
-              name="isPublic"
-              checked={isPublic}
-              onChange={onChangeDocumentSwitch}
             />
           </div>
         </Modal>

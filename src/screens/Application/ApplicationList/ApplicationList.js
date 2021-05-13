@@ -514,7 +514,6 @@ const ApplicationList = () => {
               options={dropdownData?.entityType}
               value={entityTypeSelectedValue}
               onChange={handleEntityTypeFilterChange}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               isSearchble
             />
           </div>
@@ -528,7 +527,6 @@ const ApplicationList = () => {
               options={dropdownData?.debtors}
               value={debtorIdSelectedValue}
               onChange={handleDebtorIdFilterChange}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               isSearchble
             />
           </div>
@@ -542,7 +540,6 @@ const ApplicationList = () => {
               options={dropdownData?.applicationStatus}
               value={applicationStatusSelectedValue}
               onChange={handleApplicationStatusFilterChange}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               isSearchble
             />
           </div>

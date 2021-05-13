@@ -116,7 +116,6 @@ const CompanyProfile = () => {
             value={input.value}
             options={input.data}
             isSearchable={false}
-            menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
           />
         );
         break;
@@ -143,9 +142,10 @@ const CompanyProfile = () => {
           {INPUTS.map(getComponentFromType)}
         </div>
       ) : (
-        <Loader />
+        <div className="common-white-container">
+          <Loader />
+        </div>
       )}
-
       <CompanyProfilePolicies />
     </>
   );

@@ -6,191 +6,190 @@ import { useSelector } from 'react-redux';
 import Checkbox from '../../../../../common/Checkbox/Checkbox';
 import RadioButton from '../../../../../common/RadioButton/RadioButton';
 
-
 const ApplicationConfirmationStep = () => {
   // const editApplication = useSelector(({ application }) => application.editApplication);
 
   const { company, creditLimit, partners, documents } = useSelector(
-          ({ application }) => application?.editApplication ?? {}
+    ({ application }) => application?.editApplication ?? {}
   );
   const getDocumentStepData = useMemo(
-          () =>
-                  documents?.uploadDocumentApplicationData?.map(doc => {
-                    return [
-                      {
-                        title: 'Document Type',
-                        value: doc?.documentTypeId || '-',
-                        label: 'documentType',
-                        type: 'text',
-                      },
-                      {
-                        title: 'Description',
-                        value: doc?.description || '-',
-                        label: 'description',
-                        type: 'text',
-                      },
-                    ];
-                  }) || [],
-          [documents]
+    () =>
+      documents?.uploadDocumentApplicationData?.map(doc => {
+        return [
+          {
+            title: 'Document Type',
+            value: doc?.documentTypeId || '-',
+            label: 'documentType',
+            type: 'text',
+          },
+          {
+            title: 'Description',
+            value: doc?.description || '-',
+            label: 'description',
+            type: 'text',
+          },
+        ];
+      }) || [],
+    [documents]
   );
 
   function getPersonStepData(personStep) {
     return (
-            personStep &&
-            personStep?.map(person => {
-              if (person.type === 'individual') {
-                return [
-                  {
-                    title: 'Individual Details',
-                    type: 'title',
-                  },
-                  {
-                    title: 'Title*',
-                    value: person?.title || '-',
-                    label: 'directorTitle',
-                    type: 'select',
-                  },
-                  {
-                    type: 'blank',
-                  },
-                  {
-                    title: 'First Name *',
-                    value: person?.firstName || '-',
-                    label: 'directorFirstName',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Middle Name',
-                    value: person?.middleName || '-',
-                    label: 'directorMiddleName',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Last Name',
-                    value: person?.lastName || '-',
-                    label: 'directorLastName',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Date of Birth *',
-                    value: person.dateOfBirth ? moment(person.dateOfBirth).format('DD/MM/YYYY') : '-',
-                    label: 'directorDOB',
-                    type: 'text',
-                  },
-                  {
-                    title:
-                            'Do you give your consent for us to check your credit history with external credit agencies?',
-                    value: person?.allowToCheckCreditHistory || false,
-                    label: 'directorLastName',
-                    type: 'checkbox',
-                  },
-                  {
-                    title: 'Identification Details',
-                    type: 'title',
-                  },
-                  {
-                    title: 'Driver License Number',
-                    value: person?.driverLicenceNumber || '-',
-                    label: 'directorLicenseNumber',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Unit Number',
-                    value: person?.unitNumber || '-',
-                    label: 'directorUnitNumber',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Street Number *',
-                    value: person?.streetNumber || '-',
-                    label: 'directorStreetNumber',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Street Name',
-                    value: person?.streetName || '-',
-                    label: 'directorStreetName',
-                    type: 'text',
-                  },
-                  {
-                    title: 'State *',
-                    value: person?.state || '-',
-                    label: 'directorState',
-                    type: 'select',
-                  },
-                  {
-                    title: 'Postcode *',
-                    value: person?.postCode || '-',
-                    label: 'directorPostCode',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Contact Details',
-                    type: 'title',
-                  },
-                  {
-                    title: 'Phone Number',
-                    value: person?.phoneNumber || '-',
-                    label: 'directorPhoneNumber',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Mobile',
-                    value: person?.mobileNumber || '-',
-                    label: 'directorMobile',
-                    type: 'text',
-                  },
-                  {
-                    title: 'Email Address',
-                    value: person?.email || '-',
-                    label: 'directorEmail',
-                    type: 'text',
-                  },
-                  { type: 'line' },
-                ];
-              }
-              return [
-                {
-                  title: 'Company Details',
-                  type: 'title',
-                },
-                {
-                  title: 'Trading Name',
-                  value: person?.tradingName || '-',
-                  label: 'tradingName',
-                  type: 'text',
-                },
-                {
-                  type: 'blank',
-                },
-                {
-                  title: 'Entity Type*',
-                  value: person?.entityType || '-',
-                  label: 'entityType',
-                  type: 'select',
-                },
-                {
-                  title: 'Entity Name*',
-                  value: person?.entityName || '-',
-                  label: 'entityName',
-                  type: 'select',
-                },
-                {
-                  title: 'ACN',
-                  value: person?.acn || '-',
-                  label: 'acn',
-                  type: 'text',
-                },
-                {
-                  title: 'ABN*',
-                  value: person?.abn || '-',
-                  label: 'abn',
-                  type: 'text',
-                },
+      personStep &&
+      personStep?.map(person => {
+        if (person.type === 'individual') {
+          return [
+            {
+              title: 'Individual Details',
+              type: 'title',
+            },
+            {
+              title: 'Title*',
+              value: person?.title || '-',
+              label: 'directorTitle',
+              type: 'select',
+            },
+            {
+              type: 'blank',
+            },
+            {
+              title: 'First Name *',
+              value: person?.firstName || '-',
+              label: 'directorFirstName',
+              type: 'text',
+            },
+            {
+              title: 'Middle Name',
+              value: person?.middleName || '-',
+              label: 'directorMiddleName',
+              type: 'text',
+            },
+            {
+              title: 'Last Name',
+              value: person?.lastName || '-',
+              label: 'directorLastName',
+              type: 'text',
+            },
+            {
+              title: 'Date of Birth *',
+              value: person.dateOfBirth ? moment(person.dateOfBirth).format('DD/MM/YYYY') : '-',
+              label: 'directorDOB',
+              type: 'text',
+            },
+            {
+              title:
+                'Do you give your consent for us to check your credit history with external credit agencies?',
+              value: person?.allowToCheckCreditHistory || false,
+              label: 'directorLastName',
+              type: 'checkbox',
+            },
+            {
+              title: 'Identification Details',
+              type: 'title',
+            },
+            {
+              title: 'Driver License Number',
+              value: person?.driverLicenceNumber || '-',
+              label: 'directorLicenseNumber',
+              type: 'text',
+            },
+            {
+              title: 'Unit Number',
+              value: person?.unitNumber || '-',
+              label: 'directorUnitNumber',
+              type: 'text',
+            },
+            {
+              title: 'Street Number *',
+              value: person?.streetNumber || '-',
+              label: 'directorStreetNumber',
+              type: 'text',
+            },
+            {
+              title: 'Street Name',
+              value: person?.streetName || '-',
+              label: 'directorStreetName',
+              type: 'text',
+            },
+            {
+              title: 'State *',
+              value: person?.state || '-',
+              label: 'directorState',
+              type: 'select',
+            },
+            {
+              title: 'Postcode *',
+              value: person?.postCode || '-',
+              label: 'directorPostCode',
+              type: 'text',
+            },
+            {
+              title: 'Contact Details',
+              type: 'title',
+            },
+            {
+              title: 'Phone Number',
+              value: person?.phoneNumber || '-',
+              label: 'directorPhoneNumber',
+              type: 'text',
+            },
+            {
+              title: 'Mobile',
+              value: person?.mobileNumber || '-',
+              label: 'directorMobile',
+              type: 'text',
+            },
+            {
+              title: 'Email Address',
+              value: person?.email || '-',
+              label: 'directorEmail',
+              type: 'text',
+            },
+            { type: 'line' },
+          ];
+        }
+        return [
+          {
+            title: 'Company Details',
+            type: 'title',
+          },
+          {
+            title: 'Trading Name',
+            value: person?.tradingName || '-',
+            label: 'tradingName',
+            type: 'text',
+          },
+          {
+            type: 'blank',
+          },
+          {
+            title: 'Entity Type*',
+            value: person?.entityType || '-',
+            label: 'entityType',
+            type: 'select',
+          },
+          {
+            title: 'Entity Name*',
+            value: person?.entityName || '-',
+            label: 'entityName',
+            type: 'select',
+          },
+          {
+            title: 'ACN',
+            value: person?.acn || '-',
+            label: 'acn',
+            type: 'text',
+          },
+          {
+            title: 'ABN*',
+            value: person?.abn || '-',
+            label: 'abn',
+            type: 'text',
+          },
 
-                { type: 'line' },
-              ];
-            })
+          { type: 'line' },
+        ];
+      })
     );
   }
 
@@ -371,102 +370,102 @@ const ApplicationConfirmationStep = () => {
       data: getDocumentStepData,
     },
   ];
-  if(partners?.length === 0 || partners === undefined ) {
-   delete confirmationDetails[28]
-   delete confirmationDetails[29]
-    confirmationDetails?.filter(e=>e);
+  if (partners?.length === 0 || partners === undefined) {
+    delete confirmationDetails[28];
+    delete confirmationDetails[29];
+    confirmationDetails?.filter(e => e);
   }
-  if(documents?.length === 0 ) {
-    delete confirmationDetails[31]
-    confirmationDetails?.filter(e=>e);
+  if (documents?.length === 0) {
+    delete confirmationDetails[31];
+    confirmationDetails?.filter(e => e);
   }
   const getConfirmationComponentFromType = useCallback(
-          detail => {
-            switch (detail.type) {
-              case 'text':
-                return (
-                        <>
-                          <span>{detail?.title}</span>
-                          <span className="detail-value">{detail?.value}</span>
-                        </>
-                );
-              case 'select':
-                return (
-                        <>
-                          <span>{detail?.title}</span>
-                          <span className="detail-value">{detail?.value?.label}</span>
-                        </>
-                );
-              case 'ifYesText':
-                return (
-                        <>
-                          <span>{detail.title}</span>
-                          <span className="long-text">{detail.value}</span>
-                        </>
-                );
-              case 'title':
-                return (
-                        <>
-                          <span className="title">{detail.title}</span>
-                        </>
-                );
-              case 'radio':
-                return (
-                        <>
-                          <span className="radio-title">{detail.title}</span>
-                          <span className="radio-buttons">
+    detail => {
+      switch (detail.type) {
+        case 'text':
+          return (
+            <>
+              <span className="application-confirmation-title">{detail?.title}</span>
+              <span className="detail-value">{detail?.value}</span>
+            </>
+          );
+        case 'select':
+          return (
+            <>
+              <span className="application-confirmation-title">{detail?.title}</span>
+              <span className="detail-value">{detail?.value?.label}</span>
+            </>
+          );
+        case 'ifYesText':
+          return (
+            <>
+              <span className="application-confirmation-title">{detail.title}</span>
+              <span className="long-text">{detail.value}</span>
+            </>
+          );
+        case 'title':
+          return (
+            <>
+              <span className="title">{detail.title}</span>
+            </>
+          );
+        case 'radio':
+          return (
+            <>
+              <span className="radio-title">{detail.title}</span>
+              <span className="radio-buttons">
                 <RadioButton
-                        disabled
-                        id={`${detail.id}-yes`}
-                        name={detail.name}
-                        label="Yes"
-                        value
-                        checked={detail.value}
+                  disabled
+                  id={`${detail.id}-yes`}
+                  name={detail.name}
+                  label="Yes"
+                  value
+                  checked={detail.value}
                 />
                 <RadioButton
-                        disabled
-                        id={`${detail.id}-no`}
-                        name={detail.name}
-                        label="No"
-                        value={false}
-                        checked={!detail.value}
+                  disabled
+                  id={`${detail.id}-no`}
+                  name={detail.name}
+                  label="No"
+                  value={false}
+                  checked={!detail.value}
                 />
               </span>
-                        </>
-                );
-              case 'checkbox':
-                return (
-                        <>
-                          <Checkbox className="grid-checkbox" title={detail.title} />
-                        </>
-                );
-              case 'main-title':
-                return (
-                        <>
-                          <div className="main-title">{detail.title}</div>
-                        </>
-                );
-              case 'line':
-                return <div className="horizontal-line" />;
-              case 'blank':
-                return (
-                        <>
-                          <div />
-                          <div />
-                        </>
-                );
-              case 'array':
-                return detail?.data?.map(elem => elem.map(getConfirmationComponentFromType));
-              default:
-                return null;
-            }
-          },
-          [partners]
+            </>
+          );
+        case 'checkbox':
+          return (
+            <>
+              <Checkbox className="grid-checkbox" title={detail.title} />
+            </>
+          );
+        case 'main-title':
+          return (
+            <>
+              <div className="main-title">{detail.title}</div>
+            </>
+          );
+        case 'line':
+          return <div className="horizontal-line" />;
+        case 'blank':
+          return (
+            <>
+              <div />
+              <div />
+            </>
+          );
+        case 'array':
+          return detail?.data?.map(elem => elem.map(getConfirmationComponentFromType));
+        default:
+          return null;
+      }
+    },
+    [partners]
   );
   return (
-          <div className="application-confirmation-step">
-            {confirmationDetails?.map(getConfirmationComponentFromType)}
-          </div>
+    <div className="application-confirmation-step">
+      {confirmationDetails?.map(getConfirmationComponentFromType)}
+    </div>
   );
 };
 

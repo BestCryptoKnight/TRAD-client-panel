@@ -341,7 +341,6 @@ const ApplicationDocumentsAccordion = props => {
               value={documentType}
               onChange={handleDocumentChange}
               isSearchable={false}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
             />
             <span>Please upload your documents here</span>
             <FileUpload

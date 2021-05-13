@@ -14,7 +14,6 @@ import {
   updateCreditLimitsNote,
 } from '../redux/CreditLimitsAction';
 import Modal from '../../../common/Modal/Modal';
-import Switch from '../../../common/Switch/Switch';
 import Input from '../../../common/Input/Input';
 
 const NOTE_ACTIONS = {
@@ -169,14 +168,6 @@ const CreditLimitsNotesTab = () => {
     [toggleConfirmationModal, getNoteList, deleteId, callBack]
   );
 
-  const onChangeSelectedNoteSwitch = useCallback(e => {
-    dispatchSelectedCreditLimitsNote({
-      type: CREDIT_LIMITS_NOTE_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
-      name: e.target.name,
-      value: e.target.checked,
-    });
-  }, []);
-
   const addOrEditNoteButtons = useMemo(
     () => [
       { title: 'Close', buttonType: 'primary-1', onClick: () => onCloseNotePopup() },
@@ -191,9 +182,7 @@ const CreditLimitsNotesTab = () => {
 
   const onSelectUserRecordActionClick = useCallback(
     (type, noteId, noteData) => {
-      console.log(noteId);
       if (type === NOTE_ACTIONS.EDIT) {
-        console.log('in edit');
         const { description, isPublic } = noteData;
         const data = {
           noteId,
@@ -207,7 +196,6 @@ const CreditLimitsNotesTab = () => {
         });
         toggleModifyNotes();
       } else if (type === NOTE_ACTIONS.DELETE) {
-        console.log('here delete');
         setDeleteId(noteId);
         toggleConfirmationModal();
       }
@@ -293,7 +281,7 @@ const CreditLimitsNotesTab = () => {
           buttons={addOrEditNoteButtons}
           hideModal={toggleModifyNotes}
         >
-          <div className="add-notes-popup-container">
+          <div className="add-notes-popup-container align-center">
             <span>Description</span>
             <Input
               prefixClass="font-placeholder"
@@ -302,13 +290,6 @@ const CreditLimitsNotesTab = () => {
               type="text"
               value={selectedCreditLimitsNote?.description}
               onChange={onChangeSelectedNoteInput}
-            />
-            <span>Private/Public</span>
-            <Switch
-              id="selected-note"
-              name="isPublic"
-              checked={selectedCreditLimitsNote?.isPublic}
-              onChange={onChangeSelectedNoteSwitch}
             />
           </div>
         </Modal>

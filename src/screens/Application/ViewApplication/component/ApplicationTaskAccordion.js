@@ -264,7 +264,6 @@ const ApplicationTaskAccordion = props => {
 
   const handleSelectInputChange = useCallback(
     data => {
-      console.log(data);
       updateAddTaskState(data?.name, data);
       if (data?.name === 'entityType') {
         updateAddTaskState('entityId', []);
@@ -369,7 +368,6 @@ const ApplicationTaskAccordion = props => {
                 isSearchable={false}
                 value={selectedValues}
                 onChange={handleSelectInputChange}
-                menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               />
             </>
           );
@@ -532,7 +530,7 @@ const ApplicationTaskAccordion = props => {
           buttons={addTaskModalButton}
           // hideModal={toggleAddTaskModal}
         >
-          <div className="common-white-container my-work-add-task-container">
+          <div className="common-white-container add-task-container">
             {INPUTS.map(getComponentFromType)}
           </div>
         </Modal>
@@ -544,7 +542,7 @@ const ApplicationTaskAccordion = props => {
           buttons={editTaskModalButton}
           // hideModal={toggleEditTaskModal}
         >
-          <div className="common-white-container my-work-add-task-container">
+          <div className="common-white-container add-task-container">
             {INPUTS.map(getComponentFromType)}
           </div>
         </Modal>
@@ -565,7 +563,7 @@ const ApplicationTaskAccordion = props => {
       )}
       {showConfirmModal && (
         <Modal header="Delete Task" buttons={deleteTaskButtons} hideModal={toggleConfirmationModal}>
-          <span className="confirmation-message">Are you sure you want to delete this Task?</span>
+          <span className="confirmation-message">Are you sure you want to delete this task?</span>
         </Modal>
       )}
     </>

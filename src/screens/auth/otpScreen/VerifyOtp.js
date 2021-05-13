@@ -40,6 +40,12 @@ function VerifyOtp() {
     }
   };
 
+  const onEnterKeyPress = async e => {
+    if (e.keyCode === 13) {
+      await onClickVerifyOTP();
+    }
+  };
+
   return (
     <AuthScreenContainer>
       <div className="login-field-name disabled">Email or Number</div>
@@ -53,20 +59,21 @@ function VerifyOtp() {
         disabled
       />
       <div className="login-field-name">Enter OTP</div>
-      <div className="code-container">
+      <div className="code-container" onKeyDown={onEnterKeyPress}>
         <OtpInput
           value={otp}
           isInputNum
           onChange={onChangeOtp}
-          className=""
-          placeholder="0"
+          placeholder={0}
           numInputs={6}
           separator={<span className="mr-5"> </span>}
         />
       </div>
       <div className="login-action-row">
         <div />
-        <Link to="/login">Back To Login</Link>
+        <Link to="/login" className="login-module-link">
+          Back To Login
+        </Link>
       </div>
       <Button title="Resend OTP" buttonType="outlined-secondary" onClick={resendOTP} />
       <Button title="Submit" buttonType="secondary" className="ml-15" onClick={onClickVerifyOTP} />

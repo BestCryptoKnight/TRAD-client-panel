@@ -129,7 +129,7 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
       return {
         ...state,
         creditLimitsFilterList: {
-          ...state.creditLimitsFilterList,
+          ...state?.creditLimitsFilterList,
           dropdownData,
         },
       };
@@ -138,7 +138,7 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
     case CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA:
       return {
         ...state,
-        selectedCreditLimitData: action.data,
+        selectedCreditLimitData: action?.data,
       };
 
     case CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMIT_APPLICATION_LIST_REQUEST:
@@ -246,7 +246,6 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
       columnList[`${type}`] = columnList[`${type}`].map(field =>
         field.name === name ? { ...field, isChecked: value } : field
       );
-      console.log(columnList[`${type}`]);
       return {
         ...state,
         tasks: {
@@ -321,6 +320,15 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
         },
       };
     }
+
+    case CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.EDIT_TASK.GET_CREDIT_LIMITS_TASK_DETAILS:
+      return {
+        ...state,
+        task: {
+          ...state?.task,
+          addTask: action?.data,
+        },
+      };
 
     case CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_RESET_ADD_TASK_STATE:
       return {

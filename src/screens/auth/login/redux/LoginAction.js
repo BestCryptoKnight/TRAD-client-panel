@@ -1,11 +1,12 @@
 import { LOGIN_REDUX_CONSTANTS } from './LoginReduxConstants';
 import AuthApiService from '../../services/AuthApiService';
-import { errorNotification, successNotification } from '../../../../common/Toast';
+import { successNotification } from '../../../../common/Toast';
 import {
   saveAuthTokenLocalStorage,
   saveTokenToSession,
 } from '../../../../helpers/LocalStorageHelper';
-import {getLoggedUserDetails} from "../../../../common/Header/redux/HeaderAction";
+import { getLoggedUserDetails } from '../../../../common/Header/redux/HeaderAction';
+import { displayErrors } from '../../../../helpers/ErrorNotifyHelper';
 
 export const loginUser = ({ email, password }, rememberMe) => {
   return async dispatch => {
@@ -31,26 +32,7 @@ export const loginUser = ({ email, password }, rememberMe) => {
         await dispatch(getLoggedUserDetails());
       }
     } catch (e) {
-      if (e.response && e.response.data) {
-        if (e.response.data.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        } else if (e.response.data.status === 'INTERNAL_SERVER_ERROR') {
-          errorNotification('Internal server error');
-        } else if (e.response.data.status === 'ERROR') {
-          if (e.response.data.messageCode) {
-            switch (e.response.data.messageCode) {
-              case 'INCORRECT_EMAIL_OR_PASSWORD':
-                errorNotification('Incorrect email or password');
-                break;
-              default:
-                break;
-            }
-          } else {
-            errorNotification('It seems like server is down, Please try again later.');
-          }
-        }
-        throw Error();
-      }
+      displayErrors(e);
     }
   };
 };

@@ -454,7 +454,6 @@ const ApplicationCompanyStep = () => {
               isSearchable
               value={companyState?.[input?.name]}
               onChange={handleOnChange}
-              menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
             />
           );
           break;

@@ -164,7 +164,6 @@ const ViewApplication = () => {
                 value={applicationDetail?.status || []}
                 options={applicationDetail?.applicationStatus || []}
                 isDisabled={!applicationDetail?.isAllowToUpdate}
-                menuPortalTarget={document.getElementsByClassName('modal')?.[0]}
               />
             </div>
             <div className="application-details-grid">

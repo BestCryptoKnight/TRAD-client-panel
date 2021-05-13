@@ -59,7 +59,6 @@ export const changeEmployeeColumnList = data => {
 
 export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = false }) => {
   return async dispatch => {
-    console.log(employeeColumnList);
     try {
       let data = {
         columns: [],
