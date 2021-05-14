@@ -38,7 +38,11 @@ const initialApplicationList = {
     company: {
       postCode: '',
       state: [],
-      country: [],
+      country: {
+        label:"Australia",
+        name:"country",
+        value:"AUS",
+      },
       suburb: '',
       streetType: [],
       streetName: '',
@@ -52,6 +56,7 @@ const initialApplicationList = {
       entityName: [],
       acn: '',
       abn: '',
+      registrationNo:'',
       tradingName: '',
       debtorId: [],
       clientList: [],
@@ -286,9 +291,9 @@ export const application = (state = initialApplicationList, action) => {
         ...state,
         editApplication: {
           ...state?.editApplication,
-          [action.stepName]: {
-            ...state?.editApplication[action.stepName],
-            [action.name]: action.value,
+          [action?.stepName]: {
+            ...state?.editApplication[action?.stepName],
+            [action?.name]: action?.value,
           },
         },
       };
@@ -298,19 +303,19 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
-          partners: [...state.editApplication.partners, action.data],
+          ...state?.editApplication,
+          partners: [...(state?.editApplication?.partners ?? []), action?.data],
         },
       };
     }
 
     case APPLICATION_REDUX_CONSTANTS.PERSON.REMOVE_APPLICATION_PERSON: {
-      const perStep = state.editApplication.partners;
+      const perStep = state?.editApplication?.partners;
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
-          partners: perStep.filter((e, i) => i !== action.data),
+          ...state?.editApplication,
+          partners: perStep.filter((e, i) => i !== action?.data),
         },
       };
     }
@@ -320,53 +325,59 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
-          partners: action.data,
+          ...state?.editApplication,
+          partners: action?.data,
         },
       };
     }
 
     case APPLICATION_REDUX_CONSTANTS.PERSON.EDIT_APPLICATION_PERSON: {
-      const partners = [...state.editApplication.partners];
-      partners[action.index] = {
-        ...partners[action.index],
-        [action.name]: action.value,
+      const partners = [...state?.editApplication?.partners];
+      partners[action?.index] = {
+        ...partners?.[action?.index],
+        [action?.name]: action?.value,
       };
 
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
+          ...state?.editApplication,
           partners,
         },
       };
     }
+
     case APPLICATION_REDUX_CONSTANTS.PERSON.PERSON_STEP_COMPANY_EDIT_APPLICATION_UPDATE_ALL_DATA: {
-      const partners = [...state.editApplication.partners];
-      partners[action.index] = {
-        ...partners[action.index],
-        ...action.data,
+      const partners = [...state?.editApplication?.partners];
+      partners[action?.index] = {
+        ...partners[action?.index],
+        tradingName: action?.data?.tradingName ?? '',
+        entityType: action?.data?.entityType ?? '',
+        entityName: action?.data?.entityName ?? '',
+        abn: action?.data?.abn ?? '',
+        acn: action?.data?.acn ?? '',
       };
 
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
+          ...state?.editApplication,
           partners,
         },
       };
     }
 
     case APPLICATION_REDUX_CONSTANTS.PERSON.CHANGE_APPLICATION_PERSON_TYPE: {
-      const partners = [...state.editApplication.partners];
-      partners[action.index] = {
-        ...action.data,
+      const partners = [...state?.editApplication?.partners];
+      partners[action?.index] = {
+        ...partners[action?.index],
+        type: action?.personType,
       };
 
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
+          ...state?.editApplication,
           partners,
         },
       };

@@ -6,7 +6,11 @@
   color: $field-color;
   border-collapse: collapse;
   td, th {
+    max-width: 350px;
     padding: 0.313rem 1.25rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 

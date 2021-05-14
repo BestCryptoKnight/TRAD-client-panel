@@ -199,17 +199,7 @@ export const getApplicationCompanyDataFromABNOrACN = async (params) => {
         }
         return null;
     } catch (e) {
-        if (e.response && e.response.data) {
-            if (e.response.data.status==='ERROR') {
-                errorNotification(e.response.data.message);
-            } else if (e.response.data.status===undefined) {
-                errorNotification('It seems like server is down, Please try again later.');
-            } else if (e.response.data.status==='INTERNAL_SERVER_ERROR') {
-                errorNotification('Internal server error');
-            } else {
-                errorNotification('It seems like server is down, Please try again later.');
-            }
-        }
+        displayErrors(e);
         throw Error();
     }
 };
@@ -394,6 +384,25 @@ export const wipeOutPersonsAsEntityChange = (debtor, data) => {
 };
 
 // person step edit application
+export const getApplicationPersonDataFromABNOrACN = (id, params) => {
+    return async () => {
+        try {
+            const response = await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(
+                    id,
+                    params
+            );
+
+            if (response?.data?.status === 'SUCCESS') {
+                return response.data.data;
+            }
+        } catch (e) {
+            displayErrors(e);
+            throw Error();
+        }
+        return null;
+    };
+};
+
 export const updatePersonData = (index, name, value) => {
     return dispatch => {
         dispatch({
@@ -405,46 +414,12 @@ export const updatePersonData = (index, name, value) => {
     };
 };
 // dispatch this when radio button change from indi to company
-export const changePersonType = (index, type) => {
-    const companyData = {
-        type: 'company',
-        abn: '',
-        acn: '',
-        entityType: '',
-        entityName: '',
-        tradingName: '',
-        errors: {},
-    };
-
-    const individualData = {
-        type: 'individual',
-        title: '',
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        dateOfBirth: '',
-        driverLicenceNumber: '',
-        phoneNumber: '',
-        mobileNumber: '',
-        email: '',
-        allowToCheckCreditHistory: false,
-        property: '',
-        unitNumber: '',
-        streetNumber: '',
-        streetName: '',
-        streetType: '',
-        suburb: '',
-        state: '',
-        country: '',
-        postCode: '',
-        errors: {},
-    };
-    const data = type==='individual' ? individualData:companyData;
+export const changePersonType = (index, personType) => {
     return dispatch => {
         dispatch({
             type: APPLICATION_REDUX_CONSTANTS.PERSON.CHANGE_APPLICATION_PERSON_TYPE,
             index,
-            data,
+            personType,
         });
     };
 };
@@ -468,8 +443,8 @@ export const saveApplicationStepDataToBackend = data => {
                 if (response?.data?.data?.applicationStage) {
                     const {_id} = response.data.data;
                     dispatch(changeEditApplicationFieldValue('_id', _id));
-                    successNotification('Application step saved successfully');
                 }
+                successNotification(response?.data?.message || 'Application step saved successfully');
             }
         } catch (e) {
             if (e.response?.data?.messageCode==='APPLICATION_ALREADY_EXISTS') {
