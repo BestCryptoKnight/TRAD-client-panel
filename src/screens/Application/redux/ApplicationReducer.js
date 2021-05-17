@@ -261,7 +261,7 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
+          ...state?.editApplication,
           [action.name]: action.value,
         },
       };
@@ -271,7 +271,7 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         editApplication: {
-          ...initialApplicationList.editApplication,
+          ...initialApplicationList?.editApplication,
         },
       };
     }
@@ -281,7 +281,7 @@ export const application = (state = initialApplicationList, action) => {
         ...state,
         editApplication: {
           ...state?.editApplication,
-          [action.stepName]: { ...state?.editApplication[action.stepName], ...action.data },
+          [action.stepName]: { ...state?.editApplication?.[action.stepName], ...action.data },
         },
       };
     }
@@ -292,7 +292,7 @@ export const application = (state = initialApplicationList, action) => {
         editApplication: {
           ...state?.editApplication,
           [action?.stepName]: {
-            ...state?.editApplication[action?.stepName],
+            ...state?.editApplication?.[action?.stepName],
             [action?.name]: action?.value,
           },
         },

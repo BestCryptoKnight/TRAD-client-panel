@@ -1,36 +1,39 @@
+/* eslint-disable no-restricted-globals */
 import {
   saveApplicationStepDataToBackend,
   updateEditApplicationData,
 } from '../../../../redux/ApplicationAction';
+import { SPECIAL_CHARACTER_REGEX } from '../../../../../../constants/RegexConstants';
 
 export const applicationCompanyStepValidations = async (dispatch, data, editApplicationData) => {
   const errors = {};
   let validated = true;
 
-  if(data?.country?.value === 'AUS' || data?.country?.value === 'NZL'){
+  if (data?.country?.value === 'AUS' || data?.country?.value === 'NZL') {
     if (!data?.abn || data?.abn.trim().length <= 0) {
       validated = false;
       errors.abn = 'Please enter ABN number before continue';
     }
-    if (data?.abn && data?.abn.trim().length !== 11 && Number.isNaN(data?.abn)) {
+    if (data?.abn && data?.abn.trim().length !== 11 && Number.isNaN(Number(data?.abn))) {
       validated = false;
       errors.abn = 'Please enter valid ABN number before continue';
     }
-    if (data?.acn && data.acn?.trim().length !== 9 && Number.isNaN(data?.acn)) {
+    if (data?.acn && data.acn?.trim().length !== 9 && Number.isNaN(Number(data?.acn))) {
       validated = false;
       errors.acn = 'Please enter valid ACN number before continue';
     }
+  } else {
+    if (!data?.registrationNo || data?.registrationNo?.trim().length <= 0) {
+      validated = false;
+      errors.registrationNo = 'Please enter registration number before continue';
+    }
+    if (data?.registrationNo && (data?.registrationNo?.length <= 5 || data?.registrationNo?.length >= 30) && Number.isNaN(Number(data?.registrationNo))
+    ) {
+      validated = false;
+      errors.registrationNo = 'Please enter valid registration number';
+    }
   }
-  else {
-    if((!data?.registrationNo) || data?.registrationNo?.trim().length <= 0){
-    validated = false;
-    errors.registrationNo = 'Please enter registration number before continue';
-  }
-  if(data?.registrationNo && (data?.registrationNo?.length <= 5 || data?.registrationNo?.length >= 30) && Number.isNaN(data?.registrationNo)){
-    validated = false;
-    errors.registrationNo = 'Please enter valid registration number';
-  }}
-  if (!data?.entityName || data?.entityName?.value.length <= 0) {
+  if (!data?.entityName || data?.entityName?.length <= 0 || data?.entityName?.value?.length <= 0) {
     validated = false;
     errors.entityName = 'Please enter entity name';
   }
@@ -46,28 +49,30 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.streetNumber = 'Please enter street number before continue';
   }
-  if (data?.streetNumber && Number.isNaN(data?.streetNumber)) {
+  if (data?.streetNumber && Number.isNaN(Number(data?.streetNumber))) {
     validated = false;
     errors.streetNumber = 'Street number should be number';
   }
-  if (!data?.state || data?.state.length === 0) {
+  if (!data?.state || data?.state?.length === 0) {
     validated = false;
-    if(data?.country?.value === 'AUS' || data?.country?.value === 'NZL') {
+    if (data?.country?.value === 'AUS' || data?.country?.value === 'NZL') {
       errors.state = 'Please select state before continue';
-    }
-    else{
+    } else {
       errors.state = 'Please enter state before continue';
     }
+  }
+  if (data?.state && SPECIAL_CHARACTER_REGEX.test(data?.state?.toString())) {
+    errors.state = 'Please enter valid state';
   }
   if (!data?.postCode || data?.postCode?.length === 0) {
     validated = false;
     errors.postCode = 'Please enter post code before continue';
   }
-  if (data?.postCode && Number.isNaN(data?.postCode)) {
+  if (data?.postCode && Number.isNaN(Number(data?.postCode))) {
     validated = false;
     errors.postCode = 'Post code should be number';
   }
-  if (data?.phoneNumber && Number.isNaN(data?.phoneNumber)) {
+  if (data?.phoneNumber && Number.isNaN(Number(data?.phoneNumber))) {
     validated = false;
     errors.phoneNumber = 'Phone number should be number';
   }
@@ -97,7 +102,7 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
 
     delete country?.name;
 
-    let finalData = {
+    const finalData = {
       stepper: 'company',
       debtorId: debtorId?.value,
       isActive: typeof isActive === 'string' ? isActive === 'Active' : isActive,
@@ -121,10 +126,10 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       applicationId: editApplicationData?._id ?? '',
     };
 
-    if(data?.country?.value === 'AUS' || data?.country?.value === 'NZL'){
+    if (data?.country?.value === 'AUS' || data?.country?.value === 'NZL') {
       finalData.abn = abn ?? '';
       finalData.acn = acn ?? '';
-    }else {
+    } else {
       finalData.registrationNo = registrationNo ?? '';
     }
 
