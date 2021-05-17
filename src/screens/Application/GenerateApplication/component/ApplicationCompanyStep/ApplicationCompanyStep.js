@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import ReactSelect from 'react-select';
 import _ from 'lodash';
 import Input from '../../../../../common/Input/Input';
-import './ApplicationCompanyStep.scss';
 import {
   getApplicationCompanyDataFromABNOrACN,
   getApplicationCompanyDataFromDebtor,

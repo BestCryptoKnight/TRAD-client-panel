@@ -1,5 +1,4 @@
 import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
-import './Header.scss';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -208,7 +207,7 @@ const Header = () => {
   };
 
   const headerTitle = useMemo(
-    () => SIDEBAR_URLS.find(item => history.location.pathname.includes(item.url)).title,
+    () => SIDEBAR_URLS.find(item => history?.location?.pathname?.includes(item.url))?.title,
     [history.location.pathname]
   );
 

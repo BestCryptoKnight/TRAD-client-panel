@@ -1,0 +1,11 @@
+.tab-content-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0 20px 0;
+}
+
+.tab:hover:not(.active-tab) {
+  color: $primary-color;
+}

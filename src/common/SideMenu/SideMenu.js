@@ -1,4 +1,3 @@
-import './SideMenu.scss';
 import { NavLink } from 'react-router-dom';
 import logo from '../../assets/images/logo.svg';
 import { SIDEBAR_URLS } from '../../constants/SidebarConstants';

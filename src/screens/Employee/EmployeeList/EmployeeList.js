@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import './EmployeeList.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';

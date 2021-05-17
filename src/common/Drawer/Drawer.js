@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import './Drawer.scss';
 import PropTypes from 'prop-types';
 import { useOnClickOutside } from '../../hooks/UserClickOutsideHook';
 
@@ -11,24 +10,24 @@ const Drawer = props => {
   const drawerClasses = `drawer-container ${drawerState ? 'drawer-opened' : ''} ${className}`;
 
   return (
-          <>
-            <div className={drawerState ? 'drawer-overlay' : ''} />
-            <div className={drawerClasses} {...restProps} ref={drawerMenuRef}>
-              <div className="drawer-wrapper">
-                <div className="drawer-header-container">
-                  {header}
-                  <span
-                          className="material-icons-round close-drawer"
-                          title="Close drawer"
-                          onClick={closeDrawer}
-                  >
+    <>
+      <div className={drawerState ? 'drawer-overlay' : ''} />
+      <div className={drawerClasses} {...restProps} ref={drawerMenuRef}>
+        <div className="drawer-wrapper">
+          <div className="drawer-header-container">
+            {header}
+            <span
+              className="material-icons-round close-drawer"
+              title="Close drawer"
+              onClick={closeDrawer}
+            >
               close
             </span>{' '}
-                </div>
-                <div className="drawer-content">{children}</div>
-              </div>
-            </div>
-          </>
+          </div>
+          <div className="drawer-content">{children}</div>
+        </div>
+      </div>
+    </>
   );
 };
 

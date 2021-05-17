@@ -1,13 +1,11 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { useEffect } from 'react';
-import LoginScreen from '../screens/auth/login/LoginScreen';
-import ForgotPassword from '../screens/auth/forgotPassword/ForgotPassword';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Suspense, useEffect } from 'react';
 import { saveTokenFromLocalStorageToSession } from '../helpers/LocalStorageHelper';
-import ResetPassword from '../screens/auth/resetPassword/ResetPassword';
-import VerifyOtp from '../screens/auth/otpScreen/VerifyOtp';
-import { AllAuthenticatedRoutes, AuthenticatedRoute } from './AuthenticatedRoutes';
-import ForbiddenAccessPage from '../common/ForbiddenAccessPage/ForbiddenAccessPage';
-import SetPassword from '../screens/auth/setPassword/SetPassword';
+import Loader from '../common/Loader/Loader';
+import { AuthenticatedRoute } from './AuthenticatedRoutes';
+import { ROUTES_CONSTANTS } from './RoutesConstants';
+import { NonAuthenticatedRoute } from './NonAuthenticatedRoutes';
+import Layout from '../common/Layout/Layout';
 
 function Routes() {
   useEffect(() => {
@@ -16,16 +14,25 @@ function Routes() {
 
   return (
     <Router>
-      <Switch>
-        <Route exact path="/login" component={LoginScreen} />
-        <Route exact path="/forgot-password" component={ForgotPassword} />
-        <Route exact path="/set-password" component={SetPassword} />
-        <Route exact path="/reset-password" component={ResetPassword} />
-        <Route exact path="/verify-otp" component={VerifyOtp} />
-        <Route exact path="/forbidden-access" component={ForbiddenAccessPage} />
-        <AuthenticatedRoute exact path="/" />
-        <AllAuthenticatedRoutes />
-      </Switch>
+      <Layout>
+        <Suspense fallback={<Loader />}>
+          <Switch>
+            {ROUTES_CONSTANTS.map(({ path, component, authenticated, escapeRedirect }) => {
+              const Component = authenticated ? AuthenticatedRoute : NonAuthenticatedRoute;
+
+              return (
+                <Component
+                  key={path}
+                  exact
+                  path={path}
+                  component={component}
+                  escapeRedirect={escapeRedirect}
+                />
+              );
+            })}
+          </Switch>
+        </Suspense>
+      </Layout>
     </Router>
   );
 }

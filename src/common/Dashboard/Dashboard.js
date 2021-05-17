@@ -1,5 +1,4 @@
-import React  from 'react';
-import './Dashboard.scss';
+import React from 'react';
 import PropTypes from 'prop-types';
 import SideMenu from '../SideMenu/SideMenu';
 import Header from '../Header/Header';

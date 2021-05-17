@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import './CompanyProfilePolicies.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import BigInput from '../../../common/BigInput/BigInput';

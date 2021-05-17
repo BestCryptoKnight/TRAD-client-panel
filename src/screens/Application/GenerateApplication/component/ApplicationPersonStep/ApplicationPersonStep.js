@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import './ApplicationPersonStep.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import Accordion from '../../../../../common/Accordion/Accordion';
 import PersonIndividualDetail from './personIndividualDetail/PersonIndividualDetail';
@@ -17,6 +16,11 @@ const ApplicationPersonStep = () => {
 
     const entityTypeFromCompany = useMemo(() => entityType?.value ?? '', [entityType]);
 
+  useEffect(() => {
+    if (personState?.length < 1 && ['PARTNERSHIP', 'TRUST'].includes(entityTypeFromCompany)) {
+      dispatch(addPersonDetail('individual'));
+    }
+  }, []);
     useEffect(() => {
         if (personState?.length < 1 && ['PARTNERSHIP', 'TRUST'].includes(entityTypeFromCompany)) {
             dispatch(addPersonDetail('individual'));
@@ -26,6 +30,7 @@ const ApplicationPersonStep = () => {
 
     const {companyEntityType ,streetType, australianStates, countryList, newZealandStates }  = useSelector(
             ({ application }) => application?.applicationFilterList?.dropdownData ?? []);
+
 
     const getAccordionAccordingEntityType = useCallback(
             (person, index) => {
@@ -57,11 +62,11 @@ const ApplicationPersonStep = () => {
             [entityTypeFromCompany ,newZealandStates , countryList  ,australianStates ,streetType ,companyEntityType]
     );
 
-    return (
-            <>
-                <Accordion>{personState ? personState?.map(getAccordionAccordingEntityType) : ''}</Accordion>
-            </>
-    );
+  return (
+          <>
+            <Accordion>{personState ? personState?.map(getAccordionAccordingEntityType) : ''}</Accordion>
+          </>
+  );
 };
 
 export default ApplicationPersonStep;

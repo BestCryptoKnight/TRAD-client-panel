@@ -1,8 +1,7 @@
-import React from "react";
-import './ButtonLoader.scss';
+import React from 'react';
 
 const ButtonLoader = () => {
-    return(<div className="button-loader"/> )
-}
+  return <div className="button-loader" />;
+};
 
 export default ButtonLoader;

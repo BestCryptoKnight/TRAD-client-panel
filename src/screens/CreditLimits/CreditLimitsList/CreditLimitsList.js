@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import './CreditLimitsList.scss';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactSelect from 'react-select';
