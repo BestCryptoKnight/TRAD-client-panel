@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import AuthScreenContainer from '../common/CommonAuthScreen/AuthScreenContainer';
 import Button from '../../../common/Button/Button';
@@ -11,6 +12,10 @@ import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 function ResetPassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const { resetPasswordButtonLoaderAction } = useSelector(
+    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+  );
 
   const history = useHistory();
   const { token } = useQueryParams();
@@ -83,6 +88,7 @@ function ResetPassword() {
         buttonType="secondary"
         className="ml-15"
         onClick={onClickResetPassword}
+        isLoading={resetPasswordButtonLoaderAction}
       />
     </AuthScreenContainer>
   );

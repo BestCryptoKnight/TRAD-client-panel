@@ -8,6 +8,10 @@
   cursor: pointer;
 }
 
+.button:disabled{
+  cursor: not-allowed;
+}
+
 .primary-button {
   background-color: $primary-color;
   border-color: $primary-color;
@@ -87,4 +91,25 @@
 
 .primary-button.icon-button, .secondary-button.icon-button {
   border: 1px solid white;
+}
+
+.button-loader {
+  border: 3px solid grey;
+  border-radius: 50%;
+  border-top: 3px solid #fff;
+  width: 20px;
+  height: 20px;
+  -webkit-animation: spin 1s linear infinite; /* Safari */
+  animation: spin 1s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

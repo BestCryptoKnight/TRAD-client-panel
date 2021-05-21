@@ -31,6 +31,11 @@ const CompanyProfilePolicies = () => {
   const { docs, page, limit, pages, total, headers, isLoading } = useMemo(() => policyList, [
     policyList,
   ]);
+  const {
+    CompanyProfilePolicyColumnSaveButtonLoaderAction,
+    CompanyProfilePolicyColumnResetButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const { defaultFields, customFields } = useMemo(
     () =>
@@ -139,11 +144,22 @@ const CompanyProfilePolicies = () => {
         title: 'Reset Defaults',
         buttonType: 'outlined-primary',
         onClick: onClickResetDefaultColumnSelection,
+        isLoading: CompanyProfilePolicyColumnResetButtonLoaderAction,
       },
       { title: 'Close', buttonType: 'primary-1', onClick: () => onClickCloseCustomFieldModal() },
-      { title: 'Save', buttonType: 'primary', onClick: onClickSaveColumnSelection },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: onClickSaveColumnSelection,
+        isLoading: CompanyProfilePolicyColumnSaveButtonLoaderAction,
+      },
     ],
-    [onClickResetDefaultColumnSelection, toggleCustomField, onClickSaveColumnSelection]
+    [
+      onClickResetDefaultColumnSelection,
+      onClickSaveColumnSelection,
+      CompanyProfilePolicyColumnResetButtonLoaderAction,
+      CompanyProfilePolicyColumnSaveButtonLoaderAction,
+    ]
   );
 
   useEffect(() => {

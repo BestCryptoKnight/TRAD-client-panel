@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import AuthScreenContainer from '../common/CommonAuthScreen/AuthScreenContainer';
 import Button from '../../../common/Button/Button';
@@ -9,23 +9,24 @@ import { checkForEmail, replaceHiddenCharacters } from '../../../helpers/Validat
 import { forgotPassword } from './redux/ForgotPasswordAction';
 
 function ForgotPassword() {
-  const [email, setEmail] = useState();
-
+  const [email, setEmail] = useState('');
+  const { forgotPasswordButtonLoaderAction } = useSelector(
+    ({ loaderButtonReducer }) => loaderButtonReducer ?? {}
+  );
   const history = useHistory();
 
   const onChangeEmail = e => {
     const emailText = e.target.value;
-
     setEmail(emailText);
   };
 
   const onClickForgotPassword = async () => {
-    if (email.toString().trim().length === 0) errorNotification('Please enter email');
+    if (email?.toString()?.trim()?.length === 0) errorNotification('Please enter email');
     else if (!checkForEmail(replaceHiddenCharacters(email)))
       errorNotification('Please enter a valid email');
     else {
       try {
-        await forgotPassword(email.trim());
+        await forgotPassword(email?.trim());
         history.push(`/verify-otp?email=${email}`);
       } catch (e) {
         /**/
@@ -57,7 +58,12 @@ function ForgotPassword() {
           Back To Login
         </Link>
       </div>
-      <Button title="Send OTP" buttonType="secondary" onClick={onClickForgotPassword} />
+      <Button
+        title="Send OTP"
+        buttonType="secondary"
+        onClick={onClickForgotPassword}
+        isLoading={forgotPasswordButtonLoaderAction}
+      />
     </AuthScreenContainer>
   );
 }

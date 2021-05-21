@@ -10,6 +10,7 @@ import {employee} from "../screens/Employee/redux/EmployeeReducer";
 import {companyProfile} from "../screens/CompanyProfile/redux/CompanyProfileReducer";
 import {LOGIN_REDUX_CONSTANTS} from "../screens/auth/login/redux/LoginReduxConstants";
 import {support} from "../screens/Support/redux/SupportReducer";
+import {loaderButtonReducer} from "../common/LoaderButton/redux/LoaderButtonReducer";
 
 const appReducer = combineReducers({
   creditLimits,
@@ -17,7 +18,8 @@ const appReducer = combineReducers({
   application,
   employee,
   companyProfile,
-  support
+  support,
+  loaderButtonReducer,
 });
 const rootReducer = (state, action) => {
   if (action.type === LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION) {

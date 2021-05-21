@@ -5,6 +5,10 @@ import {
   EMPLOYEE_REDUX_CONSTANTS,
 } from './EmployeeReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
+import {
+  startLoaderButtonOnRequest,
+  stopLoaderButtonOnSuccessOrFail,
+} from '../../../common/LoaderButton/redux/LoaderButtonAction';
 
 export const getEmployeeList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
@@ -60,6 +64,9 @@ export const changeEmployeeColumnList = data => {
 export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = false }) => {
   return async dispatch => {
     try {
+      startLoaderButtonOnRequest(
+        `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         columns: [],
         isReset: true,
@@ -77,6 +84,9 @@ export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = fals
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
+          stopLoaderButtonOnSuccessOrFail(
+            `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
           throw Error();
         }
       }
@@ -88,15 +98,15 @@ export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = fals
           data: employeeColumnList,
         });
         successNotification('Columns updated successfully.');
+        stopLoaderButtonOnSuccessOrFail(
+          `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      if (e.response && e.response.data) {
-        if (e.response.data.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        } else if (e.response.data.status === 'ERROR') {
-          errorNotification(e.response?.data?.message || 'Internal server error');
-        }
-      }
+      stopLoaderButtonOnSuccessOrFail(
+        `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
+      displayErrors(e);
     }
   };
 };

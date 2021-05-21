@@ -9,6 +9,10 @@ import ApplicationCompanyStepApiServices from '../services/ApplicationCompanySte
 import ApplicationDocumentStepApiServices from '../services/ApplicationDocumentStepApiServices';
 import ApplicationViewApiServices from '../services/ApplicationViewApiServices';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
+import {
+  startLoaderButtonOnRequest,
+  stopLoaderButtonOnSuccessOrFail,
+} from '../../../common/LoaderButton/redux/LoaderButtonAction';
 
 export const getApplicationsListByFilter = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
@@ -78,6 +82,9 @@ export const saveApplicationColumnNameList = ({
 }) => {
   return async dispatch => {
     try {
+      startLoaderButtonOnRequest(
+        `applicationListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         isReset: true,
         columns: [],
@@ -97,6 +104,9 @@ export const saveApplicationColumnNameList = ({
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
+          stopLoaderButtonOnSuccessOrFail(
+            `applicationListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
           throw Error();
         }
       }
@@ -107,8 +117,14 @@ export const saveApplicationColumnNameList = ({
           data: applicationColumnNameList,
         });
         successNotification('Columns updated successfully');
+        stopLoaderButtonOnSuccessOrFail(
+          `applicationListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
+      stopLoaderButtonOnSuccessOrFail(
+        `applicationListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
       throw Error();
     }
@@ -536,14 +552,18 @@ export const getDocumentTypeList = () => {
 export const uploadDocument = (data, config) => {
   return async dispatch => {
     try {
+      startLoaderButtonOnRequest('GenerateApplicationDocumentUploadButtonLoaderAction');
       const response = await ApplicationDocumentStepApiServices.uploadDocument(data, config);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.DOCUMENTS.UPLOAD_DOCUMENT_DATA,
           data: response.data.data,
         });
+        successNotification(response?.data?.message || 'Application document added successfully.');
+        stopLoaderButtonOnSuccessOrFail('GenerateApplicationDocumentUploadButtonLoaderAction');
       }
     } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('GenerateApplicationDocumentUploadButtonLoaderAction');
       displayErrors(e);
     }
   };
@@ -551,14 +571,17 @@ export const uploadDocument = (data, config) => {
 
 export const deleteApplicationDocumentAction = async (appDocId, cb) => {
   try {
+    startLoaderButtonOnRequest('GenerateApplicationDocumentDeleteButtonLoaderAction');
     const response = await ApplicationDocumentStepApiServices.deleteApplicationDocument(appDocId);
     if (response.data.status === 'SUCCESS') {
-      successNotification('Application document deleted successfully.');
+      successNotification(response?.data?.message || 'Application document deleted successfully.');
+      stopLoaderButtonOnSuccessOrFail('GenerateApplicationDocumentDeleteButtonLoaderAction');
       if (cb) {
         cb();
       }
     }
   } catch (e) {
+    stopLoaderButtonOnSuccessOrFail('GenerateApplicationDocumentDeleteButtonLoaderAction');
     displayErrors(e);
   }
 };

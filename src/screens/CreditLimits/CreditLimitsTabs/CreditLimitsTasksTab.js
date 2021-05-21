@@ -85,6 +85,10 @@ const CreditLimitsTasksTab = () => {
     value => setShowConfirmModal(value !== undefined ? value : e => !e),
     [setShowConfirmModal]
   );
+  const {
+    CreditLimitTaskColumnSaveButtonLoaderAction,
+    CreditLimitTaskColumnResetButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
 
   const deleteTask = useCallback(
     data => {
@@ -489,15 +493,23 @@ const CreditLimitsTasksTab = () => {
         title: 'Reset Defaults',
         buttonType: 'outlined-primary',
         onClick: onClickResetDefaultColumnSelection,
+        isLoading: CreditLimitTaskColumnResetButtonLoaderAction,
       },
       { title: 'Close', buttonType: 'primary-1', onClick: onClickCloseCustomFieldModal },
-      { title: 'Save', buttonType: 'primary', onClick: onClickSaveColumnSelection },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: onClickSaveColumnSelection,
+        isLoading: CreditLimitTaskColumnSaveButtonLoaderAction,
+      },
     ],
     [
       onClickResetDefaultColumnSelection,
       toggleCustomFieldModal,
       onClickCloseCustomFieldModal,
       onClickSaveColumnSelection,
+      CreditLimitTaskColumnResetButtonLoaderAction,
+      CreditLimitTaskColumnSaveButtonLoaderAction,
     ]
   );
 

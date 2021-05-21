@@ -75,6 +75,10 @@ const ApplicationList = () => {
     ({ application }) => application?.applicationFilterList ?? {}
   );
   const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
+  const {
+    applicationListColumnSaveButtonLoaderAction,
+    applicationListColumnResetButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
 
   const {
     entity,
@@ -301,11 +305,23 @@ const ApplicationList = () => {
         title: 'Reset Defaults',
         buttonType: 'outlined-primary',
         onClick: onClickResetDefaultColumnSelection,
+        isLoading: applicationListColumnResetButtonLoaderAction,
       },
       { title: 'Close', buttonType: 'primary-1', onClick: onClickCloseColumnSelection },
-      { title: 'Save', buttonType: 'primary', onClick: onClickSaveColumnSelection },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: onClickSaveColumnSelection,
+        isLoading: applicationListColumnSaveButtonLoaderAction,
+      },
     ],
-    [onClickResetDefaultColumnSelection, onClickCloseColumnSelection, onClickSaveColumnSelection]
+    [
+      onClickResetDefaultColumnSelection,
+      onClickCloseColumnSelection,
+      onClickSaveColumnSelection,
+      applicationListColumnResetButtonLoaderAction,
+      applicationListColumnSaveButtonLoaderAction,
+    ]
   );
 
   const { defaultFields, customFields } = useMemo(

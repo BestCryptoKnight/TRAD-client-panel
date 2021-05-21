@@ -64,6 +64,11 @@ const ApplicationDocumentStep = () => {
     [setShowConfirmModal]
   );
 
+  const {
+    GenerateApplicationDocumentUploadButtonLoaderAction,
+    GenerateApplicationDocumentDeleteButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+
   /* const documentTypeList = useSelector(
       ({ application }) => application.editApplication.documentStep.documentTypeList
     );
@@ -207,9 +212,18 @@ const ApplicationDocumentStep = () => {
   const uploadDocumentButton = useMemo(
     () => [
       { title: 'Close', buttonType: 'primary-1', onClick: () => onCloseUploadDocumentButton() },
-      { title: 'Upload', buttonType: 'primary', onClick: onClickUploadDocument },
+      {
+        title: 'Upload',
+        buttonType: 'primary',
+        onClick: onClickUploadDocument,
+        isLoading: GenerateApplicationDocumentUploadButtonLoaderAction,
+      },
     ],
-    [onCloseUploadDocumentButton, onClickUploadDocument]
+    [
+      onCloseUploadDocumentButton,
+      onClickUploadDocument,
+      GenerateApplicationDocumentUploadButtonLoaderAction,
+    ]
   );
 
   useEffect(() => {
@@ -265,9 +279,10 @@ const ApplicationDocumentStep = () => {
             /**/
           }
         },
+        isLoading: GenerateApplicationDocumentDeleteButtonLoaderAction,
       },
     ],
-    [toggleConfirmationModal, applicationDocId]
+    [toggleConfirmationModal, applicationDocId, GenerateApplicationDocumentDeleteButtonLoaderAction]
   );
 
   const deleteApplicationDocument = useCallback(

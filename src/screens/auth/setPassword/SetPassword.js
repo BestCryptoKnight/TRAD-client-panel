@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import AuthScreenContainer from '../common/CommonAuthScreen/AuthScreenContainer';
 import Button from '../../../common/Button/Button';
@@ -11,6 +12,9 @@ import { setPassword } from './redux/SetPasswordAction';
 function SetPassword() {
   const [makePassword, setMakePassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { setPasswordButtonLoaderAction } = useSelector(
+    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+  );
 
   const history = useHistory();
   const { token } = useQueryParams();
@@ -73,6 +77,7 @@ function SetPassword() {
         buttonType="secondary"
         className="ml-15 mt-20"
         onClick={onClickSetPassword}
+        isLoading={setPasswordButtonLoaderAction}
       />
     </AuthScreenContainer>
   );

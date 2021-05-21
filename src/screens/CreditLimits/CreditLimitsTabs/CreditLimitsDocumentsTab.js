@@ -96,6 +96,15 @@ const CreditLimitsDocumentsTab = () => {
   const { total, headers, pages, docs, page, limit, isLoading } = useMemo(() => documentList, [
     documentList,
   ]);
+
+  const {
+    CreditLimitDocumentsColumnSaveButtonLoaderAction,
+    CreditLimitDocumentsColumnResetButtonLoaderAction,
+    CreditLimitDocumentUploadButtonLoaderAction,
+    CreditLimitDocumentDeleteButtonLoaderAction,
+    CreditLimitDocumentDownloadButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+
   const { defaultFields, customFields } = useMemo(
     () => creditLimitsDocumentColumnList ?? { defaultFields: [], customFields: [] },
     [creditLimitsDocumentColumnList]
@@ -198,15 +207,23 @@ const CreditLimitsDocumentsTab = () => {
         title: 'Reset Defaults',
         buttonType: 'outlined-primary',
         onClick: onClickResetDefaultColumnSelection,
+        isLoading: CreditLimitDocumentsColumnResetButtonLoaderAction,
       },
       { title: 'Close', buttonType: 'primary-1', onClick: onClickCloseCustomFieldModal },
-      { title: 'Save', buttonType: 'primary', onClick: onClickSaveColumnSelection },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: onClickSaveColumnSelection,
+        isLoading: CreditLimitDocumentsColumnSaveButtonLoaderAction,
+      },
     ],
     [
       onClickResetDefaultColumnSelection,
       toggleCustomFieldModal,
       onClickCloseCustomFieldModal,
       onClickSaveColumnSelection,
+      CreditLimitDocumentsColumnResetButtonLoaderAction,
+      CreditLimitDocumentsColumnSaveButtonLoaderAction,
     ]
   );
 
@@ -325,9 +342,18 @@ const CreditLimitsDocumentsTab = () => {
   const uploadDocumentButton = useMemo(
     () => [
       { title: 'Close', buttonType: 'primary-1', onClick: onCloseUploadDocumentButton },
-      { title: 'Upload', buttonType: 'primary', onClick: onClickUploadDocument },
+      {
+        title: 'Upload',
+        buttonType: 'primary',
+        onClick: onClickUploadDocument,
+        isLoading: CreditLimitDocumentUploadButtonLoaderAction,
+      },
     ],
-    [onCloseUploadDocumentButton, onClickUploadDocument]
+    [
+      onCloseUploadDocumentButton,
+      onClickUploadDocument,
+      CreditLimitDocumentUploadButtonLoaderAction,
+    ]
   );
 
   const handleDocumentChange = useCallback(
@@ -412,9 +438,10 @@ const CreditLimitsDocumentsTab = () => {
             /**/
           }
         },
+        isLoading: CreditLimitDocumentDeleteButtonLoaderAction,
       },
     ],
-    [toggleConfirmationModal, deleteDocumentData]
+    [toggleConfirmationModal, deleteDocumentData, CreditLimitDocumentDeleteButtonLoaderAction]
   );
 
   useEffect(() => {
@@ -447,6 +474,7 @@ const CreditLimitsDocumentsTab = () => {
               buttonType="primary-1"
               title="cloud_download"
               onClick={onClickDownloadButton}
+              isLoading={CreditLimitDocumentDownloadButtonLoaderAction}
             />
           </div>
         )}

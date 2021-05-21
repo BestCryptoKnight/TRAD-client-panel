@@ -39,6 +39,11 @@ const CreditLimitsList = () => {
   const dropdownData = useSelector(
     ({ creditLimits }) => creditLimits?.creditLimitsFilterList?.dropdownData ?? {}
   );
+  const {
+    CreditLimitListColumnSaveButtonLoaderAction,
+    CreditLimitListColumnResetButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+
   const CREDIT_LIMITS_FILTER_REDUCER_ACTIONS = {
     UPDATE_DATA: 'UPDATE_DATA',
     RESET_STATE: 'RESET_STATE',
@@ -149,11 +154,23 @@ const CreditLimitsList = () => {
         title: 'Reset Defaults',
         buttonType: 'outlined-primary',
         onClick: onClickResetDefaultColumnSelection,
+        isLoading: CreditLimitListColumnResetButtonLoaderAction,
       },
       { title: 'Close', buttonType: 'primary-1', onClick: onClickCloseCustomFieldModal },
-      { title: 'Save', buttonType: 'primary', onClick: onClickSaveColumnSelection },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: onClickSaveColumnSelection,
+        isLoading: CreditLimitListColumnSaveButtonLoaderAction,
+      },
     ],
-    [onClickResetDefaultColumnSelection, onClickCloseCustomFieldModal, onClickSaveColumnSelection]
+    [
+      onClickResetDefaultColumnSelection,
+      onClickCloseCustomFieldModal,
+      onClickSaveColumnSelection,
+      CreditLimitListColumnSaveButtonLoaderAction,
+      CreditLimitListColumnResetButtonLoaderAction,
+    ]
   );
 
   useEffect(async () => {

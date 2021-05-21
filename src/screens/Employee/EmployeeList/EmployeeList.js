@@ -61,6 +61,11 @@ const EmployeeList = () => {
   const employeeDefaultColumnList = useSelector(
     ({ employee }) => employee?.employeeDefaultColumnList ?? {}
   );
+  const {
+    EmployeeListColumnSaveButtonLoaderAction,
+    EmployeeListColumnResetButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+
   const { defaultFields, customFields } = useMemo(
     () =>
       employeeColumnList || {
@@ -107,7 +112,8 @@ const EmployeeList = () => {
   );
 
   const onClickApplyFilter = useCallback(async () => {
-    await getEmployeeListByFilter({ page, limit }, toggleFilterModal);
+    await getEmployeeListByFilter({ page, limit });
+    toggleFilterModal();
   }, [getEmployeeListByFilter, page, limit, toggleFilterModal]);
 
   const onClickResetFilter = useCallback(async () => {
@@ -171,11 +177,23 @@ const EmployeeList = () => {
         title: 'Reset Defaults',
         buttonType: 'outlined-primary',
         onClick: onClickResetDefaultColumnSelection,
+        isLoading: EmployeeListColumnResetButtonLoaderAction,
       },
       { title: 'Close', buttonType: 'primary-1', onClick: onClickCloseCustomFieldModal },
-      { title: 'Save', buttonType: 'primary', onClick: onClickSaveColumnSelection },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: onClickSaveColumnSelection,
+        isLoading: EmployeeListColumnSaveButtonLoaderAction,
+      },
     ],
-    [onClickResetDefaultColumnSelection, onClickCloseCustomFieldModal, onClickSaveColumnSelection]
+    [
+      onClickResetDefaultColumnSelection,
+      onClickCloseCustomFieldModal,
+      onClickSaveColumnSelection,
+      EmployeeListColumnResetButtonLoaderAction,
+      EmployeeListColumnSaveButtonLoaderAction,
+    ]
   );
 
   const onChangeSelectedColumn = useCallback(

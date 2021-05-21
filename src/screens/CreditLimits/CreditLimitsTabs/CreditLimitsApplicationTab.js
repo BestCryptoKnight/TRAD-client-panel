@@ -39,6 +39,10 @@ const CreditLimitsApplicationTab = () => {
     () => creditLimitsApplicationColumnList || { defaultFields: [], customFields: [] },
     [creditLimitsApplicationColumnList]
   );
+  const {
+    CreditLimitApplicationColumnSaveButtonLoaderAction,
+    CreditLimitApplicationColumnResetButtonLoaderAction,
+  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
 
   const getApplicationList = useCallback(
     (params = {}, cb) => {
@@ -130,11 +134,23 @@ const CreditLimitsApplicationTab = () => {
         title: 'Reset Defaults',
         buttonType: 'outlined-primary',
         onClick: onClickResetDefaultColumnSelection,
+        isLoading: CreditLimitApplicationColumnResetButtonLoaderAction,
       },
       { title: 'Close', buttonType: 'primary-1', onClick: onClickCloseCustomFieldModal },
-      { title: 'Save', buttonType: 'primary', onClick: onClickSaveColumnSelection },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: onClickSaveColumnSelection,
+        isLoading: CreditLimitApplicationColumnSaveButtonLoaderAction,
+      },
     ],
-    [onClickResetDefaultColumnSelection, toggleCustomField, onClickSaveColumnSelection]
+    [
+      onClickResetDefaultColumnSelection,
+      toggleCustomField,
+      onClickSaveColumnSelection,
+      CreditLimitApplicationColumnResetButtonLoaderAction,
+      CreditLimitApplicationColumnSaveButtonLoaderAction,
+    ]
   );
 
   const onSelectLimit = useCallback(
