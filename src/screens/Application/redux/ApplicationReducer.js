@@ -37,29 +37,29 @@ const initialApplicationList = {
     entityType: '',
     company: {
       postCode: '',
-      state: [],
+      state: null,
       country: {
-        label:"Australia",
-        name:"country",
-        value:"AUS",
+        label: 'Australia',
+        name: 'country',
+        value: 'AUS',
       },
       suburb: '',
-      streetType: [],
+      streetType: null,
       streetName: '',
       streetNumber: '',
       unitNumber: '',
       property: '',
       address: '',
       outstandingAmount: '',
-      entityType: [],
+      entityType: null,
       phoneNumber: '',
-      entityName: [],
+      entityName: null,
       acn: '',
       abn: '',
-      registrationNo:'',
+      registrationNo: '',
       tradingName: '',
-      debtorId: [],
-      clientList: [],
+      debtorId: null,
+      clientList: null,
       wipeOutDetails: false,
       errors: {},
     },
@@ -119,7 +119,7 @@ const initialApplicationList = {
   },
 
   viewApplication: {
-    isLoading:true,
+    isLoading: true,
     applicationDetail: {},
     task: {
       taskList: [],
@@ -195,7 +195,7 @@ export const application = (state = initialApplicationList, action) => {
       };
       const { type, name, value } = action.data;
       columnList[`${type}`] = columnList[`${type}`].map(e =>
-              e.name === name ? { ...e, isChecked: value } : e
+        e.name === name ? { ...e, isChecked: value } : e
       );
       return {
         ...state,
@@ -222,7 +222,7 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
 
-          // Company step
+    // Company step
     case APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_DROP_DOWN_DATA: {
       const dropdownData = { ...state?.companyData?.dropdownData };
       Object.entries(action.data).forEach(([key, value]) => {
@@ -255,9 +255,9 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
 
-          // edit application
+    // edit application
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
-            .APPLICATION_COMPANY_EDIT_APPLICATION_CHANGE_FIELD_VALUE: {
+      .APPLICATION_COMPANY_EDIT_APPLICATION_CHANGE_FIELD_VALUE: {
       return {
         ...state,
         editApplication: {
@@ -267,7 +267,7 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
-            .APPLICATION_COMPANY_EDIT_APPLICATION_RESET_DATA: {
+      .APPLICATION_COMPANY_EDIT_APPLICATION_RESET_DATA: {
       return {
         ...state,
         editApplication: {
@@ -276,7 +276,7 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
-            .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_ALL_DATA: {
+      .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_ALL_DATA: {
       return {
         ...state,
         editApplication: {
@@ -286,7 +286,7 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
-            .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_FIELD: {
+      .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_FIELD: {
       return {
         ...state,
         editApplication: {
@@ -383,7 +383,7 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
 
-          // Documents
+    // Documents
     case APPLICATION_REDUX_CONSTANTS.DOCUMENTS.DOCUMENT_TYPE_LIST_DATA:
       return {
         ...state,
@@ -437,8 +437,8 @@ export const application = (state = initialApplicationList, action) => {
         viewApplication: {
           ...state?.viewApplication,
           isLoading: true,
-        }
-      }
+        },
+      };
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_FAIL_ACTION:
       return {
         ...state,
@@ -465,7 +465,7 @@ export const application = (state = initialApplicationList, action) => {
         },
       };
 
-          // application task
+    // application task
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK.APPLICATION_TASK_LIST_ACTION:
       return {
         ...state,
@@ -480,7 +480,7 @@ export const application = (state = initialApplicationList, action) => {
       };
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-            .APPLICATION_TASK_ASSIGNEE_DROP_DOWN_DATA_ACTION: {
+      .APPLICATION_TASK_ASSIGNEE_DROP_DOWN_DATA_ACTION: {
       const assigneeList = action?.data?.map(data => ({
         label: data.name,
         value: data._id,
@@ -499,7 +499,7 @@ export const application = (state = initialApplicationList, action) => {
     }
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-            .APPLICATION_TASK_ENTITY_DROP_DOWN_DATA_ACTION: {
+      .APPLICATION_TASK_ENTITY_DROP_DOWN_DATA_ACTION: {
       const entityList = action?.data?.map(data => ({
         label: data.name ?? data.applicationId,
         value: data._id,
@@ -518,7 +518,7 @@ export const application = (state = initialApplicationList, action) => {
     }
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-            .DEFAULT_APPLICATION_TASK_ENTITY_DROP_DOWN_DATA_ACTION: {
+      .DEFAULT_APPLICATION_TASK_ENTITY_DROP_DOWN_DATA_ACTION: {
       const defaultEntityList = action?.data?.map(data => ({
         label: data.name ?? data.applicationId,
         value: data._id,
@@ -538,7 +538,7 @@ export const application = (state = initialApplicationList, action) => {
     }
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-            .APPLICATION_UPDATE_TASK_FIELD_STATUS:
+      .APPLICATION_UPDATE_TASK_FIELD_STATUS:
       return {
         ...state,
         viewApplication: {
@@ -554,7 +554,7 @@ export const application = (state = initialApplicationList, action) => {
       };
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-            .APPLICATION_RESET_ADD_TASK_STATE_ACTION:
+      .APPLICATION_RESET_ADD_TASK_STATE_ACTION:
       return {
         ...state,
         viewApplication: {
@@ -567,7 +567,7 @@ export const application = (state = initialApplicationList, action) => {
       };
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-            .GET_APPLICATION_TASK_DETAILS_ACTION:
+      .GET_APPLICATION_TASK_DETAILS_ACTION:
       return {
         ...state,
         viewApplication: {
@@ -581,7 +581,7 @@ export const application = (state = initialApplicationList, action) => {
 
     // Application Module
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_MODULES
-            .APPLICATION_MODULE_LIST_DATA:
+      .APPLICATION_MODULE_LIST_DATA:
       return {
         ...state,
         viewApplication: {
@@ -594,7 +594,7 @@ export const application = (state = initialApplicationList, action) => {
       };
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_MODULES
-            .VIEW_APPLICATION_DOCUMENT_TYPE_LIST_DATA:
+      .VIEW_APPLICATION_DOCUMENT_TYPE_LIST_DATA:
       return {
         ...state,
         viewApplication: {
@@ -607,7 +607,7 @@ export const application = (state = initialApplicationList, action) => {
       };
 
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_MODULES
-            .VIEW_APPLICATION_UPLOAD_DOCUMENT_DATA:
+      .VIEW_APPLICATION_UPLOAD_DOCUMENT_DATA:
       return {
         ...state,
         viewApplication: {

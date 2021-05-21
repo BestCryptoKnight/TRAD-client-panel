@@ -3,7 +3,7 @@ import {
   saveApplicationStepDataToBackend,
   updateEditApplicationData,
 } from '../../../../redux/ApplicationAction';
-import { SPECIAL_CHARACTER_REGEX } from '../../../../../../constants/RegexConstants';
+import { NUMBER_REGEX, SPECIAL_CHARACTER_REGEX } from '../../../../../../constants/RegexConstants';
 
 export const applicationCompanyStepValidations = async (dispatch, data, editApplicationData) => {
   const errors = {};
@@ -14,34 +14,39 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       validated = false;
       errors.abn = 'Please enter ABN number before continue';
     }
-    if (data?.abn && data?.abn.trim().length !== 11 && Number.isNaN(Number(data?.abn))) {
+    if (data?.abn && (!NUMBER_REGEX.test(data?.abn) || data?.abn?.trim()?.length !== 11)) {
       validated = false;
       errors.abn = 'Please enter valid ABN number before continue';
     }
-    if (data?.acn && data.acn?.trim().length !== 9 && Number.isNaN(Number(data?.acn))) {
+    if (data?.acn && (!NUMBER_REGEX.test(data?.acn) || data?.acn?.trim()?.length !== 9)) {
       validated = false;
       errors.acn = 'Please enter valid ACN number before continue';
     }
-  } else {
-    if (!data?.registrationNo || data?.registrationNo?.trim().length <= 0) {
-      validated = false;
-      errors.registrationNo = 'Please enter registration number before continue';
-    }
-    if (data?.registrationNo && (data?.registrationNo?.length <= 5 || data?.registrationNo?.length >= 30) && Number.isNaN(Number(data?.registrationNo))
-    ) {
-      validated = false;
-      errors.registrationNo = 'Please enter valid registration number';
-    }
-  }
-  if (!data?.entityName || data?.entityName?.length <= 0 || data?.entityName?.value?.length <= 0) {
+  } else if (!data?.registrationNo || data?.registrationNo?.trim().length <= 0) {
     validated = false;
-    errors.entityName = 'Please enter entity name';
+    errors.registrationNo = 'Please enter registration number before continue';
+  } else if (
+    data?.registrationNo &&
+    (data?.registrationNo?.length <= 5 ||
+      data?.registrationNo?.length >= 30 ||
+      !NUMBER_REGEX.test(data?.registrationNo))
+  ) {
+    validated = false;
+    errors.registrationNo = 'Please enter valid registration number';
   }
-  if (!data?.entityType || data?.entityType.length <= 0) {
+  if (
+    !data?.entityName ||
+    data?.entityName?.length <= 0 ||
+    data?.entityName?.value?.trim()?.length <= 0
+  ) {
+    validated = false;
+    errors.entityName = 'Please enter entity name before continue';
+  }
+  if (!data?.entityType || Object.entries(data?.entityType).length === 0) {
     validated = false;
     errors.entityType = 'Please select entity type before continue';
   }
-  if (!data?.country || data?.country.length === 0) {
+  if (!data?.country || Object.entries(data?.country).length === 0) {
     validated = false;
     errors.country = 'Please select country before continue';
   }
@@ -49,11 +54,11 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.streetNumber = 'Please enter street number before continue';
   }
-  if (data?.streetNumber && Number.isNaN(Number(data?.streetNumber))) {
+  if (data?.streetNumber && !NUMBER_REGEX.test(data?.streetNumber)) {
     validated = false;
     errors.streetNumber = 'Street number should be number';
   }
-  if (!data?.state || data?.state?.length === 0) {
+  if (!data?.state || Object.entries(data?.state).length === 0) {
     validated = false;
     if (data?.country?.value === 'AUS' || data?.country?.value === 'NZL') {
       errors.state = 'Please select state before continue';
@@ -61,18 +66,23 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       errors.state = 'Please enter state before continue';
     }
   }
-  if (data?.state && SPECIAL_CHARACTER_REGEX.test(data?.state?.toString())) {
+  if (
+    !['AUS', 'NZL'].includes(data?.country?.value) &&
+    data?.state &&
+    SPECIAL_CHARACTER_REGEX.test(data?.state)
+  ) {
+    validated = false;
     errors.state = 'Please enter valid state';
   }
   if (!data?.postCode || data?.postCode?.length === 0) {
     validated = false;
     errors.postCode = 'Please enter post code before continue';
   }
-  if (data?.postCode && Number.isNaN(Number(data?.postCode))) {
+  if (data?.postCode && !NUMBER_REGEX.test(data?.postCode)) {
     validated = false;
     errors.postCode = 'Post code should be number';
   }
-  if (data?.phoneNumber && Number.isNaN(Number(data?.phoneNumber))) {
+  if (data?.phoneNumber && !NUMBER_REGEX.test(data?.postCode)) {
     validated = false;
     errors.phoneNumber = 'Phone number should be number';
   }

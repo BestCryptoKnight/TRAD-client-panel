@@ -11,7 +11,6 @@ import RadioButton from '../../../../../../common/RadioButton/RadioButton';
 import {
   changePersonType,
   getApplicationPersonDataFromABNOrACN,
-  removePersonDetail,
   searchApplicationCompanyEntityName,
   updatePersonData,
   updatePersonStepDataOnValueSelected,
@@ -20,7 +19,6 @@ import { DRAWER_ACTIONS } from '../../ApplicationCompanyStep/ApplicationCompanyS
 import Loader from '../../../../../../common/Loader/Loader';
 import ApplicationEntityNameTable from '../../components/ApplicationEntityNameTable/ApplicationEntityNameTable';
 import Modal from '../../../../../../common/Modal/Modal';
-import { errorNotification, successNotification } from '../../../../../../common/Toast';
 import IconButton from '../../../../../../common/IconButton/IconButton';
 
 const drawerInitialState = {
@@ -49,7 +47,6 @@ const drawerReducer = (state, action) => {
 const PersonIndividualDetail = ({
   itemHeader,
   index,
-  entityTypeFromCompany,
   companyEntityType,
   streetType,
   australianStates,
@@ -63,7 +60,6 @@ const PersonIndividualDetail = ({
     },
     [index]
   );
-
   const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
   const entityNameSearchDropDownData = useSelector(
     ({ application }) => application?.companyData?.entityNameSearch ?? {}
@@ -718,7 +714,7 @@ const PersonIndividualDetail = ({
       handleSearchTextInputKeyDown,
     ]
   );
-  const deletePartner = e => {
+  /* const deletePartner = e => {
     e.stopPropagation();
     if (partners?.length <= 2 && entityTypeFromCompany === 'PARTNERSHIP') {
       errorNotification('You can not remove partner');
@@ -728,17 +724,17 @@ const PersonIndividualDetail = ({
       dispatch(removePersonDetail(index));
     }
     successNotification('Partner deleted successfully');
-  };
+  }; */
 
-  const getSuffixItem = useMemo(() => {
+  /*  const getSuffixItem = useMemo(() => {
     if (partners?.length <= 2 && entityTypeFromCompany === 'PARTNERSHIP') {
       return '';
     }
     if (partners?.length <= 1) {
       return '';
     }
-    return 'delete_outline';
-  }, [partners, entityTypeFromCompany]);
+     return 'delete_outline';
+  }, [partners, entityTypeFromCompany]); */
 
   return (
     <>
@@ -781,9 +777,9 @@ const PersonIndividualDetail = ({
         className="application-person-step-accordion"
         header={itemHeader ?? 'Director Details'}
         prefix="expand_more"
-        suffix={getSuffixItem}
+        /* suffix={getSuffixItem}
         suffixClass="material-icons-round font-danger cursor-pointer"
-        suffixClick={e => deletePartner(e)}
+        suffixClick={e => deletePartner(e)} */
       >
         <div className="application-person-step-accordion-item">
           {INPUTS.map(getComponentFromType)}
@@ -799,15 +795,11 @@ const PersonIndividualDetail = ({
 PersonIndividualDetail.propTypes = {
   itemHeader: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-  entityTypeFromCompany: PropTypes.string,
   companyEntityType: PropTypes.array.isRequired,
   streetType: PropTypes.array.isRequired,
   newZealandStates: PropTypes.array.isRequired,
   countryList: PropTypes.array.isRequired,
   australianStates: PropTypes.array.isRequired,
-};
-PersonIndividualDetail.defaultProps = {
-  entityTypeFromCompany: '',
 };
 
 export default PersonIndividualDetail;

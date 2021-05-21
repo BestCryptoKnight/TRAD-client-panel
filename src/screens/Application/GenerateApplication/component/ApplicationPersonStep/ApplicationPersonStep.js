@@ -54,7 +54,6 @@ const ApplicationPersonStep = () => {
           companyEntityType={companyEntityType}
           itemHeader={itemHeader}
           index={index}
-          entityTypeFromCompany={entityTypeFromCompany}
         />
       );
     },

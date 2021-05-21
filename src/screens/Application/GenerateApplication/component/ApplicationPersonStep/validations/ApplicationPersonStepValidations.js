@@ -6,6 +6,7 @@ import {
 } from '../../../../redux/ApplicationAction';
 import {
   EMAIL_ADDRESS_REGEX,
+  NUMBER_REGEX,
   SPECIAL_CHARACTER_REGEX,
 } from '../../../../../../constants/RegexConstants';
 
@@ -21,11 +22,11 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
           validated = false;
           errors.abn = 'Please enter ABN number before continue';
         }
-        if (item?.abn && item?.abn?.trim()?.length !== 11 && Number.isNaN(Number(item?.abn))) {
+        if (item?.abn && item?.abn?.trim()?.length !== 11 && !NUMBER_REGEX.test(item?.abn)) {
           validated = false;
           errors.abn = 'Please enter valid ABN number before continue';
         }
-        if (item?.acn && item?.acn?.trim()?.length !== 9 && Number.isNaN(Number(item?.acn))) {
+        if (item?.acn && item?.acn?.trim()?.length !== 9 && !NUMBER_REGEX.test(item?.acn)) {
           validated = false;
           errors.acn = 'Please enter valid ACN number before continue';
         }
@@ -87,7 +88,7 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
           validated = false;
           errors.streetNumber = 'Please select street number before continue';
         }
-        if (item?.streetNumber && Number.isNaN(Number(item?.streetNumber))) {
+        if (item?.streetNumber && !NUMBER_REGEX.test(item?.streetNumber)) {
           validated = false;
           errors.streetNumber = 'Street number should be number';
         }
@@ -107,7 +108,12 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
             errors.state = 'Please enter state before continue';
           }
         }
-        if (data?.state && SPECIAL_CHARACTER_REGEX.test(data?.state?.toString())) {
+        if (
+          !['AUS', 'NZL'].includes(item?.country?.value) &&
+          data?.state &&
+          SPECIAL_CHARACTER_REGEX.test(data?.state)
+        ) {
+          validated = false;
           errors.state = 'Please enter valid state';
         }
         if (!item?.suburb || item?.suburb.length <= 0) {
@@ -119,19 +125,19 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
           errors.postCode = 'Please enter postcode before continue';
         }
 
-        if (item?.postCode && Number.isNaN(Number(item?.postCode))) {
+        if (item?.postCode && !NUMBER_REGEX.test(item?.postCode)) {
           validated = false;
           errors.postCode = 'Postcode should be number';
         }
-        if (Number.isNaN(Number(item?.phoneNumber))) {
+        if (item?.phoneNumber && !NUMBER_REGEX.test(item?.phoneNumber)) {
           validated = false;
           errors.phoneNumber = 'Phone number should be number';
         }
-        if (Number.isNaN(Number(item?.mobileNumber))) {
+        if (item?.mobileNumber && !NUMBER_REGEX.test(item?.mobileNumber)) {
           validated = false;
           errors.mobileNumber = 'Mobile number should be number';
         }
-        if (Number.isNaN(Number(item?.driverLicenceNumber))) {
+        if (item?.driverLicenceNumber && !NUMBER_REGEX.test(item?.driverLicenceNumber)) {
           validated = false;
           errors.driverLicenceNumber = 'Driving licence number should be number';
         }
