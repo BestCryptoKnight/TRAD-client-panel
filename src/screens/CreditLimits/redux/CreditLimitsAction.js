@@ -658,14 +658,17 @@ export const downloadCreditLimitsDocuments = async data => {
 
 export const deleteCreditLimitsDocumentAction = async (docId, cb) => {
   try {
+    startLoaderButtonOnRequest(`CreditLimitDocumentDeleteButtonLoaderAction`);
     const response = await CreditLimitsApiService?.deleteCreditLimitsDocument(docId);
     if (response.data.status === 'SUCCESS') {
       successNotification(response?.data?.message || 'Document deleted successfully.');
+      stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentDeleteButtonLoaderAction`);
       if (cb) {
         cb();
       }
     }
   } catch (e) {
+    stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentDeleteButtonLoaderAction`);
     displayErrors(e);
   }
 };
