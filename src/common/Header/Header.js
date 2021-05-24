@@ -207,8 +207,9 @@ const Header = () => {
   };
 
   const headerTitle = useMemo(
-    () => SIDEBAR_URLS.find(item => history?.location?.pathname?.includes(item.url))?.title,
-    [history.location.pathname]
+    () =>  SIDEBAR_URLS.find(item => history?.location?.pathname?.includes(item?.url ?? ''))?.title ??
+            '',
+          [history?.location?.pathname]
   );
 
   useEffect(() => {
@@ -482,7 +483,7 @@ const Header = () => {
                 placeholder="Re Enter Password"
                 value={confirmPassword}
                 onChange={onChangeConfirmPassword}
-              />{' '}
+              />
             </div>
           </div>
         </Modal>

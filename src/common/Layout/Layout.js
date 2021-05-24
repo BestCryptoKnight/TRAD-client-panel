@@ -13,7 +13,7 @@ const Layout = props => {
   }
 
   return (
-    <div className="dashboard-container">
+    <div className="layout-container">
       <SideMenu />
       <div className="right-side-container">
         <Header />

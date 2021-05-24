@@ -16,6 +16,11 @@ export const HEADER_URLS = {
   LOGOUT_URL: `${BASE_URL}auth/logout/`,
 };
 
+export const DASHBOARD_URLS = {
+  DASHBOARD_TASK_LIST: `${BASE_URL}task/`,
+  DASHBOARD_NOTIFICATION_LIST: `${BASE_URL}notification/`,
+};
+
 export const APPLICATION_URLS = {
   APPLICATION_LIST_URL: `${BASE_URL}application/`,
   APPLICATION_COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name?columnFor=application`,
@@ -56,7 +61,6 @@ export const APPLICATION_URLS = {
       GET_NOTES_LIST: `${BASE_URL}note/`,
     },
   },
-
 };
 
 export const CREDIT_LIMITS_URLS = {
@@ -94,21 +98,21 @@ export const CREDIT_LIMITS_URLS = {
 
   NOTES: {
     NOTES_LIST: `${BASE_URL}note/`,
-  }
+  },
 };
 
 export const EMPLOYEE_URLS = {
   EMPLOYEE_LIST_URL: `${BASE_URL}client/user/`,
   EMPLOYEE_COLUMN_LIST: `${BASE_URL}client/user/column-name/`,
-  EMPLOYEE_UPDATE_COLUMN_LIST: `${BASE_URL}client/user/column-name/`
-}
+  EMPLOYEE_UPDATE_COLUMN_LIST: `${BASE_URL}client/user/column-name/`,
+};
 
 export const COMPANY_PROFILE_URL = {
   COMPANY_PROFILE_URL: `${BASE_URL}client/`,
   COMPANY_PROFILE_POLICY_LIST: `${BASE_URL}policy/`,
-  COMPANY_PROFILE_POLICY_COLUMN_LIST: `${BASE_URL}policy/column-name/`
-}
+  COMPANY_PROFILE_POLICY_COLUMN_LIST: `${BASE_URL}policy/column-name/`,
+};
 
 export const SUPPORT_URLS = {
-  SUPPORT_URL: `${BASE_URL}organization/details/`
-}
+  SUPPORT_URL: `${BASE_URL}organization/details/`,
+};

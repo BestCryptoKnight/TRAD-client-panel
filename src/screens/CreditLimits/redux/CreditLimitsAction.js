@@ -35,7 +35,6 @@ export const getCreditLimitColumnList = () => {
   return async dispatch => {
     try {
       const response = await CreditLimitsApiService.getCreditLimitColumnList();
-      console.log(response.data.data);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST,

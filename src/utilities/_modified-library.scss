@@ -461,7 +461,7 @@
 }
 
 .rc-tooltip-inner {
-  background-color: $primary-color;
+  background-color: $primary-color!important;
   border: 1px solid $primary-color;
   opacity: .95;
 }
