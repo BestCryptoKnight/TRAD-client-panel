@@ -452,6 +452,7 @@ export const updatePersonStepDataOnValueSelected = (index, data) => {
 export const saveApplicationStepDataToBackend = data => {
   return async dispatch => {
     try {
+      startLoaderButtonOnRequest('generateApplicationSaveAndNextButtonLoaderAction');
       const response = await ApplicationApiServices.saveApplicationStepDataToBackend(data);
       if (response?.data?.status === 'SUCCESS') {
         if (response?.data?.data?.applicationStage) {
@@ -459,8 +460,10 @@ export const saveApplicationStepDataToBackend = data => {
           dispatch(changeEditApplicationFieldValue('_id', _id));
         }
         successNotification(response?.data?.message || 'Application step saved successfully');
+        stopLoaderButtonOnSuccessOrFail('generateApplicationSaveAndNextButtonLoaderAction');
       }
     } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('generateApplicationSaveAndNextButtonLoaderAction');
       if (e.response?.data?.messageCode === 'APPLICATION_ALREADY_EXISTS') {
         errorNotification(e?.response?.data?.message ?? 'Application already exist');
         throw Error();

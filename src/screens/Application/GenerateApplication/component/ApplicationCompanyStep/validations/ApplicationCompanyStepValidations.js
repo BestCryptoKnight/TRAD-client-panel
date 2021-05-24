@@ -140,7 +140,7 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       finalData.abn = abn ?? '';
       finalData.acn = acn ?? '';
     } else {
-      finalData.registrationNo = registrationNo ?? '';
+      finalData.registrationNumber = registrationNo ?? '';
     }
 
     try {

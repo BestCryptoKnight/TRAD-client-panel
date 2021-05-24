@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Switch, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   changePassword,
@@ -206,12 +206,6 @@ const Header = () => {
     setConfirmPassword(e.target.value);
   };
 
-  const headerTitle = useMemo(
-    () =>  SIDEBAR_URLS.find(item => history?.location?.pathname?.includes(item?.url ?? ''))?.title ??
-            '',
-          [history?.location?.pathname]
-  );
-
   useEffect(() => {
     try {
       dispatch(getLoggedUserDetails());
@@ -277,13 +271,20 @@ const Header = () => {
   };
   return (
     <div className="header-container">
-      <div className="screen-title">{headerTitle}</div>
+      <div className="screen-title">
+        <Switch>
+          {SIDEBAR_URLS.map(route => (
+            <Route exact path={route.url}>
+              {route.title}
+            </Route>
+          ))}
+        </Switch>
+      </div>
       <div className="header-right-part">
         <div
           ref={headerSearchRef}
-          className={`header-search-container ${
-            headerSearchFocused && 'header-search-container-focused'
-          } ${searchStart && 'got-search-results'}`}
+          className={`header-search-container ${headerSearchFocused && 'header-search-container-focused'
+            } ${searchStart && 'got-search-results'}`}
         >
           <div>
             <input
