@@ -6,4 +6,6 @@ export const DashboardApiService = {
     ApiService.getData(DASHBOARD_URLS.DASHBOARD_TASK_LIST, { params }),
   getDashboardNotificationList: params =>
     ApiService.getData(DASHBOARD_URLS.DASHBOARD_NOTIFICATION_LIST, { params }),
+  deleteDashboardNotification: id =>
+    ApiService.deleteData(`${DASHBOARD_URLS.DASHBOARD_NOTIFICATION_LIST}${id}`),
 };

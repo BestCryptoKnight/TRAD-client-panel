@@ -1,25 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { Doughnut, Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-labels';
 import Table from '../Table/Table';
-import logo from '../../assets/images/logo.svg';
-import { getDashboardNotificationList, getDashboardTaskList } from './redux/DashboardActions';
+import { getDashboardTaskList } from './redux/DashboardActions';
 import Loader from '../Loader/Loader';
+import DashBoardNotification from './components/DashBoardNotification';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const dashboardTaskList = useSelector(({ dashboard }) => dashboard?.dashboardTask ?? {});
-  const dashboardNotificationList = useSelector(
-    ({ dashboard }) => dashboard?.dashboardNotification ?? {}
-  );
+
   const { docs, headers, isLoading } = useMemo(() => dashboardTaskList, [dashboardTaskList]);
-  const { notificationList, isLoading: notiIsLoading } = useMemo(
-    () => dashboardNotificationList,
-    [dashboardNotificationList]
-  );
+
   const endorsedLimitsData = {
     labels: ['Purple'],
     datasets: [
@@ -120,7 +114,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(getDashboardTaskList());
-    dispatch(getDashboardNotificationList());
   }, []);
 
   return (
@@ -299,7 +292,7 @@ const Dashboard = () => {
           {/* eslint-disable-next-line no-nested-ternary */}
           {!isLoading && docs ? (
             docs.length > 0 ? (
-              <Table data={docs} headers={headers} refreshData={getTaskList} />
+              <Table data={docs} headers={headers} refreshData={getTaskList} rowClass="task-row" />
             ) : (
               <div className="no-record-found">No records found</div>
             )
@@ -308,45 +301,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-      <div className="dashboard-white-container mt-20 mb-20">
-        <div className="dashboard-title-date-row">
-          <div className="dashboard-card-title">Notifications</div>
-        </div>
-        {!notiIsLoading && notificationList ? (
-          (() =>
-            notificationList.length > 0 ? (
-              notificationList?.map(e => (
-                <>
-                  <div className="notification-date">{moment(e?.title).format('DD-MMM-YYYY')}</div>
-                  <div className="notification-container">
-                    {e?.data?.map(data => (
-                      <div className="notification-row">
-                        <div className="notification-circle-container">
-                          <div className="notification-vertical-line" />
-                          <div className="notification-circle">
-                            <img src={logo} alt="logo" />
-                          </div>
-                        </div>
-
-                        <div className="notification-detail-row">
-                          <span className="font-field f-14">{data?.description}</span>
-                          <span className="notification-time">
-                            {moment(data?.createdAt).format('hh:mm A')}
-                          </span>
-                          <span className="material-icons-round">delete_outline</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ))
-            ) : (
-              <div className="no-record-found">No record found</div>
-            ))()
-        ) : (
-          <Loader />
-        )}
-      </div>
+      <DashBoardNotification />
     </div>
   );
 };

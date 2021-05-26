@@ -283,8 +283,9 @@ const Header = () => {
       <div className="header-right-part">
         <div
           ref={headerSearchRef}
-          className={`header-search-container ${headerSearchFocused && 'header-search-container-focused'
-            } ${searchStart && 'got-search-results'}`}
+          className={`header-search-container ${
+            headerSearchFocused && 'header-search-container-focused'
+          } ${searchStart && 'got-search-results'}`}
         >
           <div>
             <input

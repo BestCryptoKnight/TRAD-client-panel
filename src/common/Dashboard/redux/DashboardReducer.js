@@ -13,6 +13,7 @@ const initialDashboardData = {
   },
   dashboardNotification: {
     isLoading: true,
+    notificationList: [],
   },
 };
 
@@ -46,16 +47,69 @@ export const dashboard = (state = initialDashboardData, action) => {
       };
 
     case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DASHBOARD_NOTIFICATION_LIST_SUCCESS: {
-      const notificationList = Object.entries(action?.data?.docs).map(([key, value]) => ({
+      //   const notificationList = Object.entries(action?.data?.docs).map(([key, value]) => ({
+      //     title: key,
+      //     data: value,
+      //   }));
+      //   return {
+      //     ...state,
+      //     dashboardNotification: {
+      //       ...state.dashboardNotification,
+      //       notificationList,
+      //       isLoading: false,
+      //     },
+      //   };
+      // }
+      let notificationList = state?.dashboardNotification?.notificationList ?? [];
+      let hasMoreData = false;
+      const { page, pages, docs } = action?.data;
+      notificationList = notificationList?.map(elem => {
+        if (docs[elem?.title]) {
+          const final = docs[elem?.title];
+          delete docs[elem?.title];
+          return { ...elem, data: [...elem?.data, ...final] };
+        }
+        return elem;
+      });
+      if (page < pages) {
+        hasMoreData = true;
+      }
+      const newNotificationList = Object.entries(docs).map(([key, value]) => ({
         title: key,
         data: value,
       }));
       return {
         ...state,
         dashboardNotification: {
-          ...state.dashboardNotification,
-          notificationList,
+          ...state?.dashboardNotification,
+          notificationList: [...new Set([...newNotificationList, ...notificationList])],
+          page: action?.data?.page,
+          limit: action?.data?.limit,
+          pages: action?.data?.pages,
+          total: action?.data?.total,
           isLoading: false,
+          hasMoreData,
+        },
+      };
+    }
+
+    case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DELETE_DASHBOARD_NOTIFICATION_ACTION: {
+      const notifications = state?.dashboardNotification?.notificationList ?? [];
+      const finalData = [];
+
+      notifications?.forEach(notification => {
+        const data = notification?.data?.filter(e => e?._id !== action.data);
+
+        if (data.length > 0) {
+          finalData.push({ ...notification, data });
+        }
+      });
+
+      return {
+        ...state,
+        dashboardNotification: {
+          ...state.dashboardNotification,
+          notificationList: finalData,
         },
       };
     }

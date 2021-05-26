@@ -1,6 +1,7 @@
 import { DashboardApiService } from '../services/DashboardApiService';
 import { DASHBOARD_REDUX_CONSTANTS } from './DashboardReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
+import { successNotification } from '../../Toast';
 
 export const getDashboardTaskList = (data = {}) => {
   return async dispatch => {
@@ -36,6 +37,23 @@ export const getDashboardNotificationList = data => {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DASHBOARD_NOTIFICATION_LIST_SUCCESS,
           data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const deleteDashboardNotification = notificationId => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.deleteDashboardNotification(notificationId);
+      if (response?.data?.status === 'SUCCESS') {
+        successNotification(response?.data?.message ?? 'Notification deleted successfully');
+        dispatch({
+          type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DELETE_DASHBOARD_NOTIFICATION_ACTION,
+          data: notificationId,
         });
       }
     } catch (e) {
