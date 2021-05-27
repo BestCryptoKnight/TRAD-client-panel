@@ -289,7 +289,45 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-      <DashBoardNotification />
+      <div className="dashboard-white-container mt-20 mb-20">
+        <div className="dashboard-title-date-row">
+          <div className="dashboard-card-title">Notifications</div>
+        </div>
+        {!notiIsLoading && notificationList ? (
+          (() =>
+            notificationList.length > 0 ? (
+              notificationList?.map(e => (
+                <>
+                  <div className="notification-date">{moment(e?.title).format('DD-MMM-YYYY')}</div>
+                  <div className="notification-container">
+                    {e?.data?.map(data => (
+                      <div className="notification-row">
+                        <div className="notification-circle-container">
+                          <div className="notification-vertical-line" />
+                          <div className="notification-circle">
+                            <img src={logo} alt="logo" />
+                          </div>
+                        </div>
+
+                        <div className="notification-detail-row">
+                          <span className="font-field f-14">{data?.description}</span>
+                          <span className="notification-time">
+                            {moment(data?.createdAt).format('hh:mm A')}
+                          </span>
+                          <span className="material-icons-round">delete_outline</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ))
+            ) : (
+              <div className="no-record-found">No record found</div>
+            ))()
+        ) : (
+          <Loader />
+        )}
+      </div>
     </div>
   );
 };
