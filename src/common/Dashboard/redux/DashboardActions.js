@@ -3,6 +3,86 @@ import { DASHBOARD_REDUX_CONSTANTS } from './DashboardReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
 import { successNotification } from '../../Toast';
 
+export const getDashboardPendingApplications = params => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getDashboardPendingApplications(params);
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: DASHBOARD_REDUX_CONSTANTS.DASHBOARD_PENDING_APPLICATIONS,
+          data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const getDashboardEndorsedLimit = params => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getDashboardEndorsedLimit(params);
+      if (response.data.status === 'SUCCESS') {
+        dispatch({
+          type: DASHBOARD_REDUX_CONSTANTS.DASHBOARD_ENDORSED_LIMIT,
+          data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const getDashboardDiscretionaryLimit = () => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getDashboardDiscretionaryLimit();
+      if (response.data.status === 'SUCCESS') {
+        dispatch({
+          type: DASHBOARD_REDUX_CONSTANTS.DASHBOARD_DISCRETIONARY_LIMIT,
+          data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const getDashboardApprovedAmountRatio = params => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getDashboardApprovedAmountRatio(params);
+      if (response.data.status === 'SUCCESS') {
+        dispatch({
+          type: DASHBOARD_REDUX_CONSTANTS.DASHBOARD_APPROVED_AMOUNT_RATIO,
+          data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const getDashboardApprovedApplications = params => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getDashboardApprovedApplication(params);
+      if (response.data.status === 'SUCCESS') {
+        dispatch({
+          type: DASHBOARD_REDUX_CONSTANTS.DASHBOARD_APPROVED_APPLICATIONS,
+          data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
 export const getDashboardTaskList = (data = {}) => {
   return async dispatch => {
     const params = {

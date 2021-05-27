@@ -15,10 +15,45 @@ const initialDashboardData = {
     isLoading: true,
     notificationList: [],
   },
+  pendingApplications: [],
+  endorsedLimits: {},
+  discretionaryLimit: {},
+  approvedAmountRatio: [],
+  approvedApplications: {},
 };
 
 export const dashboard = (state = initialDashboardData, action) => {
   switch (action.type) {
+    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_PENDING_APPLICATIONS:
+      return {
+        ...state,
+        pendingApplications: action.data,
+      };
+
+    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_ENDORSED_LIMIT:
+      return {
+        ...state,
+        endorsedLimits: action.data,
+      };
+
+    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_DISCRETIONARY_LIMIT:
+      return {
+        ...state,
+        discretionaryLimit: action?.data,
+      };
+
+    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_APPROVED_AMOUNT_RATIO:
+      return {
+        ...state,
+        approvedAmountRatio: action?.data,
+      };
+
+    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_APPROVED_APPLICATIONS:
+      return {
+        ...state,
+        approvedApplications: action?.data,
+      };
+
     case DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_LIST_REQUEST:
       return {
         ...state,

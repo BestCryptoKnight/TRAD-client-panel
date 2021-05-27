@@ -12,3 +12,12 @@ export const entityTypeMapperObjectForPersonStep = [
   { label: 'Add Director', value: 'PROPRIETARY' },
   { label: 'Add Director', value: 'REGISTERED_BODY' },
 ];
+
+export const dashboardPendingApplicationsMapper = [
+  { label: 'Sent to insurer', value: 'SENT_TO_INSURER' },
+  { label: 'Review application', value: 'REVIEW_APPLICATION' },
+  { label: 'Pending insurer review', value: 'PENDING_INSURER_REVIEW' },
+  { label: 'Submitted to TRAD', value: 'SUBMITTED' },
+  { label: 'Under review', value: 'UNDER_REVIEW' },
+  { label: 'Awaiting information', value: 'AWAITING_INFORMATION' },
+];

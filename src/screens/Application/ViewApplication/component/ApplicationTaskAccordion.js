@@ -493,6 +493,7 @@ const ApplicationTaskAccordion = props => {
               <div className="common-accordion-item-content-box" key={task._id}>
                 <div className="document-title-row">
                   <Tooltip
+                    mouseEnterDelay={0.5}
                     overlayClassName="tooltip-left-class"
                     overlay={task.title || 'No task title set'}
                     placement="left"
@@ -520,6 +521,7 @@ const ApplicationTaskAccordion = props => {
 
                   <span className="title">Owner:</span>
                   <Tooltip
+                    mouseEnterDelay={0.5}
                     overlayClassName="tooltip-left-class"
                     overlay={task.createdById || 'No owner name added'}
                     placement="left"

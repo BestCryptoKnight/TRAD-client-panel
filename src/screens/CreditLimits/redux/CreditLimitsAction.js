@@ -468,7 +468,7 @@ export const saveCreditLimitsTaskData = (data, cb) => {
       const response = await CreditLimitsApiService.addNewCreditLimitsTask(data);
       if (response.data.status === 'SUCCESS') {
         dispatch({
-          type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_UPDATE_ADD_TASK_FIELD,
+          type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK.CREDIT_LIMITS_RESET_ADD_TASK_STATE,
         });
         successNotification(response?.data?.message || 'Task created successfully');
         cb();

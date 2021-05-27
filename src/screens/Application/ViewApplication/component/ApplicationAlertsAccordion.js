@@ -9,6 +9,7 @@ const ApplicationAlertsAccordion = props => {
       <div className="common-accordion-item-content-box alert">
         <div className="alert-title-row">
           <Tooltip
+            mouseEnterDelay={0.5}
             overlayClassName="tooltip-left-class"
             overlay={<span>Title of Alert</span>}
             placement="left"

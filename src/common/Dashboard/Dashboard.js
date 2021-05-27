@@ -1,25 +1,63 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import DatePicker from 'react-datepicker';
+import moment from 'moment';
 import { Doughnut, Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-labels';
 import Table from '../Table/Table';
-import { getDashboardTaskList } from './redux/DashboardActions';
+import logo from '../../assets/images/logo.svg';
+import {
+  getDashboardApprovedAmountRatio,
+  getDashboardApprovedApplications,
+  getDashboardDiscretionaryLimit,
+  getDashboardEndorsedLimit,
+  getDashboardNotificationList,
+  getDashboardPendingApplications,
+  getDashboardTaskList,
+} from './redux/DashboardActions';
 import Loader from '../Loader/Loader';
-import DashBoardNotification from './components/DashBoardNotification';
+import { usdConverter } from '../../helpers/usdConverter';
+import { getLabelFromValues } from '../../helpers/chartHelper';
+import { dashboardPendingApplicationsMapper } from '../../helpers/Mappers';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+
+  const dashboardPendingApplications = useSelector(
+    ({ dashboard }) => dashboard?.pendingApplications ?? []
+  );
+  const dashboardEndorsedLimit = useSelector(({ dashboard }) => dashboard?.endorsedLimits ?? {});
+  const dashboardDiscretionaryLimit = useSelector(
+    ({ dashboard }) => dashboard?.discretionaryLimit ?? {}
+  );
+  const dashboardApprovedAmountRatio = useSelector(
+    ({ dashboard }) => dashboard?.approvedAmountRation ?? []
+  );
+  const dashboardApprovedApplications = useSelector(
+    ({ dashboard }) => dashboard?.approvedApplications ?? {}
+  );
+
   const dashboardTaskList = useSelector(({ dashboard }) => dashboard?.dashboardTask ?? {});
+  const dashboardNotificationList = useSelector(
+    ({ dashboard }) => dashboard?.dashboardNotification ?? {}
+  );
 
   const { docs, headers, isLoading } = useMemo(() => dashboardTaskList, [dashboardTaskList]);
+  const { notificationList, isLoading: notiIsLoading } = useMemo(
+    () => dashboardNotificationList,
+    [dashboardNotificationList]
+  );
 
   const endorsedLimitsData = {
-    labels: ['Purple'],
+    labels: [''],
     datasets: [
       {
-        label: '# of Votes',
-        data: [0.83, 0.27],
+        label: '',
+        data: [
+          dashboardEndorsedLimit?.endorsedLimitCount,
+          dashboardEndorsedLimit?.totalCount || dashboardEndorsedLimit?.totalCount >= 0
+            ? dashboardEndorsedLimit?.totalCount - dashboardEndorsedLimit?.endorsedLimitCount
+            : 1,
+        ],
         backgroundColor: ['#003A78', '#CBD7E4'],
       },
     ],
@@ -60,18 +98,15 @@ const Dashboard = () => {
   };
 
   const pendingApplicationsData = {
-    labels: [
-      'Sent to insurer',
-      'Review application',
-      'Pending insurer review',
-      'Submitted to TRAD',
-      'Under review',
-      'Awaiting information',
-    ],
+    labels:
+      dashboardPendingApplications &&
+      dashboardPendingApplications?.map(e =>
+        getLabelFromValues(e._id, dashboardPendingApplicationsMapper)
+      ),
     datasets: [
       {
-        label: 'aaa',
-        data: [6, 15, 30, 45, 7, 4],
+        label: '',
+        data: dashboardPendingApplications && dashboardPendingApplications?.map(e => e?.count),
         backgroundColor: ['#4382FF', '#1E205D', '#38C2BB', '#FF9700', '#950094', '#FF6969'],
       },
     ],
@@ -105,8 +140,6 @@ const Dashboard = () => {
       },
     },
   };
-  const [dateRange, setDateRange] = useState([null, null]);
-  const [startDate, endDate] = dateRange;
 
   const getTaskList = useCallback(() => {
     dispatch(getDashboardTaskList());
@@ -114,6 +147,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(getDashboardTaskList());
+    dispatch(getDashboardNotificationList());
+    dispatch(getDashboardPendingApplications());
+    dispatch(getDashboardEndorsedLimit());
+    dispatch(getDashboardDiscretionaryLimit());
+    dispatch(getDashboardApprovedAmountRatio());
+    dispatch(getDashboardApprovedApplications());
   }, []);
 
   return (
@@ -124,26 +163,28 @@ const Dashboard = () => {
             <span className="dashboard-card-title">
               Endorsed limits out of Aggregated Credit Limits
             </span>
-            <div className="date-picker-container">
-              <DatePicker
-                placeholderText="Select date"
-                startDate={startDate}
-                endDate={endDate}
-                onChange={update => {
-                  setDateRange(update);
-                }}
-                selectsRange
-                isClearable
-              />
-              <span className="material-icons-round">insert_invitation</span>
-            </div>
           </div>
           <div className="doughnut-chart-container">
             <div className="doughnut-chart">
               <Doughnut data={endorsedLimitsData} options={doughnutOptions} />
               <div className="doughnut-center-text">
-                <div>83%</div>
-                <span>550/660</span>
+                <div>
+                  {dashboardEndorsedLimit?.totalCount || dashboardEndorsedLimit?.totalCount > 0
+                    ? (
+                      (dashboardEndorsedLimit?.totalCount * 100) /
+                      dashboardEndorsedLimit?.endorsedLimitCount
+                    ).toFixed(0)
+                    : 0}
+                  %
+                </div>
+                {dashboardEndorsedLimit?.totalCount || dashboardEndorsedLimit?.totalCount > 0 ? (
+                  <span>
+                    {dashboardEndorsedLimit?.endorsedLimitCount}/
+                    {dashboardEndorsedLimit?.totalCount}
+                  </span>
+                ) : (
+                  <span>0/0</span>
+                )}
               </div>
             </div>
           </div>
@@ -153,19 +194,6 @@ const Dashboard = () => {
             <span className="dashboard-card-title">
               Applications processed out of RES Checks Assigned
             </span>
-            <div className="date-picker-container">
-              <DatePicker
-                popperModifiers={{
-                  preventOverflow: {
-                    enabled: true,
-                  },
-                }}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Select date"
-                selectsRange
-              />
-              <span className="material-icons-round">insert_invitation</span>
-            </div>
           </div>
           <div className="doughnut-chart-container">
             <div className="doughnut-chart">
@@ -180,61 +208,33 @@ const Dashboard = () => {
         <div className="dashboard-white-container">
           <div className="dashboard-title-date-row">
             <span className="dashboard-card-title">Pending Applications by Status</span>
-            <div className="date-picker-container">
-              <DatePicker
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Select date"
-                popperProps={{ positionFixed: true }}
-                selectsRange
-              />
-              <span className="material-icons-round">insert_invitation</span>
-            </div>
           </div>
           <div className="mt-10">
-            <Pie data={pendingApplicationsData} options={pendingApplicationsOptions} />
+            {pendingApplicationsData && pendingApplicationsData?.datasets?.[0]?.data.length > 0 ? (
+              <Pie data={pendingApplicationsData} options={pendingApplicationsOptions} />
+            ) : (
+              <div className="no-record-found">No record found</div>
+            )}
           </div>
         </div>
         <div className="dashboard-nested-grid-container">
           <div className="dashboard-white-container">
             <div className="dashboard-title-date-row">
               <div className="dashboard-card-title">Discretionary Limit</div>
-              <div className="date-picker-container">
-                <DatePicker
-                  dateFormat="dd/MM/yyyy"
-                  popperModifiers={{
-                    preventOverflow: {
-                      enabled: true,
-                    },
-                  }}
-                  placeholderText="Select date"
-                  popperProps={{ positionFixed: true }}
-                  selectsRange
-                />
-                <span className="material-icons-round">insert_invitation</span>
-              </div>
             </div>
-            <span className="dashboard-readings discretionary-limit">$10,000</span>
+            <span className="dashboard-readings discretionary-limit">
+              {usdConverter(dashboardDiscretionaryLimit)}
+            </span>
           </div>
           <div className="dashboard-white-container">
             <div className="dashboard-title-date-row">
               <div className="dashboard-card-title">Approved Amount Ratio</div>
-              <div className="date-picker-container">
-                <DatePicker
-                  dateFormat="dd/MM/yyyy"
-                  popperModifiers={{
-                    preventOverflow: {
-                      enabled: true,
-                    },
-                  }}
-                  placeholderText="Select date"
-                  popperProps={{ positionFixed: true }}
-                  selectsRange
-                />
-                <span className="material-icons-round">insert_invitation</span>
-              </div>
             </div>
             <span className="dashboard-readings font-primary">
-              140,000<span className="approved-amount-ratio-total">/195,000</span>{' '}
+              {dashboardApprovedAmountRatio?.approvedAmount ?? '0'}
+              <span className="approved-amount-ratio-total">
+                /{dashboardApprovedAmountRatio?.total ?? 0}
+              </span>
             </span>
           </div>
         </div>
@@ -242,20 +242,6 @@ const Dashboard = () => {
       <div className="dashboard-white-container mt-20 mb-20">
         <div className="dashboard-title-date-row">
           <div className="dashboard-card-title">Approved Applications</div>
-          <div className="date-picker-container">
-            <DatePicker
-              dateFormat="dd/MM/yyyy"
-              popperModifiers={{
-                preventOverflow: {
-                  enabled: true,
-                },
-              }}
-              placeholderText="Select date"
-              popperProps={{ positionFixed: true }}
-              selectsRange
-            />
-            <span className="material-icons-round">insert_invitation</span>
-          </div>
         </div>
         <div className="approved-application-blocks-container">
           <div className="approved-application-block fully-approved-block">
@@ -263,7 +249,7 @@ const Dashboard = () => {
               <span className="material-icons-round">verified_user</span>
             </div>
             <div className="mt-15 title">Fully Approved</div>
-            <div className="mt-5 reading">300</div>
+            <div className="mt-5 reading">{dashboardApprovedApplications?.approved ?? 0}</div>
             <div className="approved-application-stripe fully-approved-stripe" />
           </div>
           <div className="approved-application-block partially-approved-block">
@@ -271,7 +257,9 @@ const Dashboard = () => {
               <span className="material-icons-round">watch_later</span>
             </div>
             <div className="mt-15 title">Partially Approved</div>
-            <div className="mt-5 reading">152</div>
+            <div className="mt-5 reading">
+              {dashboardApprovedApplications?.partiallyApproved ?? 0}
+            </div>
             <div className="approved-application-stripe partially-approved-stripe" />
           </div>
           <div className="approved-application-block rejected-block">
@@ -279,7 +267,7 @@ const Dashboard = () => {
               <span className="material-icons-round">thumb_down</span>
             </div>
             <div className="mt-15 title">Rejected</div>
-            <div className="mt-5 reading">25</div>
+            <div className="mt-5 reading">{dashboardApprovedApplications?.rejected ?? 0}</div>
             <div className="approved-application-stripe rejected-stripe" />
           </div>
         </div>

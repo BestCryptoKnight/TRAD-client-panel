@@ -9,7 +9,6 @@ import {
   searchApplicationCompanyEntityName,
   updateEditApplicationData,
   updateEditApplicationField,
-  wipeOutPersonsAsEntityChange,
 } from '../../../redux/ApplicationAction';
 import Loader from '../../../../../common/Loader/Loader';
 import ApplicationEntityNameTable from '../components/ApplicationEntityNameTable/ApplicationEntityNameTable';
@@ -55,14 +54,8 @@ const ApplicationCompanyStep = () => {
     ({ application }) => application?.editApplication?.company ?? {}
   );
   const { partners, errors } = useSelector(({ application }) => application?.editApplication ?? {});
-  const {
-    debtors,
-    streetType,
-    australianStates,
-    newZealandStates,
-    entityType,
-    countryList,
-  } = useSelector(({ application }) => application?.companyData?.dropdownData ?? {});
+  const { debtors, streetType, australianStates, newZealandStates, entityType, countryList } =
+    useSelector(({ application }) => application?.companyData?.dropdownData ?? {});
   const entityNameSearchDropDownData = useSelector(
     ({ application }) => application?.companyData?.entityNameSearch ?? {}
   );
@@ -71,10 +64,6 @@ const ApplicationCompanyStep = () => {
   const [stateValue, setStateValue] = useState([]);
   const [isAusOrNew, setIsAusOrNew] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [wipeOutDetails, setWipeOutDetails] = useState(false);
-  const [selectedDebtorId, setSelectedDebtorId] = useState('');
-
-  const [wipeOuts, setWipeOuts] = useState('');
 
   const [searchedEntityNameValue, setSearchedEntityNameValue] = useState('');
 
@@ -113,38 +102,12 @@ const ApplicationCompanyStep = () => {
     australianStates,
   ]);
 
-  useEffect(() => {
-    setSelectedDebtorId(companyState?.debtorId?.value);
-  }, [companyState?.debtorId]);
-
-  const updateSingleCompanyState = useCallback(
-    (name, value) => {
-      if (wipeOutDetails) {
-        dispatch(updateEditApplicationField('company', 'wipeOutDetails', true));
-      }
-      dispatch(updateEditApplicationField('company', name, value));
-    },
-    [wipeOutDetails]
-  );
+  const updateSingleCompanyState = useCallback((name, value) => {
+    dispatch(updateEditApplicationField('company', name, value));
+  }, []);
   const changeEntityType = useMemo(
-    () => [
-      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleConfirmationModal() },
-      {
-        title: 'Delete',
-        buttonType: 'danger',
-        onClick: async () => {
-          try {
-            await dispatch(wipeOutPersonsAsEntityChange(selectedDebtorId, []));
-            updateSingleCompanyState(wipeOuts?.name, wipeOuts);
-            setWipeOutDetails(true);
-            toggleConfirmationModal();
-          } catch (e) {
-            /**/
-          }
-        },
-      },
-    ],
-    [toggleConfirmationModal, wipeOutDetails, selectedDebtorId, wipeOuts]
+    () => [{ title: 'Close', buttonType: 'primary-1', onClick: () => toggleConfirmationModal() }],
+    [toggleConfirmationModal]
   );
 
   const INPUTS = useMemo(
@@ -315,7 +278,6 @@ const ApplicationCompanyStep = () => {
       }
       if (data?.name === 'entityType' && partners?.length !== 0) {
         setShowConfirmModal(true);
-        setWipeOuts(data);
       } else {
         updateSingleCompanyState(data?.name, data);
       }
@@ -526,7 +488,7 @@ const ApplicationCompanyStep = () => {
           hideModal={toggleConfirmationModal}
         >
           <span className="confirmation-message">
-            Are you sure you want to change entity type it will wipe-up person step data you filled?
+            For changing the entity type, kindly contact your risk analyst
           </span>
         </Modal>
       )}

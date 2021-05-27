@@ -285,6 +285,7 @@ const ApplicationNotesAccordion = props => {
 
                   <span className="title">Owner:</span>
                   <Tooltip
+                    mouseEnterDelay={0.5}
                     overlayClassName="tooltip-left-class"
                     overlay={note.createdById || 'No owner name added'}
                     placement="left"
