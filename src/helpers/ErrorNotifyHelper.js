@@ -1,7 +1,7 @@
 import { errorNotification } from '../common/Toast';
 
 export const displayErrors = e => {
-  if (e?.message === 'timeout of 10000ms exceeded') {
+  if (e?.code === 'ECONNABORTED') {
     errorNotification('Request Timeout');
   } else {
     switch (e?.response?.data?.status) {
@@ -17,6 +17,7 @@ export const displayErrors = e => {
         errorNotification(e?.response?.data?.message || 'Bad request');
         break;
       default:
+        errorNotification(e?.message ?? 'Error');
         throw e;
     }
   }

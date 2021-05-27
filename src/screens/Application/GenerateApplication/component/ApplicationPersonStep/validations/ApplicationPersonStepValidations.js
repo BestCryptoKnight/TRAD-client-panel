@@ -10,7 +10,7 @@ import {
   SPECIAL_CHARACTER_REGEX,
 } from '../../../../../../constants/RegexConstants';
 
-export const applicationPersonStepValidation = (dispatch, data, editApplicationData) => {
+export const applicationPersonStepValidation = async (dispatch, data, editApplicationData) => {
   let validated = true;
   const partners = data?.map((item, index) => {
     const errors = {};
@@ -231,7 +231,7 @@ export const applicationPersonStepValidation = (dispatch, data, editApplicationD
         errorNotification('You can only add one sole trader');
       } else {
         validated = true;
-        dispatch(saveApplicationStepDataToBackend(finalData));
+        await dispatch(saveApplicationStepDataToBackend(finalData));
       }
     } catch (e) {
       /**/

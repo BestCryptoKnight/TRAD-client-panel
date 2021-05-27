@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
-import { getAuthTokenLocalStorage } from '../../helpers/LocalStorageHelper';
-import { LOGIN_REDUX_CONSTANTS } from '../../screens/auth/login/redux/LoginReduxConstants';
-import { errorNotification } from '../../common/Toast';
 import { store } from '../../redux/store';
+import { getAuthTokenLocalStorage } from '../../helpers/LocalStorageHelper';
+import { errorNotification } from '../../common/Toast';
+import { LOGIN_REDUX_CONSTANTS } from '../../screens/auth/login/redux/LoginReduxConstants';
 
 const instance = axios.create({
   timeout: 10000,
@@ -59,8 +59,8 @@ const ApiService = {
   postData(url, data, config) {
     return instance.post(url, data, config);
   },
-  putData(url, data) {
-    return instance.put(url, data);
+  putData(url, data, config) {
+    return instance.put(url, data, config);
   },
   patchData(url, data) {
     return instance.patch(url, data);

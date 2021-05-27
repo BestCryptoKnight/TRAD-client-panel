@@ -1,6 +1,6 @@
 import { saveApplicationStepDataToBackend } from '../../../../redux/ApplicationAction';
 
-export const applicationDocumentsStepValidations = (dispatch, data, editApplicationData) => {
+export const applicationDocumentsStepValidations = async (dispatch, data, editApplicationData) => {
   let validated = true;
   if (validated) {
     const finalData = {
@@ -8,7 +8,7 @@ export const applicationDocumentsStepValidations = (dispatch, data, editApplicat
       applicationId: editApplicationData?._id,
     };
     try {
-      dispatch(saveApplicationStepDataToBackend(finalData));
+      await dispatch(saveApplicationStepDataToBackend(finalData));
     } catch (e) {
       /**/
     }

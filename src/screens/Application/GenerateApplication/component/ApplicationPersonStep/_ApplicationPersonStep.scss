@@ -22,7 +22,7 @@
     grid-column: 1/span 4;
   }
 
-  .grid-checkbox, .title, .main-title, .horizontal-line, .radio-title {
+  .grid-checkbox, .title, .main-title, .horizontal-line, .radio-title,.main-title-director-details {
     grid-column: 1 / span 4;
   }
 
@@ -33,6 +33,11 @@
   .main-title {
     font: $title $font-medium;
     color: $secondary-color;
+  }
+
+  .main-title-director-details {
+    font: $title $font-medium;
+    color: $primary-color;
   }
 
   .title {

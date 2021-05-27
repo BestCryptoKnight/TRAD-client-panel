@@ -38,7 +38,7 @@ const priorityData = [
 
 const entityTypeData = [
   { value: 'application', label: 'Application', name: 'entityType' },
-  { value: 'client', label: 'Client', name: 'entityType' },
+  // { value: 'client', label: 'Client', name: 'entityType' },
   { value: 'debtor', label: 'Debtor', name: 'entityType' },
   // { value: 'claim', label: 'Claim', name: 'entityType' },
   // { value: 'overdue', label: 'Overdue', name: 'entityType' },
@@ -67,17 +67,19 @@ const CreditLimitsTasksTab = () => {
   );
   const loggedUserDetail = useSelector(({ loggedUserProfile }) => loggedUserProfile ?? {});
   const { _id } = useMemo(() => loggedUserDetail, [loggedUserDetail]);
-  const { total, headers, pages, docs, page, limit, isLoading } = useMemo(() => taskList, [
-    taskList,
-  ]);
+  const { total, headers, pages, docs, page, limit, isLoading } = useMemo(
+    () => taskList,
+    [taskList]
+  );
 
   const { defaultFields, customFields } = useMemo(
     () => creditLimitsTaskColumnList ?? { defaultFields: [], customFields: [] },
     [creditLimitsTaskColumnList]
   );
-  const { assigneeList, entityList, defaultEntityList } = useMemo(() => taskDropDownData, [
-    taskDropDownData,
-  ]);
+  const { assigneeList, entityList, defaultEntityList } = useMemo(
+    () => taskDropDownData,
+    [taskDropDownData]
+  );
 
   const [deleteTaskData, setDeleteTaskData] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);

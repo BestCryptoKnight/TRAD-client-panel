@@ -137,23 +137,33 @@ const GenerateApplication = () => {
   }, []);
 
   const onNextClick = useCallback(async () => {
-    const data = editApplicationData?.[FILTERED_STEPS?.[applicationStage ?? 0]?.name];
-    switch (FILTERED_STEPS?.[applicationStage ?? 0]?.name) {
-      case 'company':
-        return applicationCompanyStepValidations(dispatch, data, editApplicationData);
-      case 'partners':
-        return applicationPersonStepValidation(dispatch, data, editApplicationData);
-      case 'creditLimit':
-        return applicationCreditStepValidations(dispatch, data, editApplicationData);
-      case 'documents':
-        return applicationDocumentsStepValidations(dispatch, data, editApplicationData);
-      case 'confirmationStep':
-        return applicationConfirmationStepValidations(dispatch, data, editApplicationData, history);
+    try {
+      const data = editApplicationData?.[FILTERED_STEPS?.[applicationStage ?? 0]?.name];
+      switch (FILTERED_STEPS?.[applicationStage ?? 0]?.name) {
+        case 'company':
+          return await applicationCompanyStepValidations(dispatch, data, editApplicationData);
+        case 'partners':
+          return await applicationPersonStepValidation(dispatch, data, editApplicationData);
+        case 'creditLimit':
+          return await applicationCreditStepValidations(dispatch, data, editApplicationData);
+        case 'documents':
+          return await applicationDocumentsStepValidations(dispatch, data, editApplicationData);
+        case 'confirmationStep':
+          return await applicationConfirmationStepValidations(
+            dispatch,
+            data,
+            editApplicationData,
+            history
+          );
 
-      default:
-        return false;
+        default:
+          return false;
+      }
+    } catch (e) {
+      /**/
     }
-  }, [editApplicationData, applicationStage, FILTERED_STEPS]);
+    return false;
+  }, [editApplicationData, applicationStage, FILTERED_STEPS, history]);
 
   return (
     <>

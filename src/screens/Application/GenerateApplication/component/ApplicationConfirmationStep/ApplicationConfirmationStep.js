@@ -354,7 +354,7 @@ const ApplicationConfirmationStep = () => {
     },
     {
       title: 'Director Details',
-      type: 'main-title',
+      type: 'main-title-director-details',
     },
     {
       type: 'array',
@@ -406,6 +406,12 @@ const ApplicationConfirmationStep = () => {
           return (
             <>
               <span className="title">{detail.title}</span>
+            </>
+          );
+        case 'main-title-director-details':
+          return (
+            <>
+              <span className="main-title-director-details">{detail.title}</span>
             </>
           );
         case 'radio':

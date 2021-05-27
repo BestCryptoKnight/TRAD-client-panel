@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
-import { useHistory, Switch, Route } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   changePassword,
@@ -274,17 +274,16 @@ const Header = () => {
       <div className="screen-title">
         <Switch>
           {SIDEBAR_URLS.map(route => (
-            <Route exact path={route.url}>
-              {route.title}
-            </Route>
+            <Route path={route.url}>{route.title}</Route>
           ))}
         </Switch>
       </div>
       <div className="header-right-part">
         <div
           ref={headerSearchRef}
-          className={`header-search-container ${headerSearchFocused && 'header-search-container-focused'
-            } ${searchStart && 'got-search-results'}`}
+          className={`header-search-container ${
+            headerSearchFocused && 'header-search-container-focused'
+          } ${searchStart && 'got-search-results'}`}
         >
           <div>
             <input

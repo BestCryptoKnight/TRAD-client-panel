@@ -80,16 +80,8 @@ const ApplicationList = () => {
     applicationListColumnResetButtonLoaderAction,
   } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
 
-  const {
-    entity,
-    clientId,
-    debtorId,
-    minCreditLimit,
-    maxCreditLimit,
-    status,
-    startDate,
-    endDate,
-  } = useMemo(() => filter ?? {}, [filter]);
+  const { entity, clientId, debtorId, minCreditLimit, maxCreditLimit, status, startDate, endDate } =
+    useMemo(() => filter ?? {}, [filter]);
 
   const handleStartDateChange = useCallback(
     date => {
@@ -446,7 +438,7 @@ const ApplicationList = () => {
 
   const viewApplicationOnSelectRecord = useCallback(
     (id, data) => {
-      if (data?.status === 'DRAFT') {
+      if (data?.status === 'Draft') {
         history.push(`/applications/application/generate/?applicationId=${id}`);
       } else {
         history.push(`/applications/detail/view/${id}`);

@@ -15,7 +15,7 @@ const ApplicationCreditLimitStep = () => {
     creditLimit,
     note,
     errors,
-  } = useSelector(({ application }) => application.editApplication?.creditLimit ?? {});
+  } = useSelector(({ application }) => application?.editApplication?.creditLimit ?? {});
 
   const updateSingleCompanyState = useCallback((name, value) => {
     dispatch(updateEditApplicationField('creditLimit', name, value));

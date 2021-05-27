@@ -9,16 +9,23 @@ import Pagination from '../../../common/Pagination/Pagination';
 import Loader from '../../../common/Loader/Loader';
 import {
   changeCreditColumnList,
+  downloadCreditLimitCSV,
   getCreditLimitColumnList,
   getCreditLimitsFilter,
   getCreditLimitsList,
+  modifyClientCreditLimit,
   saveCreditLimitColumnList,
+  surrenderClientCreditLimit,
 } from '../redux/CreditLimitsAction';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
 import { errorNotification } from '../../../common/Toast';
 import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import Modal from '../../../common/Modal/Modal';
 import { CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
+import Input from '../../../common/Input/Input';
+import { NUMBER_REGEX } from '../../../constants/RegexConstants';
+import Button from '../../../common/Button/Button';
+import { downloadAll } from '../../../helpers/DownloadHelper';
 
 const CreditLimitsList = () => {
   const dispatch = useDispatch();
@@ -42,6 +49,9 @@ const CreditLimitsList = () => {
   const {
     CreditLimitListColumnSaveButtonLoaderAction,
     CreditLimitListColumnResetButtonLoaderAction,
+    creditLimitDownloadCreditLimitCSVButtonLoaderAction,
+    modifyCreditLimitButtonLoaderAction,
+    surrenderCreditLimitButtonLoaderAction,
   } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
 
   const CREDIT_LIMITS_FILTER_REDUCER_ACTIONS = {
@@ -277,6 +287,122 @@ const CreditLimitsList = () => {
     [history]
   );
 
+  // actions
+
+  const [modifyLimitModal, setModifyLimitModal] = useState(false);
+  const [surrenderModal, setSurrenderModal] = useState(false);
+  const [newCreditLimit, setNewCreditLimit] = useState('');
+  const [currentCreditLimitData, setCurrentCreditLimitData] = useState({});
+
+  const toggleModifyLimitModal = useCallback(() => {
+    setNewCreditLimit('');
+    setModifyLimitModal(!modifyLimitModal);
+  }, [modifyLimitModal, setNewCreditLimit]);
+
+  const toggleSurrenderModal = useCallback(() => {
+    setSurrenderModal(!surrenderModal);
+  }, [surrenderModal]);
+
+  const creditLimitAction = useMemo(
+    () => [
+      data => (
+        <span className="table-action-buttons">
+          <Button
+            buttonType="outlined-primary-small"
+            title="Modify"
+            onClick={e => {
+              e.stopPropagation();
+              setCurrentCreditLimitData(data);
+              toggleModifyLimitModal();
+            }}
+          />
+          <Button
+            buttonType="outlined-red-small"
+            title="Surrender"
+            onClick={e => {
+              e.stopPropagation();
+              setCurrentCreditLimitData(data);
+              toggleSurrenderModal();
+            }}
+          />
+        </span>
+      ),
+    ],
+    [toggleModifyLimitModal, toggleSurrenderModal, setCurrentCreditLimitData]
+  );
+
+  const modifyLimit = useCallback(async () => {
+    try {
+      if (newCreditLimit?.trim()?.length <= 0) {
+        errorNotification('Please provide new credit limit');
+      } else if (newCreditLimit && !newCreditLimit.match(NUMBER_REGEX)) {
+        errorNotification('Please provide valid credit limit');
+      } else {
+        const data = {
+          action: 'modify',
+          creditLimit: newCreditLimit,
+        };
+        await dispatch(modifyClientCreditLimit(currentCreditLimitData?.id, data));
+        await getCreditLimitListByFilter();
+        toggleModifyLimitModal();
+      }
+    } catch (e) {
+      /**/
+    }
+  }, [newCreditLimit, currentCreditLimitData, toggleModifyLimitModal, getCreditLimitListByFilter]);
+
+  const surrenderLimit = useCallback(async () => {
+    try {
+      const data = {
+        action: 'surrender',
+        creditLimit: currentCreditLimitData?.creditLimit,
+      };
+      await dispatch(surrenderClientCreditLimit(currentCreditLimitData?.id, data));
+      await getCreditLimitListByFilter();
+      toggleSurrenderModal();
+    } catch (e) {
+      /**/
+    }
+  }, [currentCreditLimitData, toggleSurrenderModal, getCreditLimitListByFilter]);
+
+  const modifyLimitButtons = useMemo(
+    () => [
+      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleModifyLimitModal() },
+      {
+        title: 'Save',
+        buttonType: 'primary',
+        onClick: modifyLimit,
+        isLoading: modifyCreditLimitButtonLoaderAction,
+      },
+    ],
+    [toggleModifyLimitModal, modifyLimit, modifyCreditLimitButtonLoaderAction]
+  );
+  const surrenderLimitButtons = useMemo(
+    () => [
+      { title: 'No', buttonType: 'primary-1', onClick: () => toggleSurrenderModal() },
+      {
+        title: 'Yes',
+        buttonType: 'danger',
+        onClick: surrenderLimit,
+        isLoading: surrenderCreditLimitButtonLoaderAction,
+      },
+    ],
+    [toggleSurrenderModal, surrenderLimit, modifyCreditLimitButtonLoaderAction]
+  );
+
+  const onClickDownloadButton = useCallback(async () => {
+    if (docs?.length !== 0) {
+      try {
+        const res = await dispatch(downloadCreditLimitCSV());
+        if (res) downloadAll(res);
+      } catch (e) {
+        errorNotification(e?.response?.request?.statusText ?? 'Internal server error');
+      }
+    } else {
+      errorNotification('You have no records to download');
+    }
+  }, [docs]);
+
   return (
     <>
       <div className="page-header">
@@ -297,6 +423,12 @@ const CreditLimitsList = () => {
               buttonTitle="Click to select custom fields"
               onClick={() => toggleCustomField()}
             />
+            <IconButton
+              buttonType="primary-1"
+              title="cloud_download"
+              onClick={onClickDownloadButton}
+              isLoading={creditLimitDownloadCreditLimitCSVButtonLoaderAction}
+            />
           </div>
         )}
       </div>
@@ -314,6 +446,7 @@ const CreditLimitsList = () => {
                   recordSelected={onSelectCreditLimitRecord}
                   recordActionClick={() => {}}
                   rowClass="cursor-pointer"
+                  tableButtonActions={creditLimitAction}
                 />
               </div>
               <Pagination
@@ -364,6 +497,43 @@ const CreditLimitsList = () => {
           onChangeSelectedColumn={onChangeSelectedColumn}
           toggleCustomField={toggleCustomField}
         />
+      )}
+      {modifyLimitModal && (
+        <Modal
+          header="Modify Credit Limit"
+          buttons={modifyLimitButtons}
+          hideModal={toggleModifyLimitModal}
+        >
+          <div className="modify-credit-limit-container align-center">
+            <span>Credit Limit</span>
+            <Input
+              type="text"
+              value={currentCreditLimitData?.creditLimit}
+              disabled
+              borderClass="disabled-control"
+            />
+            <span>Change Credit Limit</span>
+            <Input
+              prefixClass="font-placeholder"
+              placeholder="New Credit Limit"
+              name="creditLimit"
+              type="text"
+              value={newCreditLimit}
+              onChange={e => setNewCreditLimit(e.target.value)}
+            />
+          </div>
+        </Modal>
+      )}
+      {surrenderModal && (
+        <Modal
+          header="Modify Credit Limit"
+          buttons={surrenderLimitButtons}
+          hideModal={toggleSurrenderModal}
+        >
+          <span className="confirmation-message">
+            Are you sure you want to surrender this credit limit?
+          </span>
+        </Modal>
       )}
     </>
   );

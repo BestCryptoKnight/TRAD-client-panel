@@ -125,6 +125,24 @@ export const getCreditLimitsFilter = () => {
   };
 };
 
+export const downloadCreditLimitCSV = () => {
+  return async () => {
+    try {
+      startLoaderButtonOnRequest('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
+      const response = await CreditLimitsApiService.downloadCreditLimitCSVFile();
+      if (response?.data?.status === 'SUCCESS') {
+        stopLoaderButtonOnSuccessOrFail(`creditLimitDownloadCreditLimitCSVButtonLoaderAction`);
+        return response;
+      }
+    } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
+      displayErrors(e);
+      throw Error();
+    }
+    return false;
+  };
+};
+
 export const getCreditLimitsDetails = id => {
   return async dispatch => {
     try {
@@ -136,6 +154,38 @@ export const getCreditLimitsDetails = id => {
         });
       }
     } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const modifyClientCreditLimit = (id, data) => {
+  return async () => {
+    try {
+      startLoaderButtonOnRequest('modifyCreditLimitButtonLoaderAction');
+      const response = await CreditLimitsApiService.modifyClientCreditLimitData(id, data);
+      if (response?.data?.status === 'SUCCESS') {
+        successNotification(response?.data?.message ?? 'Credit limit updated successfully');
+        stopLoaderButtonOnSuccessOrFail('modifyCreditLimitButtonLoaderAction');
+      }
+    } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('modifyCreditLimitButtonLoaderAction');
+      displayErrors(e);
+    }
+  };
+};
+
+export const surrenderClientCreditLimit = (id, data) => {
+  return async () => {
+    try {
+      startLoaderButtonOnRequest('surrenderCreditLimitButtonLoaderAction');
+      const response = await CreditLimitsApiService.surrenderClientCreditLimitData(id, data);
+      if (response?.data?.status === 'SUCCESS') {
+        successNotification(response?.data?.message ?? 'Credit limit surrendered successfully');
+        stopLoaderButtonOnSuccessOrFail('surrenderCreditLimitButtonLoaderAction');
+      }
+    } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('surrenderCreditLimitButtonLoaderAction');
       displayErrors(e);
     }
   };
@@ -229,8 +279,7 @@ export const onSaveCreditLimitsApplicationColumnList = ({
       const response = await CreditLimitsApiService.updateCreditLimitsApplicationColumnList(data);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
-          type:
-            CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMITS_APPLICATION_DEFAULT_COLUMN_LIST,
+          type: CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMITS_APPLICATION_DEFAULT_COLUMN_LIST,
           data: creditLimitsApplicationColumnList,
         });
         successNotification('Columns updated successfully.');
@@ -392,9 +441,8 @@ export const getCreditLimitsTasksDefaultEntityDropDownData = params => {
       const response = await CreditLimitsApiService.getCreditLimitsTasksEntityDropDownData(params);
       if (response.data.status === 'SUCCESS' && response.data.data) {
         dispatch({
-          type:
-            CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK
-              .DEFAULT_CREDIT_LIMITS_ENTITY_DROP_DOWN_DATA,
+          type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.ADD_TASK
+            .DEFAULT_CREDIT_LIMITS_ENTITY_DROP_DOWN_DATA,
           data: response.data.data,
         });
       }
