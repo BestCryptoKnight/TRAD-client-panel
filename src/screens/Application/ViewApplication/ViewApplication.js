@@ -10,9 +10,7 @@ import {
   getApplicationDetailById,
   getApplicationModuleList,
   getApplicationNotesList,
-  getApplicationTaskDefaultEntityDropDownData,
   getApplicationTaskList,
-  getAssigneeDropDownData,
   getViewApplicationDocumentTypeList,
   resetApplicationDetail,
 } from '../redux/ApplicationAction';
@@ -85,8 +83,6 @@ const ViewApplication = () => {
 
   useEffect(() => {
     dispatch(getApplicationDetailById(id));
-    dispatch(getAssigneeDropDownData());
-    dispatch(getApplicationTaskDefaultEntityDropDownData({ entityName: 'application' }));
     dispatch(getApplicationNotesList(id));
     dispatch(getApplicationModuleList(id));
     dispatch(getApplicationTaskList(id));
