@@ -2,6 +2,7 @@ import ApiService from '../../../services/api-service/ApiService';
 import { DASHBOARD_URLS } from '../../../constants/UrlConstants';
 
 export const DashboardApiService = {
+  getDashboardDetails: () => ApiService.getData(DASHBOARD_URLS.DASHBOARD_DETAILS),
   getDashboardPendingApplications: params =>
     ApiService.getData(DASHBOARD_URLS.DASHBOARD_PENDING_APPLICATION, { params }),
   getDashboardEndorsedLimit: params =>

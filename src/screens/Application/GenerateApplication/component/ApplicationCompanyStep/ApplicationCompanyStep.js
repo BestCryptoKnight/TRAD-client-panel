@@ -488,7 +488,7 @@ const ApplicationCompanyStep = () => {
           hideModal={toggleConfirmationModal}
         >
           <span className="confirmation-message">
-            For changing the entity type, kindly contact your risk analyst
+            To change the entity type, kindly contact your Risk Analyst or Service manager
           </span>
         </Modal>
       )}

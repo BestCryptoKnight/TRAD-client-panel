@@ -35,7 +35,7 @@ const ViewCreditLimits = () => {
       },
       {
         label: 'Address',
-        value: `${creditLimitsDetails?.streetNumber}, ${creditLimitsDetails?.state?.label}, ${creditLimitsDetails?.postCode} `,
+        value: `${creditLimitsDetails?.unitNumber}, ${creditLimitsDetails?.property}, ${creditLimitsDetails?.streetNumber}, ${creditLimitsDetails?.streetName}, ${creditLimitsDetails?.state}, ${creditLimitsDetails?.postCode} `,
       },
       {
         label: 'Brokers Commission',

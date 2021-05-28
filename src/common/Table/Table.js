@@ -345,29 +345,20 @@ function Row(props) {
             case 'isCompleted':
               return (
                 <td key={index.toString()} align={align}>
-                  {value?.length > 50 ? (
-                    <Tooltip
-                      overlayClassName="tooltip-top-class"
-                      overlay={<span>{value ?? 'No value'}</span>}
-                      placement="topLeft"
-                    >
-                      {value ?? '-'}
-                    </Tooltip>
-                  ) : (
-                    value ?? '-'
-                  )}
+                  {value ?? '-'}
                 </td>
               );
             default:
               return (
                 <td key={index.toString()} align={align}>
-                  {data?.[key]?.props?.className !== 'table-checkbox' ? (
+                  {value?.length > 50 ? (
                     <Tooltip
+                      mouseEnterDelay={0.5}
                       overlayClassName="tooltip-top-class"
                       overlay={<span>{value ?? 'No value'}</span>}
                       placement="topLeft"
                     >
-                      <span>{value ?? '-'}</span>
+                      {value ?? '-'}
                     </Tooltip>
                   ) : (
                     value ?? '-'

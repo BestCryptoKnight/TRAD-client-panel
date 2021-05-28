@@ -17,11 +17,7 @@ export const HEADER_URLS = {
 };
 
 export const DASHBOARD_URLS = {
-  DASHBOARD_PENDING_APPLICATION: `${BASE_URL}dashboard/application-status`,
-  DASHBOARD_ENDORSED_LIMIT: `${BASE_URL}dashboard/endorsed-limit`,
-  DASHBOARD_APPROVED_APPLICATION: `${BASE_URL}dashboard/approved-application`,
-  DASHBOARD_APPROVED_AMOUNT: `${BASE_URL}dashboard/approved-amount`,
-  DASHBOARD_DISCRETIONARY_AMOUNT: `${BASE_URL}dashboard/discretionary-limit`,
+  DASHBOARD_DETAILS: `${BASE_URL}dashboard/`,
   DASHBOARD_TASK_LIST: `${BASE_URL}task/`,
   DASHBOARD_NOTIFICATION_LIST: `${BASE_URL}notification/`,
 };

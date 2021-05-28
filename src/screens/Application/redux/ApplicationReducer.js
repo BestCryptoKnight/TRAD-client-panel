@@ -79,28 +79,6 @@ const initialApplicationList = {
     partners: [],
   },
 
-  /* personStep: {
-    title: '',
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    dateOfBirth: '',
-    driverLicenceNumber: '',
-    phoneNumber: '',
-    mobileNumber: '',
-    email: '',
-    address: {
-      property: '',
-      unitNumber: '',
-      streetNumber: '',
-      streetName: '',
-      streetType: '',
-      suburb: '',
-      state: '',
-      country: '',
-      postCode: '',
-    },
-  }, */
   companyData: {
     dropdownData: {
       debtors: [],
@@ -123,7 +101,6 @@ const initialApplicationList = {
     applicationDetail: {},
     task: {
       taskList: [],
-      addTask: {},
     },
     applicationModulesList: {
       documents: [],
@@ -475,106 +452,6 @@ export const application = (state = initialApplicationList, action) => {
           task: {
             ...state?.viewApplication?.task,
             taskList: action?.data,
-          },
-        },
-      };
-
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-      .APPLICATION_TASK_ASSIGNEE_DROP_DOWN_DATA_ACTION: {
-      const assigneeList = action?.data?.map(data => ({
-        label: data.name,
-        value: data._id,
-        name: 'assigneeId',
-      }));
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          dropDownData: {
-            ...state?.viewApplication?.dropDownData,
-            assigneeList,
-          },
-        },
-      };
-    }
-
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-      .APPLICATION_TASK_ENTITY_DROP_DOWN_DATA_ACTION: {
-      const entityList = action?.data?.map(data => ({
-        label: data.name ?? data.applicationId,
-        value: data._id,
-        name: 'entityId',
-      }));
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          dropDownData: {
-            ...state?.viewApplication?.dropDownData,
-            entityList,
-          },
-        },
-      };
-    }
-
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-      .DEFAULT_APPLICATION_TASK_ENTITY_DROP_DOWN_DATA_ACTION: {
-      const defaultEntityList = action?.data?.map(data => ({
-        label: data.name ?? data.applicationId,
-        value: data._id,
-        name: 'entityId',
-      }));
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          dropDownData: {
-            ...state?.viewApplication?.dropDownData,
-            entityList: defaultEntityList,
-            defaultEntityList,
-          },
-        },
-      };
-    }
-
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-      .APPLICATION_UPDATE_TASK_FIELD_STATUS:
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          task: {
-            ...state?.viewApplication?.task,
-            addTask: {
-              ...state?.viewApplication?.task?.addTask,
-              [action?.name]: action?.value,
-            },
-          },
-        },
-      };
-
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-      .APPLICATION_RESET_ADD_TASK_STATE_ACTION:
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          task: {
-            ...state?.viewApplication?.task,
-            addTask: {},
-          },
-        },
-      };
-
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
-      .GET_APPLICATION_TASK_DETAILS_ACTION:
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          task: {
-            ...state?.viewApplication?.task,
-            addTask: action?.data,
           },
         },
       };

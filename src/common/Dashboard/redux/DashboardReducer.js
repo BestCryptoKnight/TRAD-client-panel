@@ -2,6 +2,7 @@ import { DASHBOARD_REDUX_CONSTANTS } from './DashboardReduxConstants';
 import { LOGIN_REDUX_CONSTANTS } from '../../../screens/auth/login/redux/LoginReduxConstants';
 
 const initialDashboardData = {
+  dashboardDetails: {},
   dashboardTask: {
     docs: [],
     headers: [],
@@ -24,34 +25,10 @@ const initialDashboardData = {
 
 export const dashboard = (state = initialDashboardData, action) => {
   switch (action.type) {
-    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_PENDING_APPLICATIONS:
+    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_DETAILS:
       return {
         ...state,
-        pendingApplications: action.data,
-      };
-
-    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_ENDORSED_LIMIT:
-      return {
-        ...state,
-        endorsedLimits: action.data,
-      };
-
-    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_DISCRETIONARY_LIMIT:
-      return {
-        ...state,
-        discretionaryLimit: action?.data,
-      };
-
-    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_APPROVED_AMOUNT_RATIO:
-      return {
-        ...state,
-        approvedAmountRatio: action?.data,
-      };
-
-    case DASHBOARD_REDUX_CONSTANTS.DASHBOARD_APPROVED_APPLICATIONS:
-      return {
-        ...state,
-        approvedApplications: action?.data,
+        dashboardDetails: action.data,
       };
 
     case DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_LIST_REQUEST:

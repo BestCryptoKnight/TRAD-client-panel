@@ -1,29 +1,20 @@
 .dashboard-container {
   height: 100vh;
   width: 100%;
-  padding: 1rem 0;
   background-color: $background-color;
-}
-
-.right-side-container {
-  width: calc(100% - 15.313rem);
-  height: calc(100vh - 2rem);
-  background-color: $background-color;
-}
-
-.page-container {
-  height: calc(100vh - 100px);
-  padding-right: 2rem;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .dashboard-graph-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: calc(50% - 20px) calc(50% - 20px);
   gap: 40px;
   width: 100%;
-  margin-top: 10px;
+  padding-top: 20px;
+  margin-bottom: 40px;
+
+  .dashboard-white-container {
+    margin-bottom: 0;
+  }
 }
 
 .dashboard-white-container {
@@ -59,6 +50,16 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
+
+  .dashboard-white-container {
+    margin-bottom: 0;
+  }
+}
+
+.dashboard-nested-grid-container.no-endorsed-limit-nested-grid-container {
+  grid-column: span 2;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
 }
 
 .dashboard-card-title {
@@ -118,9 +119,20 @@
   color: $light-orange-variant-color
 }
 
-.approved-amount-ratio-total {
-  font-size: $h5;
-  color: $light-orange-variant-color;
+.approved-amount-ratio {
+  display: flex;
+  align-items: baseline;
+
+  div {
+    font: $h1 $font-bold;
+    color: $primary-color;
+  }
+
+  span {
+    margin-left: 10px;
+    font: $h5 $font-medium;
+    color: $field-color
+  }
 }
 
 .approved-application-blocks-container {
@@ -206,6 +218,11 @@
 .rejected-block {
   font: $h6 $font-medium;
   color: $error-color;
+}
+
+.dashboard-table-white-container {
+  @extend .dashboard-white-container;
+  margin-top: 40px;
 }
 
 .dashboard-table-container {
