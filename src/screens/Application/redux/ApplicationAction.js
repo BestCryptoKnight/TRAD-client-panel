@@ -17,6 +17,9 @@ import {
 export const getApplicationsListByFilter = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
     try {
+      dispatch({
+        type: APPLICATION_REDUX_CONSTANTS.APPLICATION_LIST_REQUEST,
+      });
       const response = await ApplicationApiServices.getApplicationListByFilter(params);
 
       if (response?.data?.status === 'SUCCESS') {
@@ -184,43 +187,51 @@ export const getApplicationCompanyDropDownData = () => {
   };
 };
 
-export const getApplicationCompanyDataFromDebtor = async id => {
-  try {
-    const response = await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromDebtor(
-      id
-    );
-    if (response?.data?.status === 'SUCCESS') {
-      return response.data.data;
-    }
-    return null;
-  } catch (e) {
-    if (e?.response?.data?.status === 'ERROR') {
-      if (e.response.data.messageCode === 'APPLICATION_ALREADY_EXISTS') {
-        errorNotification('Application already exist with this debtor');
+export const getApplicationCompanyDataFromDebtor = id => {
+  return async dispatch => {
+    try {
+      const response = await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromDebtor(
+        id
+      );
+
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: APPLICATION_REDUX_CONSTANTS.COMPANY
+            .APPLICATION_COMPANY_WIPE_OUT_OLD_DATA_ON_SUCCESS,
+          isDebtor: true,
+        });
+        return response.data.data;
       }
-    }
-    errorNotification('Internal server error');
-    throw Error();
-  }
-};
-
-export const getApplicationCompanyDataFromABNOrACN = async params => {
-  try {
-    const response = await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(
-      params
-    );
-
-    if (response?.data?.status === 'SUCCESS') {
-      return response.data.data;
+    } catch (e) {
+      displayErrors(e);
+      throw Error();
     }
     return null;
-  } catch (e) {
-    displayErrors(e);
-    throw Error();
-  }
+  };
 };
 
-export const searchApplicationCompanyEntityName = searchText => {
+export const getApplicationCompanyDataFromABNOrACN = params => {
+  return async dispatch => {
+    try {
+      const response =
+        await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(params);
+
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: APPLICATION_REDUX_CONSTANTS.COMPANY
+            .APPLICATION_COMPANY_WIPE_OUT_OLD_DATA_ON_SUCCESS,
+        });
+        return response.data.data;
+      }
+    } catch (e) {
+      displayErrors(e);
+      throw Error();
+    }
+    return null;
+  };
+};
+
+export const searchApplicationCompanyEntityName = params => {
   return async dispatch => {
     try {
       dispatch({
@@ -233,7 +244,7 @@ export const searchApplicationCompanyEntityName = searchText => {
         },
       });
       const response = await ApplicationCompanyStepApiServices.searchApplicationCompanyEntityName(
-        searchText
+        params
       );
 
       if (response?.data?.status === 'SUCCESS') {
@@ -249,9 +260,9 @@ export const searchApplicationCompanyEntityName = searchText => {
       }
     } catch (e) {
       if (e.response && e.response.data) {
-        if (e?.response?.data?.status === undefined) {
+        if (e.response?.data?.status === undefined) {
           errorNotification('It seems like server is down, Please try again later.');
-        } else if (e.response.data.status === 'INTERNAL_SERVER_ERROR') {
+        } else if (e.response?.data?.status === 'INTERNAL_SERVER_ERROR') {
           errorNotification('Internal server error');
         } else {
           dispatch({
@@ -259,7 +270,7 @@ export const searchApplicationCompanyEntityName = searchText => {
             data: {
               isLoading: false,
               error: true,
-              errorMessage: e.response.data.message || 'Please try again later.',
+              errorMessage: e.response.data.message ?? 'Please try again later.',
               data: [],
             },
           });
@@ -398,11 +409,11 @@ export const wipeOutPersonsAsEntityChange = (debtor, data) => {
 };
 
 // person step edit application
-export const getApplicationPersonDataFromABNOrACN = (id, params) => {
+export const getApplicationPersonDataFromABNOrACN = params => {
   return async () => {
     try {
       const response =
-        await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(id, params);
+        await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(params);
 
       if (response?.data?.status === 'SUCCESS') {
         return response.data.data;
@@ -469,6 +480,7 @@ export const saveApplicationStepDataToBackend = data => {
         throw Error();
       } else {
         displayErrors(e);
+        throw Error();
       }
     }
   };
@@ -479,10 +491,10 @@ export const saveApplicationStepDataToBackend = data => {
 export const getApplicationDetailById = applicationId => {
   return async dispatch => {
     try {
-      const response = await ApplicationApiServices.getApplicationDetail(applicationId);
       dispatch({
         type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_REQUEST_ACTION,
       });
+      const response = await ApplicationApiServices.getApplicationDetail(applicationId);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_ACTION,
@@ -493,6 +505,26 @@ export const getApplicationDetailById = applicationId => {
       dispatch({
         type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_FAIL_ACTION,
       });
+      displayErrors(e);
+    }
+  };
+};
+
+export const changeApplicationStatus = (applicationId, status) => {
+  return async dispatch => {
+    try {
+      const response = await ApplicationViewApiServices.changeApplicationStatus(
+        applicationId,
+        status
+      );
+      if (response?.data?.status === 'SUCCESS') {
+        successNotification(response?.data?.message ?? 'Application status updated successfully.');
+        dispatch({
+          type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_STATUS_CHANGE_ACTION,
+          data: status,
+        });
+      }
+    } catch (e) {
       displayErrors(e);
     }
   };

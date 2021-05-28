@@ -12,8 +12,7 @@ const initialApplicationList = {
     page: 1,
     pages: 1,
     headers: [],
-    isLoading: true,
-    error: null,
+    isLoading: false,
   },
   applicationColumnNameList: {},
   applicationDefaultColumnNameList: {},
@@ -120,14 +119,22 @@ const initialApplicationList = {
 
 export const application = (state = initialApplicationList, action) => {
   switch (action.type) {
+    case APPLICATION_REDUX_CONSTANTS.APPLICATION_LIST_REQUEST:
+      return {
+        ...state,
+        applicationList: {
+          ...state?.applicationList,
+          isLoading: true,
+        },
+      };
+
     case APPLICATION_REDUX_CONSTANTS.APPLICATION_LIST_SUCCESS:
       return {
         ...state,
         applicationList: {
-          ...state.applicationList,
-          ...action.data,
+          ...state?.applicationList,
+          ...action?.data,
           isLoading: false,
-          error: null,
         },
       };
 
@@ -135,9 +142,8 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         applicationList: {
-          ...state.applicationList,
+          ...state?.applicationList,
           isLoading: false,
-          error: true,
         },
       };
     case APPLICATION_REDUX_CONSTANTS.RESET_APPLICATION_LIST_PAGINATION_DATA:
@@ -154,23 +160,23 @@ export const application = (state = initialApplicationList, action) => {
     case APPLICATION_REDUX_CONSTANTS.APPLICATION_DETAILS:
       return {
         ...state,
-        editApplication: { ...state.editApplication, ...action.data },
+        editApplication: { ...state?.editApplication, ...action?.data },
       };
     case APPLICATION_COLUMN_LIST_REDUX_CONSTANTS.APPLICATION_COLUMN_LIST_ACTION:
       return {
         ...state,
-        applicationColumnNameList: action.data,
+        applicationColumnNameList: action?.data,
       };
     case APPLICATION_COLUMN_LIST_REDUX_CONSTANTS.APPLICATION_DEFAULT_COLUMN_LIST_ACTION:
       return {
         ...state,
-        applicationDefaultColumnNameList: action.data,
+        applicationDefaultColumnNameList: action?.data,
       };
     case APPLICATION_COLUMN_LIST_REDUX_CONSTANTS.UPDATE_APPLICATION_COLUMN_LIST_ACTION: {
       const columnList = {
-        ...state.applicationColumnNameList,
+        ...state?.applicationColumnNameList,
       };
-      const { type, name, value } = action.data;
+      const { type, name, value } = action?.data;
       columnList[`${type}`] = columnList[`${type}`].map(e =>
         e.name === name ? { ...e, isChecked: value } : e
       );
@@ -181,15 +187,15 @@ export const application = (state = initialApplicationList, action) => {
     }
     case APPLICATION_FILTER_LIST_REDUX_CONSTANTS.APPLICATION_FILTER_LIST_ACTION: {
       const dropdownData = { ...state?.applicationFilterList?.dropdownData };
-      Object.entries(action.data).forEach(([key, value]) => {
-        dropdownData[key] = value.data.map(entity => ({
-          label: entity.name || entity.label,
-          name: value.field,
-          value: entity._id || entity.value,
+      Object.entries(action?.data)?.forEach(([key, value]) => {
+        dropdownData[key] = value?.data?.map(entity => ({
+          label: entity?.name || entity?.label,
+          name: value?.field,
+          value: entity?._id || entity?.value,
         }));
       });
       const applicationFilterList = {
-        ...state.applicationFilterList,
+        ...state?.applicationFilterList,
         dropdownData,
       };
 
@@ -202,15 +208,15 @@ export const application = (state = initialApplicationList, action) => {
     // Company step
     case APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_DROP_DOWN_DATA: {
       const dropdownData = { ...state?.companyData?.dropdownData };
-      Object.entries(action.data).forEach(([key, value]) => {
-        dropdownData[key] = value.data.map(entity => ({
-          label: entity.name,
-          name: value.field,
-          value: entity._id,
+      Object.entries(action?.data)?.forEach(([key, value]) => {
+        dropdownData[key] = value?.data?.map(entity => ({
+          label: entity?.name,
+          name: value?.field,
+          value: entity?._id,
         }));
       });
       const companyData = {
-        ...state.companyData,
+        ...state?.companyData,
         dropdownData,
       };
 
@@ -219,10 +225,30 @@ export const application = (state = initialApplicationList, action) => {
         companyData,
       };
     }
+
+    case APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_WIPE_OUT_OLD_DATA_ON_SUCCESS: {
+      return {
+        ...state,
+        editApplication: {
+          ...state?.editApplication,
+          company: {
+            ...state?.editApplication?.company,
+            debtorId: action?.isDebtor ? { ...state?.editApplication?.company?.debtorId } : [],
+            postCode: '',
+            state: [],
+            entityType: [],
+            entityName: [],
+            acn: '',
+            abn: '',
+            tradingName: '',
+          },
+        },
+      };
+    }
     case APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_ENTITY_TYPE_DATA: {
-      const entityNameSearch = { ...action.data };
+      const entityNameSearch = { ...action?.data };
       const companyData = {
-        ...state.companyData,
+        ...state?.companyData,
         entityNameSearch,
       };
 
@@ -235,46 +261,46 @@ export const application = (state = initialApplicationList, action) => {
     // edit application
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
       .APPLICATION_COMPANY_EDIT_APPLICATION_CHANGE_FIELD_VALUE: {
-      return {
-        ...state,
-        editApplication: {
-          ...state?.editApplication,
-          [action.name]: action.value,
-        },
-      };
-    }
-    case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
-      .APPLICATION_COMPANY_EDIT_APPLICATION_RESET_DATA: {
-      return {
-        ...state,
-        editApplication: {
-          ...initialApplicationList?.editApplication,
-        },
-      };
-    }
-    case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
-      .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_ALL_DATA: {
-      return {
-        ...state,
-        editApplication: {
-          ...state?.editApplication,
-          [action.stepName]: { ...state?.editApplication?.[action.stepName], ...action.data },
-        },
-      };
-    }
-    case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
-      .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_FIELD: {
-      return {
-        ...state,
-        editApplication: {
-          ...state?.editApplication,
-          [action?.stepName]: {
-            ...state?.editApplication?.[action?.stepName],
+        return {
+          ...state,
+          editApplication: {
+            ...state?.editApplication,
             [action?.name]: action?.value,
           },
-        },
-      };
-    }
+        };
+      }
+    case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
+      .APPLICATION_COMPANY_EDIT_APPLICATION_RESET_DATA: {
+        return {
+          ...state,
+          editApplication: {
+            ...initialApplicationList?.editApplication,
+          },
+        };
+      }
+    case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
+      .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_ALL_DATA: {
+        return {
+          ...state,
+          editApplication: {
+            ...state?.editApplication,
+            [action?.stepName]: { ...state?.editApplication?.[action?.stepName], ...action?.data },
+          },
+        };
+      }
+    case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
+      .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_FIELD: {
+        return {
+          ...state,
+          editApplication: {
+            ...state?.editApplication,
+            [action?.stepName]: {
+              ...state?.editApplication?.[action?.stepName],
+              [action?.name]: action?.value,
+            },
+          },
+        };
+      }
 
     case APPLICATION_REDUX_CONSTANTS.PERSON.ADD_APPLICATION_PERSON: {
       return {
@@ -298,7 +324,7 @@ export const application = (state = initialApplicationList, action) => {
     }
 
     case APPLICATION_REDUX_CONSTANTS.PERSON.WIPE_OUT_PERSON_STEP_DATA: {
-      // const perStep = state.editApplication.partners;
+      // const perStep = state?.editApplication.partners;
       return {
         ...state,
         editApplication: {
@@ -365,18 +391,18 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         editApplication: {
-          ...state.editApplication,
+          ...state?.editApplication,
           documents: {
-            ...state.editApplication.documents,
-            documentTypeList: action.data,
+            ...state?.editApplication?.documents,
+            documentTypeList: action?.data,
           },
         },
       };
 
     case APPLICATION_REDUX_CONSTANTS.DOCUMENTS.APPLICATION_DOCUMENT_GET_UPLOAD_DOCUMENT_DATA: {
-      const editApplication = { ...state.editApplication };
-      const documents = { ...editApplication.documents };
-      const uploadDocumentApplicationData = [...action.data];
+      const editApplication = { ...state?.editApplication };
+      const documents = { ...editApplication?.documents };
+      const uploadDocumentApplicationData = [...action?.data];
 
       return {
         ...state,
@@ -390,9 +416,9 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
     case APPLICATION_REDUX_CONSTANTS.DOCUMENTS.UPLOAD_DOCUMENT_DATA: {
-      const editApplication = { ...state.editApplication };
-      const documents = { ...editApplication.documents };
-      const uploadDocumentApplicationData = [...documents.uploadDocumentApplicationData];
+      const editApplication = { ...state?.editApplication };
+      const documents = { ...editApplication?.documents };
+      const uploadDocumentApplicationData = [...documents?.uploadDocumentApplicationData];
 
       return {
         ...state,
@@ -400,7 +426,7 @@ export const application = (state = initialApplicationList, action) => {
           ...editApplication,
           documents: {
             ...documents,
-            uploadDocumentApplicationData: [...uploadDocumentApplicationData, action.data],
+            uploadDocumentApplicationData: [...uploadDocumentApplicationData, action?.data],
           },
         },
       };
@@ -428,7 +454,7 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         viewApplication: {
-          ...initialApplicationList.viewApplication,
+          ...initialApplicationList?.viewApplication,
         },
       };
 
@@ -488,10 +514,10 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         viewApplication: {
-          ...state.viewApplication,
+          ...state?.viewApplication,
           applicationModulesList: {
-            ...state.viewApplication.applicationModulesList,
-            documents: [...state.viewApplication.applicationModulesList.documents, action.data],
+            ...state?.viewApplication?.applicationModulesList,
+            documents: [...state?.viewApplication?.applicationModulesList?.documents, action?.data],
           },
         },
       };
@@ -501,10 +527,10 @@ export const application = (state = initialApplicationList, action) => {
       return {
         ...state,
         viewApplication: {
-          ...state.viewApplication,
+          ...state?.viewApplication,
           notes: {
-            ...state.viewApplication.notes,
-            noteList: action.data,
+            ...state?.viewApplication?.notes,
+            noteList: action?.data,
           },
         },
       };

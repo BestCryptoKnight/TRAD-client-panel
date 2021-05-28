@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import Tooltip from 'rc-tooltip';
@@ -18,10 +18,6 @@ const ApplicationTaskAccordion = props => {
     ({ application }) => application?.viewApplication?.task?.taskList || []
   );
 
-  const getTaskList = useCallback(() => {
-    dispatch(getApplicationTaskList(applicationId));
-  }, [applicationId]);
-
   const handleTaskCheckbox = useCallback(
     async (taskId, value) => {
       try {
@@ -35,19 +31,15 @@ const ApplicationTaskAccordion = props => {
         });
         if (response?.data?.status === 'SUCCESS') {
           successNotification(response?.data?.message ?? 'Task updated successfully');
-          getTaskList();
+          dispatch(getApplicationTaskList(applicationId));
         }
       } catch (e) {
         displayErrors(e);
         /**/
       }
     },
-    [getTaskList]
+    [applicationId]
   );
-
-  useEffect(() => {
-    getTaskList();
-  }, []);
 
   return (
     <>

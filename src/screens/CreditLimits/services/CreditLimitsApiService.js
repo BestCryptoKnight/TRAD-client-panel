@@ -16,12 +16,8 @@ const CreditLimitsApiService = {
     ApiService.putData(`${CREDIT_LIMITS_URLS.CREDIT_LIMIT_ACTIONS}${id}`, data),
   surrenderClientCreditLimitData: (id, data) =>
     ApiService.putData(`${CREDIT_LIMITS_URLS.CREDIT_LIMIT_ACTIONS}${id}`, data),
-  downloadCreditLimitCSVFile: id =>
-    ApiService.request({
-      url: `${CREDIT_LIMITS_URLS.DOWNLOAD_CREDIT_LIMIT_CSV}${id}`,
-      method: 'GET',
-      responseType: 'blob',
-    }),
+  downloadCreditLimitCSVFile: () =>
+    ApiService.request(`${CREDIT_LIMITS_URLS.DOWNLOAD_CREDIT_LIMIT_CSV}`),
 
   // application start here
   getCreditLimitsApplicationList: (id, params) =>

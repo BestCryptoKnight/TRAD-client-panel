@@ -46,6 +46,7 @@ export const APPLICATION_URLS = {
 
   // View Application
   VIEW_APPLICATION: {
+    CHANGE_APPLICATION_STATUS: `${BASE_URL}application/`,
     APPLICATION_TASK: {
       GET_TASK_LIST: `${BASE_URL}task/`,
       ASSIGNEE_DROP_DOWN_DATA: `${BASE_URL}task/user-list/`,
@@ -70,7 +71,7 @@ export const CREDIT_LIMITS_URLS = {
   CREDIT_LIMITS_FILTER: `${BASE_URL}debtor/entity-list/`,
   VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}debtor/`,
   CREDIT_LIMIT_ACTIONS: `${BASE_URL}debtor/credit-limit/`,
-  DOWNLOAD_CREDIT_LIMIT_CSV: `${BASE_URL}debtor/download/`,
+  DOWNLOAD_CREDIT_LIMIT_CSV: `${BASE_URL}client/download/`,
 
   APPLICATION: {
     APPLICATION_LIST: `${BASE_URL}application/`,

@@ -2,6 +2,11 @@ import ApiService from '../../../services/api-service/ApiService';
 import { APPLICATION_URLS } from '../../../constants/UrlConstants';
 
 const ApplicationViewApiServices = {
+  changeApplicationStatus: (applicationId, status) =>
+    ApiService.putData(
+      `${APPLICATION_URLS.VIEW_APPLICATION.CHANGE_APPLICATION_STATUS}${applicationId}`,
+      status
+    ),
   applicationTaskApiServices: {
     getApplicationTaskListData: params =>
       ApiService.getData(APPLICATION_URLS.VIEW_APPLICATION.APPLICATION_TASK.GET_TASK_LIST, {
@@ -37,10 +42,7 @@ const ApplicationViewApiServices = {
         `${APPLICATION_URLS.VIEW_APPLICATION.APPLICATION_MODULES.GET_MODULE_LIST}${id}`
       ),
     getDocumentTypeListData: params =>
-      ApiService.getData(
-        APPLICATION_URLS.DOCUMENTS.GET_DOCUMENT_TYPE_LIST_URL,
-        { params }
-      ),
+      ApiService.getData(APPLICATION_URLS.DOCUMENTS.GET_DOCUMENT_TYPE_LIST_URL, { params }),
     uploadDocument: (data, config) =>
       ApiService.postData(
         APPLICATION_URLS.VIEW_APPLICATION.APPLICATION_MODULES.UPLOAD_DOCUMENT_URL,

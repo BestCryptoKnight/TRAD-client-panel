@@ -446,14 +446,18 @@ const PersonIndividualDetail = ({
   const handleEntityNameSelect = useCallback(
     async data => {
       try {
-        const response = await dispatch(getApplicationPersonDataFromABNOrACN(data.abn));
+        const params = { searchString: data?.abn };
+        const response = await dispatch(getApplicationPersonDataFromABNOrACN(params));
         if (response) {
-          prevRef.current.abn = response?.abn;
-          prevRef.current.acn = response?.acn;
           updatePersonState(response);
+          prevRef.current = {
+            ...prevRef.current,
+            acn: response?.acn,
+            abn: response?.abn,
+          };
           handleToggleDropdown();
         }
-      } catch (err) {
+      } catch {
         /**/
       }
       handleToggleDropdown(false);
@@ -470,15 +474,21 @@ const PersonIndividualDetail = ({
           data: null,
         });
         setSearchedEntityNameValue(e.target.value.toString());
-        dispatch(searchApplicationCompanyEntityName(e.target.value));
+        const params = {
+          searchString: e?.target?.value,
+        };
+        dispatch(searchApplicationCompanyEntityName(params));
       }
     },
     [dispatchDrawerState, updatePersonState, setSearchedEntityNameValue]
   );
 
   const retryEntityNameRequest = useCallback(() => {
-    if (searchedEntityNameValue?.trim().length > 0) {
-      dispatch(searchApplicationCompanyEntityName(searchedEntityNameValue));
+    if (searchedEntityNameValue?.trim()?.length > 0) {
+      const params = {
+        searchString: searchedEntityNameValue,
+      };
+      dispatch(searchApplicationCompanyEntityName(params));
     }
   }, [searchedEntityNameValue]);
 
@@ -486,15 +496,18 @@ const PersonIndividualDetail = ({
     async e => {
       try {
         if (e.key === 'Enter') {
-          const response = await dispatch(getApplicationPersonDataFromABNOrACN(e.target.value));
+          const params = {
+            searchString: e?.target?.value,
+          };
+          const response = await dispatch(getApplicationPersonDataFromABNOrACN(params));
 
           if (response) {
-            if (e?.target?.name === 'abn') {
-              prevRef.current.abn = response?.abn;
-            } else {
-              prevRef.current.acn = response?.acn;
-            }
             updatePersonState(response);
+            prevRef.current = {
+              ...prevRef.current,
+              acn: response?.acn,
+              abn: response?.abn,
+            };
           }
         }
       } catch {
@@ -503,7 +516,7 @@ const PersonIndividualDetail = ({
         updateSinglePersonState(e?.target?.name, value);
       }
     },
-    [updatePersonState, updateSinglePersonState, prevRef.current?.abn, prevRef.current?.abn]
+    [updatePersonState, updateSinglePersonState, prevRef.current]
   );
 
   const handleCheckBoxEvent = useCallback(

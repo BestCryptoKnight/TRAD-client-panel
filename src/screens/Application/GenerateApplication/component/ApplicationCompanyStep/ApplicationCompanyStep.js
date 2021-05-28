@@ -287,63 +287,85 @@ const ApplicationCompanyStep = () => {
   const handleDebtorSelectChange = useCallback(
     async data => {
       try {
-        const response = await getApplicationCompanyDataFromDebtor(data?.value);
+        const response = await dispatch(getApplicationCompanyDataFromDebtor(data?.value));
+
         if (response) {
-          handleSelectInputChange(data);
+          await handleSelectInputChange(data);
           updateCompanyState(response);
-          prevRef.current.acn = response?.acn;
-          prevRef.current.abn = response?.abn;
+          prevRef.current = {
+            ...prevRef.current,
+            acn: response?.acn,
+            abn: response?.abn,
+          };
         }
       } catch (e) {
         /**/
       }
     },
-    [companyState, handleSelectInputChange, updateCompanyState, prevRef?.current]
+    [handleSelectInputChange, updateCompanyState, updateSingleCompanyState, prevRef?.current]
   );
 
   const handleSearchTextInputKeyDown = useCallback(
     async e => {
       try {
         if (e.key === 'Enter') {
-          const response = await getApplicationCompanyDataFromABNOrACN(e.target.value);
+          const searchString = e?.target?.value;
+          const params = { searchString };
+          const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
+
           if (response) {
-            if (e?.target?.name === 'abn') {
-              prevRef.current.abn = response?.abn;
-            } else {
-              prevRef.current.acn = response?.acn;
-            }
             updateCompanyState(response);
+            prevRef.current = {
+              ...prevRef.current,
+              acn: response?.acn,
+              abn: response?.abn,
+            };
           }
         }
       } catch {
-        /**/
         let value = prevRef?.current?.abn;
         if (e?.target?.name === 'acn') value = prevRef?.current?.acn;
         updateSingleCompanyState(e?.target?.name, value);
       }
     },
-    [companyState, updateCompanyState, updateSingleCompanyState, prevRef.current]
+    [updateCompanyState, updateSingleCompanyState, prevRef.current]
   );
 
   const handleEntityNameSearch = useCallback(
     async e => {
       if (e.key === 'Enter' && e.target.value.trim().length > 0) {
+        if (!companyState?.country || companyState?.country?.length === 0) {
+          errorNotification('Please select country before continue');
+          return;
+        }
         dispatchDrawerState({
           type: DRAWER_ACTIONS.SHOW_DRAWER,
           data: null,
         });
         setSearchedEntityNameValue(e.target.value.toString());
-        dispatch(searchApplicationCompanyEntityName(e.target.value));
+        const params = {
+          searchString: e?.target?.value,
+          country: companyState?.country?.value,
+        };
+        dispatch(searchApplicationCompanyEntityName(params));
       }
     },
-    [updateCompanyState, dispatchDrawerState, setSearchedEntityNameValue]
+    [companyState?.country, updateCompanyState, dispatchDrawerState, setSearchedEntityNameValue]
   );
 
   const retryEntityNameRequest = useCallback(() => {
-    if ((searchedEntityNameValue?.trim()?.length ?? -1) > 0) {
-      dispatch(searchApplicationCompanyEntityName(searchedEntityNameValue));
+    if (searchedEntityNameValue.trim().length > 0) {
+      if (!companyState?.country || companyState?.country?.length === 0) {
+        errorNotification('Please select country before continue');
+        return;
+      }
+      const params = {
+        searchString: searchedEntityNameValue,
+        country: companyState?.country?.value,
+      };
+      dispatch(searchApplicationCompanyEntityName(params));
     }
-  }, [searchedEntityNameValue]);
+  }, [searchedEntityNameValue, companyState?.country]);
 
   const handleEntityChange = useCallback(event => {
     const { name, value } = event.target;
@@ -368,9 +390,16 @@ const ApplicationCompanyStep = () => {
   const handleEntityNameSelect = useCallback(
     async data => {
       try {
-        const response = await getApplicationCompanyDataFromABNOrACN(data.abn);
+        const params = { searchString: data?.abn };
+        const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
+
         if (response) {
           updateCompanyState(response);
+          prevRef.current = {
+            ...prevRef.current,
+            acn: response?.acn,
+            abn: response?.abn,
+          };
         }
       } catch (err) {
         /**/
@@ -378,7 +407,7 @@ const ApplicationCompanyStep = () => {
       handleToggleDropdown(false);
       setSearchedEntityNameValue('');
     },
-    [updateCompanyState, setSearchedEntityNameValue, handleToggleDropdown]
+    [updateCompanyState, setSearchedEntityNameValue, handleToggleDropdown, prevRef.current]
   );
 
   const getComponentFromType = useCallback(

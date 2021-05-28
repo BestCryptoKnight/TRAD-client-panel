@@ -17,6 +17,7 @@ import {
   getApplicationsListByFilter,
   resetApplicationListPaginationData,
   saveApplicationColumnNameList,
+  updateEditApplicationField,
 } from '../redux/ApplicationAction';
 import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
@@ -163,7 +164,7 @@ const ApplicationList = () => {
   );
 
   const getApplicationsByFilter = useCallback(
-    (params = {}, cb) => {
+    async (params = {}, cb) => {
       if (moment(startDate)?.isAfter(endDate)) {
         errorNotification('From date should be greater than to date');
         resetFilterDates();
@@ -186,7 +187,7 @@ const ApplicationList = () => {
           startDate: startDate || undefined,
           endDate: endDate || undefined,
         };
-        dispatch(getApplicationsListByFilter(data));
+        await dispatch(getApplicationsListByFilter(data));
         if (cb && typeof cb === 'function') {
           cb();
         }
@@ -372,6 +373,13 @@ const ApplicationList = () => {
   }, []);
 
   const generateApplicationClick = useCallback(() => {
+    dispatch(
+      updateEditApplicationField('company', 'country', {
+        label: 'Australia',
+        name: 'country',
+        value: 'AUS',
+      })
+    );
     history.push(`/applications/application/generate/`);
   }, []);
   useEffect(() => {
@@ -448,7 +456,7 @@ const ApplicationList = () => {
   );
 
   useEffect(() => {
-    return dispatch(resetApplicationListPaginationData(page, pages, total, limit));
+    return () => dispatch(resetApplicationListPaginationData(page, pages, total, limit));
   }, []);
 
   return (

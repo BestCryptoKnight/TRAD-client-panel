@@ -156,8 +156,8 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       await dispatch(saveApplicationStepDataToBackend(finalData));
       validated = true;
     } catch (e) {
-      /**/
       validated = false;
+      throw Error();
     }
   }
   dispatch(updateEditApplicationData('company', { errors }));

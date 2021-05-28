@@ -349,35 +349,27 @@ const ApplicationConfirmationStep = () => {
       label: 'isPassedMaxPeriodDetails',
       type: 'text',
     },
-    {
+    partners?.length > 0 && {
       type: 'line',
     },
-    {
+    partners?.length > 0 && {
       title: 'Director Details',
       type: 'main-title-director-details',
     },
-    {
+    partners?.length > 0 && {
       type: 'array',
       data: getPersonStepData(partners || []),
     },
-    {
+    documents?.uploadDocumentApplicationData?.length > 0 && {
       title: 'Documents Details',
       type: 'main-title',
     },
-    {
+    documents?.uploadDocumentApplicationData?.length > 0 && {
       type: 'array',
       data: getDocumentStepData,
     },
   ];
-  if (partners?.length === 0 || partners === undefined) {
-    delete confirmationDetails[28];
-    delete confirmationDetails[29];
-    confirmationDetails?.filter(e => e);
-  }
-  if (documents?.length === 0) {
-    delete confirmationDetails[31];
-    confirmationDetails?.filter(e => e);
-  }
+
   const getConfirmationComponentFromType = useCallback(
     detail => {
       switch (detail.type) {
