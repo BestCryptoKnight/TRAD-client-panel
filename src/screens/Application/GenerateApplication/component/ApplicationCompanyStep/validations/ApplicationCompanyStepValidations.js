@@ -22,17 +22,17 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       validated = false;
       errors.acn = 'Please enter valid ACN number before continue';
     }
-  } else if (!data?.registrationNo || data?.registrationNo?.trim().length <= 0) {
+  } else if (!data?.registrationNumber || data?.registrationNumber?.trim().length <= 0) {
     validated = false;
-    errors.registrationNo = 'Please enter registration number before continue';
+    errors.registrationNumber = 'Please enter registration number before continue';
   } else if (
-    data?.registrationNo &&
-    (data?.registrationNo?.length <= 5 ||
-      data?.registrationNo?.length >= 30 ||
-      !NUMBER_REGEX.test(data?.registrationNo))
+    data?.registrationNumber &&
+    (data?.registrationNumber?.length <= 5 ||
+      data?.registrationNumber?.length >= 30 ||
+      !NUMBER_REGEX.test(data?.registrationNumber))
   ) {
     validated = false;
-    errors.registrationNo = 'Please enter valid registration number';
+    errors.registrationNumber = 'Please enter valid registration number';
   }
   if (
     !data?.entityName ||
@@ -69,7 +69,16 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
   if (
     !['AUS', 'NZL'].includes(data?.country?.value) &&
     data?.state &&
-    (SPECIAL_CHARACTER_REGEX.test(data?.state?.value) || SPECIAL_CHARACTER_REGEX.test(data?.state))
+    !data.state.value &&
+    SPECIAL_CHARACTER_REGEX.test(data?.state)
+  ) {
+    validated = false;
+    errors.state = 'Please enter valid state';
+  }
+  if (
+    data?.state?.value &&
+    !['AUS', 'NZL'].includes(data?.country?.value) &&
+    SPECIAL_CHARACTER_REGEX.test(data?.state.value)
   ) {
     validated = false;
     errors.state = 'Please enter valid state';
@@ -107,7 +116,7 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       country,
       isActive,
       wipeOutDetails,
-      registrationNo,
+      registrationNumber,
     } = data;
 
     delete country?.name;
@@ -140,7 +149,7 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       finalData.abn = abn ?? '';
       finalData.acn = acn ?? '';
     } else {
-      finalData.registrationNumber = registrationNo ?? '';
+      finalData.registrationNumber = registrationNumber ?? '';
     }
 
     try {

@@ -247,7 +247,7 @@ const ApplicationCompanyStep = () => {
       label: 'Company Registration No.*',
       placeholder: 'Registration no',
       type: 'text',
-      name: 'registrationNo',
+      name: 'registrationNumber',
       data: [],
     });
     filteredData.splice(6, 1);

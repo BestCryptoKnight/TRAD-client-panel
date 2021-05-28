@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import Tooltip from 'rc-tooltip';
 import AccordionItem from '../../../../common/Accordion/AccordionItem';
 import Button from '../../../../common/Button/Button';
 import {
@@ -284,14 +283,7 @@ const ApplicationNotesAccordion = props => {
                   <span className="details">{moment(note.createdAt).format('DD-MMM-YYYY')}</span>
 
                   <span className="title">Owner:</span>
-                  <Tooltip
-                    mouseEnterDelay={0.5}
-                    overlayClassName="tooltip-left-class"
-                    overlay={note.createdById || 'No owner name added'}
-                    placement="left"
-                  >
-                    <span className="details">{note.createdById || '-'}</span>
-                  </Tooltip>
+                  <span className="details">{note.createdById || '-'}</span>
                 </div>
                 <div className="font-field">Note Description:</div>
                 <div className="view-application-accordion-description">
@@ -309,7 +301,7 @@ const ApplicationNotesAccordion = props => {
           header={`${selectedApplicationNote.type === 'EDIT' ? 'Edit Note' : 'Add Note'} `}
           className="add-notes-modal"
           buttons={noteCRUDButtons}
-          // hideModal={toggleModifyNotes}
+        // hideModal={toggleModifyNotes}
         >
           <div className="add-notes-popup-container">
             <span>Description</span>

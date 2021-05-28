@@ -56,7 +56,7 @@ const initialApplicationList = {
       entityName: null,
       acn: '',
       abn: '',
-      registrationNo: '',
+      registrationNumber: '',
       tradingName: '',
       debtorId: null,
       clientList: null,
