@@ -241,6 +241,43 @@ export const application = (state = initialApplicationList, action) => {
             acn: '',
             abn: '',
             tradingName: '',
+            errors: {},
+          },
+        },
+      };
+    }
+    case APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_WIPE_OUT_DATA_IF_EXIST: {
+      return {
+        ...state,
+        editApplication: {
+          ...state?.editApplication,
+          company: {
+            ...state?.editApplication?.company,
+            postCode: '',
+            state: null,
+            country: {
+              label: 'Australia',
+              name: 'country',
+              value: 'AUS',
+            },
+            suburb: '',
+            streetType: null,
+            streetName: '',
+            streetNumber: '',
+            unitNumber: '',
+            property: '',
+            address: '',
+            outstandingAmount: '',
+            entityType: null,
+            phoneNumber: '',
+            entityName: null,
+            acn: '',
+            abn: '',
+            registrationNumber: '',
+            tradingName: '',
+            debtorId: null,
+            clientList: null,
+            errors: {},
           },
         },
       };
@@ -261,46 +298,46 @@ export const application = (state = initialApplicationList, action) => {
     // edit application
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
       .APPLICATION_COMPANY_EDIT_APPLICATION_CHANGE_FIELD_VALUE: {
-        return {
-          ...state,
-          editApplication: {
-            ...state?.editApplication,
-            [action?.name]: action?.value,
-          },
-        };
-      }
+      return {
+        ...state,
+        editApplication: {
+          ...state?.editApplication,
+          [action?.name]: action?.value,
+        },
+      };
+    }
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
       .APPLICATION_COMPANY_EDIT_APPLICATION_RESET_DATA: {
-        return {
-          ...state,
-          editApplication: {
-            ...initialApplicationList?.editApplication,
-          },
-        };
-      }
+      return {
+        ...state,
+        editApplication: {
+          ...initialApplicationList?.editApplication,
+        },
+      };
+    }
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
       .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_ALL_DATA: {
-        return {
-          ...state,
-          editApplication: {
-            ...state?.editApplication,
-            [action?.stepName]: { ...state?.editApplication?.[action?.stepName], ...action?.data },
-          },
-        };
-      }
+      return {
+        ...state,
+        editApplication: {
+          ...state?.editApplication,
+          [action?.stepName]: { ...state?.editApplication?.[action?.stepName], ...action?.data },
+        },
+      };
+    }
     case APPLICATION_REDUX_CONSTANTS.EDIT_APPLICATION
       .APPLICATION_COMPANY_EDIT_APPLICATION_UPDATE_FIELD: {
-        return {
-          ...state,
-          editApplication: {
-            ...state?.editApplication,
-            [action?.stepName]: {
-              ...state?.editApplication?.[action?.stepName],
-              [action?.name]: action?.value,
-            },
+      return {
+        ...state,
+        editApplication: {
+          ...state?.editApplication,
+          [action?.stepName]: {
+            ...state?.editApplication?.[action?.stepName],
+            [action?.name]: action?.value,
           },
-        };
-      }
+        },
+      };
+    }
 
     case APPLICATION_REDUX_CONSTANTS.PERSON.ADD_APPLICATION_PERSON: {
       return {

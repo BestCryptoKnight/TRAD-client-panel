@@ -15,6 +15,8 @@ import ApplicationEntityNameTable from '../components/ApplicationEntityNameTable
 import Modal from '../../../../../common/Modal/Modal';
 import IconButton from '../../../../../common/IconButton/IconButton';
 import { errorNotification } from '../../../../../common/Toast';
+import { applicationErrorHelper } from '../../../../../helpers/applicationErrorHelper';
+import { APPLICATION_REDUX_CONSTANTS } from '../../../redux/ApplicationReduxConstants';
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',
@@ -71,6 +73,11 @@ const ApplicationCompanyStep = () => {
     value => setShowConfirmModal(value !== undefined ? value : e => !e),
     [setShowConfirmModal]
   );
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const [errorModal, setErrorModal] = useState(false);
+  const [warningModal, setWarningModal] = useState(false);
+
   const prevRef = useRef({});
 
   useEffect(() => {
@@ -254,6 +261,23 @@ const ApplicationCompanyStep = () => {
     return filteredData;
   }, [INPUTS, isAusOrNew]);
 
+  /**/
+  const handleApplicationErrors = useCallback(response => {
+    const { isModal, modalType, message, resData } = applicationErrorHelper(response);
+    if (isModal && modalType === 'ERROR') {
+      setErrorMessage(message);
+      setErrorModal(true);
+      return false;
+    }
+    if (isModal && modalType === 'WARNING') {
+      setErrorMessage(message);
+      setWarningModal(true);
+      return { resData, isModal };
+    }
+    return { resData };
+  }, []);
+  /**/
+
   const updateCompanyState = useCallback(data => {
     dispatch(updateEditApplicationData('company', data));
   }, []);
@@ -289,20 +313,21 @@ const ApplicationCompanyStep = () => {
       try {
         const response = await dispatch(getApplicationCompanyDataFromDebtor(data?.value));
 
-        if (response) {
+        const { resData } = handleApplicationErrors(response);
+        if (resData) {
           await handleSelectInputChange(data);
-          updateCompanyState(response);
+          updateCompanyState(resData);
           prevRef.current = {
             ...prevRef.current,
-            acn: response?.acn,
-            abn: response?.abn,
+            acn: resData?.acn,
+            abn: resData?.abn,
           };
         }
       } catch (e) {
-        /**/
+        handleApplicationErrors(e?.response);
       }
     },
-    [handleSelectInputChange, updateCompanyState, updateSingleCompanyState, prevRef?.current]
+    [handleSelectInputChange, updateCompanyState, prevRef?.current, handleApplicationErrors]
   );
 
   const handleSearchTextInputKeyDown = useCallback(
@@ -313,22 +338,24 @@ const ApplicationCompanyStep = () => {
           const params = { searchString };
           const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
 
-          if (response) {
-            updateCompanyState(response);
+          const { resData } = handleApplicationErrors(response);
+          if (resData) {
+            updateCompanyState(resData);
             prevRef.current = {
               ...prevRef.current,
-              acn: response?.acn,
-              abn: response?.abn,
+              acn: resData?.acn,
+              abn: resData?.abn,
             };
           }
         }
-      } catch {
+      } catch (err) {
         let value = prevRef?.current?.abn;
         if (e?.target?.name === 'acn') value = prevRef?.current?.acn;
         updateSingleCompanyState(e?.target?.name, value);
+        handleApplicationErrors(err?.response);
       }
     },
-    [updateCompanyState, updateSingleCompanyState, prevRef.current]
+    [updateCompanyState, updateSingleCompanyState, prevRef.current, handleApplicationErrors]
   );
 
   const handleEntityNameSearch = useCallback(
@@ -393,16 +420,17 @@ const ApplicationCompanyStep = () => {
         const params = { searchString: data?.abn };
         const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
 
-        if (response) {
-          updateCompanyState(response);
+        const { resData } = handleApplicationErrors(response);
+        if (resData) {
+          updateCompanyState(resData);
           prevRef.current = {
             ...prevRef.current,
-            acn: response?.acn,
-            abn: response?.abn,
+            acn: resData?.acn,
+            abn: resData?.abn,
           };
         }
       } catch (err) {
-        /**/
+        handleApplicationErrors(err?.response);
       }
       handleToggleDropdown(false);
       setSearchedEntityNameValue('');
@@ -422,9 +450,9 @@ const ApplicationCompanyStep = () => {
               name={input.name}
               placeholder={input.placeholder}
               value={
-                input.name === 'state'
-                  ? (!isAusOrNew && companyState?.[input.name]?.label) || companyState[input?.name]
-                  : companyState[input?.name]
+                input?.name === 'state'
+                  ? (!isAusOrNew && companyState?.[input.name]?.label) ?? companyState[input?.name]
+                  : companyState[input?.name] ?? ''
               }
               onChange={handleTextInputChange}
             />
@@ -434,11 +462,11 @@ const ApplicationCompanyStep = () => {
           component = (
             <Input
               type="text"
-              name={input?.name}
-              borderClass={input?.isOr && 'is-or-container'}
+              name={input.name}
               suffix={<span className="material-icons">search</span>}
+              borderClass={input?.isOr && 'is-or-container'}
               placeholder={input.placeholder}
-              value={companyState[input?.name]}
+              value={companyState?.[input.name] ?? ''}
               onChange={handleTextInputChange}
               onKeyDown={handleSearchTextInputKeyDown}
             />
@@ -448,12 +476,12 @@ const ApplicationCompanyStep = () => {
           component = (
             <Input
               type="text"
-              name={input?.name}
-              suffix={isAusOrNew ? <span className="material-icons">search</span> : ''}
+              name={input.name}
+              suffix={isAusOrNew && <span className="material-icons">search</span>}
               placeholder={input.placeholder}
               borderClass={input?.isOr && 'is-or-container'}
               onKeyDown={isAusOrNew ? handleEntityNameSearch : null}
-              value={companyState?.entityName?.label}
+              value={companyState?.entityName?.label ?? ''}
               onChange={handleEntityChange}
             />
           );
@@ -468,10 +496,10 @@ const ApplicationCompanyStep = () => {
               className={`${input?.isOr && 'is-or-container'} 'react-select-container'`}
               classNamePrefix="react-select"
               placeholder={input.placeholder}
-              name={input?.name}
-              options={input?.data}
+              name={input.name}
+              options={input.data}
               isSearchable
-              value={companyState?.[input?.name]}
+              value={companyState?.[input?.name] ?? []}
               onChange={handleOnChange}
             />
           );
@@ -501,6 +529,42 @@ const ApplicationCompanyStep = () => {
     ]
   );
 
+  const errorModalButtons = useMemo(
+    () => [
+      {
+        title: 'Ok',
+        buttonType: 'primary',
+        onClick: () => {
+          setErrorModal(false);
+        },
+      },
+    ],
+    []
+  );
+
+  const warningModalButtons = useMemo(
+    () => [
+      {
+        title: 'No',
+        buttonType: 'primary-1',
+        onClick: () => {
+          dispatch({
+            type: APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_WIPE_OUT_DATA_IF_EXIST,
+          });
+          setWarningModal(false);
+        },
+      },
+      {
+        title: 'Yes',
+        buttonType: 'primary',
+        onClick: () => {
+          setWarningModal(false);
+        },
+      },
+    ],
+    []
+  );
+
   useEffect(() => {
     dispatch(getApplicationCompanyDropDownData()).catch(() => {
       errorNotification('Error during fetching data');
@@ -510,6 +574,16 @@ const ApplicationCompanyStep = () => {
 
   return (
     <>
+      {warningModal && (
+        <Modal header="Application Already Exists" buttons={warningModalButtons}>
+          <span className="confirmation-message">{errorMessage}</span>
+        </Modal>
+      )}
+      {errorModal && (
+        <Modal header="Application Already Exists" buttons={errorModalButtons}>
+          <span className="confirmation-message">{errorMessage}</span>
+        </Modal>
+      )}
       {showConfirmModal && (
         <Modal
           header="Change entity type"

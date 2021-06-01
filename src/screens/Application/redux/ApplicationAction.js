@@ -189,6 +189,7 @@ export const getApplicationCompanyDropDownData = () => {
 
 export const getApplicationCompanyDataFromDebtor = id => {
   return async dispatch => {
+    // eslint-disable-next-line no-useless-catch
     try {
       const response = await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromDebtor(
         id
@@ -200,11 +201,10 @@ export const getApplicationCompanyDataFromDebtor = id => {
             .APPLICATION_COMPANY_WIPE_OUT_OLD_DATA_ON_SUCCESS,
           isDebtor: true,
         });
-        return response.data.data;
+        return response.data;
       }
     } catch (e) {
-      displayErrors(e);
-      throw Error();
+      throw e;
     }
     return null;
   };
@@ -212,6 +212,7 @@ export const getApplicationCompanyDataFromDebtor = id => {
 
 export const getApplicationCompanyDataFromABNOrACN = params => {
   return async dispatch => {
+    // eslint-disable-next-line no-useless-catch
     try {
       const response =
         await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(params);
@@ -221,11 +222,10 @@ export const getApplicationCompanyDataFromABNOrACN = params => {
           type: APPLICATION_REDUX_CONSTANTS.COMPANY
             .APPLICATION_COMPANY_WIPE_OUT_OLD_DATA_ON_SUCCESS,
         });
-        return response.data.data;
+        return response.data;
       }
     } catch (e) {
-      displayErrors(e);
-      throw Error();
+      throw e;
     }
     return null;
   };

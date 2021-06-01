@@ -92,7 +92,6 @@ export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = fals
       }
       const response = await EmployeeApiService.updateEmployeeUpdateColumnList(data);
       if (response?.data?.status === 'SUCCESS') {
-        console.log('in success');
         dispatch({
           type: EMPLOYEE_COLUMN_LIST_REDUX_CONSTANTS.EMPLOYEE_DEFAULT_COLUMN_LIST_ACTION,
           data: employeeColumnList,

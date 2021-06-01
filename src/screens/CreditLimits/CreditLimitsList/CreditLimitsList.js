@@ -140,7 +140,6 @@ const CreditLimitsList = () => {
         errorNotification('Please select different columns to apply changes.');
       }
     } catch (e) {
-      console.log(e);
       /**/
     }
   }, [
