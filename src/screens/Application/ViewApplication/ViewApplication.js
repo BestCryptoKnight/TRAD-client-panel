@@ -176,9 +176,9 @@ const ViewApplication = () => {
   const [newCreditLimit, setNewCreditLimit] = useState('');
   const [modifyLimitModal, setModifyLimitModal] = useState(false);
   const toggleModifyLimitModal = useCallback(() => {
-    setNewCreditLimit('');
+    setNewCreditLimit(creditLimit);
     setModifyLimitModal(!modifyLimitModal);
-  }, [modifyLimitModal]);
+  }, [creditLimit, modifyLimitModal]);
 
   const modifyLimit = useCallback(async () => {
     try {
@@ -361,14 +361,12 @@ const ViewApplication = () => {
       )}
       {modifyLimitModal && (
         <Modal
-          header="Modify Credit Limit"
+          header="Approve Application"
           buttons={modifyLimitButtons}
           hideModal={toggleModifyLimitModal}
         >
           <div className="modify-credit-limit-container align-center">
             <span>Credit Limit</span>
-            <Input type="text" value={creditLimit} disabled borderClass="disabled-control" />
-            <span>Change Credit Limit</span>
             <Input
               prefixClass="font-placeholder"
               placeholder="New Credit Limit"
