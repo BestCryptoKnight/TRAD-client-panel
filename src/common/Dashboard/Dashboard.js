@@ -46,7 +46,9 @@ const Dashboard = () => {
         label: '',
         data: [
           endorsedLimit?.totalCount === 0 ? 0 : endorsedLimit?.endorsedLimitCount,
-          endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
+          endorsedLimit?.totalCount === 0
+            ? 1
+            : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
         ],
         backgroundColor: ['#003A78', '#CBD7E4'],
       },
@@ -83,7 +85,9 @@ const Dashboard = () => {
         label: '',
         data: [
           resChecksCount?.totalCount === 0 ? 0 : resChecksCount?.applicationCount,
-          resChecksCount?.totalCount - resChecksCount?.applicationCount,
+          resChecksCount?.totalCount === 0
+            ? 1
+            : resChecksCount?.totalCount - resChecksCount?.applicationCount,
         ],
         backgroundColor: ['#62d493', '#CBD7E4'],
       },
@@ -165,7 +169,7 @@ const Dashboard = () => {
                     %
                   </div>
                   <span>
-                    {endorsedLimit?.endorsedLimitCount}/{endorsedLimit?.totalCount}
+                    {endorsedLimit?.endorsedLimitCount ?? 0}/{endorsedLimit?.totalCount ?? 0}
                   </span>
                 </div>
               </div>
@@ -193,7 +197,7 @@ const Dashboard = () => {
                   %
                 </div>
                 <span>
-                  {resChecksCount?.applicationCount}/{resChecksCount?.totalCount}
+                  {resChecksCount?.applicationCount ?? 0}/{resChecksCount?.totalCount ?? 0}
                 </span>
               </div>
             </div>
@@ -203,7 +207,7 @@ const Dashboard = () => {
           <div className="dashboard-title-date-row">
             <span className="dashboard-card-title">Pending Applications by Status</span>
           </div>
-          <div className="mt-10">
+          <div className="d-flex align-center h-100 mt-10">
             {pendingApplicationsData && pendingApplicationsData?.datasets?.[0]?.data?.length > 0 ? (
               <Pie data={pendingApplicationsData} options={pendingApplicationsOptions} />
             ) : (

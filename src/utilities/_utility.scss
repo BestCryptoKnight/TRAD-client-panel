@@ -41,19 +41,23 @@
 }
 
 .just-center {
-  justify-content: center!important;
+  justify-content: center;
 }
 
 .just-bet {
-  justify-content: space-between!important;
+  justify-content: space-between;
 }
 
 .just-end {
-  justify-content: flex-end!important;
+  justify-content: flex-end;
 }
 
 .align-center {
   align-items: center;
+}
+
+.h-100 {
+  height: 100%;
 }
 
 .w-100 {
@@ -117,6 +121,10 @@
 
 .bg-white {
   background-color: #ffffff;
+}
+
+.bg-background-color {
+  background-color: $background-color;
 }
 
 .form-title {

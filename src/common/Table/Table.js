@@ -52,6 +52,7 @@ const Table = props => {
     data,
     rowClass,
     recordSelected,
+    isExpandable,
     recordActionClick,
     refreshData,
     haveActions,
@@ -61,6 +62,7 @@ const Table = props => {
   const tableClassName = `table-class ${tableClass}`;
   const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
   const [selectedRowData, setSelectedRowData] = React.useState([]);
+  const [expandedRowId, setExpandedRow] = useState(-1);
 
   const handleDrawerState = useCallback(async (header, currentData, row) => {
     try {
@@ -170,6 +172,19 @@ const Table = props => {
     }
   }, [setSelectedRowData, selectedRowData, tableData]);
 
+  const handleRowExpansion = useCallback(
+    id => {
+      if (expandedRowId === id) {
+        setExpandedRow(-1);
+      } else {
+        setExpandedRow(id);
+      }
+
+      recordSelected(id);
+    },
+    [expandedRowId]
+  );
+
   useEffect(() => {
     onChangeRowSelection(selectedRowData);
   }, [selectedRowData, onChangeRowSelection]);
@@ -189,6 +204,7 @@ const Table = props => {
                 />
               </th>
             )}
+            {isExpandable && <th align="center" />}
             {headers.length > 0 &&
               headers.map(heading => (
                 <th
@@ -210,11 +226,12 @@ const Table = props => {
             {tableButtonActions.length > 0 && <th align={align}>Credit Limit Actions</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="main-table">
           {tableData.map((e, index) => (
             <Row
               key={index.toString()}
               data={e}
+              dataIndex={index}
               align={align}
               valign={valign}
               extraColumns={extraColumns}
@@ -223,6 +240,9 @@ const Table = props => {
               recordSelected={recordSelected}
               recordActionClick={recordActionClick}
               haveActions={haveActions}
+              isExpandable={isExpandable}
+              isRowExpanded={expandedRowId === e?.id}
+              handleRowExpansion={handleRowExpansion}
               showCheckbox={showCheckbox}
               isSelected={selectedRowData.some(f => f.id === e.id)}
               onRowSelectedDataChange={onRowSelectedDataChange}
@@ -245,6 +265,7 @@ Table.propTypes = {
   data: PropTypes.array,
   rowClass: PropTypes.string,
   recordSelected: PropTypes.func,
+  isExpandable: PropTypes.bool,
   recordActionClick: PropTypes.func,
   refreshData: PropTypes.func,
   haveActions: PropTypes.bool,
@@ -263,6 +284,7 @@ Table.defaultProps = {
   tableButtonActions: [],
   rowClass: '',
   haveActions: false,
+  isExpandable: false,
   showCheckbox: false,
   recordSelected: () => {},
   recordActionClick: () => {},
@@ -277,8 +299,12 @@ function Row(props) {
     align,
     valign,
     data,
+    dataIndex,
     rowClass,
     recordSelected,
+    isExpandable,
+    handleRowExpansion,
+    isRowExpanded,
     haveActions,
     extraColumns,
     tableButtonActions,
@@ -320,16 +346,31 @@ function Row(props) {
   return (
     <>
       <tr
-        onClick={() => recordSelected(data.id, data)}
-        className={
-          data?.isCompleted?.props?.children?.props?.checked
-            ? `completedTask ${rowClass}`
-            : rowClass
+        onClick={() =>
+          isExpandable ? handleRowExpansion(data?.id) : recordSelected(data.id, data)
         }
+        className={`
+          main-table-row
+          ${
+            data?.isCompleted?.props?.children?.props?.checked
+              ? `completedTask ${rowClass}`
+              : rowClass
+          } 
+          ${dataIndex % 2 === 0 ? 'bg-white' : 'bg-background-color'}
+        `}
       >
         {showCheckbox && (
           <td width={10} align={align} valign={valign} className={rowClass}>
             <Checkbox className="crm-checkbox-list" checked={isSelected} onChange={onRowSelected} />
+          </td>
+        )}
+        {isExpandable && (
+          <td align="center" className="expandable-arrow">
+            <span
+              className={`material-icons-round ${isRowExpanded ? 'rotate-expandable-arrow' : ''}`}
+            >
+              keyboard_arrow_right
+            </span>
           </td>
         )}
         {Object.entries(data).map(([key, value], index) => {
@@ -371,7 +412,9 @@ function Row(props) {
           <td
             align="right"
             valign={valign}
-            className={`fixed-action-menu ${showActionMenu ? 'fixed-action-menu-clicked' : ''}`}
+            className={`fixed-action-menu ${showActionMenu ? 'fixed-action-menu-clicked' : ''}  ${
+              dataIndex % 2 === 0 ? 'bg-white' : 'bg-background-color'
+            }`}
           >
             <span
               className="material-icons-round cursor-pointer table-action"
@@ -403,6 +446,49 @@ function Row(props) {
           </td>
         ))}
       </tr>
+      <tr className={`expandable-table ${isRowExpanded ? 'show-table' : ''}`}>
+        <td colSpan={20}>
+          <div>
+            <table width={100} cellSpacing={0}>
+              <tr>
+                <th>1000</th>
+                <th>1000</th>
+                <th>1000</th>
+                <th>1000</th>
+                <th>1000</th>
+              </tr>
+              <tr>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+              </tr>
+              <tr>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+              </tr>
+              <tr>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+              </tr>
+              <tr>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+                <td>1000</td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
       {showActionMenu && (
         <DropdownMenu style={menuPosition} toggleMenu={setShowActionMenu}>
           <div className="menu-name" onClick={e => onClickAction(e, TABLE_ROW_ACTIONS.EDIT_ROW)}>
@@ -424,7 +510,11 @@ Row.propTypes = {
   extraColumns: PropTypes.arrayOf(PropTypes.func),
   tableButtonActions: PropTypes.arrayOf(PropTypes.func),
   rowClass: PropTypes.string,
+  dataIndex: PropTypes.number.isRequired,
   recordSelected: PropTypes.func,
+  isExpandable: PropTypes.bool,
+  isRowExpanded: PropTypes.bool.isRequired,
+  handleRowExpansion: PropTypes.func.isRequired,
   haveActions: PropTypes.bool,
   isSelected: PropTypes.bool,
   recordActionClick: PropTypes.func,
@@ -442,6 +532,7 @@ Row.defaultProps = {
   recordSelected: () => {},
   haveActions: false,
   showCheckbox: false,
+  isExpandable: false,
   isSelected: false,
   recordActionClick: () => {},
   onRowSelectedDataChange: () => {},

@@ -3,10 +3,10 @@ export const SIDEBAR_NAMES = {
   APPLICATION: 'application',
   CREDIT_LIMITS: 'credit-limits',
   CLAIM: 'claim',
-  OVERDUE: 'overdue',
+  OVERDUE: 'over-dues',
   COMPANY_PROFILE: 'company-profile',
   EMPLOYEE: 'employee',
-  SUPPORT : 'support',
+  SUPPORT: 'support',
 };
 
 export const SIDEBAR_URLS = [

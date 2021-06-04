@@ -24,6 +24,8 @@ const CreditLimitsList = lazy(() =>
 const ViewCreditLimits = lazy(() =>
   import('../screens/CreditLimits/ViewCreditLimits/ViewCreditLimits')
 );
+const OverduesList = lazy(() => import('../screens/Overdues/OverduesList/OverduesList'));
+const AddOverdues = lazy(() => import('../screens/Overdues/OverduesList/AddOverdues/AddOverdues'));
 const EmployeeList = lazy(() => import('../screens/Employee/EmployeeList/EmployeeList'));
 const CompanyProfile = lazy(() => import('../screens/CompanyProfile/CompanyProfile'));
 const Support = lazy(() => import('../screens/Support/Support'));
@@ -115,6 +117,12 @@ export const ROUTES_CONSTANTS = [
   },
   {
     path: '/over-dues',
+    component: OverduesList,
+    authenticated: true,
+  },
+  {
+    path: '/over-dues/:period',
+    component: AddOverdues,
     authenticated: true,
   },
   {
