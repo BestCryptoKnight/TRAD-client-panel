@@ -13,14 +13,17 @@ import {
 export const getEmployeeList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
     try {
+      startLoaderButtonOnRequest('viewEmployeePageLoaderAction');
       const response = await EmployeeApiService.getAllEmployeeList(params);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: EMPLOYEE_REDUX_CONSTANTS.EMPLOYEE_LIST_USER_ACTION,
           data: response.data.data,
         });
+        stopLoaderButtonOnSuccessOrFail('viewEmployeePageLoaderAction');
       }
     } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('viewEmployeePageLoaderAction');
       displayErrors(e);
     }
   };

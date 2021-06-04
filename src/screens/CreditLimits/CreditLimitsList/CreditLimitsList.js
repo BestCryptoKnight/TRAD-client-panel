@@ -52,6 +52,7 @@ const CreditLimitsList = () => {
     creditLimitDownloadCreditLimitCSVButtonLoaderAction,
     modifyCreditLimitButtonLoaderAction,
     surrenderCreditLimitButtonLoaderAction,
+    creditLimitListPageLoaderAction,
   } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
 
   const CREDIT_LIMITS_FILTER_REDUCER_ACTIONS = {
@@ -404,135 +405,141 @@ const CreditLimitsList = () => {
 
   return (
     <>
-      <div className="page-header">
-        <div className="page-header-name">Credit Limit List</div>
-        {!isLoading && docs && (
-          <div className="page-header-button-container">
-            <IconButton
-              buttonType="secondary"
-              title="filter_list"
-              className="mr-10"
-              buttonTitle="Click to apply filters on credit limit list"
-              onClick={() => toggleFilterModal()}
-            />
-            <IconButton
-              buttonType="primary"
-              title="format_line_spacing"
-              className="mr-10"
-              buttonTitle="Click to select custom fields"
-              onClick={() => toggleCustomField()}
-            />
-            <IconButton
-              buttonType="primary-1"
-              title="cloud_download"
-              onClick={onClickDownloadButton}
-              isLoading={creditLimitDownloadCreditLimitCSVButtonLoaderAction}
-            />
-          </div>
-        )}
-      </div>
-      {!isLoading && docs ? (
-        (() =>
-          docs.length > 0 ? (
-            <>
-              <div className="common-list-container">
-                <Table
-                  align="left"
-                  valign="center"
-                  tableClass="main-list-table"
-                  data={docs}
-                  headers={headers}
-                  recordSelected={onSelectCreditLimitRecord}
-                  recordActionClick={() => {}}
-                  rowClass="cursor-pointer"
-                  tableButtonActions={creditLimitAction}
+      {!creditLimitListPageLoaderAction ? (
+        <>
+          <div className="page-header">
+            <div className="page-header-name">Credit Limit List</div>
+            {!isLoading && docs && (
+              <div className="page-header-button-container">
+                <IconButton
+                  buttonType="secondary"
+                  title="filter_list"
+                  className="mr-10"
+                  buttonTitle="Click to apply filters on credit limit list"
+                  onClick={() => toggleFilterModal()}
+                />
+                <IconButton
+                  buttonType="primary"
+                  title="format_line_spacing"
+                  className="mr-10"
+                  buttonTitle="Click to select custom fields"
+                  onClick={() => toggleCustomField()}
+                />
+                <IconButton
+                  buttonType="primary-1"
+                  title="cloud_download"
+                  onClick={onClickDownloadButton}
+                  isLoading={creditLimitDownloadCreditLimitCSVButtonLoaderAction}
                 />
               </div>
-              <Pagination
-                className="common-list-pagination"
-                total={total}
-                pages={pages}
-                page={page}
-                limit={limit}
-                pageActionClick={pageActionClick}
-                onSelectLimit={onSelectLimit}
-              />
-            </>
+            )}
+          </div>
+          {!isLoading && docs ? (
+            (() =>
+              docs.length > 0 ? (
+                <>
+                  <div className="common-list-container">
+                    <Table
+                      align="left"
+                      valign="center"
+                      tableClass="main-list-table"
+                      data={docs}
+                      headers={headers}
+                      recordSelected={onSelectCreditLimitRecord}
+                      recordActionClick={() => {}}
+                      rowClass="cursor-pointer"
+                      tableButtonActions={creditLimitAction}
+                    />
+                  </div>
+                  <Pagination
+                    className="common-list-pagination"
+                    total={total}
+                    pages={pages}
+                    page={page}
+                    limit={limit}
+                    pageActionClick={pageActionClick}
+                    onSelectLimit={onSelectLimit}
+                  />
+                </>
+              ) : (
+                <div className="no-record-found">No record found</div>
+              ))()
           ) : (
-            <div className="no-record-found">No record found</div>
-          ))()
+            <Loader />
+          )}
+
+          {filterModal && (
+            <Modal
+              headerIcon="filter_list"
+              header="filter"
+              buttons={filterModalButtons}
+              className="filter-modal application-filter-modal"
+            >
+              <div className="filter-modal-row">
+                <div className="form-title">Entity Type</div>
+                <ReactSelect
+                  className="filter-select react-select-container"
+                  classNamePrefix="react-select"
+                  placeholder="Select Entity Type"
+                  name="role"
+                  options={dropdownData?.entityType}
+                  value={entityTypeSelectedValue}
+                  onChange={handleEntityTypeFilterChange}
+                  isSearchble
+                />
+              </div>
+            </Modal>
+          )}
+
+          {customFieldModal && (
+            <CustomFieldModal
+              defaultFields={defaultFields}
+              customFields={customFields}
+              buttons={customFieldsModalButtons}
+              onChangeSelectedColumn={onChangeSelectedColumn}
+              toggleCustomField={toggleCustomField}
+            />
+          )}
+          {modifyLimitModal && (
+            <Modal
+              header="Modify Credit Limit"
+              buttons={modifyLimitButtons}
+              hideModal={toggleModifyLimitModal}
+            >
+              <div className="modify-credit-limit-container align-center">
+                <span>Credit Limit</span>
+                <Input
+                  type="text"
+                  value={currentCreditLimitData?.creditLimit}
+                  disabled
+                  borderClass="disabled-control"
+                />
+                <span>Change Credit Limit</span>
+                <Input
+                  prefixClass="font-placeholder"
+                  placeholder="New Credit Limit"
+                  name="creditLimit"
+                  type="text"
+                  value={newCreditLimit}
+                  onChange={e => setNewCreditLimit(e.target.value)}
+                />
+              </div>
+            </Modal>
+          )}
+          {surrenderModal && (
+            <Modal
+              header="Modify Credit Limit"
+              buttons={surrenderLimitButtons}
+              hideModal={toggleSurrenderModal}
+            >
+              <span className="confirmation-message">
+                Are you sure you want to surrender this credit limit?
+              </span>
+            </Modal>
+          )}
+        </>
       ) : (
         <Loader />
-      )}
-
-      {filterModal && (
-        <Modal
-          headerIcon="filter_list"
-          header="filter"
-          buttons={filterModalButtons}
-          className="filter-modal application-filter-modal"
-        >
-          <div className="filter-modal-row">
-            <div className="form-title">Entity Type</div>
-            <ReactSelect
-              className="filter-select react-select-container"
-              classNamePrefix="react-select"
-              placeholder="Select Entity Type"
-              name="role"
-              options={dropdownData?.entityType}
-              value={entityTypeSelectedValue}
-              onChange={handleEntityTypeFilterChange}
-              isSearchble
-            />
-          </div>
-        </Modal>
-      )}
-
-      {customFieldModal && (
-        <CustomFieldModal
-          defaultFields={defaultFields}
-          customFields={customFields}
-          buttons={customFieldsModalButtons}
-          onChangeSelectedColumn={onChangeSelectedColumn}
-          toggleCustomField={toggleCustomField}
-        />
-      )}
-      {modifyLimitModal && (
-        <Modal
-          header="Modify Credit Limit"
-          buttons={modifyLimitButtons}
-          hideModal={toggleModifyLimitModal}
-        >
-          <div className="modify-credit-limit-container align-center">
-            <span>Credit Limit</span>
-            <Input
-              type="text"
-              value={currentCreditLimitData?.creditLimit}
-              disabled
-              borderClass="disabled-control"
-            />
-            <span>Change Credit Limit</span>
-            <Input
-              prefixClass="font-placeholder"
-              placeholder="New Credit Limit"
-              name="creditLimit"
-              type="text"
-              value={newCreditLimit}
-              onChange={e => setNewCreditLimit(e.target.value)}
-            />
-          </div>
-        </Modal>
-      )}
-      {surrenderModal && (
-        <Modal
-          header="Modify Credit Limit"
-          buttons={surrenderLimitButtons}
-          hideModal={toggleSurrenderModal}
-        >
-          <span className="confirmation-message">
-            Are you sure you want to surrender this credit limit?
-          </span>
-        </Modal>
       )}
     </>
   );

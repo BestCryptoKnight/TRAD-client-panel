@@ -8,6 +8,7 @@ const ResetPassword = lazy(() => import('../screens/auth/resetPassword/ResetPass
 const VerifyOtp = lazy(() => import('../screens/auth/otpScreen/VerifyOtp'));
 const ForbiddenAccessPage = lazy(() => import('../common/ForbiddenAccessPage/ForbiddenAccessPage'));
 const Dashboard = lazy(() => import('../common/Dashboard/Dashboard'));
+const ViewClientTask = lazy(() => import('../common/Dashboard/components/ViewClientTask'));
 const ApplicationList = lazy(() =>
   import('../screens/Application/ApplicationList/ApplicationList')
 );
@@ -61,6 +62,11 @@ export const ROUTES_CONSTANTS = [
   {
     path: '/dashboard',
     component: Dashboard,
+    authenticated: true,
+  },
+  {
+    path: '/dashboard/task/:id',
+    component: ViewClientTask,
     authenticated: true,
   },
   {

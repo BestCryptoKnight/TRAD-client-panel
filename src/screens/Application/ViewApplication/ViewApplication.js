@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import ReactSelect from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Accordion from '../../../common/Accordion/Accordion';
 import {
-  changeApplicationStatus,
   getApplicationDetailById,
   getApplicationModuleList,
   getApplicationNotesList,
@@ -24,9 +22,6 @@ import ApplicationDocumentsAccordion from './component/ApplicationDocumentsAccor
 import ApplicationLogsAccordion from './component/ApplicationLogsAccordion';
 import { errorNotification } from '../../../common/Toast';
 import Loader from '../../../common/Loader/Loader';
-import Modal from '../../../common/Modal/Modal';
-import { NUMBER_REGEX } from '../../../constants/RegexConstants';
-import Input from '../../../common/Input/Input';
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',
@@ -62,11 +57,6 @@ const ViewApplication = () => {
     () => viewApplicationData,
     [viewApplicationData]
   );
-  const [showConfirmModal, setShowConfirmationModal] = useState(false);
-  const [statusToChange, setStatusToChange] = useState({});
-  const toggleConfirmationModal = useCallback(() => {
-    setShowConfirmationModal(!showConfirmModal);
-  }, [showConfirmModal]);
   const {
     tradingName,
     entityType,
@@ -76,9 +66,7 @@ const ViewApplication = () => {
     clientId,
     creditLimit,
     applicationId,
-    isAllowToUpdate,
     status,
-    _id,
   } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
 
   useEffect(() => {
@@ -88,7 +76,7 @@ const ViewApplication = () => {
     dispatch(getApplicationTaskList(id));
     dispatch(getViewApplicationDocumentTypeList());
     return () => dispatch(resetApplicationDetail());
-  }, []);
+  }, [id]);
 
   const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
   const handleDrawerState = useCallback(async (idDrawer, headers) => {
@@ -171,77 +159,6 @@ const ViewApplication = () => {
   );
   const blockers = applicationDetails?.blockers;
 
-  // limit modify
-
-  const [newCreditLimit, setNewCreditLimit] = useState('');
-  const [modifyLimitModal, setModifyLimitModal] = useState(false);
-  const toggleModifyLimitModal = useCallback(() => {
-    setNewCreditLimit(creditLimit);
-    setModifyLimitModal(!modifyLimitModal);
-  }, [creditLimit, modifyLimitModal]);
-
-  const modifyLimit = useCallback(async () => {
-    try {
-      if (newCreditLimit?.trim()?.length <= 0) {
-        errorNotification('Please provide new credit limit');
-      } else if (newCreditLimit && !newCreditLimit.match(NUMBER_REGEX)) {
-        errorNotification('Please provide valid credit limit');
-      } else {
-        const data = {
-          creditLimit: newCreditLimit,
-          status: statusToChange?.value,
-        };
-        await dispatch(changeApplicationStatus(id, data));
-        toggleModifyLimitModal();
-      }
-    } catch (e) {
-      /**/
-    }
-  }, [newCreditLimit, toggleModifyLimitModal, statusToChange, id]);
-
-  const modifyLimitButtons = useMemo(
-    () => [
-      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleModifyLimitModal() },
-      {
-        title: 'Save',
-        buttonType: 'primary',
-        onClick: modifyLimit,
-      },
-    ],
-    [toggleModifyLimitModal, modifyLimit]
-  );
-
-  const handleApplicationStatusChange = useCallback(
-    e => {
-      if (['CANCELLED', 'DECLINED', 'SURRENDERED', 'WITHDRAWN'].includes(e?.value)) {
-        setStatusToChange(e);
-        toggleConfirmationModal();
-      } else if (['APPROVED'].includes(e?.value)) {
-        setStatusToChange(e);
-        toggleModifyLimitModal();
-      } else {
-        dispatch(changeApplicationStatus(_id, { status: e?.value }));
-      }
-    },
-    [toggleConfirmationModal, toggleModifyLimitModal, _id]
-  );
-
-  const changeStatusButton = useMemo(
-    () => [
-      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleConfirmationModal() },
-      {
-        title: 'Change',
-        buttonType: 'danger',
-        onClick: async () => {
-          await dispatch(changeApplicationStatus(_id, { status: statusToChange?.value }));
-          toggleConfirmationModal();
-        },
-        // isLoading: viewApplicationDeleteTaskButtonLoaderAction,
-      },
-    ],
-    [toggleConfirmationModal, statusToChange, _id]
-  );
-
   return (
     <>
       {!isLoading ? (
@@ -256,18 +173,7 @@ const ViewApplication = () => {
             <div className="view-application-details-left">
               <div className="common-white-container">
                 <div className="">Status</div>
-                <div className="view-application-status">
-                  <ReactSelect
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                    placeholder="Select Status"
-                    name="applicationStatus"
-                    value={status || []}
-                    options={applicationDetail?.applicationStatus}
-                    isDisabled={!isAllowToUpdate}
-                    onChange={handleApplicationStatusChange}
-                  />
-                </div>
+                <div className="view-application-status">{status?.label ?? '-'}</div>
                 <div className="application-details-grid">
                   {applicationDetails?.map(detail => (
                     <div>
@@ -347,36 +253,6 @@ const ViewApplication = () => {
         </>
       ) : (
         <Loader />
-      )}
-      {showConfirmModal && (
-        <Modal
-          header="Application Status"
-          buttons={changeStatusButton}
-          hideModal={toggleConfirmationModal}
-        >
-          <span className="confirmation-message">
-            Are you sure you want to {statusToChange?.label} this application?
-          </span>
-        </Modal>
-      )}
-      {modifyLimitModal && (
-        <Modal
-          header="Approve Application"
-          buttons={modifyLimitButtons}
-          hideModal={toggleModifyLimitModal}
-        >
-          <div className="modify-credit-limit-container align-center">
-            <span>Credit Limit</span>
-            <Input
-              prefixClass="font-placeholder"
-              placeholder="New Credit Limit"
-              name="creditLimit"
-              type="text"
-              value={newCreditLimit}
-              onChange={e => setNewCreditLimit(e.target.value)}
-            />
-          </div>
-        </Modal>
       )}
     </>
   );

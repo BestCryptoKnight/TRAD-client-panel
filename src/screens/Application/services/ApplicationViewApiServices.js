@@ -22,15 +22,6 @@ const ApplicationViewApiServices = {
       }),
     saveNewTask: data =>
       ApiService.postData(APPLICATION_URLS.VIEW_APPLICATION.APPLICATION_TASK.SAVE_NEW_TASK, data),
-    updateTask: (id, data) =>
-      ApiService.putData(
-        `${APPLICATION_URLS.VIEW_APPLICATION.APPLICATION_TASK.SAVE_NEW_TASK}${id}`,
-        data
-      ),
-    getApplicationTaskDetailById: id =>
-      ApiService.getData(
-        `${APPLICATION_URLS.VIEW_APPLICATION.APPLICATION_TASK.GET_APPLICATION_TASK_DETAIL}${id}`
-      ),
     deleteTask: taskId =>
       ApiService.deleteData(
         `${APPLICATION_URLS.VIEW_APPLICATION.APPLICATION_TASK.GET_TASK_LIST}${taskId}`

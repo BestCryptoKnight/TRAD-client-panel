@@ -1,6 +1,8 @@
 import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import _ from 'lodash';
+import moment from 'moment';
 import {
   changePassword,
   logoutUser,
@@ -8,6 +10,9 @@ import {
   updateUserProfile,
   changeEditProfileData,
   uploadProfilePicture,
+  markNotificationAsReadAndDeleteAction,
+  getHeaderNotificationListURL,
+  searchGlobalData,
 } from './redux/HeaderAction';
 import dummy from '../../assets/images/dummy.svg';
 import IconButton from '../IconButton/IconButton';
@@ -18,7 +23,10 @@ import { errorNotification } from '../Toast';
 import { SIDEBAR_URLS } from '../../constants/SidebarConstants';
 import FileUpload from './component/FileUpload';
 import Drawer from '../Drawer/Drawer';
-import Checkbox from '../Checkbox/Checkbox';
+import { getAuthTokenLocalStorage } from '../../helpers/LocalStorageHelper';
+import { connectWebSocket, disconnectWebSocket } from '../../helpers/SocketHelper';
+import { handleGlobalSearchSelect } from '../../helpers/GlobalSearchHelper';
+import { HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS } from './redux/HeaderConstants';
 
 const Header = () => {
   const history = useHistory();
@@ -42,6 +50,36 @@ const Header = () => {
   const toggleEditProfileModal = value =>
     setShowEditProfileModal(value !== undefined ? value : e => !e);
 
+  const notificationData = useSelector(
+    ({ headerNotificationReducer }) => headerNotificationReducer ?? []
+  );
+
+  const notificationList = useMemo(() => {
+    let list = [];
+    if (notificationData?.notificationList?.length > 0) {
+      list = Object.values(
+        notificationData?.notificationList?.reduce((acc, cur) => {
+          if (!acc[new Date(cur.createdAt).toLocaleDateString()])
+            acc[new Date(cur.createdAt).toLocaleDateString()] = {
+              createdAt: new Date(cur.createdAt).toLocaleDateString(),
+              notifications: [],
+            };
+          acc[new Date(cur.createdAt).toLocaleDateString()].notifications.push(cur);
+          return acc;
+        }, {})
+      );
+      list = _.orderBy(list, ['createdAt'], ['desc']);
+    }
+    return list ?? [];
+  }, [notificationData?.notificationList]);
+
+  const notificationBadge = useMemo(() => {
+    const result = notificationData?.notificationList?.filter(
+      notification => notification?.isRead !== true
+    );
+    return result?.length ?? 0;
+  }, [notificationData?.notificationList]);
+
   const { name, email, contactNumber, profilePictureUrl, changed } = useMemo(() => {
     if (loggedUserDetail) {
       // eslint-disable-next-line no-shadow
@@ -56,6 +94,13 @@ const Header = () => {
     }
     return { name: '', email: '', contactNumber: '', profilePictureUrl: '', changed: false };
   }, [loggedUserDetail]);
+
+  // global search
+
+  const globalSearchResult = useSelector(
+    ({ globalSearchReducer }) => globalSearchReducer?.searchResults ?? []
+  );
+
   /** ****
    * edit profile end
    * ***** */
@@ -251,6 +296,7 @@ const Header = () => {
       </div>
     );
   };
+
   const [headerSearchFocused, setHeaderSearchFocused] = useState(false);
   const searchOnFocus = () => setHeaderSearchFocused(true);
   const headerSearchRef = useRef();
@@ -260,15 +306,47 @@ const Header = () => {
     setHeaderSearchFocused(false);
   };
   useOnClickOutside(headerSearchRef, searchOutsideClick);
-  const onSearchEnterKeyPress = e => {
-    if (e.keyCode === 13) {
-      setSearchStart(true);
+  // const onSearchEnterKeyPress = useCallback(e => {
+  //   try {
+  //     if (e.keyCode === 13) {
+  //       const { value } = e?.target;
+  //       if (value?.trim()?.length > 0) {
+  //         dispatch(searchGlobalData(value));
+  //       }
+  //     }
+  //   } catch (err) {
+  //     /**/
+  //   }
+  // }, []);
+
+  const handleOnSearchChange = useCallback(e => {
+    if (e?.target?.value?.trim()?.length === 0) {
+      setSearchStart(false);
+      dispatch({
+        type: HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS.CLEAR_SEARCHED_DATA_LIST,
+      });
+    } else {
+      try {
+        const { value } = e?.target;
+        setSearchStart(true);
+        if (value?.trim()?.length > 0) {
+          dispatch(searchGlobalData(value));
+        }
+      } catch (err) {
+        /**/
+      }
     }
-  };
-  const headerSearchResults = () => {
-    setSearchStart(true);
-    setHeaderSearchFocused(true);
-  };
+  }, []);
+
+  useEffect(() => {
+    dispatch(getHeaderNotificationListURL());
+    const AUTH_TOKEN = getAuthTokenLocalStorage();
+    if (AUTH_TOKEN !== null) {
+      connectWebSocket(AUTH_TOKEN);
+    }
+    return () => disconnectWebSocket();
+  }, []);
+
   return (
     <div className="header-container">
       <div className="screen-title">
@@ -290,30 +368,36 @@ const Header = () => {
               type="text"
               placeholder="Search Here"
               onFocus={searchOnFocus}
-              onKeyDown={onSearchEnterKeyPress}
+              // onKeyDown={onSearchEnterKeyPress}
+              onChange={_.debounce(handleOnSearchChange, 1000)}
+              onClick={e =>
+                e?.target?.value?.toString()?.trim()?.length > 0 && setSearchStart(true)
+              }
             />
-            <span className="material-icons-round" onClick={headerSearchResults}>
-              search
-            </span>
+            <span className="material-icons-round">search</span>
           </div>
           {searchStart && (
-            <div className="header-search-results">
-              <div>
-                {' '}
-                A B Companies <span className="ml-5 tag primary-tag">Redux</span>{' '}
-              </div>
-              <div> A B Companies</div>
-              <div> A B Companies</div>
-              <div> A B Companies</div>
-              <div> A B Companies</div>
-            </div>
+            <ul className="header-search-results">
+              {globalSearchResult?.map(searchResult => (
+                <li
+                  onClick={() => {
+                    handleGlobalSearchSelect(searchResult, history);
+                    setSearchStart(false);
+                  }}
+                >
+                  {searchResult?.title}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
         <IconButton
+          isBadge={notificationBadge > 0}
           title="notifications_active"
           buttonType="outlined-bg"
           className="notification"
-          onClick={() => openNotificationDrawer(true)}
+          onClick={openNotificationDrawer}
+          badgeCount={notificationBadge}
         />
         <img className="user-dp" src={profilePictureUrl || dummy} onClick={toggleUserSettings} />
         {showUserSettings && (
@@ -336,45 +420,49 @@ const Header = () => {
             drawerState={notificationDrawer}
             closeDrawer={() => setNotificationDrawer(false)}
           >
-            <div className="notification-set">
-              <div className="notification-set-title">Today</div>
-              <div className="common-notification-content-box">
-                <div className="d-flex align-center just-bet">
-                  <div className="tag red-tag">Really High</div>
-                  <Checkbox />
+            {notificationList?.length > 0 ? (
+              notificationList?.map(notification => (
+                <div className="notification-set">
+                  <div className="notification-set-title">
+                    {moment(notification?.createdAt).calendar({
+                      sameDay: '[Today]',
+                      nextDay: '[Tomorrow]',
+                      nextWeek: 'dddd',
+                      lastDay: '[Yesterday]',
+                      lastWeek: '[Last] dddd',
+                      sameElse: 'DD/MM/YYYY',
+                    })}
+                  </div>
+                  {notification?.notifications?.map(singleNotification => (
+                    <div
+                      className="common-accordion-item-content-box high-alert"
+                      key={singleNotification?._id}
+                    >
+                      <div className="date-owner-row just-bet">
+                        <span className="title mr-5">Date:</span>
+                        <span className="details">
+                          {moment(singleNotification?.createdAt).format('DD-MMM-YYYY')}
+                        </span>
+                        <span />
+                        <span
+                          className="material-icons-round font-placeholder"
+                          style={{ textAlign: 'end', fontSize: '18px', cursor: 'pointer' }}
+                          onClick={() =>
+                            dispatch(markNotificationAsReadAndDeleteAction(singleNotification?._id))
+                          }
+                        >
+                          cancel
+                        </span>
+                      </div>
+                      <div className="font-field">Description:</div>
+                      <div className="font-primary">{singleNotification?.description}</div>
+                    </div>
+                  ))}
                 </div>
-                <div className="date-owner-row">
-                  <span className="title mr-5">Date:</span>
-                  <span className="details">15-Dec-2020</span>
-
-                  <span className="title">Owner:</span>
-                  <span className="details">Lorem Ipsum Lorem Ipsum Lorem Ipsum</span>
-                </div>
-                <div className="font-field">Description:</div>
-                <div className="font-primary">
-                  Lorem ipsum dolor sit amet, consetetur saelitr, sed diam nonumy eirmod tempor
-                  invidunt ut labore et.
-                </div>
-              </div>
-              <div className="common-accordion-item-content-box high-alert">
-                <div className="note-title-row">
-                  <div className="note-title">Title of Note</div>
-                  <span className="material-icons-round font-placeholder">more_vert</span>
-                </div>
-                <div className="date-owner-row">
-                  <span className="title mr-5">Date:</span>
-                  <span className="details">15-Dec-2020</span>
-
-                  <span className="title">Owner:</span>
-                  <span className="details">Lorem Ipsum Lorem Ipsum Lorem Ipsum</span>
-                </div>
-                <div className="font-field">Description:</div>
-                <div className="font-primary">
-                  Lorem ipsum dolor sit amet, consetetur saelitr, sed diam nonumy eirmod tempor
-                  invidunt ut labore et.
-                </div>
-              </div>
-            </div>
+              ))
+            ) : (
+              <div className="no-record-found">No record found</div>
+            )}
           </Drawer>
 
           /** ********** notification drawer ends ************ */

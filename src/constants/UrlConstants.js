@@ -14,12 +14,19 @@ export const HEADER_URLS = {
   UPLOAD_PROFILE_PICTURE: `${BASE_URL}user/upload/profile-picture/`,
   CHANGE_PASSWORD_URL: `${BASE_URL}auth/change-password/`,
   LOGOUT_URL: `${BASE_URL}auth/logout/`,
+  HEADER_NOTIFICATIONS: {
+    GET_HEADER_NOTIFICATION_LIST_URL: `${BASE_URL}notification/list/`,
+    MARK_AS_READ_NOTIFICATION_URL: `${BASE_URL}notification/markAsRead/`,
+  },
+  HEADER_GLOBAL_SEARCH: `${BASE_URL}search/`,
 };
 
 export const DASHBOARD_URLS = {
   DASHBOARD_DETAILS: `${BASE_URL}dashboard/`,
   DASHBOARD_TASK_LIST: `${BASE_URL}task/`,
+  DASHBOARD_TASK_DETAILS_URL: `${BASE_URL}task/details/`,
   DASHBOARD_NOTIFICATION_LIST: `${BASE_URL}notification/`,
+  UPDATE_TASK: `${BASE_URL}task/`,
 };
 
 export const APPLICATION_URLS = {

@@ -64,6 +64,7 @@ const EmployeeList = () => {
   const {
     EmployeeListColumnSaveButtonLoaderAction,
     EmployeeListColumnResetButtonLoaderAction,
+    viewEmployeePageLoaderAction,
   } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
 
   const { defaultFields, customFields } = useMemo(
@@ -278,89 +279,95 @@ const EmployeeList = () => {
 
   return (
     <>
-      <div className="page-header">
-        <div className="page-header-name">Employee List</div>
-        {!isLoading && docs && (
-          <div className="page-header-button-container">
-            <IconButton
-              buttonType="secondary"
-              title="filter_list"
-              className="mr-10"
-              buttonTitle="Click to apply filters on employee list"
-              onClick={toggleFilterModal}
-            />
-            <IconButton
-              buttonType="primary"
-              title="format_line_spacing"
-              className="mr-10"
-              buttonTitle="Click to select custom fields"
-              onClick={() => toggleCustomField()}
-            />
-          </div>
-        )}
-      </div>
-      {docs && !isLoading ? (
-        (() =>
-          docs.length > 0 ? (
-            <>
-              <div className="common-list-container">
-                <Table
-                  align="left"
-                  valign="center"
-                  tableClass="main-list-table"
-                  data={docs}
-                  headers={headers}
-                  rowClass="cursor-pointer"
+      {!viewEmployeePageLoaderAction ? (
+        <>
+          <div className="page-header">
+            <div className="page-header-name">Employee List</div>
+            {!isLoading && docs && (
+              <div className="page-header-button-container">
+                <IconButton
+                  buttonType="secondary"
+                  title="filter_list"
+                  className="mr-10"
+                  buttonTitle="Click to apply filters on employee list"
+                  onClick={toggleFilterModal}
+                />
+                <IconButton
+                  buttonType="primary"
+                  title="format_line_spacing"
+                  className="mr-10"
+                  buttonTitle="Click to select custom fields"
+                  onClick={() => toggleCustomField()}
                 />
               </div>
-              <Pagination
-                className="common-list-pagination"
-                total={total}
-                pages={pages}
-                page={page}
-                limit={limit}
-                pageActionClick={pageActionClick}
-                onSelectLimit={onSelectLimit}
-              />
-            </>
+            )}
+          </div>
+          {docs && !isLoading ? (
+            (() =>
+              docs.length > 0 ? (
+                <>
+                  <div className="common-list-container">
+                    <Table
+                      align="left"
+                      valign="center"
+                      tableClass="main-list-table"
+                      data={docs}
+                      headers={headers}
+                      rowClass="cursor-pointer"
+                    />
+                  </div>
+                  <Pagination
+                    className="common-list-pagination"
+                    total={total}
+                    pages={pages}
+                    page={page}
+                    limit={limit}
+                    pageActionClick={pageActionClick}
+                    onSelectLimit={onSelectLimit}
+                  />
+                </>
+              ) : (
+                <div className="no-record-found">No record found</div>
+              ))()
           ) : (
-            <div className="no-record-found">No record found</div>
-          ))()
+            <Loader />
+          )}
+
+          {filterModal && (
+            <Modal
+              headerIcon="filter_list"
+              header="filter"
+              buttons={filterModalButtons}
+              className="filter-modal application-filter-modal"
+            >
+              <div className="filter-modal-row">
+                <div className="form-title">Decision Maker</div>
+                <ReactSelect
+                  className="filter-select react-select-container"
+                  classNamePrefix="react-select"
+                  placeholder="Select.."
+                  name="role"
+                  options={filterDropdownData}
+                  value={decisionMakingTypeSelected}
+                  onChange={handleDecisionMakingTypeFilterChange}
+                  isSearchble
+                />
+              </div>
+            </Modal>
+          )}
+
+          {customFieldModal && (
+            <CustomFieldModal
+              defaultFields={defaultFields}
+              customFields={customFields}
+              buttons={customFieldsModalButtons}
+              onChangeSelectedColumn={onChangeSelectedColumn}
+              toggleCustomField={toggleCustomField}
+            />
+          )}
+        </>
       ) : (
         <Loader />
-      )}
-
-      {filterModal && (
-        <Modal
-          headerIcon="filter_list"
-          header="filter"
-          buttons={filterModalButtons}
-          className="filter-modal application-filter-modal"
-        >
-          <div className="filter-modal-row">
-            <div className="form-title">Decision Maker</div>
-            <ReactSelect
-              className="filter-select react-select-container"
-              classNamePrefix="react-select"
-              placeholder="Select.."
-              name="role"
-              options={filterDropdownData}
-              value={decisionMakingTypeSelected}
-              onChange={handleDecisionMakingTypeFilterChange}
-              isSearchble
-            />
-          </div>
-        </Modal>
-      )}
-
-      {customFieldModal && (
-        <CustomFieldModal
-          defaultFields={defaultFields}
-          customFields={customFields}
-          buttons={customFieldsModalButtons}
-          onChangeSelectedColumn={onChangeSelectedColumn}
-          toggleCustomField={toggleCustomField}
-        />
       )}
     </>
   );

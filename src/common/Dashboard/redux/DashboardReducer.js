@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { DASHBOARD_REDUX_CONSTANTS } from './DashboardReduxConstants';
 import { LOGIN_REDUX_CONSTANTS } from '../../../screens/auth/login/redux/LoginReduxConstants';
 
@@ -12,6 +13,7 @@ const initialDashboardData = {
     pages: 1,
     isLoading: true,
   },
+  taskDetails: {},
   dashboardNotification: {
     isLoading: true,
     notificationList: [],
@@ -48,6 +50,21 @@ export const dashboard = (state = initialDashboardData, action) => {
           ...action.data,
         },
       };
+    case DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_DETAILS:
+      console.log(action?.data);
+      return {
+        ...state,
+        taskDetails: action.data,
+      };
+
+    case DASHBOARD_REDUX_CONSTANTS.TASK.UPDATE_EDIT_TASK_FIELD_ACTION:
+      return {
+        ...state,
+        taskDetails: {
+          ...state?.taskDetails,
+          [action?.name]: action?.value,
+        },
+      };
 
     case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DASHBOARD_NOTIFICATION_LIST_REQUEST:
       return {
@@ -59,19 +76,6 @@ export const dashboard = (state = initialDashboardData, action) => {
       };
 
     case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DASHBOARD_NOTIFICATION_LIST_SUCCESS: {
-      //   const notificationList = Object.entries(action?.data?.docs).map(([key, value]) => ({
-      //     title: key,
-      //     data: value,
-      //   }));
-      //   return {
-      //     ...state,
-      //     dashboardNotification: {
-      //       ...state.dashboardNotification,
-      //       notificationList,
-      //       isLoading: false,
-      //     },
-      //   };
-      // }
       let notificationList = state?.dashboardNotification?.notificationList ?? [];
       let hasMoreData = false;
       const { page, pages, docs } = action?.data;
@@ -105,6 +109,15 @@ export const dashboard = (state = initialDashboardData, action) => {
       };
     }
 
+    case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DASHBOARD_NOTIFICATION_LIST_FAIL:
+      return {
+        ...state,
+        dashboardNotification: {
+          isLoading: false,
+          ...state?.dashboardNotification,
+        },
+      };
+
     case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DELETE_DASHBOARD_NOTIFICATION_ACTION: {
       const notifications = state?.dashboardNotification?.notificationList ?? [];
       const finalData = [];
@@ -122,6 +135,34 @@ export const dashboard = (state = initialDashboardData, action) => {
         dashboardNotification: {
           ...state.dashboardNotification,
           notificationList: finalData,
+        },
+      };
+    }
+
+    case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.GET_NOTIFICATION_FROM_SOCKET: {
+      let notificationList = state?.notification?.notificationList ?? [];
+      const { updatedAt, _id, description } = action?.data;
+      const data = {
+        [moment(updatedAt).format('YYYY-M-DD')]: [{ updatedAt, _id, description }],
+      };
+      notificationList = notificationList?.map(elem => {
+        if (data[elem.title]) {
+          const final = data[elem.title];
+          delete data[elem.title];
+          return { ...elem, data: [...final, ...elem.data] };
+        }
+        return elem;
+      });
+      const newNotificationList = Object.entries(data).map(([key, value]) => ({
+        title: key,
+        data: value,
+      }));
+
+      return {
+        ...state,
+        dashboardNotification: {
+          ...state.dashboardNotification,
+          notificationList: [...new Set([...newNotificationList, ...notificationList])],
         },
       };
     }

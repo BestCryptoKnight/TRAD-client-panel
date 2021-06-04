@@ -14,18 +14,22 @@ import {
   startLoaderButtonOnRequest,
   stopLoaderButtonOnSuccessOrFail,
 } from '../../../common/LoaderButton/redux/LoaderButtonAction';
+import { store } from '../../../redux/store';
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
     try {
+      startLoaderButtonOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(params);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
           data: response?.data?.data,
         });
+        stopLoaderButtonOnSuccessOrFail('creditLimitListPageLoaderAction');
       }
     } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('creditLimitListPageLoaderAction');
       displayErrors(e);
     }
   };
@@ -146,14 +150,17 @@ export const downloadCreditLimitCSV = () => {
 export const getCreditLimitsDetails = id => {
   return async dispatch => {
     try {
+      startLoaderButtonOnRequest('viewCreditLimitPageLoaderAction');
       const response = await CreditLimitsApiService.getCreditLimitsDetails(id);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA,
           data: response.data.data,
         });
+        stopLoaderButtonOnSuccessOrFail('viewCreditLimitPageLoaderAction');
       }
     } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('viewCreditLimitPageLoaderAction');
       displayErrors(e);
     }
   };
@@ -680,4 +687,11 @@ export const deleteCreditLimitsNote = async (noteId, cb) => {
   } catch (e) {
     displayErrors(e);
   }
+};
+
+export const setViewCreditLimitActiveTabIndex = index => {
+  store.dispatch({
+    type: CREDIT_LIMITS_REDUX_CONSTANTS.VIEW_CREDIT_LIMIT_ACTIVE_TAB_INDEX,
+    index,
+  });
 };

@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCreditLimitsDetails } from '../redux/CreditLimitsAction';
+import {
+  getCreditLimitsDetails,
+  setViewCreditLimitActiveTabIndex,
+} from '../redux/CreditLimitsAction';
 import Loader from '../../../common/Loader/Loader';
 import Tab from '../../../common/Tab/Tab';
 import CreditLimitsApplicationTab from '../CreditLimitsTabs/CreditLimitsApplicationTab';
@@ -16,11 +19,21 @@ const ViewCreditLimits = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+
   const tabActive = index => {
+    setViewCreditLimitActiveTabIndex(index);
     setActiveTabIndex(index);
   };
+  const viewCreditLimitActiveTabIndex = useSelector(
+    ({ creditLimits }) => creditLimits?.viewCreditLimitActiveTabIndex ?? 0
+  );
+
   const creditLimitsDetails = useSelector(
     ({ creditLimits }) => creditLimits?.selectedCreditLimitData
+  );
+
+  const { viewCreditLimitPageLoaderAction } = useSelector(
+    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
   );
 
   const backToCreditLimit = useCallback(() => {
@@ -117,38 +130,53 @@ const ViewCreditLimits = () => {
   ];
 
   useEffect(() => {
+    tabActive(viewCreditLimitActiveTabIndex);
+  }, [viewCreditLimitActiveTabIndex]);
+
+  useEffect(() => {
     dispatch(getCreditLimitsDetails(id));
-  }, []);
+  }, [id]);
 
   return (
     <>
-      <div className="breadcrumb-button-row">
-        <div className="breadcrumb">
-          <span onClick={backToCreditLimit}>Credit Limit List</span>
-          <span className="material-icons-round">navigate_next</span>
-          <span>View Credit Limits</span>
-        </div>
-      </div>
-      {creditLimitsDetails && (
-        <div className="common-white-container">
-          {Object.entries(creditLimitsDetails)?.length > 0 ? (
-            <div className="credit-limits-details">
-              {INPUTS.map(detail => (
-                <>
-                  <div className="title">{detail.label}</div>
-                  <div className="value">{detail.value ?? '-'}</div>
-                </>
-              ))}
+      {!viewCreditLimitPageLoaderAction ? (
+        <>
+          <div className="breadcrumb-button-row">
+            <div className="breadcrumb">
+              <span onClick={backToCreditLimit}>Credit Limit List</span>
+              <span className="material-icons-round">navigate_next</span>
+              <span>View Credit Limits</span>
             </div>
-          ) : (
-            <div className="common-white-container just-center w-100">
-              <Loader />
+          </div>
+          {creditLimitsDetails && (
+            <div className="common-white-container">
+              {Object.entries(creditLimitsDetails)?.length > 0 ? (
+                <div className="credit-limits-details">
+                  {INPUTS.map(detail => (
+                    <>
+                      <div className="title">{detail.label}</div>
+                      <div className="value">{detail.value ?? '-'}</div>
+                    </>
+                  ))}
+                </div>
+              ) : (
+                <div className="common-white-container just-center w-100">
+                  <Loader />
+                </div>
+              )}
             </div>
           )}
-        </div>
+          <Tab
+            tabs={tabs}
+            tabActive={tabActive}
+            activeTabIndex={activeTabIndex}
+            className="mt-15"
+          />
+          <div className="common-white-container">{VIEW_CREDIT_LIMITS_TABS[activeTabIndex]}</div>
+        </>
+      ) : (
+        <Loader />
       )}
-      <Tab tabs={tabs} tabActive={tabActive} activeTabIndex={activeTabIndex} className="mt-15" />
-      <div className="common-white-container">{VIEW_CREDIT_LIMITS_TABS[activeTabIndex]}</div>
     </>
   );
 };

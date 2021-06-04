@@ -15,6 +15,10 @@ const CompanyProfile = () => {
 
   const clientData = useSelector(({ companyProfile }) => companyProfile?.clientDetail ?? {});
 
+  const { viewCompanyProfilePageLoaderAction } = useSelector(
+    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+  );
+
   const INPUTS = useMemo(
     () => [
       {
@@ -132,20 +136,26 @@ const CompanyProfile = () => {
 
   return (
     <>
-      <div className="page-header">
-        <div className="page-header-name">Company Profile</div>
-      </div>
+      {!viewCompanyProfilePageLoaderAction ? (
+        <>
+          <div className="page-header">
+            <div className="page-header-name">Company Profile</div>
+          </div>
 
-      {Object.entries(clientData)?.length > 0 ? (
-        <div className="common-white-container company-profile-container">
-          {INPUTS.map(getComponentFromType)}
-        </div>
+          {Object.entries(clientData)?.length > 0 ? (
+            <div className="common-white-container company-profile-container">
+              {INPUTS.map(getComponentFromType)}
+            </div>
+          ) : (
+            <div className="common-white-container">
+              <Loader />
+            </div>
+          )}
+          <CompanyProfilePolicies />
+        </>
       ) : (
-        <div className="common-white-container">
-          <Loader />
-        </div>
+        <Loader />
       )}
-      <CompanyProfilePolicies />
     </>
   );
 };

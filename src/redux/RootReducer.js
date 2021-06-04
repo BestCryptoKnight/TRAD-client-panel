@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import { creditLimits } from '../screens/CreditLimits/redux/CreditLimitsReducer';
 import { dashboard } from '../common/Dashboard/redux/DashboardReducer';
 import { application } from '../screens/Application/redux/ApplicationReducer';
-import { loggedUserProfile } from '../common/Header/redux/HeaderReducer';
+import { globalSearchReducer, headerNotificationReducer,loggedUserProfile } from '../common/Header/redux/HeaderReducer';
 import { employee } from '../screens/Employee/redux/EmployeeReducer';
 import { companyProfile } from '../screens/CompanyProfile/redux/CompanyProfileReducer';
 import { LOGIN_REDUX_CONSTANTS } from '../screens/auth/login/redux/LoginReduxConstants';
@@ -20,6 +20,8 @@ const appReducer = combineReducers({
   companyProfile,
   support,
   loaderButtonReducer,
+  globalSearchReducer,
+  headerNotificationReducer,
 });
 const rootReducer = (state, action) => {
   if (action.type === LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION) {

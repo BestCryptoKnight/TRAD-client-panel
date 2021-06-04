@@ -1,8 +1,10 @@
 import HeaderApiService from '../services/HeaderApiService';
 import { errorNotification, successNotification } from '../../Toast';
 import { clearAuthToken } from '../../../helpers/LocalStorageHelper';
-import { EDIT_PROFILE_CONSTANT } from './HeaderConstants';
-import {LOGIN_REDUX_CONSTANTS} from "../../../screens/auth/login/redux/LoginReduxConstants";
+import { EDIT_PROFILE_CONSTANT,HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS, HEADER_NOTIFICATION_REDUX_CONSTANTS } from './HeaderConstants';
+import { LOGIN_REDUX_CONSTANTS } from '../../../screens/auth/login/redux/LoginReduxConstants';
+import { DASHBOARD_REDUX_CONSTANTS } from '../../Dashboard/redux/DashboardReduxConstants';
+import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
 
 export const changePassword = async (oldPassword, newPassword) => {
   try {
@@ -160,6 +162,88 @@ export const logoutUser = () => {
         }
         throw Error();
       }
+    }
+  };
+};
+
+// socket actions
+
+export const getHeaderNotificationListURL = () => {
+  return async dispatch => {
+    try {
+      const response = await HeaderApiService.notificationApiServices.getHeaderNotificationList();
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: HEADER_NOTIFICATION_REDUX_CONSTANTS.GET_HEADER_NOTIFICATION,
+          data: response?.data?.data,
+        });
+      }
+    } catch (e) {
+      /**/
+    }
+  };
+};
+
+export const updateHeaderNotificationOnTaskAssignedAction = data => {
+  return dispatch => {
+    dispatch({
+      type: HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_ASSIGNED,
+      data,
+    });
+    dispatch({
+      type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.GET_NOTIFICATION_FROM_SOCKET,
+      data,
+    });
+  };
+};
+export const updateHeaderNotificationOnTaskUpdatedAction = data => {
+  return dispatch => {
+    dispatch({
+      type: HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_UPDATED,
+      data,
+    });
+    dispatch({
+      type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.GET_NOTIFICATION_FROM_SOCKET,
+      data,
+    });
+  };
+};
+
+export const markNotificationAsReadAndDeleteAction = notificationId => {
+  return async dispatch => {
+    try {
+      const response =
+        await HeaderApiService.notificationApiServices.markNotificationAsReadAndDelete(
+          notificationId
+        );
+      if (response?.data?.status === 'SUCCESS') {
+        successNotification(response?.data?.message ?? 'Notification deleted successfully');
+        dispatch({
+          type: HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_DELETED_READ,
+          id: notificationId,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const searchGlobalData = value => {
+  return async dispatch => {
+    try {
+      const params = {
+        searchString: value,
+      };
+      const response = await HeaderApiService.globalSearchApiServices.getGlobalSearchData(params);
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS.GET_SEARCH_RESULT_LIST,
+          data: response?.data?.data,
+        });
+      }
+    } catch (e) {
+      errorNotification(e);
     }
   };
 };

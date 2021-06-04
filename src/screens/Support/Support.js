@@ -6,6 +6,9 @@ import Loader from '../../common/Loader/Loader';
 const Support = () => {
   const dispatch = useDispatch();
   const supportDetails = useSelector(({ support }) => support ?? {});
+  const { supportPagePageLoaderAction } = useSelector(
+    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+  );
 
   useEffect(() => {
     dispatch(getSupportDetails());
@@ -46,23 +49,29 @@ const Support = () => {
   );
   return (
     <>
-      <div className="page-header-name mt-20">Support Details</div>
-      <div
-        className={`common-white-container just-center ${
-          Object.entries(supportDetails).length > 0 && 'support-grid'
-        }`}
-      >
-        {Object.entries(supportDetails)?.length > 0 ? (
-          INPUT.map(input => (
-            <>
-              <div className="title">{input.title}</div>
-              <div>{input.value ?? '-'}</div>
-            </>
-          ))
-        ) : (
-          <Loader />
-        )}
-      </div>
+      {!supportPagePageLoaderAction ? (
+        <>
+          <div className="page-header-name mt-20">Support Details</div>
+          <div
+            className={`common-white-container just-center ${
+              Object.entries(supportDetails).length > 0 && 'support-grid'
+            }`}
+          >
+            {Object.entries(supportDetails)?.length > 0 ? (
+              INPUT.map(input => (
+                <>
+                  <div className="title">{input.title}</div>
+                  <div>{input.value ?? '-'}</div>
+                </>
+              ))
+            ) : (
+              <Loader />
+            )}
+          </div>
+        </>
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };

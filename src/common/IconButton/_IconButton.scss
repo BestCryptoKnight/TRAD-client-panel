@@ -13,3 +13,18 @@
   justify-content: center;
   padding: 10px;
 }
+
+.notification-badge{
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  background-color: $secondary-color;
+  color: white;
+  font-size: $text;
+  border-radius: 50%;
+}

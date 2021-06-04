@@ -9,6 +9,7 @@ import {
 
 export const getClientDetails = () => {
   return async dispatch => {
+    startLoaderButtonOnRequest('viewCompanyProfilePageLoaderAction');
     try {
       const response = await CompanyProfileApiService.getClientData();
       if (response.data.status === 'SUCCESS') {
@@ -16,8 +17,10 @@ export const getClientDetails = () => {
           type: CLIENT_REDUX_CONSTANTS.CLIENT_DATA,
           data: response.data.data,
         });
+        stopLoaderButtonOnSuccessOrFail('viewCompanyProfilePageLoaderAction');
       }
     } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('viewCompanyProfilePageLoaderAction');
       displayErrors(e);
     }
   };
