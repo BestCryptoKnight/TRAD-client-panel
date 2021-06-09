@@ -71,8 +71,9 @@
   color: #ffffff !important;
 }
 
-.react-select__indicators {
-  height: 26px!important;
+.react-select__control .react-select__indicators {
+  height: 26px;
+  align-self: center;
 }
 
 .react-select__multi-value, .react-select__multi-value__label {

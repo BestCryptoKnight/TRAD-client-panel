@@ -65,6 +65,8 @@ const ViewApplication = () => {
     debtorId,
     clientId,
     creditLimit,
+    outstandingAmount,
+    ordersOnHand,
     applicationId,
     status,
   } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
@@ -113,9 +115,21 @@ const ViewApplication = () => {
         type: 'text',
       },
       {
-        title: 'Credit Limit',
+        title: 'Credit Limit Amount',
         value: creditLimit,
         name: 'creditLimit',
+        type: 'text',
+      },
+      {
+        title: 'Outstanding Amount',
+        value: outstandingAmount,
+        name: 'outstandingAmount',
+        type: 'text',
+      },
+      {
+        title: 'Order on Hand',
+        value: ordersOnHand,
+        name: 'ordersOnHand',
         type: 'text',
       },
       {

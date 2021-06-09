@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 export const AccordionContext = React.createContext();
+
 const Accordion = props => {
   const { children, className } = props;
+  const [openIndex, setOpenIndex] = React.useState(-1);
   const accordion = `accordion-container ${className}`;
-  const [openIndex, setOpenIndex] = useState(-1);
 
   return (
     <div className={accordion}>
-      <AccordionContext.Provider value={{ openIndex, setOpenIndex }}>
+      <AccordionContext.Provider
+        value={{
+          openIndex,
+          setOpenIndex,
+        }}
+      >
         {children}
       </AccordionContext.Provider>
     </div>

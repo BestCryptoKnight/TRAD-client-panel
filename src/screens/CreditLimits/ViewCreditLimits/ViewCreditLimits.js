@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import moment from 'moment';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -48,7 +49,7 @@ const ViewCreditLimits = () => {
       },
       {
         label: 'Address',
-        value: `${creditLimitsDetails?.unitNumber}, ${creditLimitsDetails?.property}, ${creditLimitsDetails?.streetNumber}, ${creditLimitsDetails?.streetName}, ${creditLimitsDetails?.state}, ${creditLimitsDetails?.postCode} `,
+        value: creditLimitsDetails?.address ?? '',
       },
       {
         label: 'Brokers Commission',
@@ -108,7 +109,7 @@ const ViewCreditLimits = () => {
       },
       {
         label: 'Last Review Date',
-        value: creditLimitsDetails?.reviewDate,
+        value: moment(creditLimitsDetails?.reviewDate).format('DD/MM/yyyy'),
       },
       {
         label: 'Status',

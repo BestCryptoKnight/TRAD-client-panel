@@ -120,19 +120,23 @@ const ApplicationCompanyStep = () => {
   const INPUTS = useMemo(
     () => [
       {
-        label: 'Debtor',
-        placeholder: 'Select',
-        type: 'select',
-        isOr: isAusOrNew,
-        name: 'debtorId',
-        data: debtors,
-      },
-      {
         label: 'Country*',
         placeholder: 'Select',
         type: 'select',
         name: 'country',
         data: countryList,
+      },
+      {
+        type: 'section',
+        mainTitle: 'Debtor Search',
+      },
+      {
+        label: 'Existing Debtors',
+        placeholder: 'Select',
+        type: 'select',
+        isOr: isAusOrNew,
+        name: 'debtorId',
+        data: debtors,
       },
       {
         label: 'ABN*',
@@ -143,10 +147,10 @@ const ApplicationCompanyStep = () => {
         data: [],
       },
       {
-        label: 'Phone Number',
-        placeholder: '1234567890',
-        type: 'text',
-        name: 'phoneNumber',
+        label: 'ACN',
+        placeholder: '01234',
+        type: 'search',
+        name: 'acn',
         data: [],
       },
       {
@@ -158,17 +162,21 @@ const ApplicationCompanyStep = () => {
         data: {},
       },
       {
+        type: 'section',
+        mainTitle: 'Address and Other details',
+      },
+      {
+        label: 'Phone Number',
+        placeholder: '1234567890',
+        type: 'text',
+        name: 'phoneNumber',
+        data: [],
+      },
+      {
         label: 'Property',
         placeholder: 'Property',
         type: 'text',
         name: 'property',
-        data: [],
-      },
-      {
-        label: 'ACN',
-        placeholder: '01234',
-        type: 'search',
-        name: 'acn',
         data: [],
       },
       {
@@ -184,13 +192,6 @@ const ApplicationCompanyStep = () => {
         type: 'select',
         name: 'entityType',
         data: entityType,
-      },
-      {
-        label: 'Outstanding Amount',
-        placeholder: '$0000',
-        type: 'text',
-        name: 'outstandingAmount',
-        data: [],
       },
       {
         label: 'Unit Number',
@@ -250,14 +251,14 @@ const ApplicationCompanyStep = () => {
       return [...INPUTS];
     }
     const filteredData = [...INPUTS];
-    filteredData.splice(2, 1, {
+    filteredData.splice(3, 1, {
       label: 'Company Registration No.*',
       placeholder: 'Registration no',
       type: 'text',
       name: 'registrationNumber',
       data: [],
     });
-    filteredData.splice(6, 1);
+    filteredData.splice(4, 1);
     return filteredData;
   }, [INPUTS, isAusOrNew]);
 
@@ -330,6 +331,32 @@ const ApplicationCompanyStep = () => {
     [handleSelectInputChange, updateCompanyState, prevRef?.current, handleApplicationErrors]
   );
 
+  const handleSearchTextInputOnSearchClick = useCallback(
+    async ref => {
+      try {
+        const searchString = ref?.value;
+        const params = { searchString };
+        const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
+
+        const { resData } = handleApplicationErrors(response);
+        if (resData) {
+          updateCompanyState(resData);
+          prevRef.current = {
+            ...prevRef.current,
+            acn: resData?.acn,
+            abn: resData?.abn,
+          };
+        }
+      } catch (err) {
+        let value = prevRef?.current?.abn;
+        if (ref?.name === 'acn') value = prevRef?.current?.acn;
+        updateSingleCompanyState(ref?.name, value);
+        handleApplicationErrors(err?.response);
+      }
+    },
+    [updateCompanyState, updateSingleCompanyState, prevRef.current, handleApplicationErrors]
+  );
+
   const handleSearchTextInputKeyDown = useCallback(
     async e => {
       try {
@@ -358,6 +385,29 @@ const ApplicationCompanyStep = () => {
     [updateCompanyState, updateSingleCompanyState, prevRef.current, handleApplicationErrors]
   );
 
+  const handleEntityNameSearchOnSearchClick = useCallback(
+    async ref => {
+      if (ref?.value.toString().trim().length > 0) {
+        if (!companyState?.country || companyState?.country?.length === 0) {
+          errorNotification('Please select country before continue');
+          return;
+        }
+        dispatchDrawerState({
+          type: DRAWER_ACTIONS.SHOW_DRAWER,
+          data: null,
+        });
+        setSearchedEntityNameValue(ref?.value.toString());
+        const params = {
+          searchString: ref?.value,
+          country: companyState?.country?.value,
+        };
+        dispatch(searchApplicationCompanyEntityName(params));
+      }
+      errorNotification('Please enter search text for entity name');
+    },
+    [companyState?.country, updateCompanyState, dispatchDrawerState, setSearchedEntityNameValue]
+  );
+
   const handleEntityNameSearch = useCallback(
     async e => {
       if (e.key === 'Enter' && e.target.value.trim().length > 0) {
@@ -376,6 +426,7 @@ const ApplicationCompanyStep = () => {
         };
         dispatch(searchApplicationCompanyEntityName(params));
       }
+      errorNotification('Please enter search text for entity name');
     },
     [companyState?.country, updateCompanyState, dispatchDrawerState, setSearchedEntityNameValue]
   );
@@ -463,8 +514,9 @@ const ApplicationCompanyStep = () => {
             <Input
               type="text"
               name={input.name}
-              suffix={<span className="material-icons">search</span>}
-              borderClass={input?.isOr && 'is-or-container'}
+              suffix="search"
+              suffixClass="application-search-suffix"
+              suffixClick={handleSearchTextInputOnSearchClick}
               placeholder={input.placeholder}
               value={companyState?.[input.name] ?? ''}
               onChange={handleTextInputChange}
@@ -477,9 +529,10 @@ const ApplicationCompanyStep = () => {
             <Input
               type="text"
               name={input.name}
-              suffix={isAusOrNew && <span className="material-icons">search</span>}
+              suffix="search"
+              suffixClass="application-search-suffix"
+              suffixClick={handleEntityNameSearchOnSearchClick}
               placeholder={input.placeholder}
-              borderClass={input?.isOr && 'is-or-container'}
               onKeyDown={isAusOrNew ? handleEntityNameSearch : null}
               value={companyState?.entityName?.label ?? ''}
               onChange={handleEntityChange}
@@ -493,7 +546,7 @@ const ApplicationCompanyStep = () => {
           }
           component = (
             <ReactSelect
-              className={`${input?.isOr && 'is-or-container'} 'react-select-container'`}
+              className="react-select-container"
               classNamePrefix="react-select"
               placeholder={input.placeholder}
               name={input.name}
@@ -506,7 +559,11 @@ const ApplicationCompanyStep = () => {
           break;
         }
         default:
-          return null;
+          return (
+            <div className="application-stepper-divider">
+              <div className="application-company-step--main-title">{input?.mainTitle}</div>
+            </div>
+          );
       }
       return (
         <React.Fragment key={input?.label}>
@@ -629,9 +686,7 @@ const ApplicationCompanyStep = () => {
           )}
         </Modal>
       )}
-      <div className="common-white-container client-details-container">
-        {finalInputs?.map(getComponentFromType)}
-      </div>
+      <div className="application-company-container">{finalInputs?.map(getComponentFromType)}</div>
     </>
   );
 };

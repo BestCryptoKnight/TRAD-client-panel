@@ -20,6 +20,7 @@ import Loader from '../../../../../../common/Loader/Loader';
 import ApplicationEntityNameTable from '../../components/ApplicationEntityNameTable/ApplicationEntityNameTable';
 import Modal from '../../../../../../common/Modal/Modal';
 import IconButton from '../../../../../../common/IconButton/IconButton';
+import { errorNotification } from '../../../../../../common/Toast';
 
 const drawerInitialState = {
   visible: false,
@@ -466,9 +467,27 @@ const PersonIndividualDetail = ({
     [updatePersonState, handleToggleDropdown, setSearchedEntityNameValue, prevRef.current]
   );
 
+  const handleEntityNameOnSearchClick = useCallback(
+    ref => {
+      if (ref?.value.toString().trim().length > 0) {
+        dispatchDrawerState({
+          type: DRAWER_ACTIONS.SHOW_DRAWER,
+          data: null,
+        });
+        setSearchedEntityNameValue(ref?.value.toString());
+        const params = {
+          searchString: ref?.target?.value,
+        };
+        dispatch(searchApplicationCompanyEntityName(params));
+      }
+      errorNotification('Please enter search text for entity name');
+    },
+    [dispatchDrawerState, updatePersonState, setSearchedEntityNameValue]
+  );
+
   const handleEntityNameSearch = useCallback(
     e => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && e.target.value.toString().trim().length > 0) {
         dispatchDrawerState({
           type: DRAWER_ACTIONS.SHOW_DRAWER,
           data: null,
@@ -479,6 +498,7 @@ const PersonIndividualDetail = ({
         };
         dispatch(searchApplicationCompanyEntityName(params));
       }
+      errorNotification('Please enter search text for entity name');
     },
     [dispatchDrawerState, updatePersonState, setSearchedEntityNameValue]
   );
@@ -491,6 +511,31 @@ const PersonIndividualDetail = ({
       dispatch(searchApplicationCompanyEntityName(params));
     }
   }, [searchedEntityNameValue]);
+
+  const handleSearchTextOnSearchClick = useCallback(
+    async ref => {
+      try {
+        const params = {
+          searchString: ref?.value,
+        };
+        const response = await dispatch(getApplicationPersonDataFromABNOrACN(params));
+
+        if (response) {
+          updatePersonState(response);
+          prevRef.current = {
+            ...prevRef.current,
+            acn: response?.acn,
+            abn: response?.abn,
+          };
+        }
+      } catch {
+        let value = prevRef?.current?.abn;
+        if (ref?.name === 'acn') value = prevRef?.current?.acn;
+        updateSinglePersonState(ref?.name, value);
+      }
+    },
+    [updatePersonState, updateSinglePersonState, prevRef.current]
+  );
 
   const handleSearchTextInputKeyDown = useCallback(
     async e => {
@@ -583,7 +628,9 @@ const PersonIndividualDetail = ({
               type="text"
               name={input.name}
               borderClass={input?.isOr && 'is-or-container'}
-              suffix={<span className="material-icons">search</span>}
+              suffix="search"
+              suffixClass="application-search-suffix"
+              suffixClick={handleSearchTextOnSearchClick}
               placeholder={input.placeholder}
               value={input?.value}
               onKeyDown={handleSearchTextInputKeyDown}
@@ -623,7 +670,9 @@ const PersonIndividualDetail = ({
               name={input.name}
               placeholder={input.placeholder}
               borderClass={input?.isOr && 'is-or-container'}
-              suffix={<span className="material-icons">search</span>}
+              suffix="search"
+              suffixClass="application-search-suffix"
+              suffixClick={handleEntityNameOnSearchClick}
               onKeyDown={handleEntityNameSearch}
               value={input?.value}
               onChange={handleEntityChange}
@@ -787,6 +836,7 @@ const PersonIndividualDetail = ({
       )}
       <AccordionItem
         index={index}
+        isExpanded
         className="application-person-step-accordion"
         header={itemHeader ?? 'Director Details'}
         prefix="expand_more"

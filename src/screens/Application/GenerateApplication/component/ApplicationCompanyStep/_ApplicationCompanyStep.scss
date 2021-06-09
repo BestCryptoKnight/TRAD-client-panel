@@ -1,3 +1,21 @@
+.application-company-container {
+  display: grid;
+  grid-template-columns: 15% calc(35% - 22px) 15% calc(35% - 22px);
+  padding: 0 10px;
+  gap: 15px;
+  font: $subtitle $font-regular;
+
+  > span {
+    margin-top: 5px;
+    font: $subtitle $font-regular;
+    color: $primary-color;
+  }
+
+  > div {
+    width:100%
+  }
+}
+
 .application-entity-name-modal {
   min-height: 30vh;
   max-height: 70vh;
@@ -24,26 +42,6 @@
   }
 }
 
-.client-details-container {
-  display: grid!important;
-  grid-template-columns: 15% calc(35% - 7px) 15% calc(35% - 7px);
-  padding: 25px 30px;
-  gap: 15px 5px;
-
-  > span {
-    margin-top: 7px;
-    color: $primary-color;
-  }
-
-  > div {
-    width: 70%;
-    min-width: 170px;
-  }
-
-  input {
-    cursor: default!important;
-  }
-}
 .application-entity-name-modal-retry-button{
   display: flex;
   align-items: center;
@@ -64,6 +62,24 @@
   font: $subtitle $font-medium;
   color: $primary-color;
 }
-.material-icons{
-  color: $placeholder-color;
+
+.application-search-suffix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background-color: $primary-color;
+}
+
+.application-company-step--main-title {
+  margin-top: 5px;
+  font: $title $font-medium;
+  color: $secondary-color;
+}
+
+.application-stepper-divider {
+  width: 100% !important;
+  grid-column: 1/span 4;
+  margin: 10px 0;
+  border-top: 1px solid $primary-color-1;
 }

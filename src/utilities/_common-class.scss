@@ -45,6 +45,7 @@
 
 .page-header-button-container {
   display: flex;
+
   .date-picker-container {
     height: 47px;
     width: 200px;
@@ -86,6 +87,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
   .react-dropdown-select {
     width: 200px;
     height: 32px;
@@ -113,8 +115,10 @@
 
 .custom-field-content {
   display: flex;
+
   > div {
     margin-right: 60px;
+
     label {
       margin: 10px 0;
     }
@@ -186,21 +190,21 @@
 }
 
 .disabled {
-  color: $field-color!important;
+  color: $field-color !important;
   opacity: .5;
 }
 
 .disabled-control {
-  border: none!important;
+  border: none !important;
   -moz-appearance: window;
   -webkit-appearance: none;
 }
 
 .react-dropdown-select.disabled-control .react-dropdown-select-content {
-  font-family: $font-medium!important;
+  font-family: $font-medium !important;
 }
 
-.react-dropdown-select-type-single{
+.react-dropdown-select-type-single {
   display: flex;
   align-items: center;
   height: 18px;
@@ -220,6 +224,7 @@
 
 .ui-state-error {
   margin-top: 10px;
+  font: $text $font-regular;
   color: $error-color;
 }
 
@@ -261,7 +266,7 @@
 
 .big-input-container.tab-search {
   width: 330px;
-  height: 47px!important;
+  height: 47px !important;
 }
 
 .add-note-class, .add-to-crm-modal {
@@ -269,7 +274,7 @@
 }
 
 .add-task-container {
-  display: grid!important;
+  display: grid !important;
   grid-template-columns: 15% calc(35% - 7px) 15% calc(35% - 7px);
   padding: 25px 30px;
   gap: 15px 5px;
@@ -285,9 +290,10 @@
   }
 
   input {
-    cursor: default!important;
+    cursor: default !important;
   }
 }
+
 .add-notes-popup-container, .modify-credit-limit-container {
   display: grid;
   grid-template-columns: 180px 2fr;
@@ -300,10 +306,12 @@
   .react-dropdown-select, .upload-document-input {
     width: 180px;
   }
+
   .switch-container {
     width: 180px;
   }
-  .document-upload-input{
+
+  .document-upload-input {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -311,12 +319,14 @@
     border: 0.063rem solid #E7ECF2;
     height: 32px;
     width: 180px;
-    button{
+
+    button {
       border: none;
       color: #B2B9BF;
       background: none;
     }
-    p{
+
+    p {
       color: #B2B9BF;
     }
 

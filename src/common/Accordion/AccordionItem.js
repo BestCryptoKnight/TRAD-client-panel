@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { AccordionContext } from './Accordion';
 
@@ -10,6 +10,7 @@ const AccordionItem = props => {
     prefix,
     prefixClass,
     suffix,
+    isExpanded,
     suffixClass,
     suffixClick,
     header,
@@ -30,7 +31,9 @@ const AccordionItem = props => {
     () => setOpenIndex(!activeAccordion ? index : -1),
     [activeAccordion, setOpenIndex]
   );
-
+  useEffect(() => {
+    setOpenIndex(isExpanded ? 0 : -1);
+  }, []);
   return (
     <div className={accordionClass}>
       <div className={headerClassName} onClick={onClickAccordionItem}>
@@ -75,6 +78,7 @@ AccordionItem.propTypes = {
   header: PropTypes.array.isRequired,
   prefix: PropTypes.string,
   suffix: PropTypes.string,
+  isExpanded: PropTypes.bool,
   count: PropTypes.number,
   prefixClass: PropTypes.string,
   suffixClass: PropTypes.string,
@@ -91,6 +95,7 @@ AccordionItem.defaultProps = {
   count: '',
   prefixClass: '',
   suffixClass: '',
+  isExpanded: false,
   accordionBodyClass: '',
   children: null,
   suffixClick: () => {},

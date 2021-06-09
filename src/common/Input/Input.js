@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 const Input = props => {
+  const inputRef = useRef();
   const {
     prefix,
     prefixType,
     prefixClass,
     suffix,
+    suffixClick,
     suffixClass,
     placeholder,
     type,
@@ -19,8 +21,6 @@ const Input = props => {
   const prefixClassName = `prefix ${prefixClass}`;
   const suffixClassName = `material-icons-round suffix ${suffixClass}`;
   const inputBorderClass = `input-container ${borderClass}`;
-  const chipClass = `chips-container ${prefixClass}`;
-  const chips = [];
 
   return (
     <div className={inputBorderClass}>
@@ -28,33 +28,29 @@ const Input = props => {
       {prefix && prefixType === 'pincode' && (
         <input className={prefixClassName} placeholder="+01" />
       )}
-      {prefix && prefixType === 'chip' && (
-        <div className={chipClass}>
-          {chips.map(e => (
-            <div>
-              {e}
-              <span className="material-icons-round close">close</span>
-            </div>
-          ))}
-        </div>
-      )}
       <input
+        ref={inputRef}
         autoComplete="off"
         type={type}
         placeholder={placeholder}
         className={inputClass}
         {...restProps}
       />
-      {suffix && <span className={suffixClassName}>{suffix}</span>}
+      {suffix && (
+        <span className={suffixClassName} onClick={() => suffixClick(inputRef.current)}>
+          {suffix}
+        </span>
+      )}
     </div>
   );
 };
 
 Input.propTypes = {
   prefix: PropTypes.string,
-  prefixType: PropTypes.oneOf(['icon', 'pincode', 'chip']),
+  prefixType: PropTypes.oneOf(['icon', 'pincode', 'chip', '']),
   prefixClass: PropTypes.string,
   suffix: PropTypes.string,
+  suffixClick: PropTypes.func,
   suffixClass: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string.isRequired,
@@ -67,6 +63,7 @@ Input.defaultProps = {
   prefixType: '',
   prefixClass: '',
   suffix: '',
+  suffixClick: () => {},
   suffixClass: '',
   placeholder: '',
   className: '',
