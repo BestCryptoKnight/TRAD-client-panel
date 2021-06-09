@@ -187,7 +187,22 @@ const ViewApplication = () => {
             <div className="view-application-details-left">
               <div className="common-white-container">
                 <div className="">Status</div>
-                <div className="view-application-status">{status?.label ?? '-'}</div>
+                {status?.label === 'Approved' || status?.label === 'Declined' ? (
+                  <>
+                    {['APPROVED'].includes(status?.value) && (
+                      <div className="application-status approved-application-status">
+                        {status?.label}
+                      </div>
+                    )}
+                    {['DECLINED'].includes(status?.value) && (
+                      <div className="application-status declined-application-status">
+                        {status?.label}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="view-application-status">{status?.label ?? '-'}</div>
+                )}
                 <div className="application-details-grid">
                   {applicationDetails?.map(detail => (
                     <div>
