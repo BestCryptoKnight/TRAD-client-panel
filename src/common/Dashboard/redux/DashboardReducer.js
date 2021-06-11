@@ -51,7 +51,6 @@ export const dashboard = (state = initialDashboardData, action) => {
         },
       };
     case DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_DETAILS:
-      console.log(action?.data);
       return {
         ...state,
         taskDetails: action.data,

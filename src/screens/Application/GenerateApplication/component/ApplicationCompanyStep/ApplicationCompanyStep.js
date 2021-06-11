@@ -571,7 +571,9 @@ const ApplicationCompanyStep = () => {
           <div>
             {component}
             {companyState?.errors?.[input?.name] && (
-              <div className="ui-state-error">{companyState?.errors?.[input?.name]}</div>
+              <div className={`ui-state-error ${input?.isOr && 'mt-10'}`}>
+                {companyState?.errors?.[input?.name]}
+              </div>
             )}
           </div>
         </React.Fragment>
@@ -648,7 +650,7 @@ const ApplicationCompanyStep = () => {
           hideModal={toggleConfirmationModal}
         >
           <span className="confirmation-message">
-            To change the entity type, kindly contact your Risk Analyst or Service manager
+            To change the entity type, kindly contact your Risk Analyst or Service Manager
           </span>
         </Modal>
       )}

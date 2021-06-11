@@ -735,7 +735,7 @@ const PersonIndividualDetail = ({
         <>
           {component}
           {partners && partners[index] ? (
-            <div className="ui-state-error">
+            <div className={`ui-state-error ${input?.isOr && 'mt-10'}`}>
               {partners && partners[index] && partners[index]?.errors
                 ? partners[index]?.errors?.[input?.name]
                 : ''}

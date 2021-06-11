@@ -127,3 +127,11 @@ export const COMPANY_PROFILE_URL = {
 export const SUPPORT_URLS = {
   SUPPORT_URL: `${BASE_URL}organization/details/`,
 };
+
+export const OVERDUE_URLS = {
+  GET_OVERDUE_LIST: `${BASE_URL}overdue/`,
+  GET_OVERDUE_LIST_BY_DATE: `${BASE_URL}overdue/list/`,
+  GET_ENTITY_LIST: `${BASE_URL}overdue/entity-list/`,
+  CHANGE_OVERDUE_STATUS: `${BASE_URL}overdue/status/`,
+  SAVE_OVERDUE_LIST: `${BASE_URL}overdue/list/`,
+};

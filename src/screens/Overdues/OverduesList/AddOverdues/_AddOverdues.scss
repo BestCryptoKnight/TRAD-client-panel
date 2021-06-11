@@ -14,7 +14,14 @@
 }
 
 .add-overdue-modal {
-  width: 80vw;
+  width:80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  .modal-body{
+    flex-grow: 1;
+    overflow-y:auto ;
+  }
 }
 
 .add-modal-full-width-row {

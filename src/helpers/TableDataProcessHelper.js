@@ -13,36 +13,36 @@ export const processTableDataByType = ({ header, row, actions }) => {
     case 'modal':
       if (currentData?.value) {
         return (
-                <div
-                        className="link"
-                        onClick={e => {
-                          e.stopPropagation();
-                          handleDrawerState(header, currentData, row);
-                        }}
-                >
-                  {currentData?.value}
-                </div>
+          <div
+            className="link"
+            onClick={e => {
+              e.stopPropagation();
+              handleDrawerState(header, currentData, row);
+            }}
+          >
+            {currentData?.value}
+          </div>
         );
       }
       return '-';
 
     case 'boolean':
       return (
-              <div className="table-checkbox">
-                <Checkbox
-                        title={null}
-                        checked={currentData?.value ?? currentData}
-                        onChange={e => handleCheckBoxState(e.target.checked, header, currentData, row)}
-                />
-              </div>
+        <div className="table-checkbox">
+          <Checkbox
+            title={null}
+            checked={currentData?.value ?? currentData}
+            onChange={e => handleCheckBoxState(e.target.checked, header, currentData, row)}
+          />
+        </div>
       );
     case 'booleanString':
       return currentData ? 'Yes' : 'No';
     case 'link':
       return (
-              <div className="link" onClick={() => handleViewDocument(header, row)}>
-                {currentData}
-              </div>
+        <div className="link" onClick={() => handleViewDocument(header, row)}>
+          {currentData}
+        </div>
       );
 
     default:

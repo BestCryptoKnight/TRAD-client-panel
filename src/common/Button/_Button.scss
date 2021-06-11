@@ -61,6 +61,12 @@
   border-radius: 8px;
 }
 
+.small-button{
+  margin-left: 7px;
+  padding: 6px 15px!important;
+  border-radius: 8px!important;
+}
+
 .outlined-primary-button:hover, .outlined-secondary-button:hover, .outlined-red-button:hover {
   background-color: $border-color;
 }
