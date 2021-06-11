@@ -62,8 +62,9 @@ const Stepper = props => {
         {steps?.map((step, index) => (
           <div
             key={index.toString()}
-            className={`step-container ${activeStep === index && 'active-step'} ${index < activeStep && 'done-step'
-              }`}
+            className={`step-container ${activeStep === index && 'active-step'} ${
+              index < activeStep && 'done-step'
+            }`}
           >
             <span className={`material-icons-round arrow ${index < activeStep && 'done-step'}`}>
               keyboard_arrow_right
@@ -80,7 +81,7 @@ const Stepper = props => {
       <div className="step-content">{children}</div>
       <div className="stepper-buttons-row">
         <div>
-          {steps?.[activeStep]?.name === 'partners' && (
+          {steps?.[activeStep]?.name === 'partners' && steps?.[activeStep]?.text !== 'Sole Trader' && (
             <Button
               buttonType="secondary"
               title={getLabelFromValues(entityType, entityTypeMapperObjectForPersonStep)}
@@ -124,10 +125,10 @@ Stepper.propTypes = {
 
 Stepper.defaultProps = {
   className: '',
-  onChangeIndex: () => { },
-  backClick: () => { },
-  nextClick: () => { },
-  addStepClick: () => { },
+  onChangeIndex: () => {},
+  backClick: () => {},
+  nextClick: () => {},
+  addStepClick: () => {},
 };
 
 export default Stepper;

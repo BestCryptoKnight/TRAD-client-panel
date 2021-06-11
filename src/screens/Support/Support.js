@@ -60,7 +60,7 @@ const Support = () => {
             {Object.entries(supportDetails)?.length > 0 ? (
               INPUT.map(input => (
                 <>
-                  <div className="title">{input.title}</div>
+                  <div className="font-field">{input.title}</div>
                   <div>{input.value ?? '-'}</div>
                 </>
               ))

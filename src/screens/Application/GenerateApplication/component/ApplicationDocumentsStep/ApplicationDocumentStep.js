@@ -177,8 +177,6 @@ const ApplicationDocumentStep = () => {
   const onClickUploadDocument = useCallback(async () => {
     if (selectedApplicationDocuments?.documentType?.length <= 0) {
       errorNotification('Please select document type');
-    } else if (!selectedApplicationDocuments.description) {
-      errorNotification('Description is required');
     } else if (!fileData) {
       errorNotification('Select document to upload');
     } else {
@@ -324,23 +322,31 @@ const ApplicationDocumentStep = () => {
             {documentData?.map(document => (
               <tr>
                 <td>
-                  <Tooltip
-                    mouseEnterDelay={0.5}
-                    overlayClassName="tooltip-top-class"
-                    overlay={<span>{document.documentTypeId || 'No value'}</span>}
-                    placement="top"
-                  >
+                  {document?.documentTypeId?.length > 50 ? (
+                    <Tooltip
+                      mouseEnterDelay={0.5}
+                      overlayClassName="tooltip-top-class"
+                      overlay={<span>{document.documentTypeId}</span>}
+                      placement="top"
+                    >
+                      <span>{document.documentTypeId}</span>
+                    </Tooltip>
+                  ) : (
                     <span>{document.documentTypeId}</span>
-                  </Tooltip>
+                  )}
                 </td>
                 <td>
-                  <Tooltip
-                    overlayClassName="tooltip-top-class"
-                    overlay={<span>{document.description || 'No value'}</span>}
-                    placement="top"
-                  >
-                    <span>{document.description}</span>
-                  </Tooltip>
+                  {document?.description?.length > 50 ? (
+                    <Tooltip
+                      overlayClassName="tooltip-top-class"
+                      overlay={<span>{document.description}</span>}
+                      placement="top"
+                    >
+                      <span>{document.description ?? '-'}</span>
+                    </Tooltip>
+                  ) : (
+                    <span>{document.description ?? '-'}</span>
+                  )}
                 </td>
                 <td align="right">
                   <span

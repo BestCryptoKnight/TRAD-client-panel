@@ -84,21 +84,9 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
           validated = false;
           errors.driverLicenceNumber = 'Please enter driver licence number before continue';
         }
-        if (!item?.streetNumber || item?.streetNumber?.length <= 0) {
-          validated = false;
-          errors.streetNumber = 'Please select street number before continue';
-        }
         if (item?.streetNumber && !NUMBER_REGEX.test(item?.streetNumber)) {
           validated = false;
           errors.streetNumber = 'Street number should be number';
-        }
-        if (!item?.streetName || item?.streetName?.length <= 0) {
-          validated = false;
-          errors.streetName = 'Please enter street name before continue';
-        }
-        if (!item?.streetType || item?.streetType?.length <= 0) {
-          validated = false;
-          errors.streetType = 'Please select street type before continue';
         }
         if (!item?.state || item?.state?.length <= 0) {
           validated = false;
@@ -115,10 +103,6 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
         ) {
           validated = false;
           errors.state = 'Please enter valid state';
-        }
-        if (!item?.suburb || item?.suburb.length <= 0) {
-          validated = false;
-          errors.suburb = 'Please enter suburb before continue';
         }
         if (!item?.postCode || item?.postCode?.trim()?.length <= 0) {
           validated = false;

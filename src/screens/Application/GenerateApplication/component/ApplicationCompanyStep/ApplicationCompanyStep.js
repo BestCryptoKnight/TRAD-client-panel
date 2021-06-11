@@ -95,10 +95,10 @@ const ApplicationCompanyStep = () => {
     }
     setIsAusOrNew(showDropDownInput);
     if (!prevRef.current?.abn) {
-      prevRef.current = { ...prevRef.current, abn: companyState.abn };
+      prevRef.current = { ...prevRef.current, abn: '' };
     }
     if (!prevRef.current?.acn) {
-      prevRef.current = { ...prevRef.current, acn: companyState?.acn };
+      prevRef.current = { ...prevRef.current, acn: '' };
     }
   }, [
     companyState.abn,
@@ -201,7 +201,7 @@ const ApplicationCompanyStep = () => {
         data: [],
       },
       {
-        label: 'Street Number*',
+        label: 'Street Number',
         placeholder: 'Street Number',
         type: 'text',
         name: 'streetNumber',
@@ -402,31 +402,35 @@ const ApplicationCompanyStep = () => {
           country: companyState?.country?.value,
         };
         dispatch(searchApplicationCompanyEntityName(params));
+      } else {
+        errorNotification('Please enter search text for entity name');
       }
-      errorNotification('Please enter search text for entity name');
     },
     [companyState?.country, updateCompanyState, dispatchDrawerState, setSearchedEntityNameValue]
   );
 
   const handleEntityNameSearch = useCallback(
     async e => {
-      if (e.key === 'Enter' && e.target.value.trim().length > 0) {
-        if (!companyState?.country || companyState?.country?.length === 0) {
-          errorNotification('Please select country before continue');
-          return;
+      if (e.key === 'Enter') {
+        if (e.target.value.trim().length > 0) {
+          if (!companyState?.country || companyState?.country?.length === 0) {
+            errorNotification('Please select country before continue');
+            return;
+          }
+          dispatchDrawerState({
+            type: DRAWER_ACTIONS.SHOW_DRAWER,
+            data: null,
+          });
+          setSearchedEntityNameValue(e.target.value.toString());
+          const params = {
+            searchString: e?.target?.value,
+            country: companyState?.country?.value,
+          };
+          dispatch(searchApplicationCompanyEntityName(params));
+        } else {
+          errorNotification('Please enter search text for entity name');
         }
-        dispatchDrawerState({
-          type: DRAWER_ACTIONS.SHOW_DRAWER,
-          data: null,
-        });
-        setSearchedEntityNameValue(e.target.value.toString());
-        const params = {
-          searchString: e?.target?.value,
-          country: companyState?.country?.value,
-        };
-        dispatch(searchApplicationCompanyEntityName(params));
       }
-      errorNotification('Please enter search text for entity name');
     },
     [companyState?.country, updateCompanyState, dispatchDrawerState, setSearchedEntityNameValue]
   );
@@ -665,12 +669,15 @@ const ApplicationCompanyStep = () => {
           {entityNameSearchDropDownData?.isLoading ? (
             <Loader />
           ) : (
-            !entityNameSearchDropDownData?.error && (
+            !entityNameSearchDropDownData?.error &&
+            (entityNameSearchDropDownData?.data?.length > 0 ? (
               <ApplicationEntityNameTable
                 data={entityNameSearchDropDownData?.data}
                 handleEntityNameSelect={handleEntityNameSelect}
               />
-            )
+            ) : (
+              <div className="no-record-found">No record found</div>
+            ))
           )}
           {entityNameSearchDropDownData?.error && (
             <>

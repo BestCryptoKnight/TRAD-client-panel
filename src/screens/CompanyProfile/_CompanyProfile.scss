@@ -1,20 +1,20 @@
 .common-white-container.company-profile-container {
   display: grid!important;
-  grid-template-columns: 135px calc(50% - 145px) 135px calc(50% - 145px);
+  grid-template-columns: 100px calc(50% - 145px) 135px calc(50% - 145px);
   padding: 25px 30px;
-  gap: 15px 5px;
+  gap: 15px;
+
+  * {
+    min-height: 32px;
+  }
 
   > span {
-    margin-top: 7px;
     color: $primary-color;
   }
 
   > div {
-    width: 70%;
+    width: 95%;
     min-width: 170px;
-  }
-
-  input {
-    cursor: default!important;
+    color: $field-color;
   }
 }

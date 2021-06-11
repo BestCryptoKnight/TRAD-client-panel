@@ -313,7 +313,6 @@ const EmployeeList = () => {
                       tableClass="main-list-table"
                       data={docs}
                       headers={headers}
-                      rowClass="cursor-pointer"
                     />
                   </div>
                   <Pagination
