@@ -334,18 +334,22 @@ const ApplicationCompanyStep = () => {
   const handleSearchTextInputOnSearchClick = useCallback(
     async ref => {
       try {
-        const searchString = ref?.value;
-        const params = { searchString };
-        const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
+        if (ref?.value?.trim()?.length > 0) {
+          const searchString = ref?.value;
+          const params = { searchString };
+          const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
 
-        const { resData } = handleApplicationErrors(response);
-        if (resData) {
-          updateCompanyState(resData);
-          prevRef.current = {
-            ...prevRef.current,
-            acn: resData?.acn,
-            abn: resData?.abn,
-          };
+          const { resData } = handleApplicationErrors(response);
+          if (resData) {
+            updateCompanyState(resData);
+            prevRef.current = {
+              ...prevRef.current,
+              acn: resData?.acn,
+              abn: resData?.abn,
+            };
+          }
+        } else {
+          errorNotification(`Please enter search text for ${ref?.name}`);
         }
       } catch (err) {
         let value = prevRef?.current?.abn;
@@ -361,19 +365,23 @@ const ApplicationCompanyStep = () => {
     async e => {
       try {
         if (e.key === 'Enter') {
-          const searchString = e?.target?.value;
-          const params = { searchString };
-          const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
+          if (e?.target?.value?.trim()?.length > 0) {
+            const searchString = e?.target?.value;
+            const params = { searchString };
+            const response = await dispatch(getApplicationCompanyDataFromABNOrACN(params));
 
-          const { resData } = handleApplicationErrors(response);
-          if (resData) {
-            updateCompanyState(resData);
-            prevRef.current = {
-              ...prevRef.current,
-              acn: resData?.acn,
-              abn: resData?.abn,
-            };
+            const { resData } = handleApplicationErrors(response);
+            if (resData) {
+              updateCompanyState(resData);
+              prevRef.current = {
+                ...prevRef.current,
+                acn: resData?.acn,
+                abn: resData?.abn,
+              };
+            }
           }
+        } else {
+          errorNotification(`Please enter search text for ${e?.target?.name}`);
         }
       } catch (err) {
         let value = prevRef?.current?.abn;

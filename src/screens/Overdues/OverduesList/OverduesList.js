@@ -45,7 +45,7 @@ function filterReducer(state, action) {
 const OverduesList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [newSubmissionDate, setNewSubmissionDate] = useState(new Date());
+  const [newSubmissionDate, setNewSubmissionDate] = useState('');
   const [newSubmissionModal, setNewSubmissionModal] = useState(false);
   const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
 
@@ -280,16 +280,24 @@ const OverduesList = () => {
     [getOverdueListByFilter]
   );
 
+  const onAddNewSubmission = useCallback(() => {
+    if (!newSubmissionDate) {
+      errorNotification('Please select month/year to add new submission');
+    } else {
+      history.push(`over-dues/${moment(newSubmissionDate)?.format('MMMM-YYYY')}`);
+    }
+  }, [newSubmissionDate]);
+
   const newSubmissionButtons = useMemo(
     () => [
       { title: 'Close', buttonType: 'primary-1', onClick: () => setNewSubmissionModal(e => !e) },
       {
         title: 'Add',
         buttonType: 'primary',
-        onClick: () => history.push(`over-dues/${moment(newSubmissionDate)?.format('MMMM-yyyy')}`),
+        onClick: onAddNewSubmission,
       },
     ],
-    [newSubmissionDate]
+    [onAddNewSubmission]
   );
 
   return (
@@ -321,6 +329,7 @@ const OverduesList = () => {
                 data={docs}
                 headers={headers}
                 rowClass="cursor-pointer"
+                refreshData={getOverdueListByFilter}
               />
               <Pagination
                 className="common-list-pagination"
@@ -399,29 +408,29 @@ const OverduesList = () => {
               </div>
               <div className="filter-modal-row">
                 <div className="form-title">Date</div>
-                <div className="date-picker-container filter-date-picker-container mr-15">
+                <div className="date-picker-container month-year-picker mr-15">
                   <DatePicker
                     className="filter-date-picker"
                     selected={startDate}
                     onChange={handleStartDateChange}
                     placeholderText="From Date"
-                    showMonthDropdown
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
                     showYearDropdown
-                    scrollableYearDropdown
-                    dateFormat="dd/MM/yyyy"
+                    showFullMonthYearPicker
                   />
                   <span className="material-icons-round">event_available</span>
                 </div>
-                <div className="date-picker-container filter-date-picker-container">
+                <div className="date-picker-container month-year-picker">
                   <DatePicker
                     className="filter-date-picker"
                     selected={endDate}
                     onChange={handleEndDateChange}
                     placeholderText="To Date"
-                    showMonthDropdown
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
                     showYearDropdown
-                    scrollableYearDropdown
-                    dateFormat="dd/MM/yyyy"
+                    showFullMonthYearPicker
                   />
                   <span className="material-icons-round">event_available</span>
                 </div>

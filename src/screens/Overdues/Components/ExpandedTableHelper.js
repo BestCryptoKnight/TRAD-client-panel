@@ -41,7 +41,7 @@ const overdueStatusList = [
 ];
 
 const ExpandedTableHelper = props => {
-  const { docs, isRowExpanded } = props;
+  const { docs, isRowExpanded, refreshData } = props;
   const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
   const handleDrawerState = useCallback(async data => {
     try {
@@ -69,7 +69,11 @@ const ExpandedTableHelper = props => {
 
   return (
     <>
-      <TableLinkDrawer drawerState={drawerState} closeDrawer={closeDrawer} />
+      <TableLinkDrawer
+        drawerState={drawerState}
+        closeDrawer={closeDrawer}
+        refreshData={refreshData}
+      />
       <tr className={`expandable-table ${isRowExpanded && 'show-table'}`}>
         <td colSpan={20}>
           <div>
@@ -105,28 +109,30 @@ const ExpandedTableHelper = props => {
 ExpandedTableHelper.propTypes = {
   docs: PropTypes.array.isRequired,
   isRowExpanded: PropTypes.bool.isRequired,
+  refreshData: PropTypes.func.isRequired,
 };
 export default ExpandedTableHelper;
 
 const TableLinkDrawer = props => {
   const dispatch = useDispatch();
-  const { drawerState, closeDrawer } = props;
+  const { drawerState, closeDrawer, refreshData } = props;
   const currentStatus = useMemo(
     () => drawerState?.data?.filter(data => data?.type === 'status')?.[0],
     [drawerState]
   );
   const [status, setStatus] = useState(currentStatus?.value);
   const handleOverdueDrawerStatusChange = useCallback(
-    e => {
+    async e => {
       try {
         const data = { status: e?.value };
-        dispatch(changeOverdueStatus(drawerState?.id, data));
+        await dispatch(changeOverdueStatus(drawerState?.id, data));
         setStatus(e);
+        refreshData();
       } catch (err) {
         /**/
       }
     },
-    [drawerState?.id]
+    [drawerState?.id, refreshData]
   );
   const checkValue = row => {
     switch (row.type) {
@@ -183,6 +189,7 @@ TableLinkDrawer.propTypes = {
     id: PropTypes.string.isRequired,
   }).isRequired,
   closeDrawer: PropTypes.func.isRequired,
+  refreshData: PropTypes.func.isRequired,
 };
 
 TableLinkDrawer.defaultProps = {};

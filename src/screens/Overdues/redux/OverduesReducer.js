@@ -5,6 +5,7 @@ const initialOverdueState = {
   overdueList: {},
   entityList: {},
   overdueListByDate: {},
+  overdueListByDateCopy: {},
   overdueDetails: {
     debtorId: [],
     acn: '',
@@ -12,7 +13,6 @@ const initialOverdueState = {
     overdueType: [],
     status: '',
     insurerId: [],
-    monthString: '',
     clientComment: '',
     currentAmount: '',
     thirtyDaysAmount: '',
@@ -61,12 +61,27 @@ export const overdue = (state = initialOverdueState, action) => {
 
     case OVERDUE_REDUX_CONSTANTS.OVERDUE_CRUD_CONSTANTS.GET_OVERDUE_LIST_BY_DATE: {
       const docs = action?.data?.docs?.map(doc => {
-        return { ...doc, monthString: `${doc?.year}, ${doc?.month}` };
+        return { ...doc };
       });
       return {
         ...state,
         overdueListByDate: {
           ...state?.overdueListByDate,
+          client: action?.data?.client,
+          previousEntries: action?.data?.previousEntries,
+          docs,
+        },
+      };
+    }
+
+    case OVERDUE_REDUX_CONSTANTS.OVERDUE_CRUD_CONSTANTS.COPY_OVERDUE_LIST_BY_DATE: {
+      const docs = action?.data?.docs?.map(doc => {
+        return { ...doc };
+      });
+      return {
+        ...state,
+        overdueListByDateCopy: {
+          ...state?.overdueListByDateCopy,
           client: action?.data?.client,
           previousEntries: action?.data?.previousEntries,
           docs,

@@ -11,7 +11,8 @@ export const addOverdueValidations = async (
   data,
   isAmendOverdueModal,
   callbackOnFormAddORAmend,
-  docs
+  docs,
+  period
 ) => {
   let validated = true;
   const errors = {};
@@ -32,8 +33,7 @@ export const addOverdueValidations = async (
   if (data?.debtorId && !isAmendOverdueModal) {
     const isExist = docs?.filter(
       doc =>
-        doc?.debtorId?.value === data?.debtorId?.value &&
-        doc?.month === moment(data?.monthString).format('MM')
+        doc?.debtorId?.value === data?.debtorId?.value && doc?.month === moment(period).format('MM')
     );
     if (isExist?.length > 0) {
       validated = false;
@@ -43,17 +43,13 @@ export const addOverdueValidations = async (
   if (data?.debtorId && isAmendOverdueModal) {
     const isExist = docs?.filter(
       doc =>
-        doc?.debtorId?.value === data?.debtorId?.value &&
-        doc?.month === moment(data?.monthString).format('MM')
+        doc?.debtorId?.value === data?.debtorId?.value && doc?.month === moment(period).format('MM')
     );
-    if (isExist?.length > 1) {
+    const isSameOverdue = isExist?.length > 0 && isExist?.[0]?._id === data?._id;
+    if (isExist?.length > 0 && !isSameOverdue) {
       validated = false;
       errors.debtorId = 'Overdue for selected debtor is already exist, you can amend that.';
     }
-  }
-  if (!data?.monthString || data?.monthString?.length <= 0) {
-    validated = false;
-    errors.monthString = 'Please select month/year before continue';
   }
   if (!data?.dateOfInvoice || data?.dateOfInvoice?.length <= 0) {
     validated = false;
@@ -95,7 +91,6 @@ export const addOverdueValidations = async (
     dateOfInvoice,
     overdueType,
     insurerId,
-    monthString,
     clientComment,
     currentAmount,
     thirtyDaysAmount,
@@ -111,9 +106,9 @@ export const addOverdueValidations = async (
     dateOfInvoice,
     overdueType,
     insurerId,
-    month: moment(data?.monthString).format('MM'),
-    year: moment(data?.monthString).format('YYYY'),
-    clientComment: clientComment?.trim?.length > 0 ? clientComment : '',
+    month: moment(period).format('MM'),
+    year: moment(period).format('YYYY'),
+    clientComment: clientComment?.trim()?.length > 0 ? clientComment : '',
     currentAmount: currentAmount ? parseInt(currentAmount, 10) : 0,
     thirtyDaysAmount: thirtyDaysAmount ? parseInt(thirtyDaysAmount, 10) : 0,
     sixtyDaysAmount: sixtyDaysAmount ? parseInt(sixtyDaysAmount, 10) : 0,
@@ -122,7 +117,6 @@ export const addOverdueValidations = async (
     outstandingAmount: outstandingAmount ? parseInt(outstandingAmount, 10) : 0,
     overdueAction: isAmendOverdueModal && 'AMEND',
     status: !isAmendOverdueModal ? { label: 'Submitted', value: 'SUBMITTED' } : status,
-    monthString,
     _id: !isAmendOverdueModal ? Math?.random().toString() : _id,
   };
   dispatch(handleOverdueFieldChange('errors', errors));
