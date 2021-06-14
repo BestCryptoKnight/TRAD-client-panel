@@ -155,11 +155,15 @@ const OverduesList = () => {
         const data = {
           page: page ?? 1,
           limit: limit ?? 15,
-          debtorId: (debtorId?.trim()?.length ?? -1) > 0 ? debtorId : undefined,
+          debtorId: (debtorId?.toString()?.trim()?.length ?? -1) > 0 ? debtorId : undefined,
           minOutstandingAmount:
-            (minOutstandingAmount?.trim()?.length ?? -1) > 0 ? minOutstandingAmount : undefined,
+            (minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+              ? minOutstandingAmount
+              : undefined,
           maxOutstandingAmount:
-            (maxOutstandingAmount?.trim()?.length ?? -1) > 0 ? maxOutstandingAmount : undefined,
+            (maxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+              ? maxOutstandingAmount
+              : undefined,
           startDate: startDate ?? undefined,
           endDate: endDate ?? undefined,
           ...params,
@@ -217,13 +221,13 @@ const OverduesList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      debtorId: (paramDebtorId?.trim()?.length ?? -1) > 0 ? paramDebtorId : undefined,
+      debtorId: (paramDebtorId?.toString()?.trim()?.length ?? -1) > 0 ? paramDebtorId : undefined,
       minOutstandingAmount:
-        (paramMinOutstandingAmount?.trim()?.length ?? -1) > 0
+        (paramMinOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
           ? paramMinOutstandingAmount
           : undefined,
       maxOutstandingAmount:
-        (paramMaxOutstandingAmount?.trim()?.length ?? -1) > 0
+        (paramMaxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
           ? paramMaxOutstandingAmount
           : undefined,
       startDate: paramStartDate ? new Date(paramStartDate) : undefined,
@@ -244,11 +248,15 @@ const OverduesList = () => {
     const params = {
       page: page ?? 1,
       limit: limit ?? 15,
-      debtorId: (debtorId?.trim()?.length ?? -1) > 0 ? debtorId : undefined,
+      debtorId: (debtorId?.toString()?.trim()?.length ?? -1) > 0 ? debtorId : undefined,
       minOutstandingAmount:
-        (minOutstandingAmount?.trim()?.length ?? -1) > 0 ? minOutstandingAmount : undefined,
+        (minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+          ? minOutstandingAmount
+          : undefined,
       maxOutstandingAmount:
-        (maxOutstandingAmount?.trim()?.length ?? -1) > 0 ? maxOutstandingAmount : undefined,
+        (maxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+          ? maxOutstandingAmount
+          : undefined,
       startDate: startDate ? new Date(startDate)?.toISOString() : undefined,
       endDate: endDate ? new Date(endDate)?.toISOString() : undefined,
     };

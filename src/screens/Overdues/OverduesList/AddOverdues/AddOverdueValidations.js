@@ -18,7 +18,7 @@ export const addOverdueValidations = async (
   const errors = {};
   let preparedData = {};
 
-  if (!data?.acn || data?.acn?.trim()?.length <= 0) {
+  if (!data?.acn || data?.acn?.toString()?.trim()?.length <= 0) {
     validated = false;
     errors.acn = 'Please enter ACN number before continue';
   }
@@ -108,7 +108,7 @@ export const addOverdueValidations = async (
     insurerId,
     month: moment(period).format('MM'),
     year: moment(period).format('YYYY'),
-    clientComment: clientComment?.trim()?.length > 0 ? clientComment : '',
+    clientComment: clientComment?.toString()?.trim()?.length > 0 ? clientComment : '',
     currentAmount: currentAmount ? parseInt(currentAmount, 10) : 0,
     thirtyDaysAmount: thirtyDaysAmount ? parseInt(thirtyDaysAmount, 10) : 0,
     sixtyDaysAmount: sixtyDaysAmount ? parseInt(sixtyDaysAmount, 10) : 0,
