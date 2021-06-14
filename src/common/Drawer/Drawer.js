@@ -5,7 +5,11 @@ import { useOnClickOutside } from '../../hooks/UserClickOutsideHook';
 const Drawer = props => {
   const { drawerState, closeDrawer, header, className, children, ...restProps } = props;
   const drawerMenuRef = useRef();
-  useOnClickOutside(drawerMenuRef, () => closeDrawer());
+  useOnClickOutside(drawerMenuRef, () => {
+    if (drawerState) {
+      setTimeout(() => closeDrawer(), 3000);
+    }
+  });
 
   const drawerClasses = `drawer-container ${drawerState ? 'drawer-opened' : ''} ${className}`;
 
