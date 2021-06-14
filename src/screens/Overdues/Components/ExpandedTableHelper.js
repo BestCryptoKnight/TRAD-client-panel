@@ -65,6 +65,7 @@ const ExpandedTableHelper = props => {
     dispatchDrawerState({
       type: DRAWER_ACTIONS.HIDE_DRAWER,
     });
+    refreshData();
   }, []);
 
   return (
@@ -127,7 +128,6 @@ const TableLinkDrawer = props => {
         const data = { status: e?.value };
         await dispatch(changeOverdueStatus(drawerState?.id, data));
         setStatus(e);
-        refreshData();
       } catch (err) {
         /**/
       }
@@ -150,7 +150,7 @@ const TableLinkDrawer = props => {
         );
       }
       case 'dollar':
-        return row?.value ? `$ ${row?.value}` : '-';
+        return row?.value ? `$ ${NumberCommaSeparator(row?.value)}` : '-';
       case 'percent':
         return row?.value ? `${row?.value} %` : '-';
       case 'date':
