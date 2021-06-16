@@ -6,9 +6,7 @@ const Drawer = props => {
   const { drawerState, closeDrawer, header, className, children, ...restProps } = props;
   const drawerMenuRef = useRef();
   useOnClickOutside(drawerMenuRef, () => {
-    if (drawerState) {
-      setTimeout(() => closeDrawer(), 3000);
-    }
+    if (drawerState) closeDrawer();
   });
 
   const drawerClasses = `drawer-container ${drawerState ? 'drawer-opened' : ''} ${className}`;

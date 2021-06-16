@@ -181,6 +181,10 @@
   }
 }
 
+.date-picker-container.cursor-default input{
+  cursor: default;
+}
+
 .react-datepicker-wrapper {
   z-index: 2;
 }

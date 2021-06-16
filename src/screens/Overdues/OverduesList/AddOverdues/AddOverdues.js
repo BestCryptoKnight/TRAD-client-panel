@@ -28,6 +28,7 @@ const AddOverdues = () => {
   const [isAmendOverdueModal, setIsAmendOverdueModal] = useState(false);
   const [showSaveAlertModal, setShowSaveAlertModal] = useState(false);
   const [alertOnLeftModal, setAlertOnLeftModal] = useState(false);
+  const [selectedDebtor, setSelectedDebtor] = useState(null);
   const toggleAlertOnLeftModal = useCallback(
     value => setAlertOnLeftModal(value !== undefined ? value : e => !e),
     [setAlertOnLeftModal]
@@ -113,6 +114,53 @@ const AddOverdues = () => {
     [toggleSaveAlertModal]
   );
 
+  const changeOverdueFields = useCallback((name, value) => {
+    dispatch(handleOverdueFieldChange(name, value));
+  }, []);
+
+  const handleTextInputChange = useCallback(e => {
+    const { name, value } = e?.target;
+    changeOverdueFields(name, value);
+  }, []);
+
+  const handleDebtorChange = useCallback(
+    (e, isAcnChanged = false) => {
+      changeOverdueFields('debtorId', e);
+
+      setSelectedDebtor(e);
+
+      if (!isAcnChanged) {
+        handleTextInputChange(
+          {
+            target: {
+              name: 'acn',
+              value: entityList?.debtorId?.find(debtor => debtor?.value === e.value)?.acn,
+            },
+          },
+          true
+        );
+      }
+    },
+    [handleTextInputChange, changeOverdueFields, entityList, selectedDebtor]
+  );
+
+  const onBlurACN = useCallback(
+    e => {
+      const selectedRecordAcn = entityList?.debtorId?.find(
+        record => record?.value === selectedDebtor?.value
+      )?.acn;
+
+      const existingDebtor = entityList?.debtorId?.find(debtor => debtor.acn === e?.target.value);
+
+      if (existingDebtor) {
+        handleDebtorChange(existingDebtor, true);
+      } else if (selectedRecordAcn && !existingDebtor) {
+        handleDebtorChange([], true);
+      }
+    },
+    [entityList, handleDebtorChange, selectedDebtor]
+  );
+
   const addModalInputs = useMemo(
     () => [
       {
@@ -137,6 +185,7 @@ const AddOverdues = () => {
         type: 'text',
         placeholder: 'Enter ACN ',
         value: overdueDetails?.acn ?? '',
+        onBlur: onBlurACN,
       },
       {},
       {
@@ -220,15 +269,6 @@ const AddOverdues = () => {
     [overdueDetails, entityList, period]
   );
 
-  const changeOverdueFields = useCallback((name, value) => {
-    dispatch(handleOverdueFieldChange(name, value));
-  }, []);
-
-  const handleTextInputChange = useCallback(e => {
-    const { name, value } = e?.target;
-    changeOverdueFields(name, value);
-  }, []);
-
   const handleAmountInputChange = useCallback(e => {
     const { name, value } = e?.target;
     const updatedVal = value?.toString()?.replaceAll(',', '');
@@ -252,6 +292,7 @@ const AddOverdues = () => {
             <Input
               type="text"
               name={input.name}
+              onBlur={input?.onBlur}
               placeholder={input.placeholder}
               value={input?.value}
               onChange={handleTextInputChange}
@@ -267,7 +308,11 @@ const AddOverdues = () => {
               placeholder={input.placeholder}
               options={input?.data}
               value={input?.value}
-              onChange={handleSelectInputChange}
+              onChange={
+                input?.name === 'debtorId'
+                  ? e => handleDebtorChange(e, false)
+                  : handleSelectInputChange
+              }
             />
           );
           break;
@@ -275,7 +320,7 @@ const AddOverdues = () => {
           component = (
             <div
               className={`date-picker-container ${
-                input.name === 'monthString' && 'month-year-picker'
+                input.name === 'monthString' && 'month-year-picker cursor-default'
               }`}
             >
               {input.name === 'monthString' ? (
@@ -315,7 +360,7 @@ const AddOverdues = () => {
               value={input?.value ? NumberCommaSeparator(input?.value) : ''}
               className="add-overdue-amount-input"
               type="text"
-              placeholder={99999}
+              placeholder={0}
               onChange={handleAmountInputChange}
             />
           );
@@ -334,7 +379,7 @@ const AddOverdues = () => {
         case 'total-amount':
           component = (
             <div className="add-overdue-total-amount">
-              {input?.value ? NumberCommaSeparator(input?.value) : ''}
+              {input?.value ? NumberCommaSeparator(input?.value) : 0}
             </div>
           );
           break;

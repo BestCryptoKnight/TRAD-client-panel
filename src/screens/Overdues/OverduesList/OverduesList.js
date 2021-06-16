@@ -333,15 +333,17 @@ const OverduesList = () => {
             </div>
           </div>
           {docs?.length > 0 ? (
-            <div className="common-list-container">
-              <Table
-                isExpandable
-                tableClass="main-list-table"
-                data={docs}
-                headers={headers}
-                rowClass="cursor-pointer"
-                refreshData={getOverdueListByFilter}
-              />
+            <>
+              <div className="common-list-container">
+                <Table
+                  isExpandable
+                  tableClass="main-list-table"
+                  data={docs}
+                  headers={headers}
+                  rowClass="cursor-pointer"
+                  refreshData={getOverdueListByFilter}
+                />
+              </div>
               <Pagination
                 className="common-list-pagination"
                 total={total}
@@ -351,7 +353,7 @@ const OverduesList = () => {
                 pageActionClick={pageActionClick}
                 onSelectLimit={onSelectLimit}
               />
-            </div>
+            </>
           ) : (
             <div className="no-record-found">No record found</div>
           )}
