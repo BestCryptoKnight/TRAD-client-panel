@@ -17,7 +17,7 @@ import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
 import { errorNotification } from '../../../common/Toast';
 import { CLAIMS_REDUX_CONSTANTS } from '../redux/ClaimsReduxConstants';
-import {useUrlParamsUpdate} from "../../../hooks/useUrlParamsUpdate";
+import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 
 const ClaimsList = () => {
   const dispatch = useDispatch();
