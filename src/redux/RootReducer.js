@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { creditLimits } from '../screens/CreditLimits/redux/CreditLimitsReducer';
+import { claims } from '../screens/Claims/redux/ClaimsReducer';
 import { dashboard } from '../common/Dashboard/redux/DashboardReducer';
 import { application } from '../screens/Application/redux/ApplicationReducer';
 import {
@@ -19,6 +20,7 @@ import { overdue } from '../screens/Overdues/redux/OverduesReducer';
 const appReducer = combineReducers({
   dashboard,
   creditLimits,
+  claims,
   loggedUserProfile,
   application,
   employee,

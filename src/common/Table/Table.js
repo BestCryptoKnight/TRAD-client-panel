@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
+import Tooltip from 'rc-tooltip';
 import Drawer from '../Drawer/Drawer';
 import { processTableDataByType } from '../../helpers/TableDataProcessHelper';
 import TableApiService from './TableApiService';
@@ -401,12 +401,12 @@ function Row(props) {
                 <td key={index.toString()} align={align}>
                   {value?.length > 50 ? (
                     <Tooltip
-                      mouseEnterDelay={0.5}
                       overlayClassName="tooltip-top-class"
+                      mouseEnterDelay={0.5}
                       overlay={<span>{value ?? 'No value'}</span>}
                       placement="topLeft"
                     >
-                      {value ?? '-'}
+                      <span>{value ?? '-'}</span>
                     </Tooltip>
                   ) : (
                     value ?? '-'

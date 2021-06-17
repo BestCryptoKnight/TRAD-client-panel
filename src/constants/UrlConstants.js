@@ -112,6 +112,12 @@ export const CREDIT_LIMITS_URLS = {
   },
 };
 
+export const CLAIMS_URLS = {
+  CLAIMS_LIST: `${BASE_URL}claim/`,
+  CLAIMS_COLUMN_LIST: `${BASE_URL}claim/column-name/`,
+  UPDATE_CLAIMS_COLUMN_LIST: `${BASE_URL}claim/column-name/`,
+};
+
 export const EMPLOYEE_URLS = {
   EMPLOYEE_LIST_URL: `${BASE_URL}client/user/`,
   EMPLOYEE_COLUMN_LIST: `${BASE_URL}client/user/column-name/`,

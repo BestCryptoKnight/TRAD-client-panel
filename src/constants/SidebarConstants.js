@@ -2,7 +2,7 @@ export const SIDEBAR_NAMES = {
   DASHBOARD: 'dashboard',
   APPLICATION: 'application',
   CREDIT_LIMITS: 'credit-limits',
-  CLAIM: 'claim',
+  CLAIM: 'claims',
   OVERDUE: 'over-dues',
   COMPANY_PROFILE: 'company-profile',
   EMPLOYEE: 'employee',
