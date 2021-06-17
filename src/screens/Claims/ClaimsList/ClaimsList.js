@@ -17,6 +17,7 @@ import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
 import { errorNotification } from '../../../common/Toast';
 import { CLAIMS_REDUX_CONSTANTS } from '../redux/ClaimsReduxConstants';
+import {useUrlParamsUpdate} from "../../../hooks/useUrlParamsUpdate";
 
 const ClaimsList = () => {
   const dispatch = useDispatch();
@@ -122,6 +123,25 @@ const ClaimsList = () => {
     dispatch(changeClaimsColumnList(data));
   }, []);
 
+  const onSelectLimit = useCallback(
+    newLimit => {
+      getClaimsByFilter({ page: 1, limit: newLimit });
+    },
+    [getClaimsByFilter]
+  );
+
+  const pageActionClick = useCallback(
+    newPage => {
+      getClaimsByFilter({ page: newPage, limit });
+    },
+    [limit, getClaimsByFilter]
+  );
+
+  useUrlParamsUpdate({
+    page: page ?? 1,
+    limit: limit ?? 15,
+  });
+
   useEffect(() => {
     const data = { page: paramPage ?? page ?? 1, limit: paramLimit ?? limit ?? 15 };
     getClaimsByFilter(data);
@@ -165,7 +185,15 @@ const ClaimsList = () => {
                   rowClass="cursor-pointer"
                 />
               </div>
-              <Pagination className="common-list-pagination" total={total} pages={pages} />
+              <Pagination
+                className="common-list-pagination"
+                total={total}
+                pages={pages}
+                page={page}
+                limit={limit}
+                onSelectLimit={onSelectLimit}
+                pageActionClick={pageActionClick}
+              />
             </>
           ) : (
             <div className="no-record-found">No record found</div>
