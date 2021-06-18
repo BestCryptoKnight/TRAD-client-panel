@@ -55,19 +55,24 @@ const CompanyProfile = () => {
         data: clientData?.riskAnalystId?.name,
       },
       {
-        label: 'Trading As',
-        name: 'tradingAs',
-        data: 'tradingAs',
-      },
-      {
-        label: 'Website',
-        name: 'website',
-        data: clientData?.website,
+        label: 'Insurer',
+        name: 'insurer',
+        data: clientData?.insurerId?.name,
       },
       {
         label: 'Service Person',
         name: 'serviceManager',
         data: clientData?.serviceManagerId?.name,
+      },
+      {
+        label: 'Sector',
+        name: 'sector',
+        data: clientData?.sector,
+      },
+      {
+        label: 'Website',
+        name: 'website',
+        data: clientData?.website,
       },
     ],
     [clientData]

@@ -835,3 +835,23 @@ export const deleteApplicationNoteAction = (noteId, cb) => {
     }
   };
 };
+
+export const getApplicationDetailsOnBackToCompanyStep = (applicationId, activeStep) => {
+  return async dispatch => {
+    try {
+      startLoaderButtonOnRequest('generateApplicationPageLoaderAction');
+      const response = await ApplicationApiServices.getApplicationDetail(applicationId);
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: APPLICATION_REDUX_CONSTANTS.UPDATE_APPLICATION_DETAILS_ON_BACK_TO_COMPANY_STEP,
+          data: response.data.data,
+          activeStep,
+        });
+        stopLoaderButtonOnSuccessOrFail('generateApplicationPageLoaderAction');
+      }
+    } catch (e) {
+      stopLoaderButtonOnSuccessOrFail('generateApplicationPageLoaderAction');
+      displayErrors(e);
+    }
+  };
+};

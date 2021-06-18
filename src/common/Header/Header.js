@@ -1,7 +1,6 @@
 import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
 import moment from 'moment';
 import {
   changePassword,
@@ -27,6 +26,10 @@ import { getAuthTokenLocalStorage } from '../../helpers/LocalStorageHelper';
 import { connectWebSocket, disconnectWebSocket } from '../../helpers/SocketHelper';
 import { handleGlobalSearchSelect } from '../../helpers/GlobalSearchHelper';
 import { HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS } from './redux/HeaderConstants';
+import {
+  DATE_FORMAT,
+  DATE_FORMAT_CONSTANT_FOR_CALENDER,
+} from '../../constants/DateFormatConstants';
 
 const Header = () => {
   const history = useHistory();
@@ -68,7 +71,9 @@ const Header = () => {
           return acc;
         }, {})
       );
-      list = _.orderBy(list, ['createdAt'], ['desc']);
+      list?.sort(function (a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
     }
     return list ?? [];
   }, [notificationData?.notificationList]);
@@ -306,18 +311,23 @@ const Header = () => {
     setHeaderSearchFocused(false);
   };
   useOnClickOutside(headerSearchRef, searchOutsideClick);
-  // const onSearchEnterKeyPress = useCallback(e => {
-  //   try {
-  //     if (e.keyCode === 13) {
-  //       const { value } = e?.target;
-  //       if (value?.trim()?.length > 0) {
-  //         dispatch(searchGlobalData(value));
-  //       }
-  //     }
-  //   } catch (err) {
-  //     /**/
-  //   }
-  // }, []);
+
+  const onSearchEnterKeyPress = useCallback(
+    e => {
+      try {
+        if (e.keyCode === 13) {
+          const { value } = e?.target;
+          if (value?.trim()?.length > 0) {
+            setSearchStart(true);
+            dispatch(searchGlobalData(value));
+          }
+        }
+      } catch (err) {
+        /**/
+      }
+    },
+    [setSearchStart]
+  );
 
   const handleOnSearchChange = useCallback(e => {
     if (e?.target?.value?.trim()?.length === 0) {
@@ -325,17 +335,8 @@ const Header = () => {
       dispatch({
         type: HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS.CLEAR_SEARCHED_DATA_LIST,
       });
-    } else {
-      try {
-        const { value } = e?.target;
-        setSearchStart(true);
-        if (value?.trim()?.length > 0) {
-          dispatch(searchGlobalData(value));
-        }
-      } catch (err) {
-        /**/
-      }
     }
+    // else setSearchStart(true);
   }, []);
 
   useEffect(() => {
@@ -368,26 +369,27 @@ const Header = () => {
               type="text"
               placeholder="Search Here"
               onFocus={searchOnFocus}
-              // onKeyDown={onSearchEnterKeyPress}
-              onChange={_.debounce(handleOnSearchChange, 1000)}
-              onClick={e =>
-                e?.target?.value?.toString()?.trim()?.length > 0 && setSearchStart(true)
-              }
+              onKeyDown={onSearchEnterKeyPress}
+              onChange={handleOnSearchChange}
             />
             <span className="material-icons-round">search</span>
           </div>
           {searchStart && (
             <ul className="header-search-results">
-              {globalSearchResult?.map(searchResult => (
-                <li
-                  onClick={() => {
-                    handleGlobalSearchSelect(searchResult, history);
-                    setSearchStart(false);
-                  }}
-                >
-                  {searchResult?.title}
-                </li>
-              ))}
+              {searchStart && globalSearchResult?.length > 0 ? (
+                globalSearchResult?.map(searchResult => (
+                  <li
+                    onClick={() => {
+                      handleGlobalSearchSelect(searchResult, history);
+                      setSearchStart(false);
+                    }}
+                  >
+                    {searchResult?.title}
+                  </li>
+                ))
+              ) : (
+                <li>No Record Found</li>
+              )}
             </ul>
           )}
         </div>
@@ -424,14 +426,10 @@ const Header = () => {
               notificationList?.map(notification => (
                 <div className="notification-set">
                   <div className="notification-set-title">
-                    {moment(notification?.createdAt).calendar({
-                      sameDay: '[Today]',
-                      nextDay: '[Tomorrow]',
-                      nextWeek: 'dddd',
-                      lastDay: '[Yesterday]',
-                      lastWeek: '[Last] dddd',
-                      sameElse: 'DD/MM/YYYY',
-                    })}
+                    {moment(notification?.createdAt, DATE_FORMAT).calendar(
+                      null,
+                      DATE_FORMAT_CONSTANT_FOR_CALENDER
+                    )}
                   </div>
                   {notification?.notifications?.map(singleNotification => (
                     <div

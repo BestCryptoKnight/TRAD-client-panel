@@ -68,7 +68,7 @@ const initialApplicationList = {
       passedOverdueDetails: '',
       creditLimit: '',
       outstandingAmount: '',
-      ordersOnHand: '',
+      orderOnHand: '',
       note: '',
       errors: {},
     },
@@ -570,6 +570,16 @@ export const application = (state = initialApplicationList, action) => {
             ...state?.viewApplication?.notes,
             noteList: action?.data,
           },
+        },
+      };
+
+    case APPLICATION_REDUX_CONSTANTS.UPDATE_APPLICATION_DETAILS_ON_BACK_TO_COMPANY_STEP:
+      return {
+        ...state,
+        editApplication: {
+          ...state?.editApplication,
+          ...action?.data,
+          applicationStage: action.activeStep - 1,
         },
       };
 

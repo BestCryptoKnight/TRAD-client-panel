@@ -299,16 +299,21 @@ const OverduesList = () => {
     }
   }, [newSubmissionDate]);
 
+  const onCloseNewSubmissionModal = useCallback(() => {
+    setNewSubmissionDate('');
+    setNewSubmissionModal(e => !e);
+  }, []);
+
   const newSubmissionButtons = useMemo(
     () => [
-      { title: 'Close', buttonType: 'primary-1', onClick: () => setNewSubmissionModal(e => !e) },
+      { title: 'Close', buttonType: 'primary-1', onClick: onCloseNewSubmissionModal },
       {
         title: 'Add',
         buttonType: 'primary',
         onClick: onAddNewSubmission,
       },
     ],
-    [onAddNewSubmission]
+    [onAddNewSubmission, onCloseNewSubmissionModal]
   );
 
   return (
@@ -364,6 +369,7 @@ const OverduesList = () => {
               className="new-submission-modal"
               headerClassName="left-aligned-modal-header"
               buttons={newSubmissionButtons}
+              hideModal={onCloseNewSubmissionModal}
             >
               <div className="date-picker-container month-year-picker">
                 <DatePicker

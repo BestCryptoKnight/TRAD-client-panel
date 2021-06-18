@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import logo from '../../../assets/images/logo.svg';
 import Loader from '../../Loader/Loader';
 import {
+  clearNotificationData,
   deleteDashboardNotification,
   getDashboardNotificationList,
 } from '../redux/DashboardActions';
@@ -14,6 +15,10 @@ const DashBoardNotification = () => {
   const { isLoading, notificationList, page, pages, total, hasMoreData } = useSelector(
     ({ dashboard }) => dashboard?.dashboardNotification ?? []
   );
+
+  notificationList?.sort(function (a, b) {
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
 
   const getDashboardNotificationListByFilter = useCallback(
     async (params = {}, cb) => {
@@ -61,6 +66,12 @@ const DashBoardNotification = () => {
     if (hasMoreData) fetchMoreListItems();
   }, [isFetching, hasMoreData]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearNotificationData());
+    };
+  }, []);
+
   return (
     <div className="dashboard-white-container mt-20 mb-20" onScroll={handleScroll}>
       <div className="dashboard-title-date-row">
@@ -90,6 +101,7 @@ const DashBoardNotification = () => {
                         <span
                           className="material-icons-round"
                           onClick={() => {
+                            console.log('clicked');
                             dispatch(deleteDashboardNotification(data?._id));
                           }}
                         >

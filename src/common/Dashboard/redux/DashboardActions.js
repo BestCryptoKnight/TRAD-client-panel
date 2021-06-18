@@ -124,3 +124,11 @@ export const markTaskAsComplete = (id, data) => {
     }
   };
 };
+
+export const clearNotificationData = () => {
+  return dispatch => {
+    dispatch({
+      type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.CLEAR_NOTIFICATION_DATA,
+    });
+  };
+};

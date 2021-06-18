@@ -69,8 +69,8 @@ export const dashboard = (state = initialDashboardData, action) => {
       return {
         ...state,
         dashboardNotification: {
-          isLoading: true,
           ...state?.dashboardNotification,
+          isLoading: true,
         },
       };
 
@@ -93,6 +93,7 @@ export const dashboard = (state = initialDashboardData, action) => {
         title: key,
         data: value,
       }));
+
       return {
         ...state,
         dashboardNotification: {
@@ -139,7 +140,7 @@ export const dashboard = (state = initialDashboardData, action) => {
     }
 
     case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.GET_NOTIFICATION_FROM_SOCKET: {
-      let notificationList = state?.notification?.notificationList ?? [];
+      let notificationList = state?.dashboardNotification?.notificationList ?? [];
       const { updatedAt, _id, description } = action?.data;
       const data = {
         [moment(updatedAt).format('YYYY-M-DD')]: [{ updatedAt, _id, description }],
@@ -160,11 +161,19 @@ export const dashboard = (state = initialDashboardData, action) => {
       return {
         ...state,
         dashboardNotification: {
-          ...state.dashboardNotification,
+          ...state.notification,
           notificationList: [...new Set([...newNotificationList, ...notificationList])],
         },
       };
     }
+
+    case DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.CLEAR_NOTIFICATION_DATA:
+      return {
+        ...state,
+        dashboardNotification: {
+          notificationList: [],
+        },
+      };
 
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:
       return null;
