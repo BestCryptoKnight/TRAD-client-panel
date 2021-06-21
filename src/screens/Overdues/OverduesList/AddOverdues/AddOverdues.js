@@ -176,6 +176,7 @@ const AddOverdues = () => {
         placeholder: 'Select Debtor',
         data: entityList?.debtorId,
         value: overdueDetails?.debtorId ?? [],
+        isOr: true,
       },
       {
         title: 'Month/ Year',
@@ -307,19 +308,22 @@ const AddOverdues = () => {
           break;
         case 'select':
           component = (
-            <ReactSelect
-              name={input.name}
-              className="react-select-container"
-              classNamePrefix="react-select"
-              placeholder={input.placeholder}
-              options={input?.data}
-              value={input?.value}
-              onChange={
-                input?.name === 'debtorId'
-                  ? e => handleDebtorChange(e, false)
-                  : handleSelectInputChange
-              }
-            />
+            <>
+              <ReactSelect
+                name={input.name}
+                className="react-select-container"
+                classNamePrefix="react-select"
+                placeholder={input.placeholder}
+                options={input?.data}
+                value={input?.value}
+                onChange={
+                  input?.name === 'debtorId'
+                    ? e => handleDebtorChange(e, false)
+                    : handleSelectInputChange
+                }
+              />
+              {input?.isOr && <div className="or-text">OR</div>}
+            </>
           );
           break;
         case 'date':
@@ -554,7 +558,7 @@ const AddOverdues = () => {
         <>
           <div className="breadcrumb-button-row mt-15">
             <div className="breadcrumb">
-              <span onClick={backToOverduesList}>List of Overdues List</span>
+              <span onClick={backToOverduesList}>List of Overdues</span>
               <span className="material-icons-round">navigate_next</span>
               <span>
                 {selectedMonth} {selectedYear}
