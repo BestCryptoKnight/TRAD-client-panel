@@ -4,6 +4,7 @@ import ReactSelect from 'react-select';
 import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
+import moment from 'moment';
 import Input from '../../../../common/Input/Input';
 import Modal from '../../../../common/Modal/Modal';
 import Button from '../../../../common/Button/Button';
@@ -104,7 +105,7 @@ const AddOverdues = () => {
   );
 
   const getOverdueList = useCallback(async () => {
-    const data = { date: new Date(period) };
+    const data = { date: moment(period, 'MMMM-YYYY').toDate() };
     await dispatch(getOverdueListByDate(data));
   }, [period]);
 
@@ -182,7 +183,7 @@ const AddOverdues = () => {
         type: 'date',
         placeholder: 'Select Month/Year',
         data: '',
-        value: new Date(period),
+        value: moment(period, 'MMMM-YYYY').toDate().toString(),
       },
       {
         title: 'ACN',
@@ -329,17 +330,9 @@ const AddOverdues = () => {
               }`}
             >
               {input.name === 'monthString' ? (
-                <DatePicker
-                  name={input.name}
-                  placeholderText={input.placeholder}
-                  dateFormat="MM/yyyy"
-                  selected={input?.value}
-                  showMonthYearPicker
-                  showYearDropdown
-                  popperProps={{ positionFixed: true }}
-                  showFullMonthYearPicker
-                  disabled
-                />
+                <span className="add-overdue-month-picker">
+                  {moment(input?.value).format('MM-YYYY')}
+                </span>
               ) : (
                 <DatePicker
                   name={input.name}
@@ -430,12 +423,7 @@ const AddOverdues = () => {
   );
 
   const backToOverduesList = async () => {
-    const isBothEqual = _.isEqual(overdueListByDate, overdueListByDateCopy);
-    if (isBothEqual) {
-      history.replace('/over-dues');
-    } else {
-      toggleAlertOnLeftModal();
-    }
+    history.replace('/over-dues');
   };
 
   const getMonthYearSeparated = period.split('-');
@@ -534,8 +522,8 @@ const AddOverdues = () => {
               type: OVERDUE_REDUX_CONSTANTS.OVERDUE_CRUD_CONSTANTS.GET_OVERDUE_LIST_BY_DATE,
               data: overdueListByDateCopy,
             });
-            history.replace('/over-dues');
             setIsPrompt(false);
+            history.replace('/over-dues');
           } else {
             history.replace('/over-dues');
           }
