@@ -170,7 +170,7 @@ const AddOverdues = () => {
   const addModalInputs = useMemo(
     () => [
       {
-        title: 'Debtor Name',
+        title: 'Debtor Name*',
         name: 'debtorId',
         type: 'select',
         placeholder: 'Select Debtor',
@@ -184,10 +184,10 @@ const AddOverdues = () => {
         type: 'date',
         placeholder: 'Select Month/Year',
         data: '',
-        value: moment(period, 'MMMM-YYYY').toDate().toString(),
+        value: moment(period, 'MMMM-YYYY').format('MM-YYYY'),
       },
       {
-        title: 'ACN',
+        title: 'ACN*',
         name: 'acn',
         type: 'text',
         placeholder: 'Enter ACN ',
@@ -196,7 +196,7 @@ const AddOverdues = () => {
       },
       {},
       {
-        title: 'Date of Invoice',
+        title: 'Date of Invoice*',
         name: 'dateOfInvoice',
         type: 'date',
         placeholder: 'Select Date Of Invoice',
@@ -204,7 +204,7 @@ const AddOverdues = () => {
       },
       {},
       {
-        title: 'Overdue Type',
+        title: 'Overdue Type*',
         name: 'overdueType',
         type: 'select',
         placeholder: 'Select Overdue Type',
@@ -213,7 +213,7 @@ const AddOverdues = () => {
       },
       {},
       {
-        title: 'Insurer Name',
+        title: 'Insurer Name*',
         name: 'insurerId',
         type: 'select',
         placeholder: 'Select Insurer',
@@ -267,7 +267,7 @@ const AddOverdues = () => {
       },
 
       {
-        title: 'Outstanding Amounts',
+        title: 'Outstanding Amounts*',
         name: 'outstandingAmount',
         type: 'total-amount',
         value: overdueDetails?.outstandingAmount ?? '',
@@ -334,9 +334,7 @@ const AddOverdues = () => {
               }`}
             >
               {input.name === 'monthString' ? (
-                <span className="add-overdue-month-picker">
-                  {moment(input?.value).format('MM-YYYY')}
-                </span>
+                <span className="add-overdue-month-picker">{input?.value}</span>
               ) : (
                 <DatePicker
                   name={input.name}
@@ -462,7 +460,7 @@ const AddOverdues = () => {
 
     const total =
       sixtyDaysAmount + ninetyDaysAmount + ninetyPlusDaysAmount + thirtyDaysAmount + currentAmount;
-    changeOverdueFields('outstandingAmount', total ?? 0);
+    changeOverdueFields('outstandingAmount', total.toString() ?? 0);
   }, [
     overdueDetails?.currentAmount,
     overdueDetails?.thirtyDaysAmount,
@@ -583,7 +581,7 @@ const AddOverdues = () => {
             <Button
               buttonType="primary"
               title="Save"
-              onClick={onCLickOverdueSave}
+              onClick={overdueListByDate?.docs?.length > 0 && onCLickOverdueSave}
               isLoading={saveOverdueToBackEndPageLoaderAction}
             />
           </div>

@@ -22,6 +22,7 @@ import ApplicationDocumentsAccordion from './component/ApplicationDocumentsAccor
 import ApplicationLogsAccordion from './component/ApplicationLogsAccordion';
 import { errorNotification } from '../../../common/Toast';
 import Loader from '../../../common/Loader/Loader';
+import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',
@@ -116,7 +117,7 @@ const ViewApplication = () => {
       },
       {
         title: 'Credit Limit Amount',
-        value: creditLimit,
+        value: NumberCommaSeparator(creditLimit),
         name: 'creditLimit',
         type: 'text',
       },
