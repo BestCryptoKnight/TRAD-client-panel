@@ -1,0 +1,34 @@
+.add-claims-save-button {
+  @extend .add-overdues-save-button;
+}
+
+.add-claims-content {
+  @extend .add-overdue-content;
+  width: 100%;
+  padding: 30px;
+
+  .react-select-container, .react-select-container .react-select__control, .date-picker-container, >div > div {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+.add-claims-content.view-claim-content {
+  gap: 20px
+}
+
+.claims-title {
+  width: 190px;
+  margin-right: 10px;
+  font: $subtitle $font-regular;
+  color: $primary-color
+}
+
+.view-claim-detail {
+  font: $subtitle $font-regular;
+  color: $field-color;
+}
+
+.view-claim-switch-disabled.common-switch + label {
+  cursor: default;
+}

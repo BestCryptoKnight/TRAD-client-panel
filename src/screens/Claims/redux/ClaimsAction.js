@@ -1,11 +1,11 @@
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
 import { CLAIMS_REDUX_CONSTANTS } from './ClaimsReduxConstants';
-import { ClaimsApiServices } from '../services/ClaimsApiServices';
 import {
   startLoaderButtonOnRequest,
   stopLoaderButtonOnSuccessOrFail,
 } from '../../../common/LoaderButton/redux/LoaderButtonAction';
 import { errorNotification, successNotification } from '../../../common/Toast';
+import { ClaimsApiServices } from '../services/ClaimsApiService';
 
 export const getClaimsListByFilter = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
@@ -40,19 +40,6 @@ export const getClaimsColumnsList = () => {
         type: CLAIMS_REDUX_CONSTANTS.GET_CLAIMS_COLUMNS_LIST,
         data: response.data.data,
       });
-    } catch (e) {
-      displayErrors(e);
-    }
-  };
-};
-
-export const getClaimsDefaultColumnsList = () => {
-  const param = {
-    columnFor: 'claim',
-  };
-  return async dispatch => {
-    try {
-      const response = await ClaimsApiServices.getClaimsColumnList(param);
       dispatch({
         type: CLAIMS_REDUX_CONSTANTS.GET_CLAIMS_DEFAULT_COLUMN_LIST,
         data: response.data.data,
@@ -119,5 +106,57 @@ export const saveClaimsColumnsList = ({ claimsColumnList = {}, isReset = false }
       displayErrors(e);
       throw Error();
     }
+  };
+};
+
+export const handleClaimChange = (name, value) => {
+  return dispatch => {
+    dispatch({
+      type: CLAIMS_REDUX_CONSTANTS.ADD_CLAIMS_VALUE_CHANGE,
+      name,
+      value,
+    });
+  };
+};
+
+export const addClaim = data => {
+  return async dispatch => {
+    try {
+      const response = await ClaimsApiServices.addClaim(data);
+
+      if (response.data.status === 'SUCCESS') {
+        successNotification(response?.data?.message ?? 'Claim added successfully');
+        dispatch({
+          type: CLAIMS_REDUX_CONSTANTS.RESET_CLAIMS_DETAILS,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const getClaimDetails = id => {
+  return async dispatch => {
+    try {
+      const response = await ClaimsApiServices.getClaimDetails(id);
+
+      if (response.data.status === 'SUCCESS') {
+        dispatch({
+          type: CLAIMS_REDUX_CONSTANTS.GET_CLAIM_DETAILS,
+          data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const resetClaimDetails = () => {
+  return async dispatch => {
+    dispatch({
+      type: CLAIMS_REDUX_CONSTANTS.RESET_CLAIMS_DETAILS,
+    });
   };
 };

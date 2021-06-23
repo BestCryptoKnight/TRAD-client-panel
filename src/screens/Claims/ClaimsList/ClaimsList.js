@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
+import { useHistory } from 'react-router-dom';
 import IconButton from '../../../common/IconButton/IconButton';
 import Button from '../../../common/Button/Button';
 import Table from '../../../common/Table/Table';
@@ -8,7 +9,6 @@ import Pagination from '../../../common/Pagination/Pagination';
 import {
   changeClaimsColumnList,
   getClaimsColumnsList,
-  getClaimsDefaultColumnsList,
   getClaimsListByFilter,
   saveClaimsColumnsList,
 } from '../redux/ClaimsAction';
@@ -21,7 +21,9 @@ import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 
 const ClaimsList = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [customFieldModal, setCustomFieldModal] = useState(false);
+
   const claimsList = useSelector(({ claims }) => claims?.claimsList ?? {});
   const claimsColumnList = useSelector(({ claims }) => claims?.claimsColumnList ?? {});
   const claimsDefaultColumnList = useSelector(
@@ -29,6 +31,7 @@ const ClaimsList = () => {
   );
   const { claimsListColumnSaveButtonLoaderAction, claimsListColumnResetButtonLoaderAction } =
     useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+
   const { total, pages, page, limit, docs, headers, isLoading } = useMemo(
     () => claimsList,
     [claimsList]
@@ -91,7 +94,7 @@ const ClaimsList = () => {
     } catch (e) {
       /**/
     }
-  }, [toggleCustomField, getClaimsByFilter, claimsColumnList, claimsDefaultColumnList]);
+  }, [toggleCustomField, claimsDefaultColumnList, getClaimsByFilter, claimsColumnList]);
 
   const customFieldsModalButtons = useMemo(
     () => [
@@ -137,16 +140,31 @@ const ClaimsList = () => {
     [limit, getClaimsByFilter]
   );
 
+  const addClaims = useCallback(() => {
+    history.replace('/claims/add');
+  }, [history]);
+
+  const viewClaim = useCallback(
+    id => {
+      console.log(id);
+      history.replace(`claims/view/${id}`);
+    },
+    [history]
+  );
+
   useUrlParamsUpdate({
     page: page ?? 1,
     limit: limit ?? 15,
   });
 
   useEffect(() => {
-    const data = { page: paramPage ?? page ?? 1, limit: paramLimit ?? limit ?? 15 };
+    const data = {
+      page: paramPage ?? page ?? 1,
+      limit: paramLimit ?? limit ?? 15,
+    };
+
     getClaimsByFilter(data);
     dispatch(getClaimsColumnsList());
-    dispatch(getClaimsDefaultColumnsList());
   }, []);
 
   return (
@@ -155,19 +173,13 @@ const ClaimsList = () => {
         <div className="page-header-name">Claims List</div>
         <div className="page-header-button-container">
           <IconButton
-            buttonType="secondary"
-            title="filter_list"
-            className="mr-10"
-            buttonTitle="Click to apply filters on claim list"
-          />
-          <IconButton
             buttonType="primary"
             title="format_line_spacing"
             className="mr-10"
             buttonTitle="Click to select custom fields"
             onClick={() => toggleCustomField()}
           />
-          <Button title="Add" buttonType="success" />
+          <Button title="Add" buttonType="success" onClick={addClaims} />
         </div>
       </div>
 
@@ -183,6 +195,7 @@ const ClaimsList = () => {
                   headers={headers}
                   tableClass="main-list-table"
                   rowClass="cursor-pointer"
+                  recordSelected={viewClaim}
                 />
               </div>
               <Pagination
