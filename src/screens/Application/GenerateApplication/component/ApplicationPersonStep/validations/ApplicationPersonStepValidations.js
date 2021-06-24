@@ -70,7 +70,7 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
           SPECIAL_CHARACTER_REGEX.test(item?.lastName?.toString())
         ) {
           validated = false;
-          errors.firstName = 'Please enter valid lastname';
+          errors.lastName = 'Please enter valid lastname';
         }
         if (!item?.country || item?.country?.length <= 0) {
           validated = false;
@@ -83,6 +83,10 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
         if (!item?.driverLicenceNumber || item?.driverLicenceNumber?.length <= 0) {
           validated = false;
           errors.driverLicenceNumber = 'Please enter driver licence number before continue';
+        }
+        if (!item?.streetNumber || item?.streetNumber?.trim()?.length <= 0) {
+          validated = false;
+          errors.streetNumber = 'Please enter street number before continue';
         }
         if (item?.streetNumber && !NUMBER_REGEX.test(item?.streetNumber)) {
           validated = false;

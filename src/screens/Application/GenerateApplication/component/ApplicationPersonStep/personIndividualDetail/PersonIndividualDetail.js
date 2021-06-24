@@ -80,7 +80,6 @@ const PersonIndividualDetail = ({
   useEffect(() => {
     const country = partners?.[index]?.country?.value ?? '';
     let showDropDownInput = true;
-    updateSinglePersonState('state', []);
     switch (country) {
       case 'AUS':
       case 'NZL':
@@ -98,8 +97,6 @@ const PersonIndividualDetail = ({
       prevRef.current = { ...prevRef.current, acn: partners?.[index]?.acn };
     }
   }, [
-    partners?.[index]?.abn,
-    partners?.[index]?.acn,
     partners?.[index]?.country?.value,
     prevRef,
     australianStates,
@@ -357,8 +354,8 @@ const PersonIndividualDetail = ({
         placeholder: isAusOrNew ? 'Select' : 'Enter State',
         type: isAusOrNew ? 'select' : 'text',
         name: 'state',
-        value: !isAusOrNew ? state?.label : state ?? '',
         data: stateValue || [],
+        value: isAusOrNew ? state ?? [] : state ?? '',
       },
       {
         label: 'Contact Details',
@@ -426,6 +423,10 @@ const PersonIndividualDetail = ({
 
   const handleSelectInputChange = useCallback(
     data => {
+      if (data.name === 'country') {
+        if (['AUS', 'NZL'].includes(data.value)) updateSinglePersonState('state', []);
+        else updateSinglePersonState('state', '');
+      }
       updateSinglePersonState(data?.name, data);
     },
     [updateSinglePersonState]
@@ -570,9 +571,9 @@ const PersonIndividualDetail = ({
                 abn: response?.abn,
               };
             }
+          } else {
+            errorNotification(`Please enter search text for ${e?.target?.name}`);
           }
-        } else {
-          errorNotification(`Please enter search text for ${e?.target?.name}`);
         }
       } catch {
         let value = prevRef?.current?.abn;
@@ -795,27 +796,6 @@ const PersonIndividualDetail = ({
       handleSearchTextInputKeyDown,
     ]
   );
-  /* const deletePartner = e => {
-    e.stopPropagation();
-    if (partners?.length <= 2 && entityTypeFromCompany === 'PARTNERSHIP') {
-      errorNotification('You can not remove partner');
-    } else if (partners?.length <= 1) {
-      errorNotification('You can not remove every partner');
-    } else {
-      dispatch(removePersonDetail(index));
-    }
-    successNotification('Partner deleted successfully');
-  }; */
-
-  /*  const getSuffixItem = useMemo(() => {
-    if (partners?.length <= 2 && entityTypeFromCompany === 'PARTNERSHIP') {
-      return '';
-    }
-    if (partners?.length <= 1) {
-      return '';
-    }
-     return 'delete_outline';
-  }, [partners, entityTypeFromCompany]); */
 
   return (
     <>
