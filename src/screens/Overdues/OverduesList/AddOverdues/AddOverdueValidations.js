@@ -23,7 +23,7 @@ export const addOverdueValidations = async (
     errors.acn = 'Please enter valid ACN number';
   }
 
-  if (data?.debtorId.length <= 0 && !data?.acn && data?.acn?.trim()?.length <= 0) {
+  if (data?.debtorId?.length <= 0 && !data?.acn && data?.acn?.trim()?.length <= 0) {
     validated = false;
     errors.acn = 'You have to provide at least one - either a debtor or ACN number';
   }

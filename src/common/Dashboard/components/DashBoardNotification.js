@@ -17,7 +17,7 @@ const DashBoardNotification = () => {
   );
 
   notificationList?.sort(function (a, b) {
-    return new Date(b.createdAt) - new Date(a.createdAt);
+    return new Date(b.title) - new Date(a.title);
   });
 
   const getDashboardNotificationListByFilter = useCallback(

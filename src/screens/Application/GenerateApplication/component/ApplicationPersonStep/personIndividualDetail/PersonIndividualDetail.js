@@ -299,7 +299,7 @@ const PersonIndividualDetail = ({ itemHeader, index }) => {
         value: lastName ?? '',
       },
       {
-        label: 'Date of Birth*',
+        label: 'Date of Birth',
         placeholder: 'Select date',
         type: 'date',
         name: 'dateOfBirth',

@@ -53,6 +53,7 @@ const ViewApplication = () => {
   const history = useHistory();
   const { id } = useParams();
   const dispatch = useDispatch();
+
   const viewApplicationData = useSelector(({ application }) => application?.viewApplication ?? {});
   const { applicationDetail, isLoading } = useMemo(
     () => viewApplicationData,
@@ -70,6 +71,9 @@ const ViewApplication = () => {
     orderOnHand,
     applicationId,
     status,
+    country,
+    acn,
+    registrationNumber,
   } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
 
   useEffect(() => {
@@ -107,7 +111,7 @@ const ViewApplication = () => {
   const backToApplicationList = () => {
     history.replace('/applications');
   };
-  const applicationDetails = useMemo(
+  const INPUTS = useMemo(
     () => [
       {
         title: 'Application ID',
@@ -152,6 +156,12 @@ const ViewApplication = () => {
         type: 'text',
       },
       {
+        title: 'ACN',
+        value: acn,
+        name: 'acn',
+        type: 'text',
+      },
+      {
         title: 'Entity Name',
         value: entityName,
         name: 'entityName',
@@ -172,6 +182,22 @@ const ViewApplication = () => {
     ],
     [tradingName, entityType, entityName, abn, debtorId, clientId, creditLimit, applicationId]
   );
+
+  const applicationDetails = useMemo(() => {
+    if (['AUS', 'NZL'].includes(country)) {
+      return [...INPUTS];
+    }
+
+    const filteredData = [...INPUTS];
+    filteredData.splice(6, 2, {
+      title: 'Company Registration No.*',
+      type: 'text',
+      name: 'registrationNumber',
+      value: registrationNumber,
+    });
+    return filteredData;
+  }, [registrationNumber, INPUTS, country]);
+
   const blockers = applicationDetails?.blockers;
 
   return (

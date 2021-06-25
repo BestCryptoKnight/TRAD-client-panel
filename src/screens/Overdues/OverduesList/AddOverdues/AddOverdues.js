@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Prompt, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, Prompt } from 'react-router-dom';
 import ReactSelect from 'react-select';
 import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,7 +19,6 @@ import { addOverdueValidations } from './AddOverdueValidations';
 import AddOverdueTable from './AddOverdueTable';
 import { NumberCommaSeparator } from '../../../../helpers/NumberCommaSeparator';
 import Loader from '../../../../common/Loader/Loader';
-import { displayErrors } from '../../../../helpers/ErrorNotifyHelper';
 import { OVERDUE_REDUX_CONSTANTS } from '../../redux/OverduesReduxConstants';
 
 const AddOverdues = () => {
@@ -96,29 +95,10 @@ const AddOverdues = () => {
     ({ loaderButtonReducer }) => loaderButtonReducer ?? false
   );
 
-  const toggleSaveAlertModal = useCallback(
-    value => {
-      setShowSaveAlertModal(value !== undefined ? value : e => !e);
-      if (isPrompt && alertOnLeftModal) toggleAlertOnLeftModal();
-    },
-    [setShowSaveAlertModal, isPrompt, alertOnLeftModal, toggleAlertOnLeftModal]
-  );
-
   const getOverdueList = useCallback(async () => {
-    const data = { date: moment(period, 'MMMM-YYYY').toDate() };
+    const data = { date: moment(period, 'MMMM-YYYY').toISOString() };
     await dispatch(getOverdueListByDate(data));
   }, [period]);
-
-  const overdueSaveAlertModalButtons = useMemo(
-    () => [
-      {
-        title: 'Ok',
-        buttonType: 'primary',
-        onClick: () => toggleSaveAlertModal(),
-      },
-    ],
-    [toggleSaveAlertModal]
-  );
 
   const changeOverdueFields = useCallback((name, value) => {
     dispatch(handleOverdueFieldChange(name, value));
@@ -149,7 +129,6 @@ const AddOverdues = () => {
     },
     [handleTextInputChange, changeOverdueFields, entityList, selectedDebtor]
   );
-
   const onBlurACN = useCallback(
     e => {
       const selectedRecordAcn = entityList?.debtorId?.find(
@@ -184,7 +163,7 @@ const AddOverdues = () => {
         type: 'date',
         placeholder: 'Select Month/Year',
         data: '',
-        value: moment(period, 'MMMM-YYYY').format('MM-YYYY'),
+        value: moment(period, 'MMMM-YYYY').format('MMMM-YYYY'),
       },
       {
         title: 'ACN*',
@@ -276,6 +255,14 @@ const AddOverdues = () => {
     [overdueDetails, entityList, period]
   );
 
+  const toggleSaveAlertModal = useCallback(
+    value => {
+      setShowSaveAlertModal(value !== undefined ? value : e => !e);
+      if (isPrompt && alertOnLeftModal) toggleAlertOnLeftModal();
+    },
+    [setShowSaveAlertModal, isPrompt, alertOnLeftModal, toggleAlertOnLeftModal]
+  );
+
   const handleAmountInputChange = useCallback(e => {
     const { name, value } = e?.target;
     const updatedVal = value?.toString()?.replaceAll(',', '');
@@ -327,15 +314,11 @@ const AddOverdues = () => {
           );
           break;
         case 'date':
-          component = (
-            <div
-              className={`date-picker-container ${
-                input.name === 'monthString' && 'month-year-picker cursor-default'
-              }`}
-            >
-              {input.name === 'monthString' ? (
-                <span className="add-overdue-month-picker">{input?.value}</span>
-              ) : (
+          component =
+            input.name === 'monthString' ? (
+              <span className="add-overdue-month-picker font-field f-14">{input?.value}</span>
+            ) : (
+              <div className="date-picker-container">
                 <DatePicker
                   name={input.name}
                   placeholderText={input.placeholder}
@@ -345,10 +328,9 @@ const AddOverdues = () => {
                   scrollableYearDropdown
                   onChange={e => handleDateInputChange(input?.name, e)}
                 />
-              )}
-              <span className="material-icons-round">event_available</span>
-            </div>
-          );
+                <span className="material-icons-round">event_available</span>
+              </div>
+            );
           break;
         case 'main-title':
           component = <div className="add-modal-full-width-row">{input.title}</div>;
@@ -360,7 +342,7 @@ const AddOverdues = () => {
               value={input?.value ? NumberCommaSeparator(input?.value) : ''}
               className="add-overdue-amount-input"
               type="text"
-              placeholder={0}
+              placeholder="0"
               onChange={handleAmountInputChange}
             />
           );
@@ -421,10 +403,10 @@ const AddOverdues = () => {
         </div>
       );
     },
-    [overdueDetails, handleDateInputChange, handleSelectInputChange, handleTextInputChange]
+    [overdueDetails, handleDateInputChange, handleSelectInputChange, handleTextInputChange, period]
   );
 
-  const backToOverduesList = async () => {
+  const backToOverduesList = () => {
     history.replace('/over-dues');
   };
 
@@ -437,8 +419,8 @@ const AddOverdues = () => {
     return () => dispatch(resetOverdueFormData());
   }, []);
 
-  useEffect(() => {
-    getOverdueList();
+  useEffect(async () => {
+    await getOverdueList();
   }, [period]);
 
   useEffect(() => {
@@ -469,6 +451,16 @@ const AddOverdues = () => {
     overdueDetails?.ninetyPlusDaysAmount,
   ]);
 
+  const overdueSaveAlertModalButtons = useMemo(
+    () => [
+      {
+        title: 'Ok',
+        buttonType: 'primary',
+        onClick: () => toggleSaveAlertModal(),
+      },
+    ],
+    [toggleSaveAlertModal]
+  );
   const onCLickOverdueSave = useCallback(async () => {
     let validated = true;
     docs?.forEach(doc => {
@@ -481,37 +473,37 @@ const AddOverdues = () => {
     if (!validated) {
       toggleSaveAlertModal();
     } else {
+      const finalData = docs?.map(doc => {
+        const data = {};
+        if (doc?.isExistingData) data._id = doc?._id;
+        data.isExistingData = doc?.isExistingData ? doc?.isExistingData : false;
+        data.debtorId = doc?.debtorId?.value;
+        data.insurerId = doc?.insurerId?.value;
+        data.overdueType = doc?.overdueType?.value;
+        data.acn = doc?.acn;
+        data.month = doc?.month;
+        data.year = doc?.year;
+        data.status = doc?.status?.value;
+        data.dateOfInvoice = doc?.dateOfInvoice;
+        data.outstandingAmount = doc?.outstandingAmount;
+        data.ninetyPlusDaysAmount = doc?.ninetyPlusDaysAmount;
+        data.ninetyDaysAmount = doc?.ninetyDaysAmount;
+        data.sixtyDaysAmount = doc?.sixtyDaysAmount;
+        data.thirtyDaysAmount = doc?.thirtyDaysAmount;
+        data.currentAmount = doc?.currentAmount;
+        if (doc?.overdueAction) data.overdueAction = doc?.overdueAction;
+        if (doc?.clientComment) data.clientComment = doc?.clientComment;
+        return data;
+      });
       try {
-        const finalData = docs?.map(doc => {
-          const data = {};
-          if (doc?.isExistingData) data._id = doc?._id;
-          data.isExistingData = doc?.isExistingData ? doc?.isExistingData : false;
-          data.debtorId = doc?.debtorId?.value;
-          data.insurerId = doc?.insurerId?.value;
-          data.overdueType = doc?.overdueType?.value;
-          data.acn = doc?.acn;
-          data.month = doc?.month;
-          data.year = doc?.year;
-          data.status = doc?.status?.value;
-          data.dateOfInvoice = doc?.dateOfInvoice;
-          data.outstandingAmount = doc?.outstandingAmount;
-          data.ninetyPlusDaysAmount = doc?.ninetyPlusDaysAmount;
-          data.ninetyDaysAmount = doc?.ninetyDaysAmount;
-          data.sixtyDaysAmount = doc?.sixtyDaysAmount;
-          data.thirtyDaysAmount = doc?.thirtyDaysAmount;
-          data.currentAmount = doc?.currentAmount;
-          if (doc?.overdueAction) data.overdueAction = doc?.overdueAction;
-          if (doc?.clientComment) data.clientComment = doc?.clientComment;
-          return data;
-        });
         await dispatch(saveOverdueList({ list: finalData }));
         if (isPrompt) setIsPrompt(false);
         history.replace('/over-dues');
       } catch (e) {
-        displayErrors(e);
+        /**/
       }
     }
-  }, [toggleSaveAlertModal, docs, getOverdueList, isPrompt, setIsPrompt]);
+  }, [toggleSaveAlertModal, docs, isPrompt, setIsPrompt]);
 
   const alertOnLeftModalButtons = useMemo(
     () => [
@@ -594,23 +586,23 @@ const AddOverdues = () => {
               <div className="add-overdue-content">{addModalInputs?.map(getComponentFromType)}</div>
             </Modal>
           )}
-          {showSaveAlertModal && (
-            <Modal header="Overdue Action" buttons={overdueSaveAlertModalButtons}>
-              <span className="confirmation-message">
-                Please take necessary actions on existing overdue.
-              </span>
-            </Modal>
-          )}
-          {alertOnLeftModal && (
-            <Modal header="Save Overdue" buttons={alertOnLeftModalButtons}>
-              <span className="confirmation-message">
-                Please save overdue, otherwise you may lose your changes.
-              </span>
-            </Modal>
-          )}
         </>
       ) : (
         <Loader />
+      )}
+      {showSaveAlertModal && (
+        <Modal header="Overdue Action" buttons={overdueSaveAlertModalButtons}>
+          <span className="confirmation-message">
+            Please take necessary actions on existing overdue.
+          </span>
+        </Modal>
+      )}
+      {alertOnLeftModal && (
+        <Modal header="Save Overdue" buttons={alertOnLeftModalButtons}>
+          <span className="confirmation-message">
+            Please save overdue, otherwise you may lose your changes.
+          </span>
+        </Modal>
       )}
     </>
   );

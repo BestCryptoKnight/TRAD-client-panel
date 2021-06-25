@@ -218,7 +218,10 @@ export const getApplicationCompanyDataFromABNOrACN = params => {
     // eslint-disable-next-line no-useless-catch
     try {
       const response =
-        await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(params);
+        await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN({
+          ...params,
+          step: 'company',
+        });
 
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
@@ -401,7 +404,10 @@ export const getApplicationPersonDataFromABNOrACN = params => {
   return async () => {
     try {
       const response =
-        await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN(params);
+        await ApplicationCompanyStepApiServices.getApplicationCompanyDataFromABNorACN({
+          ...params,
+          step: 'person',
+        });
 
       if (response?.data?.status === 'SUCCESS') {
         return response.data.data;
