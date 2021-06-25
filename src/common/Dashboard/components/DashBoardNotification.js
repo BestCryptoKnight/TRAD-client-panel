@@ -101,7 +101,6 @@ const DashBoardNotification = () => {
                         <span
                           className="material-icons-round"
                           onClick={() => {
-                            console.log('clicked');
                             dispatch(deleteDashboardNotification(data?._id));
                           }}
                         >

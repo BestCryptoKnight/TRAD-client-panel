@@ -11,6 +11,7 @@ import RadioButton from '../../../../../../common/RadioButton/RadioButton';
 import {
   changePersonType,
   getApplicationPersonDataFromABNOrACN,
+  resetEntityTableData,
   searchApplicationCompanyEntityName,
   updatePersonData,
   updatePersonStepDataOnValueSelected,
@@ -45,16 +46,7 @@ const drawerReducer = (state, action) => {
       return state;
   }
 };
-
-const PersonIndividualDetail = ({
-  itemHeader,
-  index,
-  companyEntityType,
-  streetType,
-  australianStates,
-  countryList,
-  newZealandStates,
-}) => {
+const PersonIndividualDetail = ({ itemHeader, index }) => {
   const dispatch = useDispatch();
   const updateSinglePersonState = useCallback(
     (name, value) => {
@@ -62,23 +54,31 @@ const PersonIndividualDetail = ({
     },
     [index]
   );
-  const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
   const companyState = useSelector(
     ({ application }) => application?.editApplication?.company ?? {}
   );
+  const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
   const entityNameSearchDropDownData = useSelector(
     ({ application }) => application?.companyData?.entityNameSearch ?? {}
   );
   const partners = useSelector(({ application }) => application?.editApplication?.partners ?? []);
 
+  const { streetType, australianStates, countryList, newZealandStates, companyEntityType } =
+    useSelector(({ application }) => application?.companyData?.dropdownData ?? {});
+
   const [stateValue, setStateValue] = useState([]);
   const [isAusOrNew, setIsAusOrNew] = useState(false);
+  const [isAusOrNewStakeHolder, setIsAusOrNewStakeHolder] = useState(false);
 
   const [searchedEntityNameValue, setSearchedEntityNameValue] = useState(''); // retry ABN lookup
+
+  const [currentPage, setCurrentPage] = useState(0);
+
   const prevRef = useRef({});
 
   useEffect(() => {
     const country = partners?.[index]?.country?.value ?? '';
+    const stakeHolderCountry = partners?.[index]?.stakeholderCountry?.value ?? '';
     let showDropDownInput = true;
     switch (country) {
       case 'AUS':
@@ -89,6 +89,16 @@ const PersonIndividualDetail = ({
         showDropDownInput = false;
         break;
     }
+    switch (stakeHolderCountry) {
+      case 'AUS':
+      case 'NZL':
+        setIsAusOrNewStakeHolder(true);
+        break;
+      default:
+        setIsAusOrNewStakeHolder(false);
+        break;
+    }
+
     setIsAusOrNew(showDropDownInput);
     if (!prevRef.current?.abn) {
       prevRef.current = { ...prevRef.current, abn: partners?.[index]?.abn };
@@ -98,10 +108,10 @@ const PersonIndividualDetail = ({
     }
   }, [
     partners?.[index]?.country?.value,
+    partners?.[index]?.stakeholderCountry?.value,
     prevRef,
     australianStates,
     newZealandStates,
-    updateSinglePersonState,
   ]);
 
   const {
@@ -127,13 +137,16 @@ const PersonIndividualDetail = ({
     suburb,
     state,
     country,
+    stakeholderCountry,
     postCode,
+    registrationNumber,
+    // isDisabled,
   } = useMemo(() => partners?.[index], [partners?.[index]]);
 
   const titleDropDown = useMemo(() => {
     const finalData = ['Mr', 'Mrs', 'Ms', 'Doctor', 'Miss', 'Professor'];
 
-    return finalData?.map(e => ({
+    return finalData.map(e => ({
       label: e,
       name: 'title',
       value: e,
@@ -168,21 +181,12 @@ const PersonIndividualDetail = ({
         type: 'blank',
       },
       {
-        label: 'ACN',
-        placeholder: '01234',
-        type: 'search',
-        name: 'acn',
-        value: acn ?? '',
-        isOr: true,
-        data: [],
-      },
-      {
-        label: 'Entity Type*',
+        label: 'Country*',
         placeholder: 'Select',
         type: 'select',
-        name: 'entityType',
-        value: entityType ?? [],
-        data: companyEntityType ?? [],
+        name: 'stakeholderCountry',
+        data: countryList,
+        value: stakeholderCountry ?? [],
       },
       {
         label: 'Entity Name*',
@@ -190,7 +194,6 @@ const PersonIndividualDetail = ({
         type: 'entityName',
         name: 'entityName',
         value: entityName?.label ?? entityName ?? '',
-        isOr: true,
         data: [],
       },
       {
@@ -202,7 +205,7 @@ const PersonIndividualDetail = ({
         data: [],
       },
       {
-        label: 'ABN*',
+        label: 'ABN/NZBN*',
         placeholder: '01234',
         type: 'search',
         name: 'abn',
@@ -210,11 +213,49 @@ const PersonIndividualDetail = ({
         data: [],
       },
       {
-        type: 'blank',
+        label: 'Entity Type*',
+        placeholder: 'Select',
+        type: 'select',
+        name: 'entityType',
+        value: entityType ?? [],
+        data: companyEntityType ?? [],
+      },
+      {
+        label: 'ACN/NCN',
+        placeholder: '01234',
+        type: 'search',
+        name: 'acn',
+        value: acn ?? '',
+        data: [],
       },
     ],
-    [type, abn, acn, entityType, entityName, tradingName, companyEntityType]
+    [
+      type,
+      abn,
+      acn,
+      entityType,
+      entityName,
+      tradingName,
+      companyEntityType,
+      countryList,
+      stakeholderCountry,
+    ]
   );
+  const FINAL_COMPANY_INPUTS = useMemo(() => {
+    if (isAusOrNewStakeHolder) {
+      return [...COMPANY_INPUT];
+    }
+    const filteredData = [...COMPANY_INPUT];
+    filteredData.splice(4, 1, {
+      label: 'Company Registration No.*',
+      placeholder: 'Registration no',
+      type: 'text',
+      name: 'registrationNumber',
+      value: registrationNumber,
+    });
+    filteredData.splice(6, 1);
+    return filteredData;
+  }, [COMPANY_INPUT, isAusOrNewStakeHolder, registrationNumber]);
 
   const INDIVIDUAL_INPUT = useMemo(
     () => [
@@ -234,7 +275,7 @@ const PersonIndividualDetail = ({
         type: 'select',
         name: 'title',
         value: title || titleDropDown?.find(e => e?.value === title) || [],
-        data: titleDropDown ?? [],
+        data: titleDropDown || [],
       },
       {
         label: 'First Name*',
@@ -297,7 +338,7 @@ const PersonIndividualDetail = ({
       },
       {
         label: 'Unit Number',
-        placeholder: 'Enter unit number',
+        placeholder: 'Enter location',
         type: 'text',
         name: 'unitNumber',
         value: unitNumber ?? '',
@@ -307,40 +348,40 @@ const PersonIndividualDetail = ({
         placeholder: 'Street number',
         type: 'text',
         name: 'streetNumber',
-        value: streetNumber ?? '',
         data: [],
+        value: streetNumber ?? '',
       },
       {
         label: 'Street Name',
         placeholder: 'Enter street Name',
         type: 'text',
         name: 'streetName',
-        value: streetName ?? '',
         data: [],
+        value: streetName ?? '',
       },
       {
         label: 'Street Type',
         placeholder: 'Select',
         type: 'select',
         name: 'streetType',
+        data: streetType || [],
         value: partners?.[index]?.streetType ?? [],
-        data: streetType ?? [],
       },
       {
         label: 'Suburb',
         placeholder: 'Suburb',
         type: 'text',
         name: 'suburb',
-        value: suburb ?? '',
         data: [],
+        value: suburb ?? '',
       },
       {
         label: 'Country*',
         placeholder: 'Select',
         type: 'select',
         name: 'country',
+        data: countryList || [],
         value: country ?? [],
-        data: countryList,
       },
       {
         label: 'Postcode*',
@@ -423,15 +464,17 @@ const PersonIndividualDetail = ({
 
   const handleSelectInputChange = useCallback(
     data => {
-      if (data.name === 'country') {
+      if (data.name === 'country' && partners?.[index]?.type === 'company') {
+        const { label, value } = data;
+        updateSinglePersonState('stakeholderCountry', { label, name: 'stakeholderCountry', value });
+      } else if (data.name === 'country' && partners?.[index]?.type === 'individual') {
         if (['AUS', 'NZL'].includes(data.value)) updateSinglePersonState('state', []);
         else updateSinglePersonState('state', '');
-      }
-      updateSinglePersonState(data?.name, data);
+        updateSinglePersonState(data?.name, data);
+      } else updateSinglePersonState(data?.name, data);
     },
-    [updateSinglePersonState]
+    [updateSinglePersonState, partners?.[index]?.type]
   );
-
   const updatePersonState = useCallback(data => {
     dispatch(updatePersonStepDataOnValueSelected(index, data));
   }, []);
@@ -452,10 +495,20 @@ const PersonIndividualDetail = ({
     [dispatchDrawerState]
   );
 
+  const onCloseEntityTableModal = useCallback(() => {
+    handleToggleDropdown(false);
+    setCurrentPage(0);
+    setSearchedEntityNameValue('');
+    dispatch(resetEntityTableData());
+  }, []);
+
   const handleEntityNameSelect = useCallback(
     async data => {
       try {
-        const params = { searchString: data?.abn };
+        const params = {
+          searchString: data?.abn,
+          country: partners?.[index]?.stakeholderCountry?.value,
+        };
         const response = await dispatch(getApplicationPersonDataFromABNOrACN(params));
         if (response) {
           updatePersonState(response);
@@ -464,72 +517,138 @@ const PersonIndividualDetail = ({
             acn: response?.acn,
             abn: response?.abn,
           };
-          handleToggleDropdown();
+          onCloseEntityTableModal();
         }
       } catch {
         /**/
       }
-      handleToggleDropdown(false);
-      setSearchedEntityNameValue('');
     },
-    [updatePersonState, handleToggleDropdown, setSearchedEntityNameValue, prevRef.current]
+    [
+      partners?.[index]?.stakeholderCountry?.value,
+      updatePersonState,
+      onCloseEntityTableModal,
+      prevRef.current,
+    ]
   );
 
   const handleEntityNameOnSearchClick = useCallback(
     ref => {
+      if (!isAusOrNewStakeHolder) return;
+      if (
+        !partners?.[index]?.stakeholderCountry ||
+        partners?.[index]?.stakeholderCountry?.length === 0
+      ) {
+        errorNotification('Please select country before continue');
+        return;
+      }
       if (ref?.value.toString().trim().length > 0) {
-        dispatchDrawerState({
-          type: DRAWER_ACTIONS.SHOW_DRAWER,
-          data: null,
-        });
-        setSearchedEntityNameValue(ref?.value.toString());
-        const params = {
-          searchString: ref?.value,
-        };
-        dispatch(searchApplicationCompanyEntityName(params));
+        try {
+          dispatchDrawerState({
+            type: DRAWER_ACTIONS.SHOW_DRAWER,
+            data: null,
+          });
+          setSearchedEntityNameValue(ref?.value.toString());
+          const params = {
+            searchString: ref?.value,
+            country: partners?.[index]?.stakeholderCountry?.value,
+            page: currentPage,
+          };
+          dispatch(searchApplicationCompanyEntityName(params));
+        } catch (e) {
+          /**/
+        }
       } else {
         errorNotification('Please enter search text for entity name');
       }
     },
-    [dispatchDrawerState, updatePersonState, setSearchedEntityNameValue]
+    [
+      partners?.[index]?.stakeholderCountry?.value,
+      dispatchDrawerState,
+      updatePersonState,
+      setSearchedEntityNameValue,
+      currentPage,
+      isAusOrNewStakeHolder,
+    ]
   );
 
   const handleEntityNameSearch = useCallback(
     e => {
       if (e.key === 'Enter') {
-        if (e.target.value.toString().trim().length > 0) {
-          dispatchDrawerState({
-            type: DRAWER_ACTIONS.SHOW_DRAWER,
-            data: null,
-          });
-          setSearchedEntityNameValue(e.target.value.toString());
-          const params = {
-            searchString: e?.target?.value,
-          };
-          dispatch(searchApplicationCompanyEntityName(params));
+        if (!isAusOrNewStakeHolder) return;
+        if (
+          !partners?.[index]?.stakeholderCountry ||
+          partners?.[index]?.stakeholderCountry?.length === 0
+        ) {
+          errorNotification('Please select country before continue');
+          return;
+        }
+        if (e?.target?.value.toString().trim().length > 0) {
+          try {
+            dispatchDrawerState({
+              type: DRAWER_ACTIONS.SHOW_DRAWER,
+              data: null,
+            });
+            setSearchedEntityNameValue(e.target.value.toString());
+            const params = {
+              searchString: e?.target?.value,
+              country: partners?.[index]?.stakeholderCountry?.value,
+              page: currentPage,
+            };
+            dispatch(searchApplicationCompanyEntityName(params));
+          } catch (err) {
+            /**/
+          }
         } else {
           errorNotification('Please enter search text for entity name');
         }
       }
     },
-    [dispatchDrawerState, updatePersonState, setSearchedEntityNameValue]
+    [
+      partners?.[index]?.stakeholderCountry?.value,
+      dispatchDrawerState,
+      updatePersonState,
+      setSearchedEntityNameValue,
+      currentPage,
+      isAusOrNewStakeHolder,
+    ]
   );
 
-  const retryEntityNameRequest = useCallback(() => {
-    if (searchedEntityNameValue?.trim()?.length > 0) {
-      const params = {
-        searchString: searchedEntityNameValue,
-      };
-      dispatch(searchApplicationCompanyEntityName(params));
+  const retryEntityNameRequest = useCallback(async () => {
+    if (searchedEntityNameValue.trim().length > 0) {
+      if (
+        !partners?.[index]?.stakeholderCountry ||
+        partners?.[index]?.stakeholderCountry?.length === 0
+      ) {
+        errorNotification('Please select country before continue');
+        return;
+      }
+      try {
+        const params = {
+          searchString: searchedEntityNameValue,
+          country: partners?.[index]?.stakeholderCountry?.value,
+          page: currentPage,
+        };
+        await dispatch(searchApplicationCompanyEntityName(params));
+      } catch (e) {
+        /**/
+      }
     }
-  }, [searchedEntityNameValue]);
+  }, [searchedEntityNameValue, partners?.[index]?.stakeholderCountry?.value, currentPage]);
 
   const handleSearchTextOnSearchClick = useCallback(
     async ref => {
-      try {
-        if (ref?.value?.trim()?.length > 0) {
+      if (
+        !partners?.[index]?.stakeholderCountry ||
+        partners?.[index]?.stakeholderCountry?.length === 0
+      ) {
+        errorNotification('Please select country before continue');
+        return;
+      }
+      if (ref?.value?.trim()?.length > 0) {
+        try {
           const params = {
             searchString: ref?.value,
+            country: partners?.[index]?.stakeholderCountry?.value,
           };
           const response = await dispatch(getApplicationPersonDataFromABNOrACN(params));
 
@@ -541,25 +660,38 @@ const PersonIndividualDetail = ({
               abn: response?.abn,
             };
           }
-        } else {
-          errorNotification(`Please enter search text for ${ref?.name}`);
+        } catch {
+          let value = prevRef?.current?.abn;
+          if (ref?.name === 'acn') value = prevRef?.current?.acn;
+          updateSinglePersonState(ref?.name, value);
         }
-      } catch {
-        let value = prevRef?.current?.abn;
-        if (ref?.name === 'acn') value = prevRef?.current?.acn;
-        updateSinglePersonState(ref?.name, value);
+      } else {
+        errorNotification(`Please enter search text for ${ref?.name}`);
       }
     },
-    [updatePersonState, updateSinglePersonState, prevRef.current]
+    [
+      partners?.[index]?.stakeholderCountry?.value,
+      updatePersonState,
+      updateSinglePersonState,
+      prevRef.current,
+    ]
   );
 
   const handleSearchTextInputKeyDown = useCallback(
     async e => {
-      try {
-        if (e.key === 'Enter') {
-          if (e?.target?.value?.trim()?.length > 0) {
+      if (e.key === 'Enter') {
+        if (
+          !partners?.[index]?.stakeholderCountry ||
+          partners?.[index]?.stakeholderCountry?.length === 0
+        ) {
+          errorNotification('Please select country before continue');
+          return;
+        }
+        if (e?.target?.value?.trim()?.length > 0) {
+          try {
             const params = {
               searchString: e?.target?.value,
+              country: partners?.[index]?.stakeholderCountry?.value,
             };
             const response = await dispatch(getApplicationPersonDataFromABNOrACN(params));
 
@@ -571,17 +703,22 @@ const PersonIndividualDetail = ({
                 abn: response?.abn,
               };
             }
-          } else {
-            errorNotification(`Please enter search text for ${e?.target?.name}`);
+          } catch {
+            let value = prevRef?.current?.abn;
+            if (e?.target?.name === 'acn') value = prevRef?.current?.acn;
+            updateSinglePersonState(e?.target?.name, value);
           }
+        } else {
+          errorNotification(`Please enter search text for ${e?.target?.name}`);
         }
-      } catch {
-        let value = prevRef?.current?.abn;
-        if (e?.target?.name === 'acn') value = prevRef?.current?.acn;
-        updateSinglePersonState(e?.target?.name, value);
       }
     },
-    [updatePersonState, updateSinglePersonState, prevRef.current]
+    [
+      partners?.[index]?.stakeholderCountry?.value,
+      updatePersonState,
+      updateSinglePersonState,
+      prevRef.current,
+    ]
   );
 
   const handleCheckBoxEvent = useCallback(
@@ -616,6 +753,7 @@ const PersonIndividualDetail = ({
     },
     [updateSinglePersonState]
   );
+
   const getComponentFromType = useCallback(
     input => {
       let component = null;
@@ -628,6 +766,7 @@ const PersonIndividualDetail = ({
               name={input.name}
               value={input?.value}
               onChange={handleTextInputChange}
+              // disabled={isDisabled}
             />
           );
           break;
@@ -639,6 +778,7 @@ const PersonIndividualDetail = ({
               name={input.name}
               value={input?.value}
               onChange={handleEmailChange}
+              // disabled={isDisabled}
             />
           );
           break;
@@ -647,14 +787,14 @@ const PersonIndividualDetail = ({
             <Input
               type="text"
               name={input.name}
-              borderClass={input?.isOr && 'is-or-container'}
               suffix="search"
-              suffixClass="application-search-suffix"
               suffixClick={handleSearchTextOnSearchClick}
+              suffixClass="application-search-suffix"
               placeholder={input.placeholder}
               value={input?.value}
               onKeyDown={handleSearchTextInputKeyDown}
               onChange={handleTextInputChange}
+              // disabled={isDisabled}
             />
           );
           break;
@@ -663,12 +803,13 @@ const PersonIndividualDetail = ({
             <ReactSelect
               className="react-select-container"
               classNamePrefix="react-select"
-              isSearchable
               placeholder={input.placeholder}
               name={input.name}
               options={input.data}
               value={input?.value}
+              isSearchable
               onChange={handleSelectInputChange}
+              // isDisabled={isDisabled}
             />
           );
           break;
@@ -680,6 +821,7 @@ const PersonIndividualDetail = ({
               title={input.label}
               checked={input?.value}
               onChange={handleCheckBoxEvent}
+              // isDisabled={isDisabled}
             />
           );
           break;
@@ -688,14 +830,14 @@ const PersonIndividualDetail = ({
             <Input
               type="text"
               name={input.name}
-              placeholder={input.placeholder}
-              borderClass={input?.isOr && 'is-or-container'}
               suffix="search"
               suffixClass="application-search-suffix"
               suffixClick={handleEntityNameOnSearchClick}
+              placeholder={input.placeholder}
               onKeyDown={handleEntityNameSearch}
               value={input?.value}
               onChange={handleEntityChange}
+              // disabled={isDisabled}
             />
           );
           break;
@@ -711,13 +853,14 @@ const PersonIndividualDetail = ({
                   checked={partners?.[index]?.type === radio.value}
                   label={radio.label}
                   onChange={handleRadioButton}
+                  // isDisabled={isDisabled}
                 />
               ))}
             </div>
           );
           break;
         case 'main-title':
-          component = <div className="main-title">{input?.label}</div>;
+          component = <div className="main-title">{input.label}</div>;
           break;
         case 'blank':
           component = (
@@ -732,7 +875,6 @@ const PersonIndividualDetail = ({
             <div className="date-picker-container">
               <DatePicker
                 dateFormat="dd/MM/yyyy"
-                popperProps={{ positionFixed: true }}
                 placeholderText={input.placeholder}
                 selected={
                   partners?.[index]?.dateOfBirth && new Date(partners?.[index]?.dateOfBirth)
@@ -742,6 +884,8 @@ const PersonIndividualDetail = ({
                 showYearDropdown
                 scrollableYearDropdown
                 maxDate={new Date()}
+                popperProps={{ positionFixed: true }}
+                // isDisabled={isDisabled}
               />
               <span className="material-icons-round">event_available</span>
             </div>
@@ -755,9 +899,9 @@ const PersonIndividualDetail = ({
         <>
           {component}
           {partners && partners[index] ? (
-            <div className={`ui-state-error ${input?.isOr && 'mt-10'}`}>
-              {partners && partners[index] && partners[index]?.errors
-                ? partners[index]?.errors?.[input?.name]
+            <div className="ui-state-error">
+              {partners && partners?.[index] && partners?.[index]?.errors
+                ? partners?.[index]?.errors?.[input?.name]
                 : ''}
             </div>
           ) : (
@@ -781,7 +925,7 @@ const PersonIndividualDetail = ({
     },
     [
       INPUTS,
-      COMPANY_INPUT,
+      FINAL_COMPANY_INPUTS,
       INDIVIDUAL_INPUT,
       index,
       partners,
@@ -791,17 +935,17 @@ const PersonIndividualDetail = ({
       handleSelectInputChange,
       handleEmailChange,
       handleTextInputChange,
-      isAusOrNew,
       handleEntityChange,
       handleSearchTextInputKeyDown,
+      // isDisabled,
     ]
   );
 
   return (
     <>
-      {drawerState?.visible && (
+      {drawerState.visible && (
         <Modal
-          hideModal={handleToggleDropdown}
+          hideModal={onCloseEntityTableModal}
           className="application-entity-name-modal"
           header="Search Results"
           closeIcon="cancel"
@@ -815,6 +959,10 @@ const PersonIndividualDetail = ({
               <ApplicationEntityNameTable
                 data={entityNameSearchDropDownData?.data}
                 handleEntityNameSelect={handleEntityNameSelect}
+                selectedCountry={partners?.[index]?.stakeholderCountry?.value}
+                setCurrentPage={setCurrentPage}
+                requestNewPage={retryEntityNameRequest}
+                hasMoreRecords={entityNameSearchDropDownData?.hasMoreData}
               />
             ) : (
               <div className="no-record-found">No record found</div>
@@ -842,16 +990,12 @@ const PersonIndividualDetail = ({
         className="application-person-step-accordion"
         header={itemHeader ?? 'Director Details'}
         prefix="expand_more"
-        /* suffix={getSuffixItem}
-        suffixClass="material-icons-round font-danger cursor-pointer"
-        suffixClick={e => deletePartner(e)} */
       >
         <div className="application-person-step-accordion-item">
           {INPUTS.map(getComponentFromType)}
-          {partners?.[index] &&
-            (partners?.[index]?.type === 'company'
-              ? COMPANY_INPUT.map(getComponentFromType)
-              : INDIVIDUAL_INPUT.map(getComponentFromType))}
+          {partners?.[index]?.type === 'company'
+            ? FINAL_COMPANY_INPUTS.map(getComponentFromType)
+            : INDIVIDUAL_INPUT.map(getComponentFromType)}
         </div>
       </AccordionItem>
     </>
@@ -860,11 +1004,6 @@ const PersonIndividualDetail = ({
 PersonIndividualDetail.propTypes = {
   itemHeader: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-  companyEntityType: PropTypes.array.isRequired,
-  streetType: PropTypes.array.isRequired,
-  newZealandStates: PropTypes.array.isRequired,
-  countryList: PropTypes.array.isRequired,
-  australianStates: PropTypes.array.isRequired,
 };
 
 export default PersonIndividualDetail;

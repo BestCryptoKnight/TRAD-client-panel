@@ -146,7 +146,6 @@ const ClaimsList = () => {
 
   const viewClaim = useCallback(
     id => {
-      console.log(id);
       history.replace(`claims/view/${id}`);
     },
     [history]

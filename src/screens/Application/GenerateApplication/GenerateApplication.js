@@ -71,14 +71,13 @@ const GenerateApplication = () => {
 
   // for stepper components
   const FILTERED_STEP_COMPONENT = useMemo(() => {
-    let finalSteps = [...STEP_COMPONENT];
+    const finalSteps = [...STEP_COMPONENT];
     if (
       !['PARTNERSHIP', 'TRUST', 'SOLE_TRADER'].includes(
         editApplicationData?.company?.entityType?.value ?? ''
       )
     ) {
-      delete finalSteps[1];
-      finalSteps = finalSteps.filter(step => step);
+      finalSteps.splice(1, 1);
     }
 
     return finalSteps;
@@ -91,8 +90,7 @@ const GenerateApplication = () => {
     const entityType = editApplicationData?.company?.entityType?.value ?? '';
 
     if (!['PARTNERSHIP', 'TRUST', 'SOLE_TRADER'].includes(entityType)) {
-      delete finalSteps[1];
-      finalSteps = finalSteps.filter(step => step);
+      finalSteps.splice(1, 1);
     } else {
       finalSteps = finalSteps.map(step => {
         if (step.text === 'Person')
@@ -112,9 +110,7 @@ const GenerateApplication = () => {
   }, []);
 
   useEffect(() => {
-    return () => {
-      dispatch(resetEditApplicationFieldValue);
-    };
+    return () => dispatch(resetEditApplicationFieldValue);
   }, []);
 
   useEffect(() => {
@@ -146,15 +142,18 @@ const GenerateApplication = () => {
   }, []);
 
   const onNextClick = useCallback(async () => {
+    const data = editApplicationData?.[FILTERED_STEPS?.[applicationStage ?? 0]?.name];
     try {
-      const data = editApplicationData?.[FILTERED_STEPS?.[applicationStage ?? 0]?.name];
       switch (FILTERED_STEPS?.[applicationStage ?? 0]?.name) {
         case 'company':
           return await applicationCompanyStepValidations(dispatch, data, editApplicationData);
+
         case 'partners':
           return await applicationPersonStepValidation(dispatch, data, editApplicationData);
+
         case 'creditLimit':
           return await applicationCreditStepValidations(dispatch, data, editApplicationData);
+
         case 'documents':
           return await applicationDocumentsStepValidations(dispatch, data, editApplicationData);
         case 'confirmationStep':

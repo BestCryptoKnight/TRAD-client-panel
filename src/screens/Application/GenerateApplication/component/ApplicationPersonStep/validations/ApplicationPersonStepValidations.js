@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import { errorNotification } from '../../../../../../common/Toast';
 import {
   saveApplicationStepDataToBackend,
@@ -14,139 +13,168 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
   let validated = true;
   const partners = data?.map((item, index) => {
     const errors = {};
-    const { type, isDisabled } = item;
+    const { type } = item;
     let preparedData = {};
-    if (!isDisabled) {
-      if (type === 'company') {
-        if (!item?.abn || item?.abn.trim().length <= 0) {
+    if (type === 'company') {
+      if (['AUS', 'NZL'].includes(item?.stakeholderCountry?.value)) {
+        if (!item?.abn || item?.abn?.trim()?.length <= 0) {
           validated = false;
           errors.abn = 'Please enter ABN number before continue';
         }
-        if (item?.abn && item?.abn?.trim()?.length !== 11 && !NUMBER_REGEX.test(item?.abn)) {
-          validated = false;
-          errors.abn = 'Please enter valid ABN number before continue';
-        }
-        if (item?.acn && item?.acn?.trim()?.length !== 9 && !NUMBER_REGEX.test(item?.acn)) {
-          validated = false;
-          errors.acn = 'Please enter valid ACN number before continue';
-        }
         if (
-          !item?.entityName ||
-          item?.entityName?.length <= 0 ||
-          item?.entityName?.value?.length <= 0
+          item?.abn &&
+          (!NUMBER_REGEX.test(item?.abn) ||
+            item?.abn?.trim()?.length < 11 ||
+            item?.abn?.trim().length > 13)
         ) {
           validated = false;
-          errors.entityName = 'Please enter entity name before continue';
+          errors.abn = 'Please enter valid ABN number';
         }
-        if (!item?.entityType || item?.entityType?.length <= 0) {
+        if (
+          item?.acn &&
+          (!NUMBER_REGEX.test(item?.acn) ||
+            item?.acn?.trim()?.length < 5 ||
+            item?.acn?.trim().length > 9)
+        ) {
           validated = false;
-          errors.entityType = 'Please select entity type before continue';
+          errors.acn = 'Please enter valid ACN number';
+        }
+      } else {
+        if (
+          !item?.registrationNumber ||
+          item?.registrationNumber?.toString()?.trim()?.length <= 0
+        ) {
+          validated = false;
+          errors.registrationNumber = 'Please enter registration number before continue';
+        }
+        if (
+          item?.registrationNumber &&
+          (item?.registrationNumber?.length <= 5 ||
+            item?.registrationNumber?.toString()?.trim()?.length >= 30)
+        ) {
+          validated = false;
+          errors.registrationNumber = 'Please enter valid registration number';
         }
       }
-      if (type === 'individual') {
-        if (!item?.title || item?.title?.length <= 0) {
-          validated = false;
-          errors.title = 'Please select title before continue';
+      if (
+        !item?.entityName ||
+        item?.entityName?.length <= 0 ||
+        item?.entityName?.value?.trim()?.length <= 0
+      ) {
+        validated = false;
+        errors.entityName = 'Please enter entity name before continue';
+      }
+      if (!item?.entityType || item?.entityType?.length <= 0) {
+        validated = false;
+        errors.entityType = 'Please select entity type before continue';
+      }
+      if (!item?.stakeholderCountry || item?.stakeholderCountry?.length <= 0) {
+        validated = false;
+        errors.stakeholderCountry = 'Please select country before continue';
+      }
+    }
+    if (type === 'individual') {
+      if (!item?.title || item?.title?.length <= 0) {
+        validated = false;
+        errors.title = 'Please select title before continue';
+      }
+      if (!item?.firstName || item?.firstName?.trim()?.length <= 0) {
+        validated = false;
+        errors.firstName = 'Please enter firstname before continue';
+      }
+      if (item?.firstName && SPECIAL_CHARACTER_REGEX.test(item?.firstName)) {
+        validated = false;
+        errors.firstName = 'Please enter valid firstname';
+      }
+      if (!item?.lastName || item?.lastName?.trim()?.length <= 0) {
+        validated = false;
+        errors.lastName = 'Please enter lastname before continue';
+      }
+      if (item?.lastName && SPECIAL_CHARACTER_REGEX.test(item?.lastName)) {
+        validated = false;
+        errors.lastName = 'Please enter valid lastname';
+      }
+      if (!item?.state || item?.state?.length <= 0) {
+        validated = false;
+        if (item?.country?.value === 'AUS' || item?.country?.value === 'NZL') {
+          errors.state = 'Please select state before continue';
+        } else {
+          errors.state = 'Please enter state before continue';
         }
-        if (!item?.firstName || item?.firstName?.trim().length <= 0) {
-          validated = false;
-          errors.firstName = 'Please enter firstname before continue';
-        }
-        if (
-          item?.firstName &&
-          item.firstName &&
-          SPECIAL_CHARACTER_REGEX.test(item?.firstName?.toString())
-        ) {
-          validated = false;
-          errors.firstName = 'Please enter valid firstname';
-        }
-        if (!item?.lastName || item?.lastName?.trim().length <= 0) {
-          validated = false;
-          errors.lastName = 'Please enter lastname before continue';
-        }
-        if (
-          item?.lastName &&
-          item?.lastName &&
-          SPECIAL_CHARACTER_REGEX.test(item?.lastName?.toString())
-        ) {
-          validated = false;
-          errors.lastName = 'Please enter valid lastname';
-        }
-        if (!item?.country || item?.country?.length <= 0) {
-          validated = false;
-          errors.country = 'Please select country before continue';
-        }
-        if (!item?.dateOfBirth || item?.dateOfBirth?.length <= 0) {
-          validated = false;
-          errors.dateOfBirth = 'Please select date of birth before continue';
-        }
-        if (!item?.driverLicenceNumber || item?.driverLicenceNumber?.length <= 0) {
-          validated = false;
-          errors.driverLicenceNumber = 'Please enter driver licence number before continue';
-        }
-        if (!item?.streetNumber || item?.streetNumber?.trim()?.length <= 0) {
-          validated = false;
-          errors.streetNumber = 'Please enter street number before continue';
-        }
-        if (item?.streetNumber && !NUMBER_REGEX.test(item?.streetNumber)) {
-          validated = false;
-          errors.streetNumber = 'Street number should be number';
-        }
-        if (!item?.state || item?.state?.length <= 0) {
-          validated = false;
-          if (item?.country?.value === 'AUS' || item?.country?.value === 'NZL') {
-            errors.state = 'Please select state before continue';
-          } else {
-            errors.state = 'Please enter state before continue';
-          }
-        }
-        if (
-          !['AUS', 'NZL'].includes(item?.country?.value) &&
-          data?.state &&
-          SPECIAL_CHARACTER_REGEX.test(data?.state)
-        ) {
-          validated = false;
-          errors.state = 'Please enter valid state';
-        }
-        if (!item?.postCode || item?.postCode?.trim()?.length <= 0) {
-          validated = false;
-          errors.postCode = 'Please enter postcode before continue';
-        }
-
-        if (item?.postCode && !NUMBER_REGEX.test(item?.postCode)) {
-          validated = false;
-          errors.postCode = 'Postcode should be number';
-        }
-        if (item?.phoneNumber && !NUMBER_REGEX.test(item?.phoneNumber)) {
-          validated = false;
-          errors.phoneNumber = 'Phone number should be number';
-        }
-        if (item?.mobileNumber && !NUMBER_REGEX.test(item?.mobileNumber)) {
-          validated = false;
-          errors.mobileNumber = 'Mobile number should be number';
-        }
-        if (item?.driverLicenceNumber && !NUMBER_REGEX.test(item?.driverLicenceNumber)) {
-          validated = false;
-          errors.driverLicenceNumber = 'Driving licence number should be number';
-        }
-        if (item?.email && !EMAIL_ADDRESS_REGEX.test(item?.email?.toString())) {
-          validated = false;
-          errors.email = 'Please enter valid email address';
-        }
+      }
+      if (item?.state && SPECIAL_CHARACTER_REGEX.test(item?.state?.value)) {
+        validated = false;
+        errors.state = 'Please enter valid state';
+      }
+      if (!item?.country || item?.country?.length <= 0) {
+        validated = false;
+        errors.country = 'Please select country before continue';
+      }
+      if (!item?.dateOfBirth || item?.dateOfBirth?.length <= 0) {
+        validated = false;
+        errors.dateOfBirth = 'Please select date of birth before continue';
+      }
+      if (!item?.driverLicenceNumber || item?.driverLicenceNumber?.trim()?.length <= 0) {
+        validated = false;
+        errors.driverLicenceNumber = 'Please enter driver licence number before continue';
+      }
+      if (item?.driverLicenceNumber && !NUMBER_REGEX.test(item?.driverLicenceNumber)) {
+        validated = false;
+        errors.driverLicenceNumber = 'Please enter driver valid licence number';
+      }
+      if (!item?.streetNumber || item?.streetNumber?.length <= 0) {
+        validated = false;
+        errors.streetNumber = 'Please enter street number before continue';
+      }
+      if (item?.streetNumber && !NUMBER_REGEX.test(item?.streetNumber)) {
+        validated = false;
+        errors.streetNumber = 'Street number should be number';
+      }
+      if (!item?.postCode || item?.postCode?.length <= 0) {
+        validated = false;
+        errors.postCode = 'Please enter post code before continue';
+      }
+      if (item?.postCode && !NUMBER_REGEX.test(item?.postCode)) {
+        validated = false;
+        errors.postCode = 'Post code should be number';
+      }
+      if (item?.phoneNumber && !NUMBER_REGEX.test(item?.phoneNumber)) {
+        validated = false;
+        errors.phoneNumber = 'Phone number should be number';
+      }
+      if (item?.email && !EMAIL_ADDRESS_REGEX.test(item?.email)) {
+        validated = false;
+        errors.email = 'Please enter valid email address';
       }
     }
     if (type === 'company' && validated) {
-      const { abn, acn, entityType, entityName, tradingName } = item;
-      preparedData = {
-        type,
+      const {
+        _id,
         abn,
         acn,
+        entityType,
+        entityName,
+        tradingName,
+        stakeholderCountry,
+        registrationNumber,
+      } = item;
+      preparedData = {
+        _id,
+        type,
         entityType: entityType?.value,
         entityName: entityName?.value,
         tradingName,
+        stakeholderCountry: { name: stakeholderCountry?.label, code: stakeholderCountry?.value },
       };
+      if (['AUS', 'NZL'].includes(stakeholderCountry?.value)) {
+        preparedData.abn = abn;
+        preparedData.acn = acn;
+      } else {
+        preparedData.registrationNumber = registrationNumber;
+      }
     } else if (type === 'individual' && validated) {
       const {
+        _id,
         title,
         firstName,
         middleName,
@@ -156,6 +184,7 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
         phoneNumber,
         mobileNumber,
         email,
+        property,
         unitNumber,
         streetNumber,
         streetName,
@@ -169,6 +198,7 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
       delete country?.name;
 
       preparedData = {
+        _id,
         type,
         title: title?.value,
         firstName,
@@ -180,6 +210,7 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
         mobileNumber,
         email,
         address: {
+          property,
           unitNumber,
           streetNumber,
           streetName,
@@ -206,14 +237,13 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
     try {
       if (
         editApplicationData?.company?.entityType?.value === 'PARTNERSHIP' &&
-        partners.length < 2
+        partners?.length < 2
       ) {
         validated = false;
         errorNotification('You have to add two partners at least');
       } else if (
-        // TODO CHECK IF SOLE TRADER WOULD COME HERE OR NOT
         editApplicationData?.company?.entityType?.value === 'SOLE_TRADER' &&
-        partners.length > 1
+        partners?.length > 1
       ) {
         validated = false;
         errorNotification('You can only add one sole trader');

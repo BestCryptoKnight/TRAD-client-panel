@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Accordion from '../../../../../common/Accordion/Accordion';
-import { addPersonDetail, getApplicationFilter } from '../../../redux/ApplicationAction';
 import PersonIndividualDetail from './personIndividualDetail/PersonIndividualDetail';
+import {
+  addPersonDetail,
+  getApplicationCompanyDropDownData,
+} from '../../../redux/ApplicationAction';
 
 const ApplicationPersonStep = () => {
   const dispatch = useDispatch();
@@ -23,50 +26,27 @@ const ApplicationPersonStep = () => {
     ) {
       dispatch(addPersonDetail('individual'));
     }
-    dispatch(getApplicationFilter());
+    dispatch(getApplicationCompanyDropDownData());
   }, []);
 
-  const { companyEntityType, streetType, australianStates, countryList, newZealandStates } =
-    useSelector(({ application }) => application?.applicationFilterList?.dropdownData ?? []);
+  const getAccordionAccordingEntityType = useCallback((person, index) => {
+    let itemHeader = 'Director Details';
 
-  const getAccordionAccordingEntityType = useCallback(
-    (person, index) => {
-      let itemHeader = 'Director Details';
-
-      switch (entityTypeFromCompany) {
-        case 'PARTNERSHIP':
-          itemHeader = 'Partner Details';
-          break;
-        case 'TRUST':
-          itemHeader = 'Trustee Details';
-          break;
-        case 'SOLE_TRADER':
-          itemHeader = 'Person Details';
-          break;
-        default:
-          break;
-      }
-      return (
-        <PersonIndividualDetail
-          newZealandStates={newZealandStates}
-          countryList={countryList}
-          australianStates={australianStates}
-          streetType={streetType}
-          companyEntityType={companyEntityType}
-          itemHeader={itemHeader}
-          index={index}
-        />
-      );
-    },
-    [
-      entityTypeFromCompany,
-      newZealandStates,
-      countryList,
-      australianStates,
-      streetType,
-      companyEntityType,
-    ]
-  );
+    switch (entityTypeFromCompany) {
+      case 'PARTNERSHIP':
+        itemHeader = 'Partner Details';
+        break;
+      case 'TRUST':
+        itemHeader = 'Trustee Details';
+        break;
+      case 'SOLE_TRADER':
+        itemHeader = 'Person Details';
+        break;
+      default:
+        break;
+    }
+    return <PersonIndividualDetail itemHeader={itemHeader} index={index} />;
+  }, []);
 
   return (
     <>

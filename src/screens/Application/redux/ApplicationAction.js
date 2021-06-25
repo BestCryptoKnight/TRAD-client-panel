@@ -240,10 +240,9 @@ export const searchApplicationCompanyEntityName = params => {
       dispatch({
         type: APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_ENTITY_TYPE_DATA,
         data: {
-          isLoading: true,
+          isLoading: params?.page === 0 && true,
           error: false,
           errorMessage: '',
-          data: [],
         },
       });
       const response = await ApplicationCompanyStepApiServices.searchApplicationCompanyEntityName(
@@ -274,7 +273,6 @@ export const searchApplicationCompanyEntityName = params => {
               isLoading: false,
               error: true,
               errorMessage: e.response.data.message ?? 'Please try again later.',
-              data: [],
             },
           });
         }
@@ -290,6 +288,14 @@ export const searchApplicationCompanyEntityName = params => {
         });
       }
     }
+  };
+};
+
+export const resetEntityTableData = () => {
+  return dispatch => {
+    dispatch({
+      type: APPLICATION_REDUX_CONSTANTS.COMPANY.WIPE_OUT_ENTITY_TABLE_DATA,
+    });
   };
 };
 
@@ -335,6 +341,7 @@ export const updateEditApplicationField = (stepName, name, value) => {
 export const addPersonDetail = type => {
   const companyData = {
     type: 'company',
+    stakeholderCountry: [],
     abn: '',
     acn: '',
     entityType: '',
@@ -364,6 +371,11 @@ export const addPersonDetail = type => {
     state: '',
     country: '',
     postCode: '',
+    stakeholderCountry: {
+      label: 'Australia',
+      name: 'country',
+      value: 'AUS',
+    },
     errors: {},
   };
   const data = type === 'individual' ? individualData : companyData;
@@ -381,33 +393,6 @@ export const removePersonDetail = index => {
       type: APPLICATION_REDUX_CONSTANTS.PERSON.REMOVE_APPLICATION_PERSON,
       data: index,
     });
-  };
-};
-export const wipeOutPersonsAsEntityChange = (debtor, data) => {
-  return async dispatch => {
-    try {
-      const response =
-        await ApplicationCompanyStepApiServices.deleteApplicationCompanyEntityTypeData({
-          debtorId: debtor,
-        });
-      if (response?.data?.status === 'SUCCESS') {
-        dispatch({
-          type: APPLICATION_REDUX_CONSTANTS.PERSON.WIPE_OUT_PERSON_STEP_DATA,
-          data,
-        });
-      }
-    } catch (e) {
-      if (e?.response && e?.response?.data) {
-        if (e?.response?.data?.status === undefined) {
-          errorNotification('It seems like server is down, Please try again later.');
-        }
-        if (e?.response?.data?.message) {
-          errorNotification(e.response.data.message);
-        } else {
-          errorNotification('Internal server error');
-        }
-      }
-    }
   };
 };
 
