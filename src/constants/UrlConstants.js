@@ -36,6 +36,7 @@ export const APPLICATION_URLS = {
   APPLICATION_SAVE_STEP_DATA: `${BASE_URL}application/`,
   APPLICATION_FILTER_LIST_URL: `${BASE_URL}application/entity-list`,
   GET_APPLICATION_DETAILS_URL: `${BASE_URL}application/details/`,
+  DOWNLOAD_APPLICATION: `${BASE_URL}application/download`,
 
   COMPANY: {
     DROP_DOWN_DATA_URL: `${BASE_URL}application/entity-list/`,
@@ -78,7 +79,7 @@ export const CREDIT_LIMITS_URLS = {
   CREDIT_LIMITS_FILTER: `${BASE_URL}debtor/entity-list/`,
   VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}debtor/`,
   CREDIT_LIMIT_ACTIONS: `${BASE_URL}debtor/credit-limit/`,
-  DOWNLOAD_CREDIT_LIMIT_CSV: `${BASE_URL}client/download/`,
+  DOWNLOAD_CREDIT_LIMIT_CSV: `${BASE_URL}debtor/download/`,
 
   APPLICATION: {
     APPLICATION_LIST: `${BASE_URL}application/`,

@@ -14,7 +14,7 @@ function VerifyOtp() {
   const history = useHistory();
   const { email } = useQueryParams();
   const { verifyOTPButtonLoaderAction, resendOTPButtonLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const onChangeOtp = e => {

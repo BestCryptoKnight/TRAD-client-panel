@@ -18,7 +18,7 @@ const ViewClientTask = () => {
   const taskDetails = useSelector(({ dashboard }) => dashboard?.taskDetails ?? {});
 
   const { dashboardCompleteTaskLoaderButtonAction, dashboardViewTaskLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const INPUTS = useMemo(

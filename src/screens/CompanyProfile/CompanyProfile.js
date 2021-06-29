@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getClientDetails } from './redux/CompanyProfileAction';
+import _ from 'lodash';
+import { getClientDetails, resetClientData } from './redux/CompanyProfileAction';
 import Loader from '../../common/Loader/Loader';
 import CompanyProfilePolicies from './CompanyProfilePolicies/CompanyProfilePolicies';
 
@@ -9,12 +10,13 @@ const CompanyProfile = () => {
 
   useEffect(() => {
     dispatch(getClientDetails());
+    return () => dispatch(resetClientData());
   }, []);
 
   const clientData = useSelector(({ companyProfile }) => companyProfile?.clientDetail ?? {});
 
   const { viewCompanyProfilePageLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const INPUTS = useMemo(
@@ -81,27 +83,32 @@ const CompanyProfile = () => {
   return (
     <>
       {!viewCompanyProfilePageLoaderAction ? (
-        <>
-          <div className="page-header">
-            <div className="page-header-name">Company Profile</div>
-          </div>
+        (() =>
+          !_.isEmpty(clientData) ? (
+            <>
+              <div className="page-header">
+                <div className="page-header-name">Company Profile</div>
+              </div>
 
-          {Object.entries(clientData)?.length > 0 ? (
-            <div className="common-white-container company-profile-container">
-              {INPUTS.map(input => (
-                <>
-                  <span>{input?.label}</span>
-                  <div>{input?.data?.toString()?.trim().length > 0 ? input?.data : '-'}</div>
-                </>
-              ))}
-            </div>
+              {Object.entries(clientData)?.length > 0 ? (
+                <div className="common-white-container company-profile-container">
+                  {INPUTS.map(input => (
+                    <>
+                      <span>{input?.label}</span>
+                      <div>{input?.data?.toString()?.trim().length > 0 ? input?.data : '-'}</div>
+                    </>
+                  ))}
+                </div>
+              ) : (
+                <div className="common-white-container">
+                  <Loader />
+                </div>
+              )}
+              <CompanyProfilePolicies />
+            </>
           ) : (
-            <div className="common-white-container">
-              <Loader />
-            </div>
-          )}
-          <CompanyProfilePolicies />
-        </>
+            <div className="no-record-found">No record found</div>
+          ))()
       ) : (
         <Loader />
       )}

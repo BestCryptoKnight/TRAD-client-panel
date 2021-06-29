@@ -42,7 +42,7 @@ const CreditLimitsApplicationTab = () => {
   const {
     CreditLimitApplicationColumnSaveButtonLoaderAction,
     CreditLimitApplicationColumnResetButtonLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const getApplicationList = useCallback(
     (params = {}, cb) => {

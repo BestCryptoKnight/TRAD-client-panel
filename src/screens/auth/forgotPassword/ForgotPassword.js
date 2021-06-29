@@ -11,7 +11,7 @@ import { forgotPassword } from './redux/ForgotPasswordAction';
 function ForgotPassword() {
   const [email, setEmail] = useState('');
   const { forgotPasswordButtonLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? {}
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? {}
   );
   const history = useHistory();
 

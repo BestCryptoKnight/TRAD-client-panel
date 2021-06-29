@@ -28,13 +28,14 @@ const CompanyProfilePolicies = () => {
   const companyProfilePolicyDefaultColumnList = useSelector(
     ({ companyProfile }) => companyProfile?.clientPolicyData?.clientPolicyDefaultColumnList ?? {}
   );
-  const { docs, page, limit, pages, total, headers, isLoading } = useMemo(() => policyList, [
-    policyList,
-  ]);
+  const { docs, page, limit, pages, total, headers, isLoading } = useMemo(
+    () => policyList,
+    [policyList]
+  );
   const {
     CompanyProfilePolicyColumnSaveButtonLoaderAction,
     CompanyProfilePolicyColumnResetButtonLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const { defaultFields, customFields } = useMemo(

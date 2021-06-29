@@ -78,6 +78,13 @@ export const companyProfile = (state = initialClientData, action) => {
       };
     }
 
+    case CLIENT_REDUX_CONSTANTS.RESET_CLIENT_DATA: {
+      return {
+        ...state,
+        clientDetail: initialClientData.clientDetail,
+      };
+    }
+
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:
       return null;
     default:

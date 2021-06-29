@@ -17,7 +17,6 @@ const initialCreditLimitsListState = {
     limit: 15,
     page: 1,
     pages: 1,
-    isLoading: true,
   },
   viewCreditLimitActiveTabIndex: 0,
   selectedCreditLimitData: {},
@@ -85,10 +84,7 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
     case CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION:
       return {
         ...state,
-        creditLimitList: {
-          isLoading: false,
-          ...action.data,
-        },
+        creditLimitList: action.data,
       };
 
     case CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST:
@@ -363,6 +359,18 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
       return {
         ...state,
         viewCreditLimitActiveTabIndex: action?.index,
+      };
+
+    case CREDIT_LIMITS_REDUX_CONSTANTS.RESET_CREDIT_LIMIT_LIST_DATA:
+      return {
+        ...state,
+        creditLimitList: initialCreditLimitsListState.creditLimitList,
+      };
+
+    case CREDIT_LIMITS_REDUX_CONSTANTS.RESET_VIEW_CREDIT_LIMIT_DATA:
+      return {
+        ...state,
+        selectedCreditLimitData: initialCreditLimitsListState.selectedCreditLimitData,
       };
 
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:

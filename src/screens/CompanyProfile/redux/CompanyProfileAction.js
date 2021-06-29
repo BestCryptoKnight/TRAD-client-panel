@@ -3,13 +3,13 @@ import { errorNotification, successNotification } from '../../../common/Toast';
 import { CLIENT_REDUX_CONSTANTS } from './CompanyProfileReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
 import {
-  startLoaderButtonOnRequest,
-  stopLoaderButtonOnSuccessOrFail,
-} from '../../../common/LoaderButton/redux/LoaderButtonAction';
+  startGeneralLoaderOnRequest,
+  stopGeneralLoaderOnSuccessOrFail,
+} from '../../../common/GeneralLoader/redux/GeneralLoaderAction';
 
 export const getClientDetails = () => {
   return async dispatch => {
-    startLoaderButtonOnRequest('viewCompanyProfilePageLoaderAction');
+    startGeneralLoaderOnRequest('viewCompanyProfilePageLoaderAction');
     try {
       const response = await CompanyProfileApiService.getClientData();
       if (response.data.status === 'SUCCESS') {
@@ -17,10 +17,10 @@ export const getClientDetails = () => {
           type: CLIENT_REDUX_CONSTANTS.CLIENT_DATA,
           data: response.data.data,
         });
-        stopLoaderButtonOnSuccessOrFail('viewCompanyProfilePageLoaderAction');
+        stopGeneralLoaderOnSuccessOrFail('viewCompanyProfilePageLoaderAction');
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('viewCompanyProfilePageLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('viewCompanyProfilePageLoaderAction');
       displayErrors(e);
     }
   };
@@ -89,7 +89,7 @@ export const saveCompanyProfilePolicyColumnList = ({
 }) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest(
+      startGeneralLoaderOnRequest(
         `CompanyProfilePolicyColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       let data = {
@@ -109,7 +109,7 @@ export const saveCompanyProfilePolicyColumnList = ({
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopLoaderButtonOnSuccessOrFail(
+          stopGeneralLoaderOnSuccessOrFail(
             `CompanyProfilePolicyColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
@@ -122,15 +122,23 @@ export const saveCompanyProfilePolicyColumnList = ({
           data: companyProfilePolicyColumnList,
         });
         successNotification('Columns updated successfully.');
-        stopLoaderButtonOnSuccessOrFail(
+        stopGeneralLoaderOnSuccessOrFail(
           `CompanyProfilePolicyColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
         );
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail(
+      stopGeneralLoaderOnSuccessOrFail(
         `CompanyProfilePolicyColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       displayErrors(e);
     }
+  };
+};
+
+export const resetClientData = () => {
+  return async dispatch => {
+    dispatch({
+      type: CLIENT_REDUX_CONSTANTS.RESET_CLIENT_DATA,
+    });
   };
 };

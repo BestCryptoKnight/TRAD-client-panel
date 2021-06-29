@@ -10,7 +10,7 @@ import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
 import Modal from '../../../common/Modal/Modal';
 import { useQueryParams } from '../../../hooks/GetQueryParamHook';
-import { getEntityDetails, getOverdueList } from '../redux/OverduesAction';
+import { getEntityDetails, getOverdueList, resetOverdueListData } from '../redux/OverduesAction';
 import { errorNotification } from '../../../common/Toast';
 import Input from '../../../common/Input/Input';
 import Loader from '../../../common/Loader/Loader';
@@ -58,7 +58,7 @@ const OverduesList = () => {
   );
 
   const { overdueListPageLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const {
@@ -242,6 +242,9 @@ const OverduesList = () => {
     });
     await getOverdueListByFilter({ ...params, ...filters });
     dispatch(getEntityDetails());
+    return () => {
+      dispatch(resetOverdueListData());
+    };
   }, []);
 
   useEffect(() => {

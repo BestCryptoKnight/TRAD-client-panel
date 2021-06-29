@@ -11,10 +11,12 @@ import Table from '../../../common/Table/Table';
 import Loader from '../../../common/Loader/Loader';
 import Pagination from '../../../common/Pagination/Pagination';
 import {
+  applicationDownloadAction,
   changeApplicationColumnNameList,
   getApplicationColumnNameList,
   getApplicationFilter,
   getApplicationsListByFilter,
+  resetApplicationListData,
   resetApplicationListPaginationData,
   saveApplicationColumnNameList,
   updateEditApplicationField,
@@ -25,10 +27,10 @@ import Modal from '../../../common/Modal/Modal';
 import Input from '../../../common/Input/Input';
 import { errorNotification } from '../../../common/Toast';
 import { APPLICATION_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/ApplicationReduxConstants';
+import { downloadAll } from '../../../helpers/DownloadHelper';
 
 const initialFilterState = {
   entity: '',
-  clientId: '',
   debtorId: '',
   applicationStatus: '',
   minCreditLimit: '',
@@ -68,7 +70,7 @@ const ApplicationList = () => {
   const applicationDefaultColumnNameList = useSelector(
     ({ application }) => application?.applicationDefaultColumnNameList ?? {}
   );
-  const { total, pages, page, limit, docs, headers, isLoading } = useMemo(
+  const { total, pages, page, limit, docs, headers } = useMemo(
     () => applicationListWithPageData,
     [applicationListWithPageData]
   );
@@ -79,10 +81,28 @@ const ApplicationList = () => {
   const {
     applicationListColumnSaveButtonLoaderAction,
     applicationListColumnResetButtonLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+    applicationListPageLoader,
+    applicationDownloadButtonLoaderAction,
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
-  const { entity, clientId, debtorId, minCreditLimit, maxCreditLimit, status, startDate, endDate } =
-    useMemo(() => filter ?? {}, [filter]);
+  const { entity, debtorId, minCreditLimit, maxCreditLimit, status, startDate, endDate } = useMemo(
+    () => filter ?? {},
+    [filter]
+  );
+
+  const appliedFilters = useMemo(() => {
+    return {
+      entityType: entity && entity.trim().length > 0 ? entity : undefined,
+      debtorId: debtorId && debtorId.trim().length > 0 ? debtorId : undefined,
+      status: (status?.trim()?.length ?? -1) > 0 ? status : undefined,
+      minCreditLimit:
+        minCreditLimit && minCreditLimit.trim().length > 0 ? minCreditLimit : undefined,
+      maxCreditLimit:
+        maxCreditLimit && maxCreditLimit.trim().length > 0 ? maxCreditLimit : undefined,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
+    };
+  }, [entity, debtorId, minCreditLimit, maxCreditLimit, status, startDate, endDate]);
 
   const handleStartDateChange = useCallback(
     date => {
@@ -175,17 +195,8 @@ const ApplicationList = () => {
         const data = {
           page: page || 1,
           limit: limit || 10,
-          entityType: entity && entity.trim().length > 0 ? entity : undefined,
-          clientId: clientId && clientId.trim().length > 0 ? clientId : undefined,
-          debtorId: debtorId && debtorId.trim().length > 0 ? debtorId : undefined,
-          status: (status?.trim()?.length ?? -1) > 0 ? status : undefined,
-          minCreditLimit:
-            minCreditLimit && minCreditLimit.trim().length > 0 ? minCreditLimit : undefined,
-          maxCreditLimit:
-            maxCreditLimit && maxCreditLimit.trim().length > 0 ? maxCreditLimit : undefined,
+          ...appliedFilters,
           ...params,
-          startDate: startDate || undefined,
-          endDate: endDate || undefined,
         };
         await dispatch(getApplicationsListByFilter(data));
         if (cb && typeof cb === 'function') {
@@ -193,19 +204,7 @@ const ApplicationList = () => {
         }
       }
     },
-    [
-      page,
-      limit,
-      entity,
-      clientId,
-      debtorId,
-      status,
-      minCreditLimit,
-      maxCreditLimit,
-      startDate,
-      endDate,
-      filter,
-    ]
+    [page, limit, appliedFilters]
   );
 
   // on record limit changed
@@ -331,7 +330,6 @@ const ApplicationList = () => {
     page: paramPage,
     limit: paramLimit,
     entityType: paramEntity,
-    clientId: paramClientId,
     debtorId: paramDebtorId,
     status: paramStatus,
     minCreditLimit: paramMinCreditLimit,
@@ -347,7 +345,6 @@ const ApplicationList = () => {
     };
     const filters = {
       entityType: paramEntity && paramEntity.trim().length > 0 ? paramEntity : undefined,
-      clientId: paramClientId && paramClientId.trim().length > 0 ? paramClientId : undefined,
       debtorId: paramDebtorId && paramDebtorId.trim().length > 0 ? paramDebtorId : undefined,
       status: (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : undefined,
       minCreditLimit:
@@ -391,37 +388,14 @@ const ApplicationList = () => {
     const params = {
       page: page ?? 1,
       limit: limit ?? 15,
-      entityType: entity && entity.trim().length > 0 ? entity : undefined,
-      clientId: clientId && clientId.trim().length > 0 ? clientId : undefined,
-      debtorId: debtorId && debtorId.trim().length > 0 ? debtorId : undefined,
-      status: (status?.trim()?.length ?? -1) > 0 ? status : undefined,
-      minCreditLimit:
-        minCreditLimit && minCreditLimit.trim().length > 0 ? minCreditLimit : undefined,
-      maxCreditLimit:
-        maxCreditLimit && maxCreditLimit.trim().length > 0 ? maxCreditLimit : undefined,
-      startDate: startDate ? new Date(startDate).toISOString() : undefined,
-      endDate: endDate ? new Date(endDate).toISOString() : undefined,
+      ...appliedFilters,
     };
     const url = Object.entries(params)
       .filter(arr => arr[1] !== undefined)
       .map(([k, v]) => `${k}=${v}`)
       .join('&');
     history.push(`${history.location.pathname}?${url}`);
-  }, [
-    history,
-    total,
-    pages,
-    page,
-    limit,
-    entity,
-    clientId,
-    debtorId,
-    status,
-    minCreditLimit,
-    maxCreditLimit,
-    startDate,
-    endDate,
-  ]);
+  }, [history, total, pages, page, limit, appliedFilters]);
 
   const entityTypeSelectedValue = useMemo(() => {
     const foundValue = dropdownData?.entityType?.find(e => {
@@ -455,35 +429,59 @@ const ApplicationList = () => {
     [history]
   );
 
+  const downloadApplication = useCallback(async () => {
+    if (docs?.length > 0) {
+      try {
+        const response = await applicationDownloadAction(appliedFilters);
+        if (response) downloadAll(response);
+      } catch (e) {
+        /**/
+      }
+    } else {
+      errorNotification('No records to download');
+    }
+  }, [docs?.length, appliedFilters]);
+
   useEffect(() => {
-    return () => dispatch(resetApplicationListPaginationData(page, pages, total, limit));
+    return () => {
+      dispatch(resetApplicationListPaginationData(page, pages, total, limit));
+      dispatch(resetApplicationListData());
+    };
   }, []);
 
   return (
     <>
-      <div className="page-header">
-        <div className="page-header-name">Application List</div>
-        <div className="page-header-button-container">
-          <IconButton
-            buttonType="secondary"
-            title="filter_list"
-            className="mr-10"
-            buttonTitle="Click to apply filters on application list"
-            onClick={() => toggleFilterModal()}
-          />
-          <IconButton
-            buttonType="primary"
-            title="format_line_spacing"
-            className="mr-10"
-            buttonTitle="Click to select custom fields"
-            onClick={() => toggleCustomField()}
-          />
-          <Button title="Generate" buttonType="success" onClick={generateApplicationClick} />
-        </div>
-      </div>
-      {!isLoading && docs ? (
-        (() =>
-          docs?.length > 0 ? (
+      {!applicationListPageLoader ? (
+        <>
+          <div className="page-header">
+            <div className="page-header-name">Application List</div>
+            <div className="page-header-button-container">
+              <IconButton
+                buttonType="primary"
+                title="cloud_download"
+                className="mr-10"
+                buttonTitle="Click to download applications"
+                onClick={downloadApplication}
+                isLoading={applicationDownloadButtonLoaderAction}
+              />
+              <IconButton
+                buttonType="secondary"
+                title="filter_list"
+                className="mr-10"
+                buttonTitle="Click to apply filters on application list"
+                onClick={() => toggleFilterModal()}
+              />
+              <IconButton
+                buttonType="primary"
+                title="format_line_spacing"
+                className="mr-10"
+                buttonTitle="Click to select custom fields"
+                onClick={() => toggleCustomField()}
+              />
+              <Button title="Generate" buttonType="success" onClick={generateApplicationClick} />
+            </div>
+          </div>
+          {docs?.length > 0 ? (
             <>
               <div className="common-list-container">
                 <Table
@@ -508,109 +506,110 @@ const ApplicationList = () => {
             </>
           ) : (
             <div className="no-record-found">No record found</div>
-          ))()
+          )}
+          {filterModal && (
+            <Modal
+              headerIcon="filter_list"
+              header="filter"
+              buttons={filterModalButtons}
+              className="filter-modal application-filter-modal"
+            >
+              <div className="filter-modal-row">
+                <div className="form-title">Entity Type</div>
+                <ReactSelect
+                  className="filter-select react-select-container"
+                  classNamePrefix="react-select"
+                  placeholder="Select Entity Type"
+                  name="role"
+                  options={dropdownData?.entityType}
+                  value={entityTypeSelectedValue}
+                  onChange={handleEntityTypeFilterChange}
+                  isSearchble
+                />
+              </div>
+              <div className="filter-modal-row">
+                <div className="form-title">Debtor Name</div>
+                <ReactSelect
+                  className="filter-select react-select-container"
+                  classNamePrefix="react-select"
+                  placeholder="Select Debtor"
+                  name="role"
+                  options={dropdownData?.debtors}
+                  value={debtorIdSelectedValue}
+                  onChange={handleDebtorIdFilterChange}
+                  isSearchble
+                />
+              </div>
+              <div className="filter-modal-row">
+                <div className="form-title">Application Status</div>
+                <ReactSelect
+                  className="filter-select react-select-container"
+                  classNamePrefix="react-select"
+                  placeholder="Select Status"
+                  name="role"
+                  options={dropdownData?.applicationStatus}
+                  value={applicationStatusSelectedValue}
+                  onChange={handleApplicationStatusFilterChange}
+                  isSearchble
+                />
+              </div>
+              <div className="filter-modal-row">
+                <div className="form-title"> Minimum Credit Limit</div>
+                <Input
+                  type="text"
+                  name="min-limit"
+                  value={minCreditLimit}
+                  placeholder="3000"
+                  onChange={handleMinLimitChange}
+                />
+              </div>
+              <div className="filter-modal-row">
+                <div className="form-title">Maximum Credit Limit</div>
+                <Input
+                  type="text"
+                  name="max-limit"
+                  value={maxCreditLimit}
+                  placeholder="100000"
+                  onChange={handleMaxLimitChange}
+                />
+              </div>
+              <div className="filter-modal-row">
+                <div className="form-title">Date</div>
+                <div className="date-picker-container filter-date-picker-container mr-15">
+                  <DatePicker
+                    className="filter-date-picker"
+                    selected={startDate}
+                    onChange={handleStartDateChange}
+                    placeholderText="From Date"
+                    popperProps={{ positionFixed: true }}
+                  />
+                  <span className="material-icons-round">event_available</span>
+                </div>
+                <div className="date-picker-container filter-date-picker-container">
+                  <DatePicker
+                    className="filter-date-picker"
+                    selected={endDate}
+                    onChange={handleEndDateChange}
+                    placeholderText="To Date"
+                    popperProps={{ positionFixed: true }}
+                  />
+                  <span className="material-icons-round">event_available</span>
+                </div>
+              </div>
+            </Modal>
+          )}
+          {customFieldModal && (
+            <CustomFieldModal
+              defaultFields={defaultFields}
+              customFields={customFields}
+              onChangeSelectedColumn={onChangeSelectedColumn}
+              buttons={customFieldsModalButtons}
+              toggleCustomField={toggleCustomField}
+            />
+          )}
+        </>
       ) : (
         <Loader />
-      )}
-      {filterModal && (
-        <Modal
-          headerIcon="filter_list"
-          header="filter"
-          buttons={filterModalButtons}
-          className="filter-modal application-filter-modal"
-        >
-          <div className="filter-modal-row">
-            <div className="form-title">Entity Type</div>
-            <ReactSelect
-              className="filter-select react-select-container"
-              classNamePrefix="react-select"
-              placeholder="Select Entity Type"
-              name="role"
-              options={dropdownData?.entityType}
-              value={entityTypeSelectedValue}
-              onChange={handleEntityTypeFilterChange}
-              isSearchble
-            />
-          </div>
-          <div className="filter-modal-row">
-            <div className="form-title">Debtor Name</div>
-            <ReactSelect
-              className="filter-select react-select-container"
-              classNamePrefix="react-select"
-              placeholder="Select Debtor"
-              name="role"
-              options={dropdownData?.debtors}
-              value={debtorIdSelectedValue}
-              onChange={handleDebtorIdFilterChange}
-              isSearchble
-            />
-          </div>
-          <div className="filter-modal-row">
-            <div className="form-title">Application Status</div>
-            <ReactSelect
-              className="filter-select react-select-container"
-              classNamePrefix="react-select"
-              placeholder="Select Status"
-              name="role"
-              options={dropdownData?.applicationStatus}
-              value={applicationStatusSelectedValue}
-              onChange={handleApplicationStatusFilterChange}
-              isSearchble
-            />
-          </div>
-          <div className="filter-modal-row">
-            <div className="form-title"> Minimum Credit Limit</div>
-            <Input
-              type="text"
-              name="min-limit"
-              value={minCreditLimit}
-              placeholder="3000"
-              onChange={handleMinLimitChange}
-            />
-          </div>
-          <div className="filter-modal-row">
-            <div className="form-title">Maximum Credit Limit</div>
-            <Input
-              type="text"
-              name="max-limit"
-              value={maxCreditLimit}
-              placeholder="100000"
-              onChange={handleMaxLimitChange}
-            />
-          </div>
-          <div className="filter-modal-row">
-            <div className="form-title">Date</div>
-            <div className="date-picker-container filter-date-picker-container mr-15">
-              <DatePicker
-                className="filter-date-picker"
-                selected={startDate}
-                onChange={handleStartDateChange}
-                placeholderText="From Date"
-                popperProps={{ positionFixed: true }}
-              />
-              <span className="material-icons-round">event_available</span>
-            </div>
-            <div className="date-picker-container filter-date-picker-container">
-              <DatePicker
-                className="filter-date-picker"
-                selected={endDate}
-                onChange={handleEndDateChange}
-                placeholderText="To Date"
-                popperProps={{ positionFixed: true }}
-              />
-              <span className="material-icons-round">event_available</span>
-            </div>
-          </div>
-        </Modal>
-      )}
-      {customFieldModal && (
-        <CustomFieldModal
-          defaultFields={defaultFields}
-          customFields={customFields}
-          onChangeSelectedColumn={onChangeSelectedColumn}
-          buttons={customFieldsModalButtons}
-          toggleCustomField={toggleCustomField}
-        />
       )}
     </>
   );

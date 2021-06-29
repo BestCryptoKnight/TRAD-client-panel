@@ -10,6 +10,7 @@ import {
   changeClaimsColumnList,
   getClaimsColumnsList,
   getClaimsListByFilter,
+  resetClaimListData,
   saveClaimsColumnsList,
 } from '../redux/ClaimsAction';
 import Loader from '../../../common/Loader/Loader';
@@ -29,13 +30,13 @@ const ClaimsList = () => {
   const claimsDefaultColumnList = useSelector(
     ({ claims }) => claims?.claimsDefaultColumnList ?? {}
   );
-  const { claimsListColumnSaveButtonLoaderAction, claimsListColumnResetButtonLoaderAction } =
-    useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  const {
+    claimsListColumnSaveButtonLoaderAction,
+    claimsListColumnResetButtonLoaderAction,
+    claimListLoader,
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
-  const { total, pages, page, limit, docs, headers, isLoading } = useMemo(
-    () => claimsList,
-    [claimsList]
-  );
+  const { total, pages, page, limit, docs, headers } = useMemo(() => claimsList, [claimsList]);
 
   const { defaultFields, customFields } = useMemo(
     () =>
@@ -164,6 +165,9 @@ const ClaimsList = () => {
 
     getClaimsByFilter(data);
     dispatch(getClaimsColumnsList());
+    return () => {
+      dispatch(resetClaimListData());
+    };
   }, []);
 
   return (
@@ -182,7 +186,7 @@ const ClaimsList = () => {
         </div>
       </div>
 
-      {!isLoading && docs ? (
+      {!claimListLoader ? (
         (() =>
           docs?.length > 0 ? (
             <>
@@ -206,22 +210,22 @@ const ClaimsList = () => {
                 onSelectLimit={onSelectLimit}
                 pageActionClick={pageActionClick}
               />
+
+              {customFieldModal && (
+                <CustomFieldModal
+                  defaultFields={defaultFields}
+                  customFields={customFields}
+                  buttons={customFieldsModalButtons}
+                  onChangeSelectedColumn={onChangeSelectedColumn}
+                  toggleCustomField={toggleCustomField}
+                />
+              )}
             </>
           ) : (
             <div className="no-record-found">No record found</div>
           ))()
       ) : (
         <Loader />
-      )}
-
-      {customFieldModal && (
-        <CustomFieldModal
-          defaultFields={defaultFields}
-          customFields={customFields}
-          buttons={customFieldsModalButtons}
-          onChangeSelectedColumn={onChangeSelectedColumn}
-          toggleCustomField={toggleCustomField}
-        />
       )}
     </>
   );

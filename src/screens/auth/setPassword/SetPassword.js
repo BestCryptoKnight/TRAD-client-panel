@@ -13,7 +13,7 @@ function SetPassword() {
   const [makePassword, setMakePassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { setPasswordButtonLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const history = useHistory();

@@ -77,9 +77,10 @@ const CreditLimitsDocumentsTab = () => {
     creditLimitsDocumentReducer,
     initialCreditLimitsDocumentState
   );
-  const { documentType, description } = useMemo(() => selectedCreditLimitsDocument, [
-    selectedCreditLimitsDocument,
-  ]);
+  const { documentType, description } = useMemo(
+    () => selectedCreditLimitsDocument,
+    [selectedCreditLimitsDocument]
+  );
   const documentList = useSelector(
     ({ creditLimits }) => creditLimits?.documents?.documentList ?? {}
   );
@@ -93,9 +94,10 @@ const CreditLimitsDocumentsTab = () => {
     ({ creditLimits }) => creditLimits?.documents?.documentTypeList ?? []
   );
 
-  const { total, headers, pages, docs, page, limit, isLoading } = useMemo(() => documentList, [
-    documentList,
-  ]);
+  const { total, headers, pages, docs, page, limit, isLoading } = useMemo(
+    () => documentList,
+    [documentList]
+  );
 
   const {
     CreditLimitDocumentsColumnSaveButtonLoaderAction,
@@ -103,7 +105,7 @@ const CreditLimitsDocumentsTab = () => {
     CreditLimitDocumentUploadButtonLoaderAction,
     CreditLimitDocumentDeleteButtonLoaderAction,
     CreditLimitDocumentDownloadButtonLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const { defaultFields, customFields } = useMemo(
     () => creditLimitsDocumentColumnList ?? { defaultFields: [], customFields: [] },

@@ -68,7 +68,7 @@ const ApplicationDocumentStep = () => {
   const {
     GenerateApplicationDocumentUploadButtonLoaderAction,
     GenerateApplicationDocumentDeleteButtonLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   /* const documentTypeList = useSelector(
       ({ application }) => application.editApplication.documentStep.documentTypeList

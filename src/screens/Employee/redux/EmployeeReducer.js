@@ -5,7 +5,7 @@ import {
 } from './EmployeeReduxConstants';
 
 const initialEmployeeListState = {
-  employeeList: { docs: [], total: 0, limit: 15, page: 1, pages: 1, isLoading: true },
+  employeeList: { docs: [], total: 0, limit: 15, page: 1, pages: 1 },
   employeeColumnList: {},
   employeeDefaultColumnList: {},
 };
@@ -40,6 +40,13 @@ export const employee = (state = initialEmployeeListState, action) => {
       return {
         ...state,
         employeeColumnList: columnList,
+      };
+    }
+
+    case EMPLOYEE_REDUX_CONSTANTS.RESET_EMPLOYEE_DETAILS: {
+      return {
+        ...state,
+        employeeList: initialEmployeeListState.employeeList,
       };
     }
 

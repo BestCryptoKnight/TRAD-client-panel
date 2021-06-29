@@ -12,7 +12,6 @@ const initialApplicationList = {
     page: 1,
     pages: 1,
     headers: [],
-    isLoading: false,
   },
   applicationColumnNameList: {},
   applicationDefaultColumnNameList: {},
@@ -120,15 +119,6 @@ const initialApplicationList = {
 
 export const application = (state = initialApplicationList, action) => {
   switch (action.type) {
-    case APPLICATION_REDUX_CONSTANTS.APPLICATION_LIST_REQUEST:
-      return {
-        ...state,
-        applicationList: {
-          ...state?.applicationList,
-          isLoading: true,
-        },
-      };
-
     case APPLICATION_REDUX_CONSTANTS.APPLICATION_LIST_SUCCESS:
       return {
         ...state,
@@ -139,14 +129,6 @@ export const application = (state = initialApplicationList, action) => {
         },
       };
 
-    case APPLICATION_REDUX_CONSTANTS.APPLICATION_LIST_FAILURE:
-      return {
-        ...state,
-        applicationList: {
-          ...state?.applicationList,
-          isLoading: false,
-        },
-      };
     case APPLICATION_REDUX_CONSTANTS.RESET_APPLICATION_LIST_PAGINATION_DATA:
       return {
         ...state,
@@ -501,22 +483,6 @@ export const application = (state = initialApplicationList, action) => {
 
     // View Application
 
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_REQUEST_ACTION:
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          isLoading: true,
-        },
-      };
-    case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_FAIL_ACTION:
-      return {
-        ...state,
-        viewApplication: {
-          ...state?.viewApplication,
-          isLoading: false,
-        },
-      };
     case APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.VIEW_APPLICATION_DATA_RESET:
       return {
         ...state,
@@ -530,7 +496,6 @@ export const application = (state = initialApplicationList, action) => {
         ...state,
         viewApplication: {
           ...state?.viewApplication,
-          isLoading: false,
           applicationDetail: action?.data,
         },
       };
@@ -610,6 +575,12 @@ export const application = (state = initialApplicationList, action) => {
           ...action?.data,
           applicationStage: action.activeStep - 1,
         },
+      };
+
+    case APPLICATION_REDUX_CONSTANTS.RESET_APPLICATION_LIST_DATA:
+      return {
+        ...state,
+        applicationList: initialApplicationList.applicationList,
       };
 
     default:

@@ -6,24 +6,24 @@ import {
 } from './EmployeeReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
 import {
-  startLoaderButtonOnRequest,
-  stopLoaderButtonOnSuccessOrFail,
-} from '../../../common/LoaderButton/redux/LoaderButtonAction';
+  startGeneralLoaderOnRequest,
+  stopGeneralLoaderOnSuccessOrFail,
+} from '../../../common/GeneralLoader/redux/GeneralLoaderAction';
 
 export const getEmployeeList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest('viewEmployeePageLoaderAction');
+      startGeneralLoaderOnRequest('viewEmployeePageLoaderAction');
       const response = await EmployeeApiService.getAllEmployeeList(params);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: EMPLOYEE_REDUX_CONSTANTS.EMPLOYEE_LIST_USER_ACTION,
           data: response.data.data,
         });
-        stopLoaderButtonOnSuccessOrFail('viewEmployeePageLoaderAction');
+        stopGeneralLoaderOnSuccessOrFail('viewEmployeePageLoaderAction');
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('viewEmployeePageLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('viewEmployeePageLoaderAction');
       displayErrors(e);
     }
   };
@@ -67,7 +67,7 @@ export const changeEmployeeColumnList = data => {
 export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = false }) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest(
+      startGeneralLoaderOnRequest(
         `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       let data = {
@@ -87,7 +87,7 @@ export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = fals
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopLoaderButtonOnSuccessOrFail(
+          stopGeneralLoaderOnSuccessOrFail(
             `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
@@ -100,15 +100,23 @@ export const saveEmployeeColumnList = ({ employeeColumnList = {}, isReset = fals
           data: employeeColumnList,
         });
         successNotification('Columns updated successfully.');
-        stopLoaderButtonOnSuccessOrFail(
+        stopGeneralLoaderOnSuccessOrFail(
           `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
         );
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail(
+      stopGeneralLoaderOnSuccessOrFail(
         `EmployeeListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       displayErrors(e);
     }
+  };
+};
+
+export const resetEmployeeDetails = () => {
+  return dispatch => {
+    dispatch({
+      type: EMPLOYEE_REDUX_CONSTANTS.RESET_EMPLOYEE_DETAILS,
+    });
   };
 };

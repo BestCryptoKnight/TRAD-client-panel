@@ -7,7 +7,7 @@ const Support = () => {
   const dispatch = useDispatch();
   const supportDetails = useSelector(({ support }) => support ?? {});
   const { supportPagePageLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   useEffect(() => {

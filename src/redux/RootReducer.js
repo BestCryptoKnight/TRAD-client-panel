@@ -14,7 +14,7 @@ import { employee } from '../screens/Employee/redux/EmployeeReducer';
 import { companyProfile } from '../screens/CompanyProfile/redux/CompanyProfileReducer';
 import { LOGIN_REDUX_CONSTANTS } from '../screens/auth/login/redux/LoginReduxConstants';
 import { support } from '../screens/Support/redux/SupportReducer';
-import { loaderButtonReducer } from '../common/LoaderButton/redux/LoaderButtonReducer';
+import { generalLoaderReducer } from '../common/GeneralLoader/redux/GeneralLoaderReducer';
 import { overdue } from '../screens/Overdues/redux/OverduesReducer';
 
 const appReducer = combineReducers({
@@ -26,7 +26,7 @@ const appReducer = combineReducers({
   employee,
   companyProfile,
   support,
-  loaderButtonReducer,
+  generalLoaderReducer,
   globalSearchReducer,
   headerNotificationReducer,
   overdue,

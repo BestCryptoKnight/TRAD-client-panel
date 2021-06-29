@@ -44,7 +44,7 @@ const CreditLimitsTasksTab = () => {
   const {
     CreditLimitTaskColumnSaveButtonLoaderAction,
     CreditLimitTaskColumnResetButtonLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const getTasksList = useCallback(
     async (params = {}, cb) => {

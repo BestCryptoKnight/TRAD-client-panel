@@ -11,25 +11,25 @@ import {
 } from './CreditLimitsReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
 import {
-  startLoaderButtonOnRequest,
-  stopLoaderButtonOnSuccessOrFail,
-} from '../../../common/LoaderButton/redux/LoaderButtonAction';
+  startGeneralLoaderOnRequest,
+  stopGeneralLoaderOnSuccessOrFail,
+} from '../../../common/GeneralLoader/redux/GeneralLoaderAction';
 import { store } from '../../../redux/store';
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest('creditLimitListPageLoaderAction');
+      startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(params);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
           data: response?.data?.data,
         });
-        stopLoaderButtonOnSuccessOrFail('creditLimitListPageLoaderAction');
+        stopGeneralLoaderOnSuccessOrFail('creditLimitListPageLoaderAction');
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('creditLimitListPageLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('creditLimitListPageLoaderAction');
       displayErrors(e);
     }
   };
@@ -67,7 +67,7 @@ export const changeCreditColumnList = data => {
 export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset = false }) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest(
+      startGeneralLoaderOnRequest(
         `CreditLimitListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       let data = {
@@ -87,7 +87,7 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopLoaderButtonOnSuccessOrFail(
+          stopGeneralLoaderOnSuccessOrFail(
             `CreditLimitListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
@@ -100,12 +100,12 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
           data: creditLimitsColumnList,
         });
         successNotification('Columns updated successfully.');
-        stopLoaderButtonOnSuccessOrFail(
+        stopGeneralLoaderOnSuccessOrFail(
           `CreditLimitListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
         );
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail(
+      stopGeneralLoaderOnSuccessOrFail(
         `CreditLimitListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       displayErrors(e);
@@ -132,14 +132,14 @@ export const getCreditLimitsFilter = () => {
 export const downloadCreditLimitCSV = () => {
   return async () => {
     try {
-      startLoaderButtonOnRequest('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
+      startGeneralLoaderOnRequest('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
       const response = await CreditLimitsApiService.downloadCreditLimitCSVFile();
-      if (response?.data?.status === 'SUCCESS') {
-        stopLoaderButtonOnSuccessOrFail(`creditLimitDownloadCreditLimitCSVButtonLoaderAction`);
+      if (response?.statusText === 'OK') {
+        stopGeneralLoaderOnSuccessOrFail(`creditLimitDownloadCreditLimitCSVButtonLoaderAction`);
         return response;
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
       displayErrors(e);
       throw Error();
     }
@@ -150,17 +150,17 @@ export const downloadCreditLimitCSV = () => {
 export const getCreditLimitsDetails = id => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest('viewCreditLimitPageLoaderAction');
+      startGeneralLoaderOnRequest('viewCreditLimitPageLoaderAction');
       const response = await CreditLimitsApiService.getCreditLimitsDetails(id);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA,
           data: response.data.data,
         });
-        stopLoaderButtonOnSuccessOrFail('viewCreditLimitPageLoaderAction');
+        stopGeneralLoaderOnSuccessOrFail('viewCreditLimitPageLoaderAction');
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('viewCreditLimitPageLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('viewCreditLimitPageLoaderAction');
       displayErrors(e);
     }
   };
@@ -169,14 +169,14 @@ export const getCreditLimitsDetails = id => {
 export const modifyClientCreditLimit = (id, data) => {
   return async () => {
     try {
-      startLoaderButtonOnRequest('modifyCreditLimitButtonLoaderAction');
+      startGeneralLoaderOnRequest('modifyCreditLimitButtonLoaderAction');
       const response = await CreditLimitsApiService.modifyClientCreditLimitData(id, data);
       if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message ?? 'Credit limit updated successfully');
-        stopLoaderButtonOnSuccessOrFail('modifyCreditLimitButtonLoaderAction');
+        stopGeneralLoaderOnSuccessOrFail('modifyCreditLimitButtonLoaderAction');
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('modifyCreditLimitButtonLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('modifyCreditLimitButtonLoaderAction');
       displayErrors(e);
     }
   };
@@ -185,14 +185,14 @@ export const modifyClientCreditLimit = (id, data) => {
 export const surrenderClientCreditLimit = (id, data) => {
   return async () => {
     try {
-      startLoaderButtonOnRequest('surrenderCreditLimitButtonLoaderAction');
+      startGeneralLoaderOnRequest('surrenderCreditLimitButtonLoaderAction');
       const response = await CreditLimitsApiService.surrenderClientCreditLimitData(id, data);
       if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message ?? 'Credit limit surrendered successfully');
-        stopLoaderButtonOnSuccessOrFail('surrenderCreditLimitButtonLoaderAction');
+        stopGeneralLoaderOnSuccessOrFail('surrenderCreditLimitButtonLoaderAction');
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('surrenderCreditLimitButtonLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('surrenderCreditLimitButtonLoaderAction');
       displayErrors(e);
     }
   };
@@ -254,7 +254,7 @@ export const onSaveCreditLimitsApplicationColumnList = ({
   isReset = false,
 }) => {
   return async dispatch => {
-    startLoaderButtonOnRequest(
+    startGeneralLoaderOnRequest(
       `CreditLimitApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
     );
     try {
@@ -277,7 +277,7 @@ export const onSaveCreditLimitsApplicationColumnList = ({
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopLoaderButtonOnSuccessOrFail(
+          stopGeneralLoaderOnSuccessOrFail(
             `CreditLimitApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
@@ -290,12 +290,12 @@ export const onSaveCreditLimitsApplicationColumnList = ({
           data: creditLimitsApplicationColumnList,
         });
         successNotification('Columns updated successfully.');
-        stopLoaderButtonOnSuccessOrFail(
+        stopGeneralLoaderOnSuccessOrFail(
           `CreditLimitApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
         );
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail(
+      stopGeneralLoaderOnSuccessOrFail(
         `CreditLimitApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       displayErrors(e);
@@ -362,7 +362,7 @@ export const onSaveCreditLimitsTaskColumnList = ({
 }) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest(
+      startGeneralLoaderOnRequest(
         `CreditLimitTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       let data = {
@@ -384,7 +384,7 @@ export const onSaveCreditLimitsTaskColumnList = ({
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopLoaderButtonOnSuccessOrFail(
+          stopGeneralLoaderOnSuccessOrFail(
             `CreditLimitTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
@@ -397,12 +397,12 @@ export const onSaveCreditLimitsTaskColumnList = ({
           data: creditLimitsTaskColumnList,
         });
         successNotification('Columns updated successfully.');
-        stopLoaderButtonOnSuccessOrFail(
+        stopGeneralLoaderOnSuccessOrFail(
           `CreditLimitTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
         );
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail(
+      stopGeneralLoaderOnSuccessOrFail(
         `CreditLimitTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       displayErrors(e);
@@ -475,7 +475,7 @@ export const saveCreditLimitsDocumentsColumnList = ({
 }) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest(
+      startGeneralLoaderOnRequest(
         `CreditLimitDocumentsColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       let data = {
@@ -499,7 +499,7 @@ export const saveCreditLimitsDocumentsColumnList = ({
 
       if (!isReset && data.columns.length < 1) {
         errorNotification('Please select at least one column to continue.');
-        stopLoaderButtonOnSuccessOrFail(
+        stopGeneralLoaderOnSuccessOrFail(
           `CreditLimitDocumentsColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
         );
       } else {
@@ -511,13 +511,13 @@ export const saveCreditLimitsDocumentsColumnList = ({
 
         if (response && response.data && response.data.status === 'SUCCESS') {
           successNotification('Columns updated successfully.');
-          stopLoaderButtonOnSuccessOrFail(
+          stopGeneralLoaderOnSuccessOrFail(
             `CreditLimitDocumentsColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
         }
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail(
+      stopGeneralLoaderOnSuccessOrFail(
         `CreditLimitDocumentsColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
       );
       displayErrors(e);
@@ -547,7 +547,7 @@ export const getCreditLimitsDocumentTypeList = () => {
 export const creditLimitsUploadDocument = (data, config) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest(`CreditLimitDocumentUploadButtonLoaderAction`);
+      startGeneralLoaderOnRequest(`CreditLimitDocumentUploadButtonLoaderAction`);
       const response = await CreditLimitsApiService.uploadDocument(data, config);
       if (response.data.status === 'SUCCESS') {
         dispatch({
@@ -555,10 +555,10 @@ export const creditLimitsUploadDocument = (data, config) => {
           data: response.data.data,
         });
         successNotification(response.data.message || 'Document uploaded successfully');
-        stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentUploadButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentUploadButtonLoaderAction`);
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentUploadButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentUploadButtonLoaderAction`);
       displayErrors(e);
     }
   };
@@ -568,7 +568,7 @@ export const downloadCreditLimitsDocuments = async data => {
   const str = data.toString();
 
   try {
-    startLoaderButtonOnRequest(`CreditLimitDocumentDownloadButtonLoaderAction`);
+    startGeneralLoaderOnRequest(`CreditLimitDocumentDownloadButtonLoaderAction`);
     const config = {
       documentIds: str,
       action: 'download',
@@ -576,11 +576,11 @@ export const downloadCreditLimitsDocuments = async data => {
 
     const response = await CreditLimitsApiService?.downloadDocuments(config);
     if (response?.statusText === 'OK') {
-      stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentDownloadButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentDownloadButtonLoaderAction`);
       return response;
     }
   } catch (e) {
-    stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentDownloadButtonLoaderAction`);
+    stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentDownloadButtonLoaderAction`);
     displayErrors(e);
   }
   return false;
@@ -588,17 +588,17 @@ export const downloadCreditLimitsDocuments = async data => {
 
 export const deleteCreditLimitsDocumentAction = async (docId, cb) => {
   try {
-    startLoaderButtonOnRequest(`CreditLimitDocumentDeleteButtonLoaderAction`);
+    startGeneralLoaderOnRequest(`CreditLimitDocumentDeleteButtonLoaderAction`);
     const response = await CreditLimitsApiService?.deleteCreditLimitsDocument(docId);
     if (response.data.status === 'SUCCESS') {
       successNotification(response?.data?.message || 'Document deleted successfully.');
-      stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentDeleteButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentDeleteButtonLoaderAction`);
       if (cb) {
         cb();
       }
     }
   } catch (e) {
-    stopLoaderButtonOnSuccessOrFail(`CreditLimitDocumentDeleteButtonLoaderAction`);
+    stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentDeleteButtonLoaderAction`);
     displayErrors(e);
   }
 };
@@ -694,4 +694,20 @@ export const setViewCreditLimitActiveTabIndex = index => {
     type: CREDIT_LIMITS_REDUX_CONSTANTS.VIEW_CREDIT_LIMIT_ACTIVE_TAB_INDEX,
     index,
   });
+};
+
+export const resetCreditLimitListData = () => {
+  return dispatch => {
+    dispatch({
+      type: CREDIT_LIMITS_REDUX_CONSTANTS.RESET_CREDIT_LIMIT_LIST_DATA,
+    });
+  };
+};
+
+export const resetViewCreditLimitData = () => {
+  return dispatch => {
+    dispatch({
+      type: CREDIT_LIMITS_REDUX_CONSTANTS.RESET_VIEW_CREDIT_LIMIT_DATA,
+    });
+  };
 };

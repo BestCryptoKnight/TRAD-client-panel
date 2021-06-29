@@ -14,6 +14,7 @@ import {
   getCreditLimitsFilter,
   getCreditLimitsList,
   modifyClientCreditLimit,
+  resetCreditLimitListData,
   saveCreditLimitColumnList,
   surrenderClientCreditLimit,
 } from '../redux/CreditLimitsAction';
@@ -34,7 +35,7 @@ const CreditLimitsList = () => {
   const creditLimitListWithPageData = useSelector(
     ({ creditLimits }) => creditLimits?.creditLimitList ?? {}
   );
-  const { total, pages, page, limit, docs, headers, isLoading } = useMemo(
+  const { total, pages, page, limit, docs, headers } = useMemo(
     () => creditLimitListWithPageData,
     [creditLimitListWithPageData]
   );
@@ -54,7 +55,7 @@ const CreditLimitsList = () => {
     modifyCreditLimitButtonLoaderAction,
     surrenderCreditLimitButtonLoaderAction,
     creditLimitListPageLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const CREDIT_LIMITS_FILTER_REDUCER_ACTIONS = {
     UPDATE_DATA: 'UPDATE_DATA',
@@ -201,6 +202,7 @@ const CreditLimitsList = () => {
     });
     await getCreditLimitListByFilter({ ...params, ...filters });
     dispatch(getCreditLimitColumnList());
+    return () => dispatch(resetCreditLimitListData());
   }, []);
 
   const onChangeSelectedColumn = useCallback(
@@ -410,63 +412,56 @@ const CreditLimitsList = () => {
         <>
           <div className="page-header">
             <div className="page-header-name">Credit Limit List</div>
-            {!isLoading && docs && (
-              <div className="page-header-button-container">
-                <IconButton
-                  buttonType="secondary"
-                  title="filter_list"
-                  className="mr-10"
-                  buttonTitle="Click to apply filters on credit limit list"
-                  onClick={() => toggleFilterModal()}
-                />
-                <IconButton
-                  buttonType="primary"
-                  title="format_line_spacing"
-                  className="mr-10"
-                  buttonTitle="Click to select custom fields"
-                  onClick={() => toggleCustomField()}
-                />
-                <IconButton
-                  buttonType="primary-1"
-                  title="cloud_download"
-                  onClick={onClickDownloadButton}
-                  isLoading={creditLimitDownloadCreditLimitCSVButtonLoaderAction}
+            <div className="page-header-button-container">
+              <IconButton
+                buttonType="secondary"
+                title="filter_list"
+                className="mr-10"
+                buttonTitle="Click to apply filters on credit limit list"
+                onClick={() => toggleFilterModal()}
+              />
+              <IconButton
+                buttonType="primary"
+                title="format_line_spacing"
+                className="mr-10"
+                buttonTitle="Click to select custom fields"
+                onClick={() => toggleCustomField()}
+              />
+              <IconButton
+                buttonType="primary-1"
+                title="cloud_download"
+                onClick={onClickDownloadButton}
+                isLoading={creditLimitDownloadCreditLimitCSVButtonLoaderAction}
+              />
+            </div>
+          </div>
+          {docs?.length > 0 ? (
+            <>
+              <div className="common-list-container">
+                <Table
+                  align="left"
+                  valign="center"
+                  tableClass="main-list-table"
+                  data={docs}
+                  headers={headers}
+                  recordSelected={onSelectCreditLimitRecord}
+                  recordActionClick={() => {}}
+                  rowClass="cursor-pointer"
+                  tableButtonActions={creditLimitAction}
                 />
               </div>
-            )}
-          </div>
-          {!isLoading && docs ? (
-            (() =>
-              docs.length > 0 ? (
-                <>
-                  <div className="common-list-container">
-                    <Table
-                      align="left"
-                      valign="center"
-                      tableClass="main-list-table"
-                      data={docs}
-                      headers={headers}
-                      recordSelected={onSelectCreditLimitRecord}
-                      recordActionClick={() => {}}
-                      rowClass="cursor-pointer"
-                      tableButtonActions={creditLimitAction}
-                    />
-                  </div>
-                  <Pagination
-                    className="common-list-pagination"
-                    total={total}
-                    pages={pages}
-                    page={page}
-                    limit={limit}
-                    pageActionClick={pageActionClick}
-                    onSelectLimit={onSelectLimit}
-                  />
-                </>
-              ) : (
-                <div className="no-record-found">No record found</div>
-              ))()
+              <Pagination
+                className="common-list-pagination"
+                total={total}
+                pages={pages}
+                page={page}
+                limit={limit}
+                pageActionClick={pageActionClick}
+                onSelectLimit={onSelectLimit}
+              />
+            </>
           ) : (
-            <Loader />
+            <div className="no-record-found">No record found</div>
           )}
 
           {filterModal && (

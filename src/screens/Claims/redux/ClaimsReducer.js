@@ -98,6 +98,13 @@ export const claims = (state = initialClaims, action) => {
       };
     }
 
+    case CLAIMS_REDUX_CONSTANTS.RESET_CLAIM_LIST_DATA: {
+      return {
+        ...state,
+        claimsList: initialClaims.claimsList,
+      };
+    }
+
     default:
       return state;
   }

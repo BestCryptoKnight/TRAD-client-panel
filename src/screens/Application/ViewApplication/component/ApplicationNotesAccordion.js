@@ -68,7 +68,7 @@ const ApplicationNotesAccordion = props => {
     viewApplicationEditNoteButtonLoaderAction,
     viewApplicationAddNewNoteButtonLoaderAction,
     viewApplicationDeleteNoteButtonLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   // add task
   const [modifyNoteModal, setModifyNoteModal] = useState(false);
@@ -297,7 +297,7 @@ const ApplicationNotesAccordion = props => {
           header={`${selectedApplicationNote.type === 'EDIT' ? 'Edit Note' : 'Add Note'} `}
           className="add-notes-modal"
           buttons={noteCRUDButtons}
-        // hideModal={toggleModifyNotes}
+          // hideModal={toggleModifyNotes}
         >
           <div className="add-notes-popup-container">
             <span>Description</span>

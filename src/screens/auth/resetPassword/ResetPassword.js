@@ -14,7 +14,7 @@ function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const { resetPasswordButtonLoaderAction } = useSelector(
-    ({ loaderButtonReducer }) => loaderButtonReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const history = useHistory();

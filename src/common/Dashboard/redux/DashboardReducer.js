@@ -175,6 +175,13 @@ export const dashboard = (state = initialDashboardData, action) => {
         },
       };
 
+    case DASHBOARD_REDUX_CONSTANTS.RESET_DASHBOARD_DATA: {
+      return {
+        ...state,
+        dashboardDetails: initialDashboardData.dashboardDetails,
+      };
+    }
+
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:
       return null;
 

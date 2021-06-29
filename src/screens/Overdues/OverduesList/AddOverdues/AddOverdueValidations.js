@@ -18,7 +18,10 @@ export const addOverdueValidations = async (
   const errors = {};
   let preparedData = {};
 
-  if (data?.acn && (!NUMBER_REGEX.test(data?.acn) || data?.acn?.trim()?.length !== 9)) {
+  if (
+    data?.acn &&
+    (!NUMBER_REGEX.test(data?.acn) || data?.acn?.trim()?.length < 5 || data?.acn?.trim().length > 9)
+  ) {
     validated = false;
     errors.acn = 'Please enter valid ACN number';
   }

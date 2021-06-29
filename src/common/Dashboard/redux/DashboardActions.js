@@ -3,21 +3,24 @@ import { DASHBOARD_REDUX_CONSTANTS } from './DashboardReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
 import { successNotification } from '../../Toast';
 import {
-  startLoaderButtonOnRequest,
-  stopLoaderButtonOnSuccessOrFail,
-} from '../../LoaderButton/redux/LoaderButtonAction';
+  startGeneralLoaderOnRequest,
+  stopGeneralLoaderOnSuccessOrFail,
+} from '../../GeneralLoader/redux/GeneralLoaderAction';
 
 export const getDashboardDetails = () => {
   return async dispatch => {
     try {
+      startGeneralLoaderOnRequest('dashboardDetailsLoader');
       const response = await DashboardApiService.getDashboardDetails();
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.DASHBOARD_DETAILS,
           data: response.data.data,
         });
+        stopGeneralLoaderOnSuccessOrFail('dashboardDetailsLoader');
       }
     } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('dashboardDetailsLoader');
       displayErrors(e);
     }
   };
@@ -88,17 +91,17 @@ export const deleteDashboardNotification = notificationId => {
 export const getTaskById = id => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest('dashboardViewTaskLoaderAction');
+      startGeneralLoaderOnRequest('dashboardViewTaskLoaderAction');
       const response = await DashboardApiService.getTaskDetailById(id);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_DETAILS,
           data: response.data.data,
         });
-        stopLoaderButtonOnSuccessOrFail('dashboardViewTaskLoaderAction');
+        stopGeneralLoaderOnSuccessOrFail('dashboardViewTaskLoaderAction');
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('dashboardViewTaskLoaderAction');
+      stopGeneralLoaderOnSuccessOrFail('dashboardViewTaskLoaderAction');
       displayErrors(e);
     }
   };
@@ -107,11 +110,11 @@ export const getTaskById = id => {
 export const markTaskAsComplete = (id, data) => {
   return async dispatch => {
     try {
-      startLoaderButtonOnRequest('dashboardCompleteTaskLoaderButtonAction');
+      startGeneralLoaderOnRequest('dashboardCompleteTaskLoaderButtonAction');
       const response = await DashboardApiService.updateTask(id, data);
       if (response.data.status === 'SUCCESS') {
         successNotification(response?.data?.message ?? 'Task updated successfully.');
-        stopLoaderButtonOnSuccessOrFail('dashboardCompleteTaskLoaderButtonAction');
+        stopGeneralLoaderOnSuccessOrFail('dashboardCompleteTaskLoaderButtonAction');
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.TASK.UPDATE_EDIT_TASK_FIELD_ACTION,
           name: 'isCompleted',
@@ -119,7 +122,7 @@ export const markTaskAsComplete = (id, data) => {
         });
       }
     } catch (e) {
-      stopLoaderButtonOnSuccessOrFail('dashboardCompleteTaskLoaderButtonAction');
+      stopGeneralLoaderOnSuccessOrFail('dashboardCompleteTaskLoaderButtonAction');
       displayErrors(e);
     }
   };
@@ -129,6 +132,14 @@ export const clearNotificationData = () => {
   return dispatch => {
     dispatch({
       type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.CLEAR_NOTIFICATION_DATA,
+    });
+  };
+};
+
+export const resetDashboardDetails = () => {
+  return dispatch => {
+    dispatch({
+      type: DASHBOARD_REDUX_CONSTANTS.RESET_DASHBOARD_DATA,
     });
   };
 };

@@ -11,6 +11,7 @@ import {
   changeEmployeeColumnList,
   getEmployeeColumnList,
   getEmployeeList,
+  resetEmployeeDetails,
   saveEmployeeColumnList,
 } from '../redux/EmployeeAction';
 import { useQueryParams } from '../../../hooks/GetQueryParamHook';
@@ -65,7 +66,7 @@ const EmployeeList = () => {
     EmployeeListColumnSaveButtonLoaderAction,
     EmployeeListColumnResetButtonLoaderAction,
     viewEmployeePageLoaderAction,
-  } = useSelector(({ loaderButtonReducer }) => loaderButtonReducer ?? false);
+  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const { defaultFields, customFields } = useMemo(
     () =>
@@ -76,7 +77,7 @@ const EmployeeList = () => {
     [employeeColumnList]
   );
 
-  const { total, pages, page, limit, docs, headers, isLoading } = useMemo(
+  const { total, pages, page, limit, docs, headers } = useMemo(
     () => employeeListWithPageData,
     [employeeListWithPageData]
   );
@@ -225,6 +226,7 @@ const EmployeeList = () => {
 
   useEffect(() => {
     dispatch(getEmployeeList());
+    return () => dispatch(resetEmployeeDetails());
   }, []);
 
   useEffect(async () => {
@@ -283,53 +285,46 @@ const EmployeeList = () => {
         <>
           <div className="page-header">
             <div className="page-header-name">Employee List</div>
-            {!isLoading && docs && (
-              <div className="page-header-button-container">
-                <IconButton
-                  buttonType="secondary"
-                  title="filter_list"
-                  className="mr-10"
-                  buttonTitle="Click to apply filters on employee list"
-                  onClick={toggleFilterModal}
-                />
-                <IconButton
-                  buttonType="primary"
-                  title="format_line_spacing"
-                  className="mr-10"
-                  buttonTitle="Click to select custom fields"
-                  onClick={() => toggleCustomField()}
+            <div className="page-header-button-container">
+              <IconButton
+                buttonType="secondary"
+                title="filter_list"
+                className="mr-10"
+                buttonTitle="Click to apply filters on employee list"
+                onClick={toggleFilterModal}
+              />
+              <IconButton
+                buttonType="primary"
+                title="format_line_spacing"
+                className="mr-10"
+                buttonTitle="Click to select custom fields"
+                onClick={() => toggleCustomField()}
+              />
+            </div>
+          </div>
+          {docs?.length > 0 ? (
+            <>
+              <div className="common-list-container">
+                <Table
+                  align="left"
+                  valign="center"
+                  tableClass="main-list-table"
+                  data={docs}
+                  headers={headers}
                 />
               </div>
-            )}
-          </div>
-          {docs && !isLoading ? (
-            (() =>
-              docs.length > 0 ? (
-                <>
-                  <div className="common-list-container">
-                    <Table
-                      align="left"
-                      valign="center"
-                      tableClass="main-list-table"
-                      data={docs}
-                      headers={headers}
-                    />
-                  </div>
-                  <Pagination
-                    className="common-list-pagination"
-                    total={total}
-                    pages={pages}
-                    page={page}
-                    limit={limit}
-                    pageActionClick={pageActionClick}
-                    onSelectLimit={onSelectLimit}
-                  />
-                </>
-              ) : (
-                <div className="no-record-found">No record found</div>
-              ))()
+              <Pagination
+                className="common-list-pagination"
+                total={total}
+                pages={pages}
+                page={page}
+                limit={limit}
+                pageActionClick={pageActionClick}
+                onSelectLimit={onSelectLimit}
+              />
+            </>
           ) : (
-            <Loader />
+            <div className="no-record-found">No record found</div>
           )}
 
           {filterModal && (
