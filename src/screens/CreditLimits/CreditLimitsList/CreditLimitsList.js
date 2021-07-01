@@ -28,6 +28,8 @@ import { NUMBER_REGEX } from '../../../constants/RegexConstants';
 import Button from '../../../common/Button/Button';
 import { downloadAll } from '../../../helpers/DownloadHelper';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
+import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
+import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 
 const CreditLimitsList = () => {
   const dispatch = useDispatch();
@@ -57,41 +59,23 @@ const CreditLimitsList = () => {
     creditLimitListPageLoaderAction,
   } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
-  const CREDIT_LIMITS_FILTER_REDUCER_ACTIONS = {
-    UPDATE_DATA: 'UPDATE_DATA',
-    RESET_STATE: 'RESET_STATE',
-  };
+  const [filter, dispatchFilter] = useReducer(filterReducer, {
+    tempFilter: {},
+    finalFilter: {},
+  });
 
-  const initialFilterState = {
-    entityType: '',
-  };
+  const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
-  function filterReducer(state = initialFilterState, action) {
-    switch (action.type) {
-      case CREDIT_LIMITS_FILTER_REDUCER_ACTIONS.UPDATE_DATA:
-        return {
-          ...state,
-          [`${action?.name}`]: action?.value,
-        };
-      case CREDIT_LIMITS_FILTER_REDUCER_ACTIONS.RESET_STATE:
-        return { ...initialFilterState };
-      default:
-        return state;
-    }
-  }
-
-  const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
-
-  const { entity } = useMemo(() => filter ?? {}, [filter]);
-
-  useEffect(() => dispatch(getCreditLimitsFilter()), []);
+  useEffect(() => {
+    dispatch(getCreditLimitsFilter());
+  }, []);
 
   const entityTypeSelectedValue = useMemo(() => {
     const foundValue = dropdownData?.entityType?.find(e => {
-      return (e?.value ?? '') === entity;
+      return (e?.value ?? '') === tempFilter?.entity;
     });
     return foundValue ?? [];
-  }, [entity, dropdownData]);
+  }, [tempFilter?.entity, dropdownData]);
 
   const { page: paramPage, limit: paramLimit, entityType: paramEntity } = useQueryParams();
 
@@ -110,11 +94,14 @@ const CreditLimitsList = () => {
       const data = {
         page: page ?? 1,
         limit: limit ?? 15,
-        entityType: (entity?.trim()?.length ?? -1) > 0 ? entity : undefined,
+        entityType: (tempFilter?.entity?.trim()?.length ?? -1) > 0 ? tempFilter?.entity : undefined,
         ...params,
       };
       try {
         await dispatch(getCreditLimitsList(data));
+        dispatchFilter({
+          type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
+        });
         if (cb && typeof cb === 'function') {
           cb();
         }
@@ -122,7 +109,7 @@ const CreditLimitsList = () => {
         /**/
       }
     },
-    [page, limit, entity]
+    [page, limit, tempFilter?.entity]
   );
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
@@ -195,7 +182,7 @@ const CreditLimitsList = () => {
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
-        type: CREDIT_LIMITS_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name,
         value,
       });
@@ -214,33 +201,29 @@ const CreditLimitsList = () => {
   );
 
   // for params in url
-  useEffect(() => {
-    const params = {
+  useUrlParamsUpdate(
+    {
       page: page ?? 1,
       limit: limit ?? 15,
-      entityType: (entity?.trim()?.length ?? -1) > 0 ? entity : undefined,
-    };
-    const url = Object.entries(params)
-      ?.filter(arr => arr[1] !== undefined)
-      ?.map(([k, v]) => `${k}=${v}`)
-      ?.join('&');
-    history.push(`${history?.location?.pathname}?${url}`);
-  }, [history, total, pages, page, limit, entity]);
+      entityType: (finalFilter?.entity?.trim()?.length ?? -1) > 0 ? finalFilter?.entity : undefined,
+    },
+    [page, limit, { ...finalFilter }]
+  );
 
   const [filterModal, setFilterModal] = React.useState(false);
   const toggleFilterModal = useCallback(
     value => setFilterModal(value !== undefined ? value : e => !e),
     [setFilterModal]
   );
-  const onClickApplyFilter = useCallback(() => {
-    getCreditLimitListByFilter({ page, limit }, toggleFilterModal);
+  const onClickApplyFilter = useCallback(async () => {
+    await getCreditLimitListByFilter({ page, limit }, toggleFilterModal);
   }, [getCreditLimitListByFilter, page, limit, toggleFilterModal]);
 
-  const onClickResetFilter = useCallback(() => {
+  const onClickResetFilter = useCallback(async () => {
     dispatchFilter({
-      type: CREDIT_LIMITS_FILTER_REDUCER_ACTIONS.RESET_STATE,
+      type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
     });
-    onClickApplyFilter();
+    await onClickApplyFilter();
   }, [dispatchFilter]);
 
   const filterModalButtons = useMemo(
@@ -250,7 +233,16 @@ const CreditLimitsList = () => {
         buttonType: 'outlined-primary',
         onClick: onClickResetFilter,
       },
-      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleFilterModal() },
+      {
+        title: 'Close',
+        buttonType: 'primary-1',
+        onClick: () => {
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
+          });
+          toggleFilterModal();
+        },
+      },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
     [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
@@ -258,30 +250,27 @@ const CreditLimitsList = () => {
 
   // on record limit changed
   const onSelectLimit = useCallback(
-    newLimit => {
-      getCreditLimitListByFilter({ page: 1, limit: newLimit });
+    async newLimit => {
+      await getCreditLimitListByFilter({ page: 1, limit: newLimit });
     },
     [getCreditLimitListByFilter]
   );
 
   // on pagination changed
   const pageActionClick = useCallback(
-    newPage => {
-      getCreditLimitListByFilter({ page: newPage, limit });
+    async newPage => {
+      await getCreditLimitListByFilter({ page: newPage, limit });
     },
     [getCreditLimitListByFilter, limit]
   );
 
-  const handleEntityTypeFilterChange = useCallback(
-    event => {
-      dispatchFilter({
-        type: CREDIT_LIMITS_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'entity',
-        value: event?.value,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleEntityTypeFilterChange = useCallback(event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'entity',
+      value: event?.value,
+    });
+  }, []);
 
   const onSelectCreditLimitRecord = useCallback(
     id => {

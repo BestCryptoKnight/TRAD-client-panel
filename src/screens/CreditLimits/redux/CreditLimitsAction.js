@@ -7,6 +7,7 @@ import {
   CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
   CREDIT_LIMITS_NOTES_REDUX_CONSTANTS,
   CREDIT_LIMITS_REDUX_CONSTANTS,
+  CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS,
   CREDIT_LIMITS_TASKS_REDUX_CONSTANTS,
 } from './CreditLimitsReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
@@ -38,7 +39,10 @@ export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
 export const getCreditLimitColumnList = () => {
   return async dispatch => {
     try {
-      const response = await CreditLimitsApiService.getCreditLimitColumnList();
+      const params = {
+        columnFor: 'credit-limit',
+      };
+      const response = await CreditLimitsApiService.getCreditLimitColumnList(params);
       if (response.data.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST,
@@ -73,6 +77,7 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
       let data = {
         columns: [],
         isReset: true,
+        columnFor: 'credit-limit',
       };
       if (!isReset) {
         const defaultFields = creditLimitsColumnList.defaultFields
@@ -84,6 +89,7 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
         data = {
           columns: [...defaultFields, ...customFields],
           isReset: false,
+          columnFor: 'credit-limit',
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
@@ -709,5 +715,115 @@ export const resetViewCreditLimitData = () => {
     dispatch({
       type: CREDIT_LIMITS_REDUX_CONSTANTS.RESET_VIEW_CREDIT_LIMIT_DATA,
     });
+  };
+};
+
+// stakeHolder
+
+export const getCreditLimitsStakeHolderList = (id, param) => {
+  return async dispatch => {
+    const params = {
+      ...param,
+    };
+    try {
+      startGeneralLoaderOnRequest('creditLimitStakeHolderListLoader');
+      const response = await CreditLimitsApiService.getCreditLimitsStakeHolderList(id, params);
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMIT_STAKE_HOLDER_LIST_SUCCESS,
+          data: response.data?.data,
+        });
+        stopGeneralLoaderOnSuccessOrFail('creditLimitStakeHolderListLoader');
+      }
+    } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('creditLimitStakeHolderListLoader');
+      displayErrors(e);
+    }
+  };
+};
+
+export const getCreditLimitsStakeHolderColumnList = () => {
+  return async dispatch => {
+    try {
+      const params = {
+        columnFor: 'stakeholder',
+      };
+      const response = await CreditLimitsApiService.getCreditLimitsStakeHolderColumnList(params);
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMITS_STAKE_HOLDER_COLUMN_LIST,
+          data: response.data.data,
+        });
+        dispatch({
+          type: CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMITS_STAKE_HOLDER_DEFAULT_COLUMN_LIST,
+          data: response.data.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const changeCreditLimitsStakeHolderColumnList = data => {
+  return dispatch => {
+    dispatch({
+      type: CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_STAKE_HOLDER_COLUMN_LIST,
+      data,
+    });
+  };
+};
+
+export const onSaveCreditLimitsStakeHolderColumnList = ({
+  stakeHolderColumnList = {},
+  isReset = false,
+}) => {
+  return async dispatch => {
+    startGeneralLoaderOnRequest(
+      `CreditLimitStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+    );
+    try {
+      let data = {
+        columns: [],
+        isReset: true,
+        columnFor: 'stakeholder',
+      };
+      if (!isReset) {
+        const defaultFields = stakeHolderColumnList.defaultFields
+          .filter(field => field.isChecked)
+          .map(field => field.name);
+        const customFields = stakeHolderColumnList.customFields
+          .filter(field => field.isChecked)
+          .map(field => field.name);
+        data = {
+          ...data,
+          columns: [...defaultFields, ...customFields],
+          isReset: false,
+        };
+        if (data.columns.length < 1) {
+          errorNotification('Please select at least one column to continue.');
+          stopGeneralLoaderOnSuccessOrFail(
+            `CreditLimitStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
+          throw Error();
+        }
+      }
+      const response = await CreditLimitsApiService.updateCreditLimitsStakeHolderColumnList(data);
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMITS_STAKE_HOLDER_DEFAULT_COLUMN_LIST,
+          data: stakeHolderColumnList,
+        });
+        successNotification('Columns updated successfully.');
+        stopGeneralLoaderOnSuccessOrFail(
+          `CreditLimitStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
+      }
+    } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail(
+        `CreditLimitStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
+      displayErrors(e);
+    }
   };
 };

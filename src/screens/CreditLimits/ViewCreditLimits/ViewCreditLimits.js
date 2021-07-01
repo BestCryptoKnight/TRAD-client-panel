@@ -11,11 +11,10 @@ import {
 import Loader from '../../../common/Loader/Loader';
 import Tab from '../../../common/Tab/Tab';
 import CreditLimitsApplicationTab from '../CreditLimitsTabs/CreditLimitsApplicationTab';
-import CreditLimitsOverduesTab from '../CreditLimitsTabs/CreditLimitsOverduesTab';
 import CreditLimitsTasksTab from '../CreditLimitsTabs/CreditLimitsTasksTab';
-import CreditLimitsClaimsTab from '../CreditLimitsTabs/CreditLimitsClaimsTab';
 import CreditLimitsDocumentsTab from '../CreditLimitsTabs/CreditLimitsDocumentsTab';
 import CreditLimitsNotesTab from '../CreditLimitsTabs/CreditLimitsNotesTab';
+import CreditLimitStakeHolderTab from '../CreditLimitsTabs/CreditLimitsStakeHolderTab';
 
 const ViewCreditLimits = () => {
   const history = useHistory();
@@ -121,12 +120,11 @@ const ViewCreditLimits = () => {
     [creditLimitsDetails]
   );
 
-  const tabs = ['Application', 'Overdues', 'Claims', 'Tasks', 'Documents', 'Notes'];
+  const tabs = ['Application', 'Stakeholder', 'Tasks', 'Documents', 'Notes'];
 
   const VIEW_CREDIT_LIMITS_TABS = [
     <CreditLimitsApplicationTab />,
-    <CreditLimitsOverduesTab />,
-    <CreditLimitsClaimsTab />,
+    <CreditLimitStakeHolderTab />,
     <CreditLimitsTasksTab />,
     <CreditLimitsDocumentsTab />,
     <CreditLimitsNotesTab />,

@@ -172,23 +172,22 @@ const ClaimsList = () => {
 
   return (
     <>
-      <div className="page-header">
-        <div className="page-header-name">Claims List</div>
-        <div className="page-header-button-container">
-          <IconButton
-            buttonType="primary"
-            title="format_line_spacing"
-            className="mr-10"
-            buttonTitle="Click to select custom fields"
-            onClick={() => toggleCustomField()}
-          />
-          <Button title="Add" buttonType="success" onClick={addClaims} />
-        </div>
-      </div>
-
       {!claimListLoader ? (
-        (() =>
-          docs?.length > 0 ? (
+        <>
+          <div className="page-header">
+            <div className="page-header-name">Claims List</div>
+            <div className="page-header-button-container">
+              <IconButton
+                buttonType="primary"
+                title="format_line_spacing"
+                className="mr-10"
+                buttonTitle="Click to select custom fields"
+                onClick={() => toggleCustomField()}
+              />
+              <Button title="Add" buttonType="success" onClick={addClaims} />
+            </div>
+          </div>
+          {docs?.length > 0 ? (
             <>
               <div className="common-list-container">
                 <Table
@@ -210,20 +209,20 @@ const ClaimsList = () => {
                 onSelectLimit={onSelectLimit}
                 pageActionClick={pageActionClick}
               />
-
-              {customFieldModal && (
-                <CustomFieldModal
-                  defaultFields={defaultFields}
-                  customFields={customFields}
-                  buttons={customFieldsModalButtons}
-                  onChangeSelectedColumn={onChangeSelectedColumn}
-                  toggleCustomField={toggleCustomField}
-                />
-              )}
             </>
           ) : (
             <div className="no-record-found">No record found</div>
-          ))()
+          )}
+          {customFieldModal && (
+            <CustomFieldModal
+              defaultFields={defaultFields}
+              customFields={customFields}
+              buttons={customFieldsModalButtons}
+              onChangeSelectedColumn={onChangeSelectedColumn}
+              toggleCustomField={toggleCustomField}
+            />
+          )}
+        </>
       ) : (
         <Loader />
       )}

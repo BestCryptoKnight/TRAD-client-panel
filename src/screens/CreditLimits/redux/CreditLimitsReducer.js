@@ -6,6 +6,7 @@ import {
   CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS,
   CREDIT_LIMITS_NOTES_REDUX_CONSTANTS,
   CREDIT_LIMITS_REDUX_CONSTANTS,
+  CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS,
   CREDIT_LIMITS_TASKS_REDUX_CONSTANTS,
 } from './CreditLimitsReduxConstants';
 
@@ -76,6 +77,18 @@ const initialCreditLimitsListState = {
   },
   notes: {
     noteList: { docs: [], headers: [], total: 0, limit: 15, page: 1, pages: 1, isLoading: false },
+  },
+  stakeHolder: {
+    stakeHolderList: {
+      docs: [],
+      headers: [],
+      total: 0,
+      limit: 15,
+      page: 1,
+      pages: 1,
+    },
+    stakeHolderColumnList: {},
+    stakeHolderDefaultColumnList: {},
   },
 };
 
@@ -372,6 +385,57 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
         ...state,
         selectedCreditLimitData: initialCreditLimitsListState.selectedCreditLimitData,
       };
+
+    // stakeHolder
+    case CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMIT_STAKE_HOLDER_LIST_SUCCESS:
+      return {
+        ...state,
+        stakeHolder: {
+          ...state?.stakeHolder,
+          stakeHolderList: action.data,
+        },
+      };
+
+    case CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMITS_STAKE_HOLDER_COLUMN_LIST:
+      return {
+        ...state,
+        stakeHolder: {
+          ...state?.stakeHolder,
+          stakeHolderColumnList: action.data,
+        },
+      };
+
+    case CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMITS_STAKE_HOLDER_DEFAULT_COLUMN_LIST: {
+      return {
+        ...state,
+        stakeHolder: {
+          ...state?.stakeHolder,
+          stakeHolderDefaultColumnList: action.data,
+        },
+      };
+    }
+
+    case CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.UPDATE_CREDIT_LIMITS_STAKE_HOLDER_COLUMN_LIST: {
+      const stakeHolderColumnList = {
+        ...state.stakeHolder.stakeHolderColumnList,
+      };
+      const { type, name, value } = action?.data;
+      stakeHolderColumnList[`${type}`] = stakeHolderColumnList?.[`${type}`]?.map(field =>
+        field.name === name
+          ? {
+              ...field,
+              isChecked: value,
+            }
+          : field
+      );
+      return {
+        ...state,
+        stakeHolder: {
+          ...state?.stakeHolder,
+          stakeHolderColumnList,
+        },
+      };
+    }
 
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:
       return null;

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import { useHistory } from 'react-router-dom';
 import ReactSelect from 'react-select';
 import IconButton from '../../../common/IconButton/IconButton';
 import Table from '../../../common/Table/Table';
@@ -19,38 +18,16 @@ import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomField
 import { EMPLOYEE_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/EmployeeReduxConstants';
 import { errorNotification } from '../../../common/Toast';
 import Modal from '../../../common/Modal/Modal';
-
-const EMPLOYEE_FILTER_REDUCER_ACTIONS = {
-  UPDATE_DATA: 'UPDATE_DATA',
-  RESET_STATE: 'RESET_STATE',
-};
-
-const initialFilterState = {
-  isDecisionMaker: '',
-};
+import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
+import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 
 const filterDropdownData = [
   { value: 'true', label: 'Yes', name: 'decisionMaker' },
   { value: 'false', label: 'No', name: 'decisionMaker' },
 ];
 
-function filterReducer(state = initialFilterState, action) {
-  switch (action.type) {
-    case EMPLOYEE_FILTER_REDUCER_ACTIONS.UPDATE_DATA:
-      return {
-        ...state,
-        [`${action?.name}`]: action?.value,
-      };
-    case EMPLOYEE_FILTER_REDUCER_ACTIONS.RESET_STATE:
-      return { ...initialFilterState };
-    default:
-      return state;
-  }
-}
-
 const EmployeeList = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const {
     page: paramPage,
     limit: paramLimit,
@@ -88,21 +65,30 @@ const EmployeeList = () => {
     value => setFilterModal(value !== undefined ? value : e => !e),
     [setFilterModal]
   );
-  const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
+  const [filter, dispatchFilter] = useReducer(filterReducer, {
+    tempFilter: {},
+    finalFilter: {},
+  });
 
-  const { isDecisionMaker } = useMemo(() => filter ?? {}, [filter]);
+  const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
   const getEmployeeListByFilter = useCallback(
     async (params = {}, cb) => {
       const data = {
         page: page ?? 1,
         limit: limit ?? 15,
-        isDecisionMaker: (isDecisionMaker?.trim()?.length ?? -1) > 0 ? isDecisionMaker : undefined,
+        isDecisionMaker:
+          (tempFilter?.isDecisionMaker?.trim()?.length ?? -1) > 0
+            ? tempFilter?.isDecisionMaker
+            : undefined,
         ...params,
       };
 
       try {
         await dispatch(getEmployeeList(data));
+        dispatchFilter({
+          type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
+        });
         if (cb && typeof cb === 'function') {
           cb();
         }
@@ -110,7 +96,7 @@ const EmployeeList = () => {
         /**/
       }
     },
-    [isDecisionMaker, limit, page]
+    [tempFilter?.isDecisionMaker, limit, page]
   );
 
   const onClickApplyFilter = useCallback(async () => {
@@ -120,10 +106,10 @@ const EmployeeList = () => {
 
   const onClickResetFilter = useCallback(async () => {
     dispatchFilter({
-      type: EMPLOYEE_FILTER_REDUCER_ACTIONS.RESET_STATE,
+      type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
     });
     await onClickApplyFilter();
-  }, [dispatchFilter]);
+  }, []);
 
   const filterModalButtons = useMemo(
     () => [
@@ -132,7 +118,16 @@ const EmployeeList = () => {
         buttonType: 'outlined-primary',
         onClick: onClickResetFilter,
       },
-      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleFilterModal() },
+      {
+        title: 'Close',
+        buttonType: 'primary-1',
+        onClick: () => {
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
+          });
+          toggleFilterModal();
+        },
+      },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
     [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
@@ -163,7 +158,7 @@ const EmployeeList = () => {
       const isBothEqual = _.isEqual(employeeColumnList, employeeDefaultColumnList);
       if (!isBothEqual) {
         await dispatch(saveEmployeeColumnList({ employeeColumnList }));
-        getEmployeeListByFilter();
+        await getEmployeeListByFilter();
         toggleCustomField();
       } else {
         errorNotification('Please select different columns to apply changes.');
@@ -208,15 +203,15 @@ const EmployeeList = () => {
 
   const decisionMakingTypeSelected = useMemo(() => {
     const foundValue = filterDropdownData?.find(e => {
-      return (e?.value ?? '') === isDecisionMaker;
+      return (e?.value ?? '') === tempFilter?.isDecisionMaker;
     });
     return foundValue ?? [];
-  }, [isDecisionMaker, filterDropdownData]);
+  }, [tempFilter?.isDecisionMaker, filterDropdownData]);
 
   const handleDecisionMakingTypeFilterChange = useCallback(
     event => {
       dispatchFilter({
-        type: EMPLOYEE_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name: 'isDecisionMaker',
         value: event?.value,
       });
@@ -240,7 +235,7 @@ const EmployeeList = () => {
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
-        type: EMPLOYEE_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name,
         value,
       });
@@ -250,31 +245,30 @@ const EmployeeList = () => {
   }, []);
 
   // for params in url
-  useEffect(() => {
-    const params = {
+  useUrlParamsUpdate(
+    {
       page: page ?? 1,
       limit: limit ?? 15,
-      isDecisionMaker: (isDecisionMaker?.trim()?.length ?? -1) > 0 ? isDecisionMaker : undefined,
-    };
-    const url = Object.entries(params)
-      ?.filter(arr => arr[1] !== undefined)
-      ?.map(([k, v]) => `${k}=${v}`)
-      ?.join('&');
-    history.push(`${history?.location?.pathname}?${url}`);
-  }, [history, total, pages, page, limit, isDecisionMaker]);
+      isDecisionMaker:
+        (finalFilter?.isDecisionMaker?.trim()?.length ?? -1) > 0
+          ? finalFilter?.isDecisionMaker
+          : undefined,
+    },
+    [page, limit, { ...finalFilter }]
+  );
 
   // on record limit changed
   const onSelectLimit = useCallback(
-    newLimit => {
-      getEmployeeListByFilter({ page: 1, limit: newLimit });
+    async newLimit => {
+      await getEmployeeListByFilter({ page: 1, limit: newLimit });
     },
     [getEmployeeListByFilter]
   );
 
   // on pagination changed
   const pageActionClick = useCallback(
-    newPage => {
-      getEmployeeListByFilter({ page: newPage, limit });
+    async newPage => {
+      await getEmployeeListByFilter({ page: newPage, limit });
     },
     [getEmployeeListByFilter, limit]
   );

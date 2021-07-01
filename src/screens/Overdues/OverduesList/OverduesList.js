@@ -15,47 +15,22 @@ import { errorNotification } from '../../../common/Toast';
 import Input from '../../../common/Input/Input';
 import Loader from '../../../common/Loader/Loader';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
-
-const initialFilterState = {
-  debtorId: '',
-  minOutstandingAmount: '',
-  maxOutstandingAmount: '',
-  startDate: null,
-  endDate: null,
-};
-
-const APPLICATION_FILTER_REDUCER_ACTIONS = {
-  UPDATE_DATA: 'UPDATE_DATA',
-  RESET_STATE: 'RESET_STATE',
-};
-
-function filterReducer(state, action) {
-  switch (action.type) {
-    case APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA:
-      return {
-        ...state,
-        [`${action.name}`]: action.value,
-      };
-    case APPLICATION_FILTER_REDUCER_ACTIONS.RESET_STATE:
-      return { ...initialFilterState };
-    default:
-      return state;
-  }
-}
+import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
+import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 
 const OverduesList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [newSubmissionDate, setNewSubmissionDate] = useState('');
   const [newSubmissionModal, setNewSubmissionModal] = useState(false);
-  const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
+  const [filter, dispatchFilter] = useReducer(filterReducer, {
+    tempFilter: {},
+    finalFilter: {},
+  });
 
   const entityList = useSelector(({ overdue }) => overdue?.entityList ?? {});
 
-  const { debtorId, maxOutstandingAmount, minOutstandingAmount, startDate, endDate } = useMemo(
-    () => filter ?? {},
-    [filter]
-  );
+  const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
   const { overdueListPageLoaderAction } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
@@ -71,73 +46,58 @@ const OverduesList = () => {
     endDate: paramEndDate,
   } = useQueryParams();
 
-  const handleStartDateChange = useCallback(
-    date => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'startDate',
-        value: date,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleStartDateChange = useCallback(date => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'startDate',
+      value: new Date(date).toISOString(),
+    });
+  }, []);
 
-  const handleEndDateChange = useCallback(
-    date => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'endDate',
-        value: date,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleEndDateChange = useCallback(date => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'endDate',
+      value: new Date(date).toISOString(),
+    });
+  }, []);
 
   const resetFilterDates = useCallback(() => {
     handleStartDateChange(null);
     handleEndDateChange(null);
   }, [handleStartDateChange, handleEndDateChange]);
 
-  const handleDebtorIdFilterChange = useCallback(
-    event => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'debtorId',
-        value: event?.value,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleDebtorIdFilterChange = useCallback(event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'debtorId',
+      value: event?.value,
+    });
+  }, []);
 
-  const handleMinOutstandingAmount = useCallback(
-    event => {
-      const updatedVal = event?.target?.value?.toString()?.replaceAll(',', '');
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'minOutstandingAmount',
-        value: parseInt(updatedVal, 10),
-      });
-    },
-    [dispatchFilter]
-  );
-  const handleMaxOutstandingAmount = useCallback(
-    event => {
-      const updatedVal = event?.target?.value?.toString()?.replaceAll(',', '');
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'maxOutstandingAmount',
-        value: parseInt(updatedVal, 10),
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleMinOutstandingAmount = useCallback(event => {
+    const updatedVal = event?.target?.value?.toString()?.replaceAll(',', '');
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'minOutstandingAmount',
+      value: parseInt(updatedVal, 10),
+    });
+  }, []);
+  const handleMaxOutstandingAmount = useCallback(event => {
+    const updatedVal = event?.target?.value?.toString()?.replaceAll(',', '');
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'maxOutstandingAmount',
+      value: parseInt(updatedVal, 10),
+    });
+  }, []);
 
   const debtorIdSelectedValue = useMemo(() => {
     const foundValue = entityList?.debtorId?.find(e => {
-      return (e?.value ?? '') === debtorId;
+      return (e?.value ?? '') === tempFilter?.debtorId;
     });
     return foundValue ?? [];
-  }, [debtorId, entityList]);
+  }, [tempFilter?.debtorId, entityList]);
 
   // listing
   const overdueListWithPageData = useSelector(({ overdue }) => overdue?.overdueList ?? {});
@@ -148,28 +108,38 @@ const OverduesList = () => {
 
   const getOverdueListByFilter = useCallback(
     async (params = {}, cb) => {
-      if (startDate && endDate && moment(endDate).isBefore(startDate)) {
+      if (
+        tempFilter?.startDate &&
+        tempFilter?.endDate &&
+        moment(tempFilter?.endDate).isBefore(tempFilter?.startDate)
+      ) {
         errorNotification('Please enter a valid date range');
         resetFilterDates();
       } else {
         const data = {
           page: page ?? 1,
           limit: limit ?? 15,
-          debtorId: (debtorId?.toString()?.trim()?.length ?? -1) > 0 ? debtorId : undefined,
+          debtorId:
+            (tempFilter?.debtorId?.toString()?.trim()?.length ?? -1) > 0
+              ? tempFilter?.debtorId
+              : undefined,
           minOutstandingAmount:
-            (minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
-              ? minOutstandingAmount
+            (tempFilter?.minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+              ? tempFilter?.minOutstandingAmount
               : undefined,
           maxOutstandingAmount:
-            (maxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
-              ? maxOutstandingAmount
+            (tempFilter?.maxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+              ? tempFilter?.maxOutstandingAmount
               : undefined,
-          startDate: startDate ?? undefined,
-          endDate: endDate ?? undefined,
+          startDate: tempFilter?.startDate ?? undefined,
+          endDate: tempFilter?.endDate ?? undefined,
           ...params,
         };
         try {
           await dispatch(getOverdueList(data));
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
+          });
           if (cb && typeof cb === 'function') {
             cb();
           }
@@ -178,7 +148,7 @@ const OverduesList = () => {
         }
       }
     },
-    [page, limit, endDate, startDate, maxOutstandingAmount, minOutstandingAmount, debtorId]
+    [page, limit, { ...tempFilter }]
   );
 
   const [filterModal, setFilterModal] = useState(false);
@@ -186,16 +156,16 @@ const OverduesList = () => {
     value => setFilterModal(value !== undefined ? value : e => !e),
     [setFilterModal]
   );
-  const onClickApplyFilter = useCallback(() => {
+  const onClickApplyFilter = useCallback(async () => {
     toggleFilterModal();
-    getOverdueListByFilter({ page: 1, limit: 15 });
+    await getOverdueListByFilter({ page: 1, limit: 15 });
   }, [getOverdueListByFilter, toggleFilterModal, page, limit]);
 
-  const onClickResetFilter = useCallback(() => {
+  const onClickResetFilter = useCallback(async () => {
     dispatchFilter({
-      type: APPLICATION_FILTER_REDUCER_ACTIONS.RESET_STATE,
+      type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
     });
-    onClickApplyFilter();
+    await onClickApplyFilter();
   }, [dispatchFilter]);
 
   const filterModalButtons = useMemo(
@@ -205,7 +175,16 @@ const OverduesList = () => {
         buttonType: 'outlined-primary',
         onClick: onClickResetFilter,
       },
-      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleFilterModal() },
+      {
+        title: 'Close',
+        buttonType: 'primary-1',
+        onClick: () => {
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
+          });
+          toggleFilterModal();
+        },
+      },
       {
         title: 'Apply',
         buttonType: 'primary',
@@ -235,7 +214,7 @@ const OverduesList = () => {
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name,
         value,
       });
@@ -247,39 +226,27 @@ const OverduesList = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const params = {
+  useUrlParamsUpdate(
+    {
       page: page ?? 1,
       limit: limit ?? 15,
-      debtorId: (debtorId?.toString()?.trim()?.length ?? -1) > 0 ? debtorId : undefined,
+      debtorId:
+        (finalFilter?.debtorId?.toString()?.trim()?.length ?? -1) > 0
+          ? finalFilter?.debtorId
+          : undefined,
       minOutstandingAmount:
-        (minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
-          ? minOutstandingAmount
+        (finalFilter?.minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+          ? finalFilter?.minOutstandingAmount
           : undefined,
       maxOutstandingAmount:
-        (maxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
-          ? maxOutstandingAmount
+        (finalFilter?.maxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
+          ? finalFilter?.maxOutstandingAmount
           : undefined,
-      startDate: startDate ? new Date(startDate)?.toISOString() : undefined,
-      endDate: endDate ? new Date(endDate)?.toISOString() : undefined,
-    };
-    const url = Object.entries(params)
-      ?.filter(arr => arr[1] !== undefined)
-      ?.map(([k, v]) => `${k}=${v}`)
-      ?.join('&');
-    history.push(`${history?.location?.pathname}?${url}`);
-  }, [
-    history,
-    total,
-    pages,
-    page,
-    limit,
-    debtorId,
-    minOutstandingAmount,
-    maxOutstandingAmount,
-    startDate,
-    endDate,
-  ]);
+      startDate: finalFilter?.startDate || undefined,
+      endDate: finalFilter?.endDate || undefined,
+    },
+    [page, limit, { ...finalFilter }]
+  );
 
   const pageActionClick = useCallback(
     async newPage => {
@@ -414,7 +381,9 @@ const OverduesList = () => {
                   type="text"
                   name="min-limit"
                   value={
-                    minOutstandingAmount ? NumberCommaSeparator(minOutstandingAmount) : undefined
+                    tempFilter?.minOutstandingAmount
+                      ? NumberCommaSeparator(tempFilter?.minOutstandingAmount)
+                      : undefined
                   }
                   placeholder="0"
                   onChange={handleMinOutstandingAmount}
@@ -426,7 +395,9 @@ const OverduesList = () => {
                   type="text"
                   name="max-limit"
                   value={
-                    maxOutstandingAmount ? NumberCommaSeparator(maxOutstandingAmount) : undefined
+                    tempFilter?.maxOutstandingAmount
+                      ? NumberCommaSeparator(tempFilter?.maxOutstandingAmount)
+                      : undefined
                   }
                   placeholder="0"
                   onChange={handleMaxOutstandingAmount}
@@ -437,7 +408,7 @@ const OverduesList = () => {
                 <div className="date-picker-container month-year-picker mr-15">
                   <DatePicker
                     className="filter-date-picker"
-                    selected={startDate}
+                    selected={tempFilter?.startDate ? new Date(tempFilter?.startDate) : null}
                     onChange={handleStartDateChange}
                     placeholderText="From Date"
                     dateFormat="MM/yyyy"
@@ -450,7 +421,7 @@ const OverduesList = () => {
                 <div className="date-picker-container month-year-picker">
                   <DatePicker
                     className="filter-date-picker"
-                    selected={endDate}
+                    selected={tempFilter?.endDate ? new Date(tempFilter?.endDate) : null}
                     onChange={handleEndDateChange}
                     placeholderText="To Date"
                     dateFormat="MM/yyyy"

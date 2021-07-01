@@ -26,12 +26,15 @@ const AddViewClaims = () => {
   const claimDetails = useSelector(({ claims }) => claims?.claimDetails ?? {});
   const backToClaimsList = useCallback(() => {
     history.replace('/claims');
-    dispatch(resetClaimDetails());
   }, [history]);
 
   const changeClaimDetails = useCallback(
     (name, value) => dispatch(handleClaimChange(name, value)),
     []
+  );
+
+  const { viewClaimLoader, saveClaimsButtonLoaderAction } = useSelector(
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const onHandleInputTextChange = useCallback(e => {
@@ -377,45 +380,43 @@ const AddViewClaims = () => {
 
   useEffect(() => {
     dispatch(getClaimDetails(id));
+    return () => {
+      dispatch(resetClaimDetails());
+    };
   }, []);
 
   return (
     <>
-      <div className="breadcrumb-button-row">
-        <div className="breadcrumb">
-          <span onClick={backToClaimsList}>Claims List</span>
-          <span className="material-icons-round">navigate_next</span>
-          <span>{type === 'view' ? 'View' : 'New'} Claim</span>
-        </div>
-      </div>
-
-      {type === 'view' ? (
-        (() =>
-          claimDetails && Object.entries(claimDetails).length > 0 ? (
-            <div
-              className={`common-white-container add-claims-content ${
-                type === 'view' && 'view-claim-content'
-              }`}
-            >
-              {inputClaims.map(getComponentByType)}
+      {!viewClaimLoader ? (
+        <>
+          {' '}
+          <div className="breadcrumb-button-row">
+            <div className="breadcrumb">
+              <span onClick={backToClaimsList}>Claims List</span>
+              <span className="material-icons-round">navigate_next</span>
+              <span>{type === 'view' ? 'View' : 'New'} Claim</span>
             </div>
-          ) : (
-            <Loader />
-          ))()
+          </div>
+          <div
+            className={`common-white-container add-claims-content ${
+              type === 'view' && 'view-claim-content'
+            }`}
+          >
+            {inputClaims.map(getComponentByType)}
+          </div>
+          {type === 'add' && (
+            <div className="add-overdues-save-button">
+              <Button
+                buttonType="primary"
+                title="Save"
+                onClick={onAddClaim}
+                isLoading={saveClaimsButtonLoaderAction}
+              />
+            </div>
+          )}
+        </>
       ) : (
-        <div
-          className={`common-white-container add-claims-content ${
-            type === 'view' && 'view-claim-content'
-          }`}
-        >
-          {inputClaims.map(getComponentByType)}
-        </div>
-      )}
-
-      {type === 'add' && (
-        <div className="add-overdues-save-button">
-          <Button buttonType="primary" title="Save" onClick={onAddClaim} />
-        </div>
+        <Loader />
       )}
     </>
   );

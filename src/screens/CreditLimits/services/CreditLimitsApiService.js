@@ -78,6 +78,14 @@ const CreditLimitsApiService = {
     ApiService.putData(`${CREDIT_LIMITS_URLS.NOTES.NOTES_LIST}${id}`, data),
   deleteCreditLimitsNote: id =>
     ApiService.deleteData(`${CREDIT_LIMITS_URLS.NOTES.NOTES_LIST}${id}`),
+
+  // stakeHolder start here
+  getCreditLimitsStakeHolderList: (id, params) =>
+    ApiService.getData(`${CREDIT_LIMITS_URLS.STAKE_HOLDER.STAKE_HOLDER_LIST}${id}`, { params }),
+  getCreditLimitsStakeHolderColumnList: params =>
+    ApiService.getData(CREDIT_LIMITS_URLS.STAKE_HOLDER.COLUMN_NAME_LIST_URL, { params }),
+  updateCreditLimitsStakeHolderColumnList: data =>
+    ApiService.putData(CREDIT_LIMITS_URLS.STAKE_HOLDER.COLUMN_NAME_LIST_URL, data),
 };
 
 export default CreditLimitsApiService;

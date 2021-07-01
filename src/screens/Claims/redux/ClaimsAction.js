@@ -121,6 +121,7 @@ export const handleClaimChange = (name, value) => {
 export const addClaim = data => {
   return async dispatch => {
     try {
+      startGeneralLoaderOnRequest('saveClaimsButtonLoaderAction');
       const response = await ClaimsApiServices.addClaim(data);
 
       if (response.data.status === 'SUCCESS') {
@@ -128,8 +129,10 @@ export const addClaim = data => {
         dispatch({
           type: CLAIMS_REDUX_CONSTANTS.RESET_CLAIMS_DETAILS,
         });
+        stopGeneralLoaderOnSuccessOrFail('saveClaimsButtonLoaderAction');
       }
     } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('saveClaimsButtonLoaderAction');
       displayErrors(e);
     }
   };
@@ -138,6 +141,7 @@ export const addClaim = data => {
 export const getClaimDetails = id => {
   return async dispatch => {
     try {
+      startGeneralLoaderOnRequest('viewClaimLoader');
       const response = await ClaimsApiServices.getClaimDetails(id);
 
       if (response.data.status === 'SUCCESS') {
@@ -145,8 +149,10 @@ export const getClaimDetails = id => {
           type: CLAIMS_REDUX_CONSTANTS.GET_CLAIM_DETAILS,
           data: response.data.data,
         });
+        stopGeneralLoaderOnSuccessOrFail('viewClaimLoader');
       }
     } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('viewClaimLoader');
       displayErrors(e);
     }
   };

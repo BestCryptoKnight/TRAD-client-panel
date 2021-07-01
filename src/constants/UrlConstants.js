@@ -111,6 +111,12 @@ export const CREDIT_LIMITS_URLS = {
   NOTES: {
     NOTES_LIST: `${BASE_URL}note/`,
   },
+
+  STAKE_HOLDER: {
+    STAKE_HOLDER_LIST: `${BASE_URL}debtor/stakeholder/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+  },
 };
 
 export const CLAIMS_URLS = {

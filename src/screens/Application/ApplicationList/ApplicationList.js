@@ -28,35 +28,8 @@ import Input from '../../../common/Input/Input';
 import { errorNotification } from '../../../common/Toast';
 import { APPLICATION_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/ApplicationReduxConstants';
 import { downloadAll } from '../../../helpers/DownloadHelper';
-
-const initialFilterState = {
-  entity: '',
-  debtorId: '',
-  applicationStatus: '',
-  minCreditLimit: '',
-  maxCreditLimit: '',
-  startDate: null,
-  endDate: null,
-};
-
-const APPLICATION_FILTER_REDUCER_ACTIONS = {
-  UPDATE_DATA: 'UPDATE_DATA',
-  RESET_STATE: 'RESET_STATE',
-};
-
-function filterReducer(state, action) {
-  switch (action.type) {
-    case APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA:
-      return {
-        ...state,
-        [`${action.name}`]: action.value,
-      };
-    case APPLICATION_FILTER_REDUCER_ACTIONS.RESET_STATE:
-      return { ...initialFilterState };
-    default:
-      return state;
-  }
-}
+import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
+import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 
 const ApplicationList = () => {
   const history = useHistory();
@@ -77,7 +50,10 @@ const ApplicationList = () => {
   const { dropdownData } = useSelector(
     ({ application }) => application?.applicationFilterList ?? {}
   );
-  const [filter, dispatchFilter] = useReducer(filterReducer, initialFilterState);
+  const [filter, dispatchFilter] = useReducer(filterReducer, {
+    tempFilter: {},
+    finalFilter: {},
+  });
   const {
     applicationListColumnSaveButtonLoaderAction,
     applicationListColumnResetButtonLoaderAction,
@@ -85,97 +61,82 @@ const ApplicationList = () => {
     applicationDownloadButtonLoaderAction,
   } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
-  const { entity, debtorId, minCreditLimit, maxCreditLimit, status, startDate, endDate } = useMemo(
-    () => filter ?? {},
-    [filter]
-  );
+  const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
   const appliedFilters = useMemo(() => {
     return {
-      entityType: entity && entity.trim().length > 0 ? entity : undefined,
-      debtorId: debtorId && debtorId.trim().length > 0 ? debtorId : undefined,
-      status: (status?.trim()?.length ?? -1) > 0 ? status : undefined,
+      entityType:
+        tempFilter?.entityType?.toString()?.trim()?.length > 0 ? tempFilter?.entityType : undefined,
+      debtorId:
+        tempFilter?.debtorId?.toString()?.trim()?.length > 0 ? tempFilter?.debtorId : undefined,
+      status: tempFilter?.status?.toString()?.trim()?.length > 0 ? tempFilter?.status : undefined,
       minCreditLimit:
-        minCreditLimit && minCreditLimit.trim().length > 0 ? minCreditLimit : undefined,
+        tempFilter?.minCreditLimit?.toString()?.trim()?.length > 0
+          ? tempFilter?.minCreditLimit
+          : undefined,
       maxCreditLimit:
-        maxCreditLimit && maxCreditLimit.trim().length > 0 ? maxCreditLimit : undefined,
-      startDate: startDate || undefined,
-      endDate: endDate || undefined,
+        tempFilter?.maxCreditLimit?.toString()?.trim()?.length > 0
+          ? tempFilter?.maxCreditLimit
+          : undefined,
+      startDate: tempFilter?.startDate || undefined,
+      endDate: tempFilter?.endDate || undefined,
     };
-  }, [entity, debtorId, minCreditLimit, maxCreditLimit, status, startDate, endDate]);
+  }, [{ ...tempFilter }]);
 
-  const handleStartDateChange = useCallback(
-    date => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'startDate',
-        value: date,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleStartDateChange = useCallback(date => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'startDate',
+      value: new Date(date).toISOString(),
+    });
+  }, []);
 
-  const handleEndDateChange = useCallback(
-    date => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'endDate',
-        value: date,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleEndDateChange = useCallback(date => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'endDate',
+      value: new Date(date).toISOString(),
+    });
+  }, []);
 
   const resetFilterDates = useCallback(() => {
     handleStartDateChange(null);
     handleEndDateChange(null);
   }, [handleStartDateChange, handleEndDateChange]);
 
-  const handleEntityTypeFilterChange = useCallback(
-    event => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'entity',
-        value: event?.value,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleEntityTypeFilterChange = useCallback(event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'entityType',
+      value: event?.value,
+    });
+  }, []);
 
-  const handleDebtorIdFilterChange = useCallback(
-    event => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'debtorId',
-        value: event?.value,
-      });
-    },
-    [dispatchFilter]
-  );
-  const handleApplicationStatusFilterChange = useCallback(
-    event => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'status',
-        value: event?.value,
-      });
-    },
-    [dispatchFilter]
-  );
-  const handleMinLimitChange = useCallback(
-    event => {
-      dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'minCreditLimit',
-        value: event?.target?.value,
-      });
-    },
-    [dispatchFilter]
-  );
+  const handleDebtorIdFilterChange = useCallback(event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'debtorId',
+      value: event?.value,
+    });
+  }, []);
+  const handleApplicationStatusFilterChange = useCallback(event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'status',
+      value: event?.value,
+    });
+  }, []);
+  const handleMinLimitChange = useCallback(event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'minCreditLimit',
+      value: event?.target?.value,
+    });
+  }, []);
   const handleMaxLimitChange = useCallback(
     event => {
       dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name: 'maxCreditLimit',
         value: event?.target?.value,
       });
@@ -185,10 +146,10 @@ const ApplicationList = () => {
 
   const getApplicationsByFilter = useCallback(
     async (params = {}, cb) => {
-      if (moment(startDate)?.isAfter(endDate)) {
+      if (moment(tempFilter?.startDate)?.isAfter(tempFilter?.endDate)) {
         errorNotification('From date should be greater than to date');
         resetFilterDates();
-      } else if (moment(endDate)?.isBefore(startDate)) {
+      } else if (moment(tempFilter?.endDate)?.isBefore(tempFilter?.startDate)) {
         errorNotification('To Date should be smaller than from date');
         resetFilterDates();
       } else {
@@ -199,6 +160,9 @@ const ApplicationList = () => {
           ...params,
         };
         await dispatch(getApplicationsListByFilter(data));
+        dispatchFilter({
+          type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
+        });
         if (cb && typeof cb === 'function') {
           cb();
         }
@@ -233,10 +197,10 @@ const ApplicationList = () => {
 
   const onClickResetFilter = useCallback(() => {
     dispatchFilter({
-      type: APPLICATION_FILTER_REDUCER_ACTIONS.RESET_STATE,
+      type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
     });
     onClickApplyFilter();
-  }, [dispatchFilter]);
+  }, []);
 
   const filterModalButtons = useMemo(
     () => [
@@ -245,7 +209,16 @@ const ApplicationList = () => {
         buttonType: 'outlined-primary',
         onClick: onClickResetFilter,
       },
-      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleFilterModal() },
+      {
+        title: 'Close',
+        buttonType: 'primary-1',
+        onClick: () => {
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
+          });
+          toggleFilterModal();
+        },
+      },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
     [toggleFilterModal, onClickApplyFilter]
@@ -329,7 +302,7 @@ const ApplicationList = () => {
   const {
     page: paramPage,
     limit: paramLimit,
-    entityType: paramEntity,
+    entityType: paramEntityType,
     debtorId: paramDebtorId,
     status: paramStatus,
     minCreditLimit: paramMinCreditLimit,
@@ -344,23 +317,19 @@ const ApplicationList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      entityType: paramEntity && paramEntity.trim().length > 0 ? paramEntity : undefined,
-      debtorId: paramDebtorId && paramDebtorId.trim().length > 0 ? paramDebtorId : undefined,
+      entityType: (paramEntityType?.trim()?.length ?? -1) > 0 ? paramEntityType : undefined,
+      debtorId: (paramDebtorId?.trim()?.length ?? -1) > 0 ? paramDebtorId : undefined,
       status: (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : undefined,
       minCreditLimit:
-        paramMinCreditLimit && paramMinCreditLimit.trim().length > 0
-          ? paramMinCreditLimit
-          : undefined,
+        (paramMinCreditLimit?.trim()?.length ?? -1) > 0 ? paramMinCreditLimit : undefined,
       maxCreditLimit:
-        paramMaxCreditLimit && paramMaxCreditLimit.trim().length > 0
-          ? paramMaxCreditLimit
-          : undefined,
-      startDate: paramStartDate ? new Date(paramStartDate) : undefined,
-      endDate: paramEndDate ? new Date(paramEndDate) : undefined,
+        (paramMaxCreditLimit?.trim()?.length ?? -1) > 0 ? paramMaxCreditLimit : undefined,
+      startDate: paramStartDate || undefined,
+      endDate: paramEndDate || undefined,
     };
     Object.entries(filters).forEach(([name, value]) => {
       dispatchFilter({
-        type: APPLICATION_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name,
         value,
       });
@@ -384,39 +353,51 @@ const ApplicationList = () => {
   }, []);
 
   // for params in url
-  useEffect(() => {
-    const params = {
+  useUrlParamsUpdate(
+    {
       page: page ?? 1,
       limit: limit ?? 15,
-      ...appliedFilters,
-    };
-    const url = Object.entries(params)
-      .filter(arr => arr[1] !== undefined)
-      .map(([k, v]) => `${k}=${v}`)
-      .join('&');
-    history.push(`${history.location.pathname}?${url}`);
-  }, [history, total, pages, page, limit, appliedFilters]);
+      entityType:
+        finalFilter?.entityType?.toString()?.trim()?.length > 0
+          ? finalFilter?.entityType
+          : undefined,
+      debtorId:
+        finalFilter?.debtorId?.toString()?.trim()?.length > 0 ? finalFilter?.debtorId : undefined,
+      status: finalFilter?.status?.toString()?.trim()?.length > 0 ? finalFilter?.status : undefined,
+      minCreditLimit:
+        finalFilter?.minCreditLimit?.toString()?.trim()?.length > 0
+          ? finalFilter?.minCreditLimit
+          : undefined,
+      maxCreditLimit:
+        finalFilter?.maxCreditLimit?.toString()?.trim()?.length > 0
+          ? finalFilter?.maxCreditLimit
+          : undefined,
+      startDate: finalFilter?.startDate || undefined,
+      endDate: finalFilter?.endDate || undefined,
+    },
+    [page, limit, { ...finalFilter }]
+  );
 
   const entityTypeSelectedValue = useMemo(() => {
     const foundValue = dropdownData?.entityType?.find(e => {
-      return (e?.value ?? '') === entity;
+      return (e?.value ?? '') === tempFilter?.entityType;
     });
     return foundValue ? [foundValue] : [];
-  }, [entity, dropdownData]);
+  }, [tempFilter?.entityType, dropdownData]);
 
   const debtorIdSelectedValue = useMemo(() => {
     const foundValue = dropdownData?.debtors?.find(e => {
-      return (e?.value ?? '') === debtorId;
+      return (e?.value ?? '') === tempFilter?.debtorId;
     });
     return foundValue ? [foundValue] : [];
-  }, [debtorId, dropdownData]);
+  }, [tempFilter?.debtorId, dropdownData]);
 
   const applicationStatusSelectedValue = useMemo(() => {
     const foundValue = dropdownData?.applicationStatus?.find(e => {
-      return (e?.value ?? '') === status;
+      return (e?.value ?? '') === tempFilter?.status;
     });
     return foundValue ? [foundValue] : [];
-  }, [status, dropdownData]);
+  }, [tempFilter?.status, dropdownData]);
 
   const viewApplicationOnSelectRecord = useCallback(
     (id, data) => {
@@ -558,7 +539,7 @@ const ApplicationList = () => {
                 <Input
                   type="text"
                   name="min-limit"
-                  value={minCreditLimit}
+                  value={tempFilter?.minCreditLimit}
                   placeholder="3000"
                   onChange={handleMinLimitChange}
                 />
@@ -568,7 +549,7 @@ const ApplicationList = () => {
                 <Input
                   type="text"
                   name="max-limit"
-                  value={maxCreditLimit}
+                  value={tempFilter?.maxCreditLimit}
                   placeholder="100000"
                   onChange={handleMaxLimitChange}
                 />
@@ -578,7 +559,7 @@ const ApplicationList = () => {
                 <div className="date-picker-container filter-date-picker-container mr-15">
                   <DatePicker
                     className="filter-date-picker"
-                    selected={startDate}
+                    selected={tempFilter?.startDate ? new Date(tempFilter?.startDate) : null}
                     onChange={handleStartDateChange}
                     placeholderText="From Date"
                     popperProps={{ positionFixed: true }}
@@ -588,7 +569,7 @@ const ApplicationList = () => {
                 <div className="date-picker-container filter-date-picker-container">
                   <DatePicker
                     className="filter-date-picker"
-                    selected={endDate}
+                    selected={tempFilter?.endDate ? new Date(tempFilter?.endDate) : null}
                     onChange={handleEndDateChange}
                     placeholderText="To Date"
                     popperProps={{ positionFixed: true }}
