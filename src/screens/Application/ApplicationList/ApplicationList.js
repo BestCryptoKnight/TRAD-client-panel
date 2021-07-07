@@ -146,11 +146,12 @@ const ApplicationList = () => {
 
   const getApplicationsByFilter = useCallback(
     async (params = {}, cb) => {
-      if (moment(tempFilter?.startDate)?.isAfter(tempFilter?.endDate)) {
-        errorNotification('From date should be greater than to date');
-        resetFilterDates();
-      } else if (moment(tempFilter?.endDate)?.isBefore(tempFilter?.startDate)) {
-        errorNotification('To Date should be smaller than from date');
+      if (
+        tempFilter?.startDate &&
+        tempFilter?.endDate &&
+        moment(tempFilter?.endDate).isBefore(tempFilter?.startDate)
+      ) {
+        errorNotification('Please enter a valid date range');
         resetFilterDates();
       } else {
         const data = {

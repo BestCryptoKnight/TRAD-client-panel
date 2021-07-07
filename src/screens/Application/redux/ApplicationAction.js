@@ -111,7 +111,7 @@ export const saveApplicationColumnNameList = ({
         }
       }
       const response = await ApplicationApiServices.updateApplicationColumnNameList(data);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_COLUMN_LIST_REDUX_CONSTANTS.APPLICATION_DEFAULT_COLUMN_LIST_ACTION,
           data: applicationColumnNameList,

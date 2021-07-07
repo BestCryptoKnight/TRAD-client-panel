@@ -552,6 +552,7 @@ const PersonIndividualDetail = ({ itemHeader, index }) => {
             searchString: ref?.value,
             country: partners?.[index]?.stakeholderCountry?.value,
             page: currentPage,
+            step: 'person',
           };
           dispatch(searchApplicationCompanyEntityName(params));
         } catch (e) {
@@ -593,6 +594,7 @@ const PersonIndividualDetail = ({ itemHeader, index }) => {
               searchString: e?.target?.value,
               country: partners?.[index]?.stakeholderCountry?.value,
               page: currentPage,
+              step: 'person',
             };
             dispatch(searchApplicationCompanyEntityName(params));
           } catch (err) {
@@ -627,6 +629,7 @@ const PersonIndividualDetail = ({ itemHeader, index }) => {
           searchString: searchedEntityNameValue,
           country: partners?.[index]?.stakeholderCountry?.value,
           page: currentPage,
+          step: 'person',
         };
         await dispatch(searchApplicationCompanyEntityName(params));
       } catch (e) {

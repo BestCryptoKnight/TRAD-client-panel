@@ -15,7 +15,7 @@ export const getEmployeeList = (params = { page: 1, limit: 15 }) => {
     try {
       startGeneralLoaderOnRequest('viewEmployeePageLoaderAction');
       const response = await EmployeeApiService.getAllEmployeeList(params);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: EMPLOYEE_REDUX_CONSTANTS.EMPLOYEE_LIST_USER_ACTION,
           data: response.data.data,
@@ -33,7 +33,7 @@ export const getEmployeeColumnList = () => {
   return async dispatch => {
     try {
       const response = await EmployeeApiService.getEmployeeColumnList();
-      if (response && response.data && response.data.status === 'SUCCESS') {
+      if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
           type: EMPLOYEE_COLUMN_LIST_REDUX_CONSTANTS.EMPLOYEE_COLUMN_LIST_ACTION,
           data: response.data.data,
@@ -45,9 +45,9 @@ export const getEmployeeColumnList = () => {
       }
     } catch (e) {
       if (e.response && e.response.data) {
-        if (e.response.data.status === undefined) {
+        if (e.response?.data?.status === undefined) {
           errorNotification('It seems like server is down, Please try again later.');
-        } else if (e.response.data.status === 'ERROR') {
+        } else if (e.response?.data?.status === 'ERROR') {
           errorNotification(e.response?.data?.message || 'Internal server error');
         }
       }

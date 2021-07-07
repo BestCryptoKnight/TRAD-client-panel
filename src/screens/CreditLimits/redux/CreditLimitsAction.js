@@ -22,7 +22,7 @@ export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
     try {
       startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(params);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
           data: response?.data?.data,
@@ -43,7 +43,7 @@ export const getCreditLimitColumnList = () => {
         columnFor: 'credit-limit',
       };
       const response = await CreditLimitsApiService.getCreditLimitColumnList(params);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST,
           data: response.data.data,
@@ -100,7 +100,7 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
         }
       }
       const response = await CreditLimitsApiService.updateCreditLimitsColumnList(data);
-      if (response && response.data && response.data.status === 'SUCCESS') {
+      if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_DEFAULT_COLUMN_LIST,
           data: creditLimitsColumnList,
@@ -123,7 +123,7 @@ export const getCreditLimitsFilter = () => {
   return async dispatch => {
     try {
       const response = await CreditLimitsApiService.getCreditLimitsFilterData();
-      if (response && response.data && response.data.status === 'SUCCESS') {
+      if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST,
           data: response.data.data,
@@ -337,7 +337,7 @@ export const getCreditLimitsTasksColumnList = () => {
     };
     try {
       const response = await CreditLimitsApiService.getCreditLimitsTaskColumnList(params);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_COLUMN_LIST,
           data: response.data.data,
@@ -450,7 +450,7 @@ export const getCreditLimitsDocumentsColumnNamesList = () => {
       };
 
       const response = await CreditLimitsApiService.getCreditLimitsDocumentsColumnNamesList(params);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_COLUMN_LIST,
           data: response.data.data,
@@ -515,7 +515,7 @@ export const saveCreditLimitsDocumentsColumnList = ({
 
         dispatch(getCreditLimitsDocumentsColumnNamesList());
 
-        if (response && response.data && response.data.status === 'SUCCESS') {
+        if (response && response.data && response?.data?.status === 'SUCCESS') {
           successNotification('Columns updated successfully.');
           stopGeneralLoaderOnSuccessOrFail(
             `CreditLimitDocumentsColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
@@ -538,7 +538,7 @@ export const getCreditLimitsDocumentTypeList = () => {
         listFor: 'debtor',
       };
       const response = await CreditLimitsApiService.getCreditLimitsDocumentTypeList(params);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENT_TYPE_LIST,
           data: response.data.data,
@@ -555,7 +555,7 @@ export const creditLimitsUploadDocument = (data, config) => {
     try {
       startGeneralLoaderOnRequest(`CreditLimitDocumentUploadButtonLoaderAction`);
       const response = await CreditLimitsApiService.uploadDocument(data, config);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.UPLOAD_DOCUMENT_CREDIT_LIMITS,
           data: response.data.data,
@@ -596,7 +596,7 @@ export const deleteCreditLimitsDocumentAction = async (docId, cb) => {
   try {
     startGeneralLoaderOnRequest(`CreditLimitDocumentDeleteButtonLoaderAction`);
     const response = await CreditLimitsApiService?.deleteCreditLimitsDocument(docId);
-    if (response.data.status === 'SUCCESS') {
+    if (response?.data?.status === 'SUCCESS') {
       successNotification(response?.data?.message || 'Document deleted successfully.');
       stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentDeleteButtonLoaderAction`);
       if (cb) {
@@ -622,7 +622,7 @@ export const getCreditLimitsNoteList = (id, params) => {
         type: CREDIT_LIMITS_NOTES_REDUX_CONSTANTS.REQUEST_CREDIT_LIMITS_NOTES_LIST,
       });
       const response = await CreditLimitsApiService.getCreditLimitsNoteList(id, updatedParams);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_NOTES_REDUX_CONSTANTS.CREDIT_LIMITS_NOTES_LIST_SUCCESS,
           data: response.data.data,
@@ -647,7 +647,7 @@ export const addCreditLimitsNote = (entityId, noteData) => {
 
       const response = await CreditLimitsApiService.addCreditLimitsNote(data);
 
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         await dispatch(getCreditLimitsNoteList(entityId));
         successNotification(response?.data?.message || 'Note added successfully.');
       }
@@ -670,7 +670,7 @@ export const updateCreditLimitsNote = (entityId, noteData) => {
 
       const response = await CreditLimitsApiService.updateCreditLimitsNote(noteId, data);
 
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         await dispatch(getCreditLimitsNoteList(entityId));
         successNotification(response?.data?.message || 'Note updated successfully.');
       }
@@ -684,7 +684,7 @@ export const deleteCreditLimitsNote = async (noteId, cb) => {
   try {
     const response = await CreditLimitsApiService.deleteCreditLimitsNote(noteId);
 
-    if (response.data.status === 'SUCCESS') {
+    if (response?.data?.status === 'SUCCESS') {
       successNotification(response?.data?.message || 'Note deleted successfully.');
       if (cb) {
         cb();

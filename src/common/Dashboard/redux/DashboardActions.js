@@ -93,7 +93,7 @@ export const getTaskById = id => {
     try {
       startGeneralLoaderOnRequest('dashboardViewTaskLoaderAction');
       const response = await DashboardApiService.getTaskDetailById(id);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_DETAILS,
           data: response.data.data,
@@ -112,7 +112,7 @@ export const markTaskAsComplete = (id, data) => {
     try {
       startGeneralLoaderOnRequest('dashboardCompleteTaskLoaderButtonAction');
       const response = await DashboardApiService.updateTask(id, data);
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message ?? 'Task updated successfully.');
         stopGeneralLoaderOnSuccessOrFail('dashboardCompleteTaskLoaderButtonAction');
         dispatch({

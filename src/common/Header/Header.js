@@ -1,17 +1,16 @@
-import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import {
-  changePassword,
-  logoutUser,
-  getLoggedUserDetails,
-  updateUserProfile,
   changeEditProfileData,
-  uploadProfilePicture,
-  markNotificationAsReadAndDeleteAction,
+  changePassword,
   getHeaderNotificationListURL,
-  searchGlobalData,
+  getLoggedUserDetails,
+  logoutUser,
+  markNotificationAsReadAndDeleteAction,
+  updateUserProfile,
+  uploadProfilePicture,
 } from './redux/HeaderAction';
 import dummy from '../../assets/images/dummy.svg';
 import IconButton from '../IconButton/IconButton';
@@ -24,12 +23,11 @@ import FileUpload from './component/FileUpload';
 import Drawer from '../Drawer/Drawer';
 import { getAuthTokenLocalStorage } from '../../helpers/LocalStorageHelper';
 import { connectWebSocket, disconnectWebSocket } from '../../helpers/SocketHelper';
-import { handleGlobalSearchSelect } from '../../helpers/GlobalSearchHelper';
-import { HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS } from './redux/HeaderConstants';
 import {
   DATE_FORMAT,
   DATE_FORMAT_CONSTANT_FOR_CALENDER,
 } from '../../constants/DateFormatConstants';
+import GlobalSearch from './component/GlobalSearch';
 
 const Header = () => {
   const history = useHistory();
@@ -101,12 +99,6 @@ const Header = () => {
     }
     return { name: '', email: '', contactNumber: '', profilePictureUrl: '', changed: false };
   }, [loggedUserDetail]);
-
-  // global search
-
-  const globalSearchResult = useSelector(
-    ({ globalSearchReducer }) => globalSearchReducer?.searchResults ?? []
-  );
 
   /** ****
    * edit profile end
@@ -304,43 +296,6 @@ const Header = () => {
     );
   };
 
-  const [headerSearchFocused, setHeaderSearchFocused] = useState(false);
-  const searchOnFocus = () => setHeaderSearchFocused(true);
-  const headerSearchRef = useRef();
-  const [searchStart, setSearchStart] = useState(false);
-  const searchOutsideClick = () => {
-    setSearchStart(false);
-    setHeaderSearchFocused(false);
-  };
-  useOnClickOutside(headerSearchRef, searchOutsideClick);
-
-  const onSearchEnterKeyPress = useCallback(
-    e => {
-      try {
-        if (e.keyCode === 13) {
-          const { value } = e?.target;
-          if (value?.trim()?.length > 0) {
-            setSearchStart(true);
-            dispatch(searchGlobalData(value));
-          }
-        }
-      } catch (err) {
-        /**/
-      }
-    },
-    [setSearchStart]
-  );
-
-  const handleOnSearchChange = useCallback(e => {
-    if (e?.target?.value?.trim()?.length === 0) {
-      setSearchStart(false);
-      dispatch({
-        type: HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS.CLEAR_SEARCHED_DATA_LIST,
-      });
-    }
-    // else setSearchStart(true);
-  }, []);
-
   useEffect(() => {
     dispatch(getHeaderNotificationListURL());
     const AUTH_TOKEN = getAuthTokenLocalStorage();
@@ -360,41 +315,7 @@ const Header = () => {
         </Switch>
       </div>
       <div className="header-right-part">
-        <div
-          ref={headerSearchRef}
-          className={`header-search-container ${
-            headerSearchFocused && 'header-search-container-focused'
-          } ${searchStart && 'got-search-results'}`}
-        >
-          <div>
-            <input
-              type="text"
-              placeholder="Search Here"
-              onFocus={searchOnFocus}
-              onKeyDown={onSearchEnterKeyPress}
-              onChange={handleOnSearchChange}
-            />
-            <span className="material-icons-round">search</span>
-          </div>
-          {searchStart && (
-            <ul className="header-search-results">
-              {searchStart && globalSearchResult?.length > 0 ? (
-                globalSearchResult?.map(searchResult => (
-                  <li
-                    onClick={() => {
-                      handleGlobalSearchSelect(searchResult, history);
-                      setSearchStart(false);
-                    }}
-                  >
-                    {searchResult?.title}
-                  </li>
-                ))
-              ) : (
-                <li>No Record Found</li>
-              )}
-            </ul>
-          )}
-        </div>
+        <GlobalSearch />
         <IconButton
           isBadge={notificationBadge > 0}
           title="notifications_active"

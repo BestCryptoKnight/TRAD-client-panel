@@ -12,7 +12,7 @@ export const setPassword = async (token, password, cb) => {
     const data = { token, password };
     const response = await AuthApiService.setPassword(data);
 
-    if (response.data.status === 'SUCCESS') {
+    if (response?.data?.status === 'SUCCESS') {
       successNotification('Password set successfully.');
       stopGeneralLoaderOnSuccessOrFail('setPasswordButtonLoaderAction');
       if (cb) {

@@ -11,7 +11,7 @@ export const getSupportDetails = () => {
     try {
       startGeneralLoaderOnRequest('supportPagePageLoaderAction');
       const response = await SupportApiService.getSupportDetails();
-      if (response.data.status === 'SUCCESS') {
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: SUPPORT_REDUX_CONSTANTS.SUPPORT_GET_DETAILS_ACTION,
           data: response.data.data,

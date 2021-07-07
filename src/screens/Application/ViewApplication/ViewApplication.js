@@ -15,7 +15,6 @@ import {
 } from '../redux/ApplicationAction';
 import TableApiService from '../../../common/Table/TableApiService';
 import Drawer from '../../../common/Drawer/Drawer';
-import ApplicationReportAccordion from './component/ApplicationReportAccordion';
 import ApplicationTaskAccordion from './component/ApplicationTaskAccordion';
 import ApplicationNotesAccordion from './component/ApplicationNotesAccordion';
 import ApplicationAlertsAccordion from './component/ApplicationAlertsAccordion';
@@ -301,7 +300,6 @@ const ViewApplication = () => {
                 <div className="view-application-details-right">
                   <div className="common-white-container">
                     <Accordion className="view-application-accordion">
-                      <ApplicationReportAccordion index={0} />
                       <ApplicationTaskAccordion applicationId={id} index={1} />
                       <ApplicationNotesAccordion applicationId={id} index={2} />
                       <ApplicationAlertsAccordion index={3} />
