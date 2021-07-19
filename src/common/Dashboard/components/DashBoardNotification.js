@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import logo from '../../../assets/images/logo.svg';
 import Loader from '../../Loader/Loader';
@@ -16,9 +16,12 @@ const DashBoardNotification = () => {
     ({ dashboard }) => dashboard?.dashboardNotification ?? []
   );
 
-  notificationList?.sort(function (a, b) {
-    return new Date(b.title) - new Date(a.title);
-  });
+  const sortedNotification = useMemo(() => {
+    notificationList?.sort(function (a, b) {
+      return new Date(b.title) - new Date(a.title);
+    });
+    return notificationList;
+  }, [notificationList]);
 
   const getDashboardNotificationListByFilter = useCallback(
     async (params = {}, cb) => {
@@ -40,7 +43,7 @@ const DashBoardNotification = () => {
 
   const handleScroll = e => {
     if (e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight)
-      if (notificationList?.length > 0) {
+      if (sortedNotification?.length > 0) {
         setIsFetching(true);
       }
   };
@@ -77,10 +80,10 @@ const DashBoardNotification = () => {
       <div className="dashboard-title-date-row">
         <div className="dashboard-card-title">Notifications</div>
       </div>
-      {!isLoading && notificationList ? (
+      {!isLoading && sortedNotification ? (
         (() =>
-          notificationList?.length > 0 ? (
-            notificationList?.map(e => (
+          sortedNotification?.length > 0 ? (
+            sortedNotification?.map(e => (
               <>
                 <div className="notification-date">{moment(e?.title).format('DD-MMM-YYYY')}</div>
                 <div className="notification-container">

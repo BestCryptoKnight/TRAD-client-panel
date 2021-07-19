@@ -45,80 +45,93 @@ const ViewCreditLimits = () => {
   const INPUTS = useMemo(
     () => [
       {
+        label: 'Debtor Code',
+        value: creditLimitsDetails?.debtorCode,
+      },
+      {
         label: 'Name',
         value: creditLimitsDetails?.entityName?.label,
       },
       {
-        label: 'Address',
-        value: creditLimitsDetails?.address ?? '',
-      },
-      {
-        label: 'Brokers Commission',
-        value: creditLimitsDetails?.commission,
-      },
-      {
-        label: 'Phone',
-        value: creditLimitsDetails?.contactNumber,
-      },
-      {
-        label: 'ABN',
+        label: 'ABN/NZBN',
         value: creditLimitsDetails?.abn,
       },
       {
-        label: 'ACN',
+        label: 'ACN/NCN',
         value: creditLimitsDetails?.acn,
+      },
+      {
+        label: 'Entity Type',
+        value: creditLimitsDetails?.entityType?.label,
+      },
+      {
+        label: 'Trading Name',
+        value: creditLimitsDetails?.tradingName,
+      },
+      {
+        label: 'Phone Number',
+        value: creditLimitsDetails?.contactNumber,
+      },
+      {
+        label: 'Property',
+        value: creditLimitsDetails?.property,
+      },
+      {
+        label: 'Unit Number',
+        value: creditLimitsDetails?.unitNumber,
+      },
+      {
+        label: 'Street Number',
+        value: creditLimitsDetails?.streetNumber,
+      },
+      {
+        label: 'Street Name',
+        value: creditLimitsDetails?.streetName,
+      },
+      {
+        label: 'Street Type',
+        value: creditLimitsDetails?.streetType?.label,
+      },
+      {
+        label: 'Suburb',
+        value: creditLimitsDetails?.suburb,
+      },
+      {
+        label: 'State',
+        value: creditLimitsDetails?.state?.label ?? creditLimitsDetails?.state,
       },
       {
         label: 'Country',
         value: creditLimitsDetails?.country?.label,
       },
       {
-        label: 'Joint Insured',
-        value: creditLimitsDetails?.jointInsured,
+        label: 'Post Code',
+        value: creditLimitsDetails?.postCode,
       },
       {
-        label: 'Associated Client',
-        value: creditLimitsDetails?.associatedClient,
-      },
-      {
-        label: 'Current Business',
-        value: creditLimitsDetails?.tradingName,
-      },
-      {
-        label: 'Website',
-        value: creditLimitsDetails?.website,
-      },
-      {
-        label: 'Net Income',
-        value: creditLimitsDetails?.netIncome,
-      },
-      {
-        label: 'Current Credit Limits',
-        value: creditLimitsDetails?.creditLimit,
-      },
-      {
-        label: 'Policy Type',
-        value: creditLimitsDetails?.policyType,
-      },
-      {
-        label: 'Inception Date',
-        value: creditLimitsDetails?.inceptionDate,
-      },
-      {
-        label: 'Expiry Date',
-        value: creditLimitsDetails?.expiredAt,
-      },
-      {
-        label: 'Last Review Date',
+        label: 'Review Date',
         value: moment(creditLimitsDetails?.reviewDate).format('DD/MM/yyyy'),
       },
       {
-        label: 'Status',
-        value: creditLimitsDetails?.status,
+        label: 'Risk Rating',
+        value: creditLimitsDetails?.riskRating,
       },
     ],
     [creditLimitsDetails]
   );
+
+  const finalInputs = useMemo(() => {
+    if (['AUS', 'NZL'].includes(creditLimitsDetails?.country?.value)) {
+      return [...INPUTS];
+    }
+    const filteredData = [...INPUTS];
+    filteredData.splice(2, 2, {
+      isEditable: false,
+      label: 'Registration No.*',
+      value: creditLimitsDetails?.registrationNumber,
+    });
+    return filteredData;
+  }, [INPUTS, creditLimitsDetails?.country]);
 
   const tabs = ['Application', 'Stakeholder', 'Tasks', 'Documents', 'Notes'];
 
@@ -158,7 +171,7 @@ const ViewCreditLimits = () => {
                 <div className="common-white-container">
                   {Object.entries(creditLimitsDetails)?.length > 0 ? (
                     <div className="credit-limits-details">
-                      {INPUTS.map(detail => (
+                      {finalInputs.map(detail => (
                         <>
                           <div className="title">{detail.label}</div>
                           <div className="value">{detail.value ?? '-'}</div>

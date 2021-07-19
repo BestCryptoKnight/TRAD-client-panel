@@ -237,7 +237,7 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
         partners?.length < 2
       ) {
         validated = false;
-        errorNotification('You have to add two partners at least');
+        errorNotification('You have to add at least two partners.');
       } else if (
         editApplicationData?.company?.entityType?.value === 'SOLE_TRADER' &&
         partners?.length > 1

@@ -23,7 +23,7 @@ export const getApplicationsListByFilter = (params = { page: 1, limit: 15 }) => 
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.APPLICATION_LIST_SUCCESS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('applicationListPageLoader');
       }
@@ -54,11 +54,11 @@ export const getApplicationColumnNameList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_COLUMN_LIST_REDUX_CONSTANTS.APPLICATION_COLUMN_LIST_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         dispatch({
           type: APPLICATION_COLUMN_LIST_REDUX_CONSTANTS.APPLICATION_DEFAULT_COLUMN_LIST_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -139,7 +139,7 @@ export const getApplicationFilter = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_FILTER_LIST_REDUX_CONSTANTS.APPLICATION_FILTER_LIST_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -155,7 +155,7 @@ export const getApplicationDetail = applicationId => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.APPLICATION_DETAILS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('generateApplicationPageLoaderAction');
       }
@@ -178,7 +178,7 @@ export const getApplicationCompanyDropDownData = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_DROP_DOWN_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -256,7 +256,7 @@ export const searchApplicationCompanyEntityName = params => {
             isLoading: false,
             error: false,
             errorMessage: '',
-            data: response.data.data,
+            data: response?.data?.data,
           },
         });
       }
@@ -282,7 +282,7 @@ export const searchApplicationCompanyEntityName = params => {
           data: {
             isLoading: false,
             error: true,
-            errorMessage: 'ABR lookup facing trouble to found searched data. Please try again...',
+            errorMessage: 'ABR Lookup is not responding, please try again.',
             data: [],
           },
         });
@@ -407,7 +407,7 @@ export const getApplicationPersonDataFromABNOrACN = params => {
         });
 
       if (response?.data?.status === 'SUCCESS') {
-        return response.data.data;
+        return response?.data?.data;
       }
     } catch (e) {
       displayErrors(e);
@@ -455,7 +455,7 @@ export const saveApplicationStepDataToBackend = data => {
       const response = await ApplicationApiServices.saveApplicationStepDataToBackend(data);
       if (response?.data?.status === 'SUCCESS') {
         if (response?.data?.data?.applicationStage) {
-          const { _id } = response.data.data;
+          const { _id } = response?.data?.data;
           dispatch(changeEditApplicationFieldValue('_id', _id));
         }
         successNotification(response?.data?.message || 'Application step saved successfully');
@@ -487,7 +487,7 @@ export const getApplicationDetailById = applicationId => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_DETAIL_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('viewApplicationPageLoader');
       }
@@ -542,7 +542,7 @@ export const getApplicationDocumentDataList = (id, params = { page: 1, limit: 15
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.DOCUMENTS.APPLICATION_DOCUMENT_GET_UPLOAD_DOCUMENT_DATA,
-          data: response.data.data && response.data.data.docs ? response.data.data.docs : [],
+          data: response?.data?.data && response?.data?.data.docs ? response?.data?.data.docs : [],
         });
       }
     } catch (e) {
@@ -561,7 +561,7 @@ export const getDocumentTypeList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.DOCUMENTS.DOCUMENT_TYPE_LIST_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -577,7 +577,7 @@ export const uploadDocument = (data, config) => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.DOCUMENTS.UPLOAD_DOCUMENT_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         successNotification(response?.data?.message || 'Application document added successfully.');
         stopGeneralLoaderOnSuccessOrFail('GenerateApplicationDocumentUploadButtonLoaderAction');
@@ -623,7 +623,7 @@ export const getApplicationTaskList = id => {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_TASK
             .APPLICATION_TASK_LIST_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -644,7 +644,7 @@ export const getApplicationModuleList = id => {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_MODULES
             .APPLICATION_MODULE_LIST_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -667,7 +667,7 @@ export const getViewApplicationDocumentTypeList = () => {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_MODULES
             .VIEW_APPLICATION_DOCUMENT_TYPE_LIST_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -734,7 +734,7 @@ export const getApplicationNotesList = id => {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.VIEW_APPLICATION.APPLICATION_NOTES
             .APPLICATION_NOTES_LIST_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -829,7 +829,7 @@ export const getApplicationDetailsOnBackToCompanyStep = (applicationId, activeSt
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.UPDATE_APPLICATION_DETAILS_ON_BACK_TO_COMPANY_STEP,
-          data: response.data.data,
+          data: response?.data?.data,
           activeStep,
         });
         stopGeneralLoaderOnSuccessOrFail('generateApplicationPageLoaderAction');

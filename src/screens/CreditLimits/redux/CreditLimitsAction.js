@@ -46,11 +46,11 @@ export const getCreditLimitColumnList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         dispatch({
           type: CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_DEFAULT_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -126,7 +126,7 @@ export const getCreditLimitsFilter = () => {
       if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -161,7 +161,7 @@ export const getCreditLimitsDetails = id => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('viewCreditLimitPageLoaderAction');
       }
@@ -237,7 +237,7 @@ export const getCreditLimitsApplicationColumnList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS.CREDIT_LIMITS_APPLICATION_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -321,7 +321,7 @@ export const getCreditLimitsTasksLists = (id, param) => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -340,11 +340,11 @@ export const getCreditLimitsTasksColumnList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         dispatch({
           type: CREDIT_LIMITS_TASKS_REDUX_CONSTANTS.CREDIT_LIMITS_TASK_DEFAULT_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -433,7 +433,7 @@ export const getCreditLimitsDocumentsList = (id, params) => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_LIST_SUCCESS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -453,11 +453,11 @@ export const getCreditLimitsDocumentsColumnNamesList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENTS_DEFAULT_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -541,7 +541,7 @@ export const getCreditLimitsDocumentTypeList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.CREDIT_LIMITS_DOCUMENT_TYPE_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -558,7 +558,7 @@ export const creditLimitsUploadDocument = (data, config) => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_DOCUMENTS_REDUX_CONSTANTS.UPLOAD_DOCUMENT_CREDIT_LIMITS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         successNotification(response.data.message || 'Document uploaded successfully');
         stopGeneralLoaderOnSuccessOrFail(`CreditLimitDocumentUploadButtonLoaderAction`);
@@ -625,7 +625,7 @@ export const getCreditLimitsNoteList = (id, params) => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_NOTES_REDUX_CONSTANTS.CREDIT_LIMITS_NOTES_LIST_SUCCESS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -752,11 +752,11 @@ export const getCreditLimitsStakeHolderColumnList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMITS_STAKE_HOLDER_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         dispatch({
           type: CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS.CREDIT_LIMITS_STAKE_HOLDER_DEFAULT_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {

@@ -1,10 +1,7 @@
 import socketIOClient from 'socket.io-client';
 import { displayErrors } from './ErrorNotifyHelper';
 import { HEADER_NOTIFICATION_REDUX_CONSTANTS } from '../common/Header/redux/HeaderConstants';
-import {
-  updateHeaderNotificationOnTaskAssignedAction,
-  updateHeaderNotificationOnTaskUpdatedAction,
-} from '../common/Header/redux/HeaderAction';
+import { updateHeaderNotificationOnTaskAssignedAction } from '../common/Header/redux/HeaderAction';
 import { store } from '../redux/store';
 
 const urls = {
@@ -18,11 +15,9 @@ let socket = null;
 
 export const dispatchActionsOnSocketEvents = data => {
   switch (data.type) {
-    case HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_ASSIGNED:
+    case HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_ASSIGNED ||
+      HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_UPDATED:
       store.dispatch(updateHeaderNotificationOnTaskAssignedAction(data?.data));
-      break;
-    case HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_UPDATED:
-      store.dispatch(updateHeaderNotificationOnTaskUpdatedAction(data?.data));
       break;
     default:
       break;

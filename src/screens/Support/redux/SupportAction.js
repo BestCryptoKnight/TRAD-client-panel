@@ -14,7 +14,7 @@ export const getSupportDetails = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: SUPPORT_REDUX_CONSTANTS.SUPPORT_GET_DETAILS_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('supportPagePageLoaderAction');
       }

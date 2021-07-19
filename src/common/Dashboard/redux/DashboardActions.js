@@ -15,7 +15,7 @@ export const getDashboardDetails = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.DASHBOARD_DETAILS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('dashboardDetailsLoader');
       }
@@ -40,7 +40,7 @@ export const getDashboardTaskList = (data = {}) => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_LIST_SUCCESS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -59,7 +59,7 @@ export const getDashboardNotificationList = data => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.DASHBOARD_NOTIFICATION_LIST_SUCCESS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -96,7 +96,7 @@ export const getTaskById = id => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DASHBOARD_REDUX_CONSTANTS.TASK.DASHBOARD_TASK_DETAILS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('dashboardViewTaskLoaderAction');
       }

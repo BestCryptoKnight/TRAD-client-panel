@@ -18,7 +18,7 @@ export const getEmployeeList = (params = { page: 1, limit: 15 }) => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: EMPLOYEE_REDUX_CONSTANTS.EMPLOYEE_LIST_USER_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('viewEmployeePageLoaderAction');
       }
@@ -36,11 +36,11 @@ export const getEmployeeColumnList = () => {
       if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
           type: EMPLOYEE_COLUMN_LIST_REDUX_CONSTANTS.EMPLOYEE_COLUMN_LIST_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         dispatch({
           type: EMPLOYEE_COLUMN_LIST_REDUX_CONSTANTS.EMPLOYEE_DEFAULT_COLUMN_LIST_ACTION,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {

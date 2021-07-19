@@ -20,6 +20,7 @@ import { errorNotification } from '../../../common/Toast';
 import Modal from '../../../common/Modal/Modal';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
 import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
+import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 
 const filterDropdownData = [
   { value: 'true', label: 'Yes', name: 'decisionMaker' },
@@ -72,6 +73,8 @@ const EmployeeList = () => {
 
   const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
+  const { employeeListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
+
   const getEmployeeListByFilter = useCallback(
     async (params = {}, cb) => {
       const data = {
@@ -100,7 +103,7 @@ const EmployeeList = () => {
   );
 
   const onClickApplyFilter = useCallback(async () => {
-    await getEmployeeListByFilter({ page, limit });
+    await getEmployeeListByFilter({ page: 1, limit });
     toggleFilterModal();
   }, [getEmployeeListByFilter, page, limit, toggleFilterModal]);
 
@@ -220,7 +223,7 @@ const EmployeeList = () => {
   );
 
   useEffect(() => {
-    dispatch(getEmployeeList());
+    // dispatch(getEmployeeList());
     return () => dispatch(resetEmployeeDetails());
   }, []);
 
@@ -231,7 +234,9 @@ const EmployeeList = () => {
     };
     const filters = {
       isDecisionMaker:
-        (paramDecisionMaker?.trim()?.length ?? -1) > 0 ? paramDecisionMaker : undefined,
+        (paramDecisionMaker?.trim()?.length ?? -1) > 0
+          ? paramDecisionMaker
+          : employeeListFilters?.isDecisionMaker,
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
@@ -240,9 +245,13 @@ const EmployeeList = () => {
         value,
       });
     });
-    await getEmployeeListByFilter({ ...params });
+    await getEmployeeListByFilter({ ...params, ...filters });
     await dispatch(getEmployeeColumnList());
   }, []);
+
+  useEffect(() => {
+    dispatch(saveAppliedFilters('employeeListFilters', finalFilter));
+  }, [finalFilter]);
 
   // for params in url
   useUrlParamsUpdate(

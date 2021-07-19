@@ -1,7 +1,11 @@
 import HeaderApiService from '../services/HeaderApiService';
 import { errorNotification, successNotification } from '../../Toast';
 import { clearAuthToken } from '../../../helpers/LocalStorageHelper';
-import { EDIT_PROFILE_CONSTANT,HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS, HEADER_NOTIFICATION_REDUX_CONSTANTS } from './HeaderConstants';
+import {
+  EDIT_PROFILE_CONSTANT,
+  HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS,
+  HEADER_NOTIFICATION_REDUX_CONSTANTS,
+} from './HeaderConstants';
 import { LOGIN_REDUX_CONSTANTS } from '../../../screens/auth/login/redux/LoginReduxConstants';
 import { DASHBOARD_REDUX_CONSTANTS } from '../../Dashboard/redux/DashboardReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
@@ -61,7 +65,7 @@ export const getLoggedUserDetails = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: EDIT_PROFILE_CONSTANT.GET_LOGGED_USER_DETAILS,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -121,7 +125,7 @@ export const uploadProfilePicture = (data, config) => {
       if (response?.data?.status === 'success') {
         dispatch({
           type: EDIT_PROFILE_CONSTANT.UPDATE_USER_PROFILE_PICTURE,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         successNotification('Profile picture updated successfully');
       }
@@ -196,18 +200,6 @@ export const updateHeaderNotificationOnTaskAssignedAction = data => {
     });
   };
 };
-export const updateHeaderNotificationOnTaskUpdatedAction = data => {
-  return dispatch => {
-    dispatch({
-      type: HEADER_NOTIFICATION_REDUX_CONSTANTS.TASK_UPDATED,
-      data,
-    });
-    dispatch({
-      type: DASHBOARD_REDUX_CONSTANTS.NOTIFICATION.GET_NOTIFICATION_FROM_SOCKET,
-      data,
-    });
-  };
-};
 
 export const markNotificationAsReadAndDeleteAction = notificationId => {
   return async dispatch => {
@@ -245,5 +237,13 @@ export const searchGlobalData = value => {
     } catch (e) {
       errorNotification(e);
     }
+  };
+};
+
+export const turnOffNotifire = () => {
+  return dispatch => {
+    dispatch({
+      type: HEADER_NOTIFICATION_REDUX_CONSTANTS.OFF_NOTIFIRE,
+    });
   };
 };

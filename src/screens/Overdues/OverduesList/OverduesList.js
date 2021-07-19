@@ -17,6 +17,7 @@ import Loader from '../../../common/Loader/Loader';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
 import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
+import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 
 const OverduesList = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const OverduesList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'startDate',
-      value: new Date(date).toISOString(),
+      value: date.toISOString(),
     });
   }, []);
 
@@ -58,7 +59,7 @@ const OverduesList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'endDate',
-      value: new Date(date).toISOString(),
+      value: date.toISOString(),
     });
   }, []);
 
@@ -101,6 +102,9 @@ const OverduesList = () => {
 
   // listing
   const overdueListWithPageData = useSelector(({ overdue }) => overdue?.overdueList ?? {});
+
+  const { overdueListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
+
   const { total, pages, page, limit, docs, headers } = useMemo(
     () => overdueListWithPageData,
     [overdueListWithPageData]
@@ -200,17 +204,18 @@ const OverduesList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      debtorId: (paramDebtorId?.toString()?.trim()?.length ?? -1) > 0 ? paramDebtorId : undefined,
+      debtorId:
+        (paramDebtorId?.trim()?.length ?? -1) > 0 ? paramDebtorId : overdueListFilters?.debtorId,
       minOutstandingAmount:
         (paramMinOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
           ? paramMinOutstandingAmount
-          : undefined,
+          : overdueListFilters?.minOutstandingAmount,
       maxOutstandingAmount:
         (paramMaxOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
           ? paramMaxOutstandingAmount
-          : undefined,
-      startDate: paramStartDate ? new Date(paramStartDate) : undefined,
-      endDate: paramEndDate ? new Date(paramEndDate) : undefined,
+          : overdueListFilters?.maxOutstandingAmount,
+      startDate: paramStartDate ? new Date(paramStartDate) : overdueListFilters?.startDate,
+      endDate: paramEndDate ? new Date(paramEndDate) : overdueListFilters?.endDate,
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
@@ -225,6 +230,10 @@ const OverduesList = () => {
       dispatch(resetOverdueListData());
     };
   }, []);
+
+  useEffect(() => {
+    dispatch(saveAppliedFilters('overdueListFilters', finalFilter));
+  }, [finalFilter]);
 
   useUrlParamsUpdate(
     {

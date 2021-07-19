@@ -30,6 +30,7 @@ import { APPLICATION_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/ApplicationRed
 import { downloadAll } from '../../../helpers/DownloadHelper';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
 import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
+import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 
 const ApplicationList = () => {
   const history = useHistory();
@@ -60,6 +61,10 @@ const ApplicationList = () => {
     applicationListPageLoader,
     applicationDownloadButtonLoaderAction,
   } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
+
+  const { applicationListFilters } = useSelector(
+    ({ listFilterReducer }) => listFilterReducer ?? {}
+  );
 
   const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
@@ -174,15 +179,15 @@ const ApplicationList = () => {
 
   // on record limit changed
   const onSelectLimit = useCallback(
-    newLimit => {
-      getApplicationsByFilter({ page: 1, limit: newLimit });
+    async newLimit => {
+      await getApplicationsByFilter({ page: 1, limit: newLimit });
     },
     [getApplicationsByFilter]
   );
   // on pagination changed
   const pageActionClick = useCallback(
-    newPage => {
-      getApplicationsByFilter({ page: newPage, limit });
+    async newPage => {
+      await getApplicationsByFilter({ page: newPage, limit });
     },
     [getApplicationsByFilter, limit]
   );
@@ -192,8 +197,8 @@ const ApplicationList = () => {
     value => setFilterModal(value !== undefined ? value : e => !e),
     [setFilterModal]
   );
-  const onClickApplyFilter = useCallback(() => {
-    getApplicationsByFilter({ page: 1 }, toggleFilterModal);
+  const onClickApplyFilter = useCallback(async () => {
+    await getApplicationsByFilter({ page: 1 }, toggleFilterModal);
   }, [getApplicationsByFilter]);
 
   const onClickResetFilter = useCallback(() => {
@@ -234,7 +239,7 @@ const ApplicationList = () => {
       const isBothEqual = _.isEqual(applicationColumnNameList, applicationDefaultColumnNameList);
       if (!isBothEqual) {
         await dispatch(saveApplicationColumnNameList({ applicationColumnNameList }));
-        getApplicationsByFilter();
+        await getApplicationsByFilter();
       } else {
         errorNotification('Please select different columns to apply changes.');
         throw Error();
@@ -253,7 +258,7 @@ const ApplicationList = () => {
   const onClickResetDefaultColumnSelection = useCallback(async () => {
     await dispatch(saveApplicationColumnNameList({ isReset: true }));
     dispatch(getApplicationColumnNameList());
-    getApplicationsByFilter();
+    await getApplicationsByFilter();
     toggleCustomField();
   }, [toggleCustomField, getApplicationsByFilter]);
 
@@ -312,21 +317,32 @@ const ApplicationList = () => {
     endDate: paramEndDate,
   } = useQueryParams();
 
-  useEffect(() => {
+  useEffect(async () => {
     const params = {
       page: paramPage ?? page ?? 1,
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      entityType: (paramEntityType?.trim()?.length ?? -1) > 0 ? paramEntityType : undefined,
-      debtorId: (paramDebtorId?.trim()?.length ?? -1) > 0 ? paramDebtorId : undefined,
-      status: (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : undefined,
+      entityType:
+        (paramEntityType?.trim()?.length ?? -1) > 0
+          ? paramEntityType
+          : applicationListFilters?.entityType ?? undefined,
+      debtorId:
+        (paramDebtorId?.trim()?.length ?? -1) > 0
+          ? paramDebtorId
+          : applicationListFilters?.debtorId,
+      status:
+        (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status,
       minCreditLimit:
-        (paramMinCreditLimit?.trim()?.length ?? -1) > 0 ? paramMinCreditLimit : undefined,
+        (paramMinCreditLimit?.trim()?.length ?? -1) > 0
+          ? paramMinCreditLimit
+          : applicationListFilters?.minCreditLimit,
       maxCreditLimit:
-        (paramMaxCreditLimit?.trim()?.length ?? -1) > 0 ? paramMaxCreditLimit : undefined,
-      startDate: paramStartDate || undefined,
-      endDate: paramEndDate || undefined,
+        (paramMaxCreditLimit?.trim()?.length ?? -1) > 0
+          ? paramMaxCreditLimit
+          : applicationListFilters?.maxCreditLimit,
+      startDate: paramStartDate || applicationListFilters?.startDate,
+      endDate: paramEndDate || applicationListFilters?.endDate,
     };
     Object.entries(filters).forEach(([name, value]) => {
       dispatchFilter({
@@ -335,9 +351,13 @@ const ApplicationList = () => {
         value,
       });
     });
-    getApplicationsByFilter({ ...params, ...filters });
+    await getApplicationsByFilter({ ...params, ...filters });
     dispatch(getApplicationColumnNameList());
   }, []);
+
+  useEffect(() => {
+    dispatch(saveAppliedFilters('applicationListFilters', finalFilter));
+  }, [finalFilter]);
 
   const generateApplicationClick = useCallback(() => {
     dispatch(
@@ -439,7 +459,7 @@ const ApplicationList = () => {
             <div className="page-header-name">Application List</div>
             <div className="page-header-button-container">
               <IconButton
-                buttonType="primary"
+                buttonType="primary-1"
                 title="cloud_download"
                 className="mr-10"
                 buttonTitle="Click to download applications"

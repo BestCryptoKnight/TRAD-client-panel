@@ -30,6 +30,7 @@ import { downloadAll } from '../../../helpers/DownloadHelper';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
 import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
+import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 
 const CreditLimitsList = () => {
   const dispatch = useDispatch();
@@ -66,13 +67,17 @@ const CreditLimitsList = () => {
 
   const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
+  const { creditLimitListFilters } = useSelector(
+    ({ listFilterReducer }) => listFilterReducer ?? {}
+  );
+
   useEffect(() => {
     dispatch(getCreditLimitsFilter());
   }, []);
 
   const entityTypeSelectedValue = useMemo(() => {
     const foundValue = dropdownData?.entityType?.find(e => {
-      return (e?.value ?? '') === tempFilter?.entity;
+      return (e?.value ?? '') === tempFilter?.entityType;
     });
     return foundValue ?? [];
   }, [tempFilter?.entity, dropdownData]);
@@ -94,7 +99,8 @@ const CreditLimitsList = () => {
       const data = {
         page: page ?? 1,
         limit: limit ?? 15,
-        entityType: (tempFilter?.entity?.trim()?.length ?? -1) > 0 ? tempFilter?.entity : undefined,
+        entityType:
+          (tempFilter?.entityType?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
         ...params,
       };
       try {
@@ -109,7 +115,7 @@ const CreditLimitsList = () => {
         /**/
       }
     },
-    [page, limit, tempFilter?.entity]
+    [page, limit, tempFilter?.entityType]
   );
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
@@ -178,7 +184,8 @@ const CreditLimitsList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      entityType: (paramEntity?.trim()?.length ?? -1) > 0 ? paramEntity : undefined,
+      entityType:
+        (paramEntity?.trim()?.length ?? -1) > 0 ? paramEntity : creditLimitListFilters?.entityType,
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
@@ -191,6 +198,10 @@ const CreditLimitsList = () => {
     dispatch(getCreditLimitColumnList());
     return () => dispatch(resetCreditLimitListData());
   }, []);
+
+  useEffect(() => {
+    dispatch(saveAppliedFilters('creditLimitListFilters', finalFilter));
+  }, [finalFilter]);
 
   const onChangeSelectedColumn = useCallback(
     (type, name, value) => {
@@ -205,9 +216,10 @@ const CreditLimitsList = () => {
     {
       page: page ?? 1,
       limit: limit ?? 15,
-      entityType: (finalFilter?.entity?.trim()?.length ?? -1) > 0 ? finalFilter?.entity : undefined,
+      entityType:
+        (finalFilter?.entityType?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType : undefined,
     },
-    [page, limit, { ...finalFilter }]
+    [page, limit, finalFilter?.entityType]
   );
 
   const [filterModal, setFilterModal] = React.useState(false);
@@ -216,7 +228,7 @@ const CreditLimitsList = () => {
     [setFilterModal]
   );
   const onClickApplyFilter = useCallback(async () => {
-    await getCreditLimitListByFilter({ page, limit }, toggleFilterModal);
+    await getCreditLimitListByFilter({ page: 1, limit }, toggleFilterModal);
   }, [getCreditLimitListByFilter, page, limit, toggleFilterModal]);
 
   const onClickResetFilter = useCallback(async () => {
@@ -267,7 +279,7 @@ const CreditLimitsList = () => {
   const handleEntityTypeFilterChange = useCallback(event => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-      name: 'entity',
+      name: 'entityType',
       value: event?.value,
     });
   }, []);

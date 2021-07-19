@@ -16,6 +16,7 @@ import { LOGIN_REDUX_CONSTANTS } from '../screens/auth/login/redux/LoginReduxCon
 import { support } from '../screens/Support/redux/SupportReducer';
 import { generalLoaderReducer } from '../common/GeneralLoader/redux/GeneralLoaderReducer';
 import { overdue } from '../screens/Overdues/redux/OverduesReducer';
+import { listFilterReducer } from '../common/ListFilters/redux/ListFiltersReducer';
 
 const appReducer = combineReducers({
   dashboard,
@@ -30,6 +31,7 @@ const appReducer = combineReducers({
   globalSearchReducer,
   headerNotificationReducer,
   overdue,
+  listFilterReducer,
 });
 const rootReducer = (state, action) => {
   if (action.type === LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION) {

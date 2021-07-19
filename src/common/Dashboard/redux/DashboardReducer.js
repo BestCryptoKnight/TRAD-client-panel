@@ -143,7 +143,7 @@ export const dashboard = (state = initialDashboardData, action) => {
       let notificationList = state?.dashboardNotification?.notificationList ?? [];
       const { updatedAt, _id, description } = action?.data;
       const data = {
-        [moment(updatedAt).format('YYYY-M-DD')]: [{ updatedAt, _id, description }],
+        [moment(updatedAt).format('YYYY-M-D')]: [{ updatedAt, _id, description }],
       };
       notificationList = notificationList?.map(elem => {
         if (data[elem.title]) {
@@ -161,7 +161,7 @@ export const dashboard = (state = initialDashboardData, action) => {
       return {
         ...state,
         dashboardNotification: {
-          ...state.notification,
+          ...state.dashboardNotification,
           notificationList: [...new Set([...newNotificationList, ...notificationList])],
         },
       };

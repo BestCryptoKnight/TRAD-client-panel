@@ -15,7 +15,7 @@ export const getClientDetails = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CLIENT_REDUX_CONSTANTS.CLIENT_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         stopGeneralLoaderOnSuccessOrFail('viewCompanyProfilePageLoaderAction');
       }
@@ -33,7 +33,7 @@ export const getCompanyProfilePolicyList = (params = { page: 1, limit: 15 }) => 
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CLIENT_REDUX_CONSTANTS.CLIENT_POLICY_DATA,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
@@ -55,11 +55,11 @@ export const getCompanyProfilePolicyColumnList = () => {
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CLIENT_REDUX_CONSTANTS.CLIENT_POLICY_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
         dispatch({
           type: CLIENT_REDUX_CONSTANTS.CLIENT_POLICY_DEFAULT_COLUMN_LIST,
-          data: response.data.data,
+          data: response?.data?.data,
         });
       }
     } catch (e) {
