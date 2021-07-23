@@ -4,12 +4,12 @@
 ##Introduction:
 The TRAD is a financial services company who provides credit assessments for large businesses to protect financial health of the business.
 -    Purpose of this project:
-    -   Decrease the financial risk for large businesses with the system that allow to send information to the customers about their clients.
-    -   Automations on the credit limit.
-    -   Good user interface (UI).
+     -  Decrease the financial risk for large businesses with the system that allow to send information to the customers about their clients.
+     -   Automations on the credit limit.
+     -   Good user interface (UI).
 
 -    What we have archived with this project:
-    -    A dynamic system with integration of different services like ABR Lookup, New Zealand Lookup, RSS, Illion.
+     -    A dynamic system with integration of different services like ABR Lookup, New Zealand Lookup, RSS, Illion.
 
 ##Module:
 -    TRAD Client Portal
@@ -29,13 +29,13 @@ The TRAD is a financial services company who provides credit assessments for lar
 
 ###4. Configure Module:
 -    Configure back-end point
-    -    In **source/client-panel/. env-cmdrc** (environment file) replace the ‘REACT_APP_BASE_URL’ with the generated Api URL pointing to your backend according to environments.
+     -    In **source/client-panel/. env-cmdrc** (environment file) replace the ‘REACT_APP_BASE_URL’ with the generated Api URL pointing to your backend according to environments.
 
 ###5. Get up and running:
 -    Install Requirements
 -    Go to source/client-panel directory and open terminal for that directory
-    -    Run **“npm I”** to install dependencies.
-    -    Run **“npm run <environment name>”** to run project and client-panel loads on port available with your system default is port: 3000, **ex: npm run dev**.
-    -    Login into panel from browser at **“localhost:<port number>”** by providing credentials.
-    -    Dashboard will load once authentication done. 
+     -    Run **“npm I”** to install dependencies.
+     -    Run **“npm run <environment name>”** to run project and client-panel loads on port available with your system default is port: 3000, **ex: npm run dev**.
+     -    Login into panel from browser at **“localhost:<port number>”** by providing credentials.
+     -    Dashboard will load once authentication done. 
 
