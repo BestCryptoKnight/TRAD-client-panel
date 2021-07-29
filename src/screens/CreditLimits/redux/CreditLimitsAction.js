@@ -827,3 +827,21 @@ export const onSaveCreditLimitsStakeHolderColumnList = ({
     }
   };
 };
+
+export const downloadCreditLimitDecisionLetter = id => {
+  return async () => {
+    try {
+      startGeneralLoaderOnRequest('decisionLetterDownloadButtonLoaderAction');
+      const response = await CreditLimitsApiService.downloadCreditLimitDecisionLetter(id);
+      if (response?.statusText === 'OK') {
+        stopGeneralLoaderOnSuccessOrFail(`decisionLetterDownloadButtonLoaderAction`);
+        return response;
+      }
+    } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('decisionLetterDownloadButtonLoaderAction');
+      displayErrors(e);
+      throw Error();
+    }
+    return false;
+  };
+};
