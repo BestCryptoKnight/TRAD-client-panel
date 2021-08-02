@@ -242,9 +242,9 @@ const Dashboard = () => {
                         <div>
                           {approvedAmount?.total
                             ? (
-                                (approvedAmount?.total / approvedAmount?.approvedAmount) *
+                                (approvedAmount?.approvedAmount / approvedAmount?.total) *
                                 100
-                              ).toFixed(0)
+                              ).toFixed(3)
                             : 0}
                           %
                         </div>
