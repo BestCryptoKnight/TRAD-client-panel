@@ -31,6 +31,7 @@ import { downloadAll } from '../../../helpers/DownloadHelper';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
 import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
+import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
 
 const ApplicationList = () => {
   const history = useHistory();
@@ -135,7 +136,7 @@ const ApplicationList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'minCreditLimit',
-      value: event?.target?.value,
+      value: parseInt(event?.target?.value?.toString()?.replaceAll(',', ''), 10),
     });
   }, []);
   const handleMaxLimitChange = useCallback(
@@ -143,7 +144,7 @@ const ApplicationList = () => {
       dispatchFilter({
         type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name: 'maxCreditLimit',
-        value: event?.target?.value,
+        value: parseInt(event?.target?.value?.toString()?.replaceAll(',', ''), 10),
       });
     },
     [dispatchFilter]
@@ -556,34 +557,37 @@ const ApplicationList = () => {
                 />
               </div>
               <div className="filter-modal-row">
-                <div className="form-title"> Minimum Credit Limit</div>
+                <div className="form-title"> Minimum Requested Amount</div>
                 <Input
                   type="text"
                   name="min-limit"
-                  value={tempFilter?.minCreditLimit}
-                  placeholder="3000"
+                  value={NumberCommaSeparator(tempFilter?.minCreditLimit)}
+                  placeholder="00,000"
                   onChange={handleMinLimitChange}
                 />
               </div>
               <div className="filter-modal-row">
-                <div className="form-title">Maximum Credit Limit</div>
+                <div className="form-title">Maximum Requested Amount</div>
                 <Input
                   type="text"
                   name="max-limit"
-                  value={tempFilter?.maxCreditLimit}
-                  placeholder="100000"
+                  value={NumberCommaSeparator(tempFilter?.maxCreditLimit)}
+                  placeholder="00,000"
                   onChange={handleMaxLimitChange}
                 />
               </div>
               <div className="filter-modal-row">
-                <div className="form-title">Date</div>
+                <div className="form-title">Expiry Date</div>
                 <div className="date-picker-container filter-date-picker-container mr-15">
                   <DatePicker
                     className="filter-date-picker"
                     selected={tempFilter?.startDate ? new Date(tempFilter?.startDate) : null}
                     onChange={handleStartDateChange}
                     placeholderText="From Date"
-                    popperProps={{ positionFixed: true }}
+                    showMonthDropdown
+                    showYearDropdown
+                    scrollableYearDropdown
+                    dateFormat="dd/MM/yyyy"
                   />
                   <span className="material-icons-round">event_available</span>
                 </div>
@@ -593,7 +597,10 @@ const ApplicationList = () => {
                     selected={tempFilter?.endDate ? new Date(tempFilter?.endDate) : null}
                     onChange={handleEndDateChange}
                     placeholderText="To Date"
-                    popperProps={{ positionFixed: true }}
+                    showMonthDropdown
+                    showYearDropdown
+                    scrollableYearDropdown
+                    dateFormat="dd/MM/yyyy"
                   />
                   <span className="material-icons-round">event_available</span>
                 </div>
