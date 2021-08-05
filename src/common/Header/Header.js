@@ -376,7 +376,11 @@ const Header = () => {
                         <span />
                         <span
                           className="material-icons-round font-placeholder"
-                          style={{ textAlign: 'end', fontSize: '18px', cursor: 'pointer' }}
+                          style={{
+                            textAlign: 'end',
+                            fontSize: '18px',
+                            cursor: 'pointer',
+                          }}
                           onClick={() =>
                             dispatch(markNotificationAsReadAndDeleteAction(singleNotification?._id))
                           }
@@ -417,6 +421,7 @@ const Header = () => {
                   isProfile
                   handleChange={handleChange}
                   fileName={fileName}
+                  file={file}
                 />
               )}
               <div className="form-title">Name</div>
