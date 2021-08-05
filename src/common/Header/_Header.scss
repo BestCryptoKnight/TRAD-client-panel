@@ -60,6 +60,7 @@
     }
   }
 }
+
 .user-settings > div:hover {
   background-color: $background-color;
 }
@@ -163,6 +164,7 @@
   width: 3.5rem;
   margin-left: 10px;
   color: $primary-color;
+  height: auto;
 }
 
 .notification.true::after {
@@ -259,3 +261,35 @@
     margin-right: 5px;
   }
 }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-header-name, .tab-content-header {
+  font: $h5 $font-medium;
+  color: $primary-color;
+}
+
+.page-header-button-container {
+  display: flex;
+}
+
+.notification-item-wrapper{
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: $text;
+  border-radius: 5px;
+  .notification-date-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .notification-date-row-left{
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+

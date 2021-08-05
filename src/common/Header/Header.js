@@ -1,35 +1,28 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import {
   changeEditProfileData,
   changePassword,
   getHeaderNotificationListURL,
   getLoggedUserDetails,
   logoutUser,
-  markNotificationAsReadAndDeleteAction,
   turnOffNotifire,
   updateUserProfile,
   uploadProfilePicture,
 } from './redux/HeaderAction';
 import dummy from '../../assets/images/dummy.svg';
-import IconButton from '../IconButton/IconButton';
 import Modal from '../Modal/Modal';
 import Input from '../Input/Input';
 import { useOnClickOutside } from '../../hooks/UserClickOutsideHook';
 import { errorNotification } from '../Toast';
 import { SIDEBAR_URLS } from '../../constants/SidebarConstants';
 import FileUpload from './component/FileUpload';
-import Drawer from '../Drawer/Drawer';
 import { getAuthTokenLocalStorage } from '../../helpers/LocalStorageHelper';
 import { connectWebSocket, disconnectWebSocket } from '../../helpers/SocketHelper';
-import {
-  DATE_FORMAT,
-  DATE_FORMAT_CONSTANT_FOR_CALENDER,
-} from '../../constants/DateFormatConstants';
 import GlobalSearch from './component/GlobalSearch';
 import audio from '../../assets/Sounds/notification_high-intensity.wav';
+import HeaderNotification from './component/HeaderNotification';
 
 const Header = () => {
   const history = useHistory();
@@ -53,7 +46,7 @@ const Header = () => {
   const toggleEditProfileModal = value =>
     setShowEditProfileModal(value !== undefined ? value : e => !e);
 
-  const { notificationList, notificationReceived } = useSelector(
+  const { notificationReceived } = useSelector(
     ({ headerNotificationReducer }) => headerNotificationReducer ?? []
   );
 
@@ -65,34 +58,6 @@ const Header = () => {
       dispatch(turnOffNotifire());
     } else player?.pause();
   }, [notificationReceived]);
-
-  const sortedNotificationList = useMemo(() => {
-    let list = [];
-    if (notificationList?.length > 0) {
-      list = Object.values(
-        notificationList?.reduce((acc, cur) => {
-          if (!acc[moment(cur.createdAt).format('DD/MM/YYYY')])
-            acc[moment(cur.createdAt).format('DD/MM/YYYY')] = {
-              createdAt: moment(cur.createdAt).format('DD/MM/YYYY'),
-              notifications: [],
-            };
-          acc[moment(cur.createdAt).format('DD/MM/YYYY')].notifications.push(cur);
-          return acc;
-        }, {})
-      );
-      list?.sort(function (a, b) {
-        return (
-          moment(b.createdAt, 'DD/MM/YYYY').toDate() - moment(a.createdAt, 'DD/MM/YYYY').toDate()
-        );
-      });
-    }
-    return list ?? [];
-  }, [notificationList]);
-
-  const notificationBadge = useMemo(() => {
-    const result = notificationList?.filter(notification => notification?.isRead !== true);
-    return result?.length ?? 0;
-  }, [notificationList]);
 
   const { name, email, contactNumber, profilePictureUrl, changed } = useMemo(() => {
     if (loggedUserDetail) {
@@ -293,18 +258,6 @@ const Header = () => {
     [setFile, setFileName]
   );
 
-  const [notificationDrawer, setNotificationDrawer] = useState(false);
-  const openNotificationDrawer = useCallback(value =>
-    setNotificationDrawer(value !== undefined ? value : e => !e)
-  );
-  const NotiDrawerHeader = () => {
-    return (
-      <div className="notification-drawer-title">
-        <span className="material-icons-round">notifications_active</span> Notifications
-      </div>
-    );
-  };
-
   useEffect(() => {
     dispatch(getHeaderNotificationListURL());
     const AUTH_TOKEN = getAuthTokenLocalStorage();
@@ -325,14 +278,7 @@ const Header = () => {
       </div>
       <div className="header-right-part">
         <GlobalSearch />
-        <IconButton
-          isBadge={notificationBadge > 0}
-          title="notifications_active"
-          buttonType="outlined-bg"
-          className="notification"
-          onClick={openNotificationDrawer}
-          badgeCount={notificationBadge}
-        />
+        <HeaderNotification />
         <img className="user-dp" src={profilePictureUrl || dummy} onClick={toggleUserSettings} />
         {showUserSettings && (
           <div ref={userSettingsRef} className="user-settings">
@@ -347,60 +293,6 @@ const Header = () => {
             </div>
           </div>
         )}
-        {
-          /** ********** notification drawer starts ************ */
-          <Drawer
-            header={<NotiDrawerHeader />}
-            drawerState={notificationDrawer}
-            closeDrawer={() => setNotificationDrawer(false)}
-          >
-            {sortedNotificationList?.length > 0 ? (
-              sortedNotificationList?.map(notification => (
-                <div className="notification-set">
-                  <div className="notification-set-title">
-                    {moment(notification?.createdAt, DATE_FORMAT).calendar(
-                      null,
-                      DATE_FORMAT_CONSTANT_FOR_CALENDER
-                    )}
-                  </div>
-                  {notification?.notifications?.map(singleNotification => (
-                    <div
-                      className="common-accordion-item-content-box high-alert"
-                      key={singleNotification?._id}
-                    >
-                      <div className="date-owner-row just-bet">
-                        <span className="title mr-5">Date:</span>
-                        <span className="details">
-                          {moment(singleNotification?.createdAt).format('DD-MMM-YYYY')}
-                        </span>
-                        <span />
-                        <span
-                          className="material-icons-round font-placeholder"
-                          style={{
-                            textAlign: 'end',
-                            fontSize: '18px',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() =>
-                            dispatch(markNotificationAsReadAndDeleteAction(singleNotification?._id))
-                          }
-                        >
-                          cancel
-                        </span>
-                      </div>
-                      <div className="font-field">Description:</div>
-                      <div className="font-primary">{singleNotification?.description}</div>
-                    </div>
-                  ))}
-                </div>
-              ))
-            ) : (
-              <div className="no-record-found">No record found</div>
-            )}
-          </Drawer>
-
-          /** ********** notification drawer ends ************ */
-        }
       </div>
       {
         /** ***********Edit Profile Modal************** */
