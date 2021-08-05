@@ -80,6 +80,7 @@ export const CREDIT_LIMITS_URLS = {
   VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}debtor/`,
   CREDIT_LIMIT_ACTIONS: `${BASE_URL}debtor/credit-limit/`,
   DOWNLOAD_CREDIT_LIMIT_CSV: `${BASE_URL}debtor/download/`,
+  DOWNLOAD_DEBTOR_CREDIT_LIMIT_DECISION_LETTER: `${BASE_URL}debtor/download/decision-letter/`,
 
   APPLICATION: {
     APPLICATION_LIST: `${BASE_URL}application/`,

@@ -153,6 +153,8 @@
 }
 
 .table-action-buttons {
+  display: flex;
+  align-items: center;
   button:not(:last-child) {
     margin-right: 7px;
   }

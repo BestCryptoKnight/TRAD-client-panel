@@ -10,6 +10,7 @@ import Loader from '../../../common/Loader/Loader';
 import {
   changeCreditColumnList,
   downloadCreditLimitCSV,
+  downloadCreditLimitDecisionLetter,
   getCreditLimitColumnList,
   getCreditLimitsFilter,
   getCreditLimitsList,
@@ -58,6 +59,7 @@ const CreditLimitsList = () => {
     modifyCreditLimitButtonLoaderAction,
     surrenderCreditLimitButtonLoaderAction,
     creditLimitListPageLoaderAction,
+    // decisionLetterDownloadButtonLoaderAction,
   } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const [filter, dispatchFilter] = useReducer(filterReducer, {
@@ -307,10 +309,34 @@ const CreditLimitsList = () => {
     setSurrenderModal(!surrenderModal);
   }, [surrenderModal]);
 
+  const downloadDecisionLetter = useCallback(async creditLimitId => {
+    if (creditLimitId) {
+      try {
+        const res = await dispatch(downloadCreditLimitDecisionLetter(creditLimitId));
+        if (res) downloadAll(res);
+      } catch (e) {
+        errorNotification(e?.response?.request?.statusText ?? 'Internal server error');
+      }
+    } else {
+      errorNotification('You have no records to download');
+    }
+  }, []);
+
   const creditLimitAction = useMemo(
     () => [
       data => (
         <span className="table-action-buttons">
+          <IconButton
+            buttonType="primary-1"
+            title="cloud_download"
+            buttonTitle="Click to download applications"
+            className="download-decision-letter-icon"
+            onClick={e => {
+              e.stopPropagation();
+              downloadDecisionLetter(data?.id);
+            }}
+            // isLoading={decisionLetterDownloadButtonLoaderAction}
+          />
           <Button
             buttonType="outlined-primary-small"
             title="Modify"
@@ -332,7 +358,12 @@ const CreditLimitsList = () => {
         </span>
       ),
     ],
-    [toggleModifyLimitModal, toggleSurrenderModal, setCurrentCreditLimitData]
+    [
+      toggleModifyLimitModal,
+      toggleSurrenderModal,
+      setCurrentCreditLimitData,
+      // decisionLetterDownloadButtonLoaderAction,
+    ]
   );
 
   const modifyLimit = useCallback(async () => {
