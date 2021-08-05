@@ -34,6 +34,8 @@ const ViewCreditLimits = () => {
     ({ creditLimits }) => creditLimits?.selectedCreditLimitData
   );
 
+  const { _id } = useMemo(() => creditLimitsDetails, [creditLimitsDetails]);
+
   const { viewCreditLimitPageLoaderAction } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
@@ -136,11 +138,11 @@ const ViewCreditLimits = () => {
   const tabs = ['Application', 'Stakeholder', 'Tasks', 'Documents', 'Notes'];
 
   const VIEW_CREDIT_LIMITS_TABS = [
-    <CreditLimitsApplicationTab />,
-    <CreditLimitStakeHolderTab />,
-    <CreditLimitsTasksTab />,
-    <CreditLimitsDocumentsTab />,
-    <CreditLimitsNotesTab />,
+    <CreditLimitsApplicationTab id={_id} />,
+    <CreditLimitStakeHolderTab id={_id} />,
+    <CreditLimitsTasksTab id={_id} />,
+    <CreditLimitsDocumentsTab id={_id} />,
+    <CreditLimitsNotesTab id={_id} />,
   ];
 
   useEffect(() => {

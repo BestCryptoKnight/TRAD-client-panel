@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
 import BigInput from '../../../common/BigInput/BigInput';
@@ -17,9 +17,9 @@ import { errorNotification } from '../../../common/Toast';
 import { CREDIT_LIMITS_STAKE_HOLDER_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
 
-const CreditLimitStakeHolderTab = () => {
+const CreditLimitStakeHolderTab = props => {
+  const { id } = props;
   const dispatch = useDispatch();
-  const { id } = useParams();
   const searchInputRef = useRef();
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const { stakeHolderList, stakeHolderColumnList, stakeHolderDefaultColumnList } = useSelector(
@@ -218,6 +218,10 @@ const CreditLimitStakeHolderTab = () => {
       )}
     </>
   );
+};
+
+CreditLimitStakeHolderTab.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default CreditLimitStakeHolderTab;

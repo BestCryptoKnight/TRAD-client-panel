@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import BigInput from '../../../common/BigInput/BigInput';
 import IconButton from '../../../common/IconButton/IconButton';
 import Table from '../../../common/Table/Table';
@@ -18,9 +18,9 @@ import { errorNotification } from '../../../common/Toast';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
 import { CREDIT_LIMITS_TASKS_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
 
-const CreditLimitsTasksTab = () => {
+const CreditLimitsTasksTab = props => {
+  const { id } = props;
   const dispatch = useDispatch();
-  const { id } = useParams();
   const searchInputRef = useRef();
   const [isCompletedChecked, setIsCompletedChecked] = useState(false);
 
@@ -240,6 +240,10 @@ const CreditLimitsTasksTab = () => {
       )}
     </>
   );
+};
+
+CreditLimitsTasksTab.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default CreditLimitsTasksTab;

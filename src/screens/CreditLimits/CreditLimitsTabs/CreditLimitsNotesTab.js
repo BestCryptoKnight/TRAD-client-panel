@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import BigInput from '../../../common/BigInput/BigInput';
 import Button from '../../../common/Button/Button';
 import Table from '../../../common/Table/Table';
@@ -54,9 +54,9 @@ function creditLimitsNoteReducer(state, action) {
   }
 }
 
-const CreditLimitsNotesTab = () => {
+const CreditLimitsNotesTab = props => {
+  const { id } = props;
   const dispatch = useDispatch();
-  const { id } = useParams();
   const searchInputRef = useRef();
   const [modifyNoteModal, setModifyNoteModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -301,6 +301,10 @@ const CreditLimitsNotesTab = () => {
       )}
     </>
   );
+};
+
+CreditLimitsNotesTab.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default CreditLimitsNotesTab;

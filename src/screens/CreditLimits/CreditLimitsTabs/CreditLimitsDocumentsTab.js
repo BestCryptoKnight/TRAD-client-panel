@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import ReactSelect from 'react-select';
+import PropTypes from 'prop-types';
 import BigInput from '../../../common/BigInput/BigInput';
 import IconButton from '../../../common/IconButton/IconButton';
 import Table from '../../../common/Table/Table';
@@ -26,7 +26,8 @@ import FileUpload from '../../../common/Header/component/FileUpload';
 import Input from '../../../common/Input/Input';
 import { downloadAll } from '../../../helpers/DownloadHelper';
 
-const CreditLimitsDocumentsTab = () => {
+const CreditLimitsDocumentsTab = props => {
+  const { id } = props;
   const initialCreditLimitsDocumentState = {
     description: '',
     fileData: '',
@@ -60,7 +61,6 @@ const CreditLimitsDocumentsTab = () => {
   }
 
   const dispatch = useDispatch();
-  const { id } = useParams();
   const searchInputRef = useRef();
   const [uploadModal, setUploadModal] = useState(false);
   const [selectedCheckBoxData, setSelectedCheckBoxData] = useState([]);
@@ -576,6 +576,10 @@ const CreditLimitsDocumentsTab = () => {
       )}
     </>
   );
+};
+
+CreditLimitsDocumentsTab.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default CreditLimitsDocumentsTab;
