@@ -29,7 +29,6 @@ export const headerNotificationReducer = (
   switch (action.type) {
     case HEADER_NOTIFICATION_REDUX_CONSTANTS.GET_HEADER_NOTIFICATION: {
       let notificationReceived = false;
-      console.log(action?.data);
       if (action?.data?.length > 0) notificationReceived = true;
       return {
         ...state,
@@ -55,6 +54,11 @@ export const headerNotificationReducer = (
         notificationList: finalList,
       };
     }
+    case HEADER_NOTIFICATION_REDUX_CONSTANTS.MARKED_ALL_AS_READ:
+      return {
+        ...state,
+        notificationList: [],
+      };
     case HEADER_NOTIFICATION_REDUX_CONSTANTS.OFF_NOTIFIRE: {
       return {
         ...state,

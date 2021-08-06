@@ -9,6 +9,10 @@ import {
 import { LOGIN_REDUX_CONSTANTS } from '../../../screens/auth/login/redux/LoginReduxConstants';
 import { DASHBOARD_REDUX_CONSTANTS } from '../../Dashboard/redux/DashboardReduxConstants';
 import { displayErrors } from '../../../helpers/ErrorNotifyHelper';
+import {
+  startGeneralLoaderOnRequest,
+  stopGeneralLoaderOnSuccessOrFail,
+} from '../../GeneralLoader/redux/GeneralLoaderAction';
 
 export const changePassword = async (oldPassword, newPassword) => {
   try {
@@ -245,5 +249,24 @@ export const turnOffNotifire = () => {
     dispatch({
       type: HEADER_NOTIFICATION_REDUX_CONSTANTS.OFF_NOTIFIRE,
     });
+  };
+};
+
+export const markAllNotificationAsRead = () => {
+  return async dispatch => {
+    try {
+      startGeneralLoaderOnRequest('markAllAsReadLoader');
+      const response = await HeaderApiService.notificationApiServices.markAllAsRead();
+      if (response?.data?.status === 'SUCCESS') {
+        stopGeneralLoaderOnSuccessOrFail('markAllAsReadLoader');
+        successNotification(response?.data?.message ?? 'Marked all notification as read.');
+        dispatch({
+          type: HEADER_NOTIFICATION_REDUX_CONSTANTS.MARKED_ALL_AS_READ,
+        });
+      }
+    } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('markAllAsReadLoader');
+      displayErrors(e);
+    }
   };
 };

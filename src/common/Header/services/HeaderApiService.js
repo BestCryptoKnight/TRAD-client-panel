@@ -15,6 +15,8 @@ const HeaderApiService = {
       ApiService.putData(
         `${HEADER_URLS.HEADER_NOTIFICATIONS.MARK_AS_READ_NOTIFICATION_URL}${notificationId}`
       ),
+    markAllAsRead: () =>
+      ApiService.getData(HEADER_URLS.HEADER_NOTIFICATIONS.MARK_ALL_NOTIFICATIONS_AS_READ),
   },
 
   globalSearchApiServices: {

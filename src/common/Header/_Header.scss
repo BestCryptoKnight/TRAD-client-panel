@@ -293,3 +293,24 @@
   }
 }
 
+.notification-clear-all-wrapper {
+  position: sticky;
+  top: 0;
+  padding: 20px;
+  background: #fff;
+  color: $primary-color;
+  text-align: right;
+
+  .notification-clear-all-btn {
+    width: auto;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+      background: $background-color;
+    }
+  }
+}
+
+
