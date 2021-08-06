@@ -9,7 +9,7 @@ import {
   stopGeneralLoaderOnSuccessOrFail,
 } from '../../../../common/GeneralLoader/redux/GeneralLoaderAction';
 
-export const loginUser = ({ email, password }, rememberMe) => {
+export const loginUser = ({ email, password }) => {
   return async dispatch => {
     try {
       startGeneralLoaderOnRequest('logInButtonLoaderAction');
@@ -23,12 +23,8 @@ export const loginUser = ({ email, password }, rememberMe) => {
         });
 
         const { token } = response?.data?.data;
+        saveAuthTokenLocalStorage(token);
 
-        if (rememberMe) {
-          saveAuthTokenLocalStorage(token);
-        } else {
-          saveAuthTokenLocalStorage(token);
-        }
         successNotification('Login successfully.');
 
         await dispatch(getLoggedUserDetails());
