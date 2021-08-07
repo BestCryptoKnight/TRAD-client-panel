@@ -173,3 +173,57 @@ export const resetClaimDetails = () => {
     });
   };
 };
+
+export const getClaimsDocumentsListData = (id, params = { page: 1, limit: 15 }) => {
+  return async dispatch => {
+    try {
+      const response = await ClaimsApiServices.ClaimsDocumentServices.getClaimsDocumentsList(
+        id,
+        params
+      );
+
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: CLAIMS_REDUX_CONSTANTS.DOCUMENTS.FETCH_CLAIMS_DOCUMENTS_LIST,
+          data: response?.data?.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const uploadClaimDocument = (data, config) => {
+  return async () => {
+    try {
+      startGeneralLoaderOnRequest('viewClaimUploadDocumentButtonLoaderAction');
+      const response = await ClaimsApiServices.ClaimsDocumentServices.uploadClaimDocument(
+        data,
+        config
+      );
+      if (response?.data?.status === 'SUCCESS') {
+        stopGeneralLoaderOnSuccessOrFail('viewClaimUploadDocumentButtonLoaderAction');
+        successNotification(response.data.message || 'Document uploaded successfully');
+      }
+    } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('viewClaimUploadDocumentButtonLoaderAction');
+      displayErrors(e);
+    }
+  };
+};
+
+export const downloadDocumentFromServer = async id => {
+  try {
+    startGeneralLoaderOnRequest('viewClaimDownloadDocumentButtonLoaderAction');
+    const response = await ClaimsApiServices.ClaimsDocumentServices.downloadClaimDocument(id);
+    if (response?.statusText === 'OK') {
+      stopGeneralLoaderOnSuccessOrFail('viewClaimDownloadDocumentButtonLoaderAction');
+      return response;
+    }
+  } catch (e) {
+    stopGeneralLoaderOnSuccessOrFail('viewClaimDownloadDocumentButtonLoaderAction');
+    displayErrors(e);
+  }
+  return false;
+};

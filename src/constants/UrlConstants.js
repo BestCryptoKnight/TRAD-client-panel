@@ -128,6 +128,11 @@ export const CLAIMS_URLS = {
   GET_CLAIMS_ENTITY_LIST: `${BASE_URL}claim/entity-list`,
   ADD_CLAIM: `${BASE_URL}claim/`,
   GET_CLAIM_DETAILS: `${BASE_URL}claim/`,
+
+  DOCUMENTS: {
+    DOCUMENTS_LIST: `${BASE_URL}claim/document/`,
+    DOWNLOAD_DOCUMENTS: `${BASE_URL}claim/document/download/`,
+  },
 };
 
 export const EMPLOYEE_URLS = {

@@ -10,13 +10,14 @@ const initialClaims = {
     headers: [],
     isLoading: false,
   },
-
   claimsColumnList: {},
   claimsDefaultColumnList: {},
-
   claimsEntityList: [],
-
   claimDetails: {},
+
+  documents: {
+    documentList: [],
+  },
 };
 
 export const claims = (state = initialClaims, action) => {
@@ -104,6 +105,15 @@ export const claims = (state = initialClaims, action) => {
         claimsList: initialClaims.claimsList,
       };
     }
+
+    case CLAIMS_REDUX_CONSTANTS.DOCUMENTS.FETCH_CLAIMS_DOCUMENTS_LIST:
+      return {
+        ...state,
+        documents: {
+          ...state?.documents,
+          documentList: action.data,
+        },
+      };
 
     default:
       return state;
