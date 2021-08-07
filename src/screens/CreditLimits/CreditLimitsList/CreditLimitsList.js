@@ -59,7 +59,7 @@ const CreditLimitsList = () => {
     modifyCreditLimitButtonLoaderAction,
     surrenderCreditLimitButtonLoaderAction,
     creditLimitListPageLoaderAction,
-    // decisionLetterDownloadButtonLoaderAction,
+    decisionLetterDownloadButtonLoaderAction,
   } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const [filter, dispatchFilter] = useReducer(filterReducer, {
@@ -333,7 +333,7 @@ const CreditLimitsList = () => {
             className="download-decision-letter-icon"
             onClick={e => {
               e.stopPropagation();
-              downloadDecisionLetter(data?.id);
+              if (!decisionLetterDownloadButtonLoaderAction) downloadDecisionLetter(data?.id);
             }}
             // isLoading={decisionLetterDownloadButtonLoaderAction}
           />
@@ -362,7 +362,7 @@ const CreditLimitsList = () => {
       toggleModifyLimitModal,
       toggleSurrenderModal,
       setCurrentCreditLimitData,
-      // decisionLetterDownloadButtonLoaderAction,
+      decisionLetterDownloadButtonLoaderAction,
     ]
   );
 
