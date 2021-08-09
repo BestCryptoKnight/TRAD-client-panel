@@ -18,6 +18,7 @@ const ApplicationCreditLimitStep = () => {
     orderOnHand,
     note,
     errors,
+    clientReference,
   } = useSelector(({ application }) => application?.editApplication?.creditLimit ?? {});
 
   const updateSingleCompanyState = useCallback((name, value) => {
@@ -189,7 +190,7 @@ const ApplicationCreditLimitStep = () => {
         </div>
       </div>
 
-      <div className="credit-limits-note mt-10">
+      <div className="credit-limits-note mt-10 mb-10">
         <span className="font-primary">Note</span>
         <textarea
           rows={5}
@@ -200,6 +201,23 @@ const ApplicationCreditLimitStep = () => {
           value={note}
         />
         {errors?.note && <div className="ui-state-error">{errors?.note}</div>}
+      </div>
+
+      <div>
+        <span className="f-14 font-primary">Client Reference</span>
+        <div>
+          <Input
+            type="text"
+            name="clientReference"
+            placeholder="Enter Client Reference"
+            value={clientReference}
+            borderClass="mt-5"
+            onChange={handleInputChange}
+          />
+          {errors?.clientReference && (
+            <div className="ui-state-error">{errors?.clientReference}</div>
+          )}
+        </div>
       </div>
     </>
   );

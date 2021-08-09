@@ -53,6 +53,7 @@ export const applicationCreditStepValidations = async (dispatch, data, editAppli
       outstandingAmount,
       orderOnHand,
       note,
+      clientReference,
     } = data;
 
     const finalData = {
@@ -67,6 +68,7 @@ export const applicationCreditStepValidations = async (dispatch, data, editAppli
       outstandingAmount,
       orderOnHand,
       note,
+      clientReference,
     };
     try {
       await dispatch(saveApplicationStepDataToBackend(finalData));
