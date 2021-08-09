@@ -17,12 +17,15 @@ import TableApiService from '../../../common/Table/TableApiService';
 import Drawer from '../../../common/Drawer/Drawer';
 import ApplicationTaskAccordion from './component/ApplicationTaskAccordion';
 import ApplicationNotesAccordion from './component/ApplicationNotesAccordion';
-import ApplicationAlertsAccordion from './component/ApplicationAlertsAccordion';
 import ApplicationDocumentsAccordion from './component/ApplicationDocumentsAccordion';
 import ApplicationLogsAccordion from './component/ApplicationLogsAccordion';
 import { errorNotification } from '../../../common/Toast';
 import Loader from '../../../common/Loader/Loader';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
+import ViewApplicationStatusComponent from './component/ViewApplicationStatusComponent';
+import ViewApplicationEditableRowComponent from './component/ViewApplicationEditableRowComponent';
+import ApplicationCommentAccordion from './component/ApplicationCommentAccordion';
+import ApplicationClientReferenceAccordion from './component/ApplicationClientReferenceAccordion';
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',
@@ -56,8 +59,9 @@ const ViewApplication = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const viewApplicationData = useSelector(({ application }) => application?.viewApplication ?? {});
-  const { applicationDetail } = useMemo(() => viewApplicationData ?? {}, [viewApplicationData]);
+  const { applicationDetail } = useSelector(
+    ({ application }) => application?.viewApplication ?? {}
+  );
 
   const { viewApplicationPageLoader } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
@@ -74,10 +78,11 @@ const ViewApplication = () => {
     outstandingAmount,
     orderOnHand,
     applicationId,
-    status,
     country,
     acn,
     registrationNumber,
+    clientReference,
+    comment,
   } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
 
   useEffect(() => {
@@ -220,23 +225,8 @@ const ViewApplication = () => {
               <div className="view-application-container">
                 <div className="view-application-details-left">
                   <div className="common-white-container">
-                    <div className="">Status</div>
-                    {status?.label === 'Approved' || status?.label === 'Declined' ? (
-                      <>
-                        {['APPROVED'].includes(status?.value) && (
-                          <div className="application-status approved-application-status">
-                            {status?.label}
-                          </div>
-                        )}
-                        {['DECLINED'].includes(status?.value) && (
-                          <div className="application-status declined-application-status">
-                            {status?.label}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="view-application-status">{status?.label ?? '-'}</div>
-                    )}
+                    <ViewApplicationStatusComponent />
+                    <ViewApplicationEditableRowComponent />
                     <div className="application-details-grid">
                       {applicationDetails?.map(detail => (
                         <div>
@@ -266,18 +256,26 @@ const ViewApplication = () => {
                         </div>
                       ))}
                     </div>
-                    {blockers && (
+                    {blockers?.length > 0 && (
                       <>
                         <div className="blockers-title">Blockers</div>
 
                         {blockers.map(blocker => (
                           <div className="guideline" key={Math.random()}>
-                            {blocker?.value}
+                            {blocker}
                           </div>
                         ))}
                       </>
                     )}
-                    <div className="current-business-address-title">Current Business Address</div>
+                    {/* <div className="current-business-address-title">Current Business Address</div> */}
+                    <div className="application-comment">
+                      <div className="font-field mr-15">Comment</div>
+                      <div className="font-primary">{comment || '-'}</div>
+                    </div>
+                    <div className="client-reference">
+                      <div className="font-field mr-15">Client reference</div>
+                      <div className="font-primary">{clientReference || '-'}</div>
+                    </div>
                     <div className="current-business-address">
                       <div className="font-field mr-15">Address</div>
                       <div className="font-primary">{applicationDetail?.address || '-'}</div>
@@ -305,9 +303,11 @@ const ViewApplication = () => {
                     <Accordion className="view-application-accordion">
                       <ApplicationTaskAccordion applicationId={id} index={1} />
                       <ApplicationNotesAccordion applicationId={id} index={2} />
-                      <ApplicationAlertsAccordion index={3} />
-                      <ApplicationDocumentsAccordion applicationId={id} index={4} />
-                      <ApplicationLogsAccordion index={5} />
+                      {/* <ApplicationAlertsAccordion index={3} /> */}
+                      <ApplicationDocumentsAccordion applicationId={id} index={3} />
+                      <ApplicationLogsAccordion index={4} />
+                      <ApplicationClientReferenceAccordion index={5} />
+                      <ApplicationCommentAccordion index={6} />
                     </Accordion>
                   </div>
                 </div>

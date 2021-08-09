@@ -21,26 +21,10 @@
   }
 }
 
-.application-status {
-  width: fit-content;
-  margin-top: 5px;
-  padding: 7px 10px;
-  color: white;
-  border-radius: 5px;
-}
-
-.approved-application-status {
-  background-color: $success-color;
-}
-
-.declined-application-status {
-  background-color: $error-color;
-}
-
 .view-application-accordion {
   width: 100%;
 
- .accordion-body-container {
+  .accordion-body-container {
     background-color: white;
   }
 
@@ -57,8 +41,16 @@
   border-radius: 5px;
 
   .note-title, .alert-title, .document-title {
+    max-width: 70%;
     font: $subtitle $font-medium;
     color: $secondary-color;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .menu-name {
+    font: $subtitle!important;
   }
 }
 
@@ -111,6 +103,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .material-icons-round {
     width: 10px;
     cursor: pointer;
@@ -120,27 +113,59 @@
   }
 }
 
-.common-accordion-item-content-box.high-alert {
-  background-color: $error-color-light;
-  .alert-title {
-    color: $error-color;
-  }
-}
-
-.common-accordion-item-content-box.alert {
-  background-color: $secondary-color-light;
-  .alert-title {
-    color: $secondary-color;
-  }
-}
-
 .document-title-row .document-title {
   color: $primary-color;
 }
 
+.application-status-grid{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-side-status{
+  display: flex;
+  color:$primary-color;
+}
+
+.application-status {
+  padding: 7px 10px;
+  color: white;
+  border-radius: 5px;
+}
+
+.approved-application-status {
+  background-color: $success-color;
+}
+
+.declined-application-status {
+  background-color: $error-color;
+}
+
 .view-application-status {
-  color: $primary-color;
+  display: flex;
+  align-items: center;
   margin-top: 5px;
+
+  .react-select-container {
+    min-width: 180px
+  }
+
+  .ui-state-error {
+    margin-left: 30px;
+  }
+}
+
+.application-editable-row-grid{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  .view-application-status {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-right: 10px;
+  }
 }
 
 .application-details-grid {
@@ -171,10 +196,10 @@
   border-radius: 5px;
 }
 
-.guidelines-title {
+.blockers-title {
   margin-bottom: 7px;
   font: $subtitle $font-medium;
-  color: $primary-color;
+  color:$secondary-color;
 }
 
 .current-business-address-title {
@@ -183,9 +208,9 @@
   color: $primary-color;
 }
 
-.current-business-address {
+.current-business-address, .client-reference, .application-comment {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 150px auto;
   align-items: center;
   margin: 10px 0;
 }
@@ -217,66 +242,33 @@
   width: 175px;
 }
 
- .my-work-add-task-container {
-  display: grid!important;
-  grid-template-columns: 15% calc(35% - 7px) 15% calc(35% - 7px);
-  padding: 25px 30px;
-  gap: 15px 5px;
-
-  > span {
-    margin-top: 7px;
-    color: $primary-color;
-  }
-
-  > div {
-    width: 70%;
-    min-width: 170px;
-  }
-
-  input {
-    cursor: default!important;
-  }
+.accordion-body-container.application-active-accordion-scroll.active-accordion{
+  max-height: 60vh;
+  overflow: auto!important;
 }
-.add-notes-popup-container {
-  display: grid;
-  grid-template-columns: 180px 2fr;
-  gap: 15px 5px;
 
-  > span {
-    color: $primary-color;
-  }
-
-  .react-dropdown-select, .upload-document-input {
-    width: 180px;
-  }
-  .switch-container {
-    width: 180px;
-  }
-  .document-upload-input{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    border: 0.063rem solid #E7ECF2;
-    height: 32px;
-    width: 180px;
-    button{
-      border: none;
-      color: #B2B9BF;
-      background: none;
-    }
-    p{
-      color: #B2B9BF;
-    }
-
-  }
-
-}
 .view-application-accordion-description {
   color: $primary-color;
   word-break: break-all;
   white-space: pre-wrap;
 }
-.add-notes-modal{
-  width: 60vw;
+
+.view-application-accordion-dropdown .menu-name {
+  font-size: $subtitle!important;
+}
+
+.fetch-report-modal {
+  width: 500px;
+}
+
+.fetch-report-popup-container {
+  display: grid;
+  grid-template-columns: 150px minmax(200px, 400px);
+  gap: 10px;
+  align-items: center;
+  font-size: $subtitle;
+
+  span {
+    color: $primary-color;
+  }
 }
