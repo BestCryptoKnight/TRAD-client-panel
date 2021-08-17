@@ -34,7 +34,7 @@ const ViewCreditLimits = () => {
     ({ creditLimits }) => creditLimits?.selectedCreditLimitData
   );
 
-  const { _id } = useMemo(() => creditLimitsDetails, [creditLimitsDetails]);
+  const { _id } = useMemo(() => creditLimitsDetails ?? '', [creditLimitsDetails]);
 
   const { viewCreditLimitPageLoaderAction } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
