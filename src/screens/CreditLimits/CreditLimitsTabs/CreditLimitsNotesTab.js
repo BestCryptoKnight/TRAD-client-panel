@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import BigInput from '../../../common/BigInput/BigInput';
-import Button from '../../../common/Button/Button';
 import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
 import Loader from '../../../common/Loader/Loader';
-import { errorNotification } from '../../../common/Toast';
+import {errorNotification} from '../../../common/Toast';
 import {
   addCreditLimitsNote,
   deleteCreditLimitsNote,
@@ -238,7 +237,6 @@ const CreditLimitsNotesTab = props => {
             placeholder="Search here"
             onKeyUp={checkIfEnterKeyPressed}
           />
-          <Button buttonType="success" title="Add" onClick={toggleModifyNotes} />
         </div>
       </div>
       {/* eslint-disable-next-line no-nested-ternary */}
