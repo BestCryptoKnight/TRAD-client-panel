@@ -56,6 +56,11 @@ function applicationNoteReducer(state, action) {
 const ApplicationNotesAccordion = props => {
   const dispatch = useDispatch();
   const { applicationId, index } = props;
+  const { applicationDetail } = useSelector(
+      ({ application }) => application?.viewApplication ?? {}
+  );
+
+  const { status } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
 
   const [currentNoteId, setCurrentNoteId] = useState('');
   const [editNoteDetails, setEditNoteDetails] = useState([]);
@@ -257,12 +262,12 @@ const ApplicationNotesAccordion = props => {
           }
           suffix="expand_more"
         >
-          <Button
+          {status.value !== 'APPROVED' && status.value !== 'DECLINED' &&<Button
             buttonType="primary-1"
             title="Add Note"
             className="add-note-button"
             onClick={toggleModifyNotes}
-          />
+          />}
           {applicationNoteList?.length > 0 ? (
             applicationNoteList.map(note => (
               <div className="common-accordion-item-content-box" key={note._id}>
