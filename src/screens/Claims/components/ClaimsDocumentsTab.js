@@ -127,8 +127,6 @@ const ClaimsDocumentsTab = () => {
     }
   }, [selectedClaimsDocument, fileData, toggleUploadModel, id]);
 
-  console.log(fileData);
-
   const onUploadClick = useCallback(e => {
     // e.persist();
     if (e.target.files && e.target.files.length > 0) {
