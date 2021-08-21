@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useCallback, useEffect, useMemo} from 'react';
+import {useHistory, useParams} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import Button from '../../Button/Button';
-import Input from '../../Input/Input';
 import Loader from '../../Loader/Loader';
-import { getTaskById, markTaskAsComplete } from '../redux/DashboardActions';
+import {getTaskById, markTaskAsComplete} from '../redux/DashboardActions';
 
 const ViewClientTask = () => {
   const history = useHistory();
@@ -114,14 +113,7 @@ const ViewClientTask = () => {
           component = (
             <>
               <span>{input.label}</span>
-              <Input
-                type="text"
-                name={input.name}
-                placeholder={input.placeholder}
-                value={taskFieldValues(input.name)}
-                disabled
-                borderClass="disabled-control"
-              />
+                <div className="font-field f-14 mt-5">{taskFieldValues(input.name)}</div>
             </>
           );
           break;
@@ -177,7 +169,7 @@ const ViewClientTask = () => {
                 />
               </div>
             </div>
-            <div className="common-white-container my-work-add-task-container">
+            <div className="common-white-container view-task-container">
               {INPUTS.map(getComponentFromType)}
             </div>
           </>
