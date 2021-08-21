@@ -62,10 +62,10 @@ const ApplicationTaskAccordion = props => {
                   <Tooltip
                     mouseEnterDelay={0.5}
                     overlayClassName="tooltip-left-class"
-                    overlay={task.title || 'No task title set'}
+                    overlay={task.description || 'No task title set'}
                     placement="left"
                   >
-                    <div className="document-title">{task.title || '-'}</div>
+                    <div className="document-title">{task.description || '-'}</div>
                   </Tooltip>
 
                   <div className="d-flex">
@@ -90,9 +90,9 @@ const ApplicationTaskAccordion = props => {
                     <span className="details">{task.createdById}</span>
                   </Tooltip>
                 </div>
-                <div className="font-field">Description:</div>
+                <div className="font-field">Comments:</div>
                 <div className="view-application-accordion-description">
-                  {task.description || '-'}
+                  {task.comments || '-'}
                 </div>
               </div>
             ))

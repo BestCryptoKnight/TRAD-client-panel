@@ -239,11 +239,11 @@
 }
 
 .notification-set {
-  padding: 20px;
+  padding: 0 20px;
 }
 
 .notification-set-title {
-  margin-bottom: 10px;
+  margin: 5px 0 2px 0;
   font: $h6 $font-medium;
   color: $primary-color;
 }
@@ -282,6 +282,8 @@
   padding: 10px;
   font-size: $text;
   border-radius: 5px;
+  cursor: pointer;
+
   .notification-date-row{
     display: flex;
     align-items: center;
@@ -291,19 +293,27 @@
       align-items: center;
     }
   }
+
+  &.secondary-tag:hover {
+    background-color: #F9D0AC ;
+  }
+
+  &.red-tag:hover {
+    background-color: #FEC4C4;
+  }
 }
 
 .notification-clear-all-wrapper {
   position: sticky;
   top: 0;
-  padding: 20px;
+  padding: 20px 20px 0;
   background: #fff;
   color: $primary-color;
   text-align: right;
 
   .notification-clear-all-btn {
     width: auto;
-    padding: 5px;
+    padding: 5px 10px;
     cursor: pointer;
     border-radius: 5px;
 

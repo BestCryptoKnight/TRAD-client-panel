@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useCallback, useMemo, useState } from 'react';
+import {useHistory} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import {
   DATE_FORMAT,
@@ -12,9 +13,11 @@ import {
   markNotificationAsReadAndDeleteAction,
 } from '../redux/HeaderAction';
 import { errorNotification } from '../../Toast';
+import {handleGlobalSearchSelect} from "../../../helpers/GlobalSearchHelper";
 
 const HeaderNotification = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [notificationDrawer, setNotificationDrawer] = useState(false);
 
   const { notificationList } = useSelector(
@@ -66,6 +69,12 @@ const HeaderNotification = () => {
     );
   };
 
+  const onNotificationClick = useCallback(notification => {
+    const { entityType, entityId, hasSubModule, subModule, description } = notification;
+    handleGlobalSearchSelect(history, entityType, entityId, hasSubModule, subModule, description);
+    setNotificationDrawer(false);
+  },[])
+
   const markAllAsRead = useCallback(() => {
     if (sortedNotificationList?.length > 0 && !markAllAsReadLoader) {
       dispatch(markAllNotificationAsRead());
@@ -110,6 +119,7 @@ const HeaderNotification = () => {
                   <div
                     className="notification-item-wrapper secondary-tag"
                     key={singleNotification?._id}
+                    onClick={() => onNotificationClick(singleNotification)}
                   >
                     <div className="notification-date-row">
                       <div className="notification-date-row-left">
@@ -140,7 +150,7 @@ const HeaderNotification = () => {
               </div>
             ))
           ) : (
-            <div className="no-record-found">No record found</div>
+            <div className="no-record-found">No new notification</div>
           )}
         </>
       </Drawer>

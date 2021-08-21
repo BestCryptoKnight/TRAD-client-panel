@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useReducer, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useCallback, useMemo, useReducer, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import ReactSelect from 'react-select';
@@ -14,13 +14,11 @@ import IconButton from '../../../../common/IconButton/IconButton';
 import Modal from '../../../../common/Modal/Modal';
 import FileUpload from '../../../../common/Header/component/FileUpload';
 import Input from '../../../../common/Input/Input';
-import Switch from '../../../../common/Switch/Switch';
-import { errorNotification } from '../../../../common/Toast';
+import {errorNotification} from '../../../../common/Toast';
 
 const initialApplicationDocumentState = {
   description: '',
   fileData: '',
-  isPublic: false,
   documentType: [],
 };
 const APPLICATION_DOCUMENT_REDUCER_ACTIONS = {
@@ -79,7 +77,7 @@ const ApplicationDocumentsAccordion = props => {
     [setUploadModel]
   );
 
-  const { documentType, description, isPublic } = useMemo(
+  const { documentType, description } = useMemo(
     () => selectedApplicationDocuments,
     [selectedApplicationDocuments]
   );
@@ -113,16 +111,7 @@ const ApplicationDocumentsAccordion = props => {
     },
     [dispatchSelectedApplicationDocuments]
   );
-  const onChangeDocumentSwitch = useCallback(
-    e => {
-      dispatchSelectedApplicationDocuments({
-        type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
-        name: e.target.name,
-        value: e.target.checked,
-      });
-    },
-    [dispatchSelectedApplicationDocuments]
-  );
+
   const onUploadClick = useCallback(
     e => {
       // e.persist();
@@ -205,7 +194,6 @@ const ApplicationDocumentsAccordion = props => {
     } else {
       const formData = new FormData();
       formData.append('description', selectedApplicationDocuments.description);
-      formData.append('isPublic', selectedApplicationDocuments.isPublic);
       formData.append('documentType', selectedApplicationDocuments.documentType.value);
       formData.append('document', selectedApplicationDocuments.fileData);
       formData.append('entityId', applicationId);
@@ -376,13 +364,6 @@ const ApplicationDocumentsAccordion = props => {
               type="text"
               value={description}
               onChange={onchangeDocumentDescription}
-            />
-            <span>Private/Public</span>
-            <Switch
-              id="document-type"
-              name="isPublic"
-              checked={isPublic}
-              onChange={onChangeDocumentSwitch}
             />
           </div>
         </Modal>

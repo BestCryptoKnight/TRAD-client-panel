@@ -57,7 +57,8 @@ const GlobalSearch = () => {
           setSearchStart(true);
           dispatch(searchGlobalData(value));
         } else {
-          handleGlobalSearchSelect(globalSearchResult?.[cursor], history);
+          const {module, _id, hasSubModule, subModule, status} = globalSearchResult?.[cursor]
+          handleGlobalSearchSelect(history, module, _id, hasSubModule, subModule, status);
           setSearchStart(false);
           setSearchedString('');
           setCursor(0);
@@ -76,6 +77,11 @@ const GlobalSearch = () => {
         type: HEADER_GLOBAL_SEARCH_REDUX_CONSTANTS.CLEAR_SEARCHED_DATA_LIST,
       });
     }
+  }, []);
+
+  const onSearchResultSelection = useCallback(searchResult => {
+    const { module, _id, hasSubModule, subModule, status } = searchResult;
+    handleGlobalSearchSelect(history, module, _id, hasSubModule, subModule, status);
   }, []);
 
   return (
@@ -103,7 +109,7 @@ const GlobalSearch = () => {
               <li
                 className={index === cursor && 'header-active-search'}
                 onClick={() => {
-                  handleGlobalSearchSelect(searchResult, history);
+                  onSearchResultSelection(searchResult);
                   setSearchStart(false);
                   setSearchedString('');
                   setCursor(0);

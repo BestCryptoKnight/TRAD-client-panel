@@ -14,6 +14,7 @@ import { usdConverter } from '../../helpers/usdConverter';
 import { getLabelFromValues } from '../../helpers/chartHelper';
 import { dashboardPendingApplicationsMapper } from '../../helpers/Mappers';
 import DashBoardNotification from './components/DashBoardNotification';
+import {NumberCommaSeparator} from "../../helpers/NumberCommaSeparator";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const Dashboard = () => {
       {
         label: '',
         data: [
-          endorsedLimit?.totalCount === 0 ? 0 : endorsedLimit?.endorsedLimitCount,
+          0,
           endorsedLimit?.totalCount === 0
             ? 1
             : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
@@ -172,8 +173,8 @@ const Dashboard = () => {
                               %
                             </div>
                             <span>
-                              {endorsedLimit?.endorsedLimitCount ?? 0}/
-                              {endorsedLimit?.totalCount ?? 0}
+                              {NumberCommaSeparator(endorsedLimit?.endorsedLimitCount) || 0}/
+                              {NumberCommaSeparator(endorsedLimit?.totalCount) || 0}
                             </span>
                           </div>
                         </div>
@@ -201,8 +202,8 @@ const Dashboard = () => {
                             %
                           </div>
                           <span>
-                            {resChecksCount?.applicationCount ?? 0}/
-                            {resChecksCount?.totalCount ?? 0}
+                            {NumberCommaSeparator(resChecksCount?.applicationCount) || 0}/
+                            {NumberCommaSeparator(resChecksCount?.totalCount) || 0}
                           </span>
                         </div>
                       </div>

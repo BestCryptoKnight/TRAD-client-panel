@@ -32,6 +32,7 @@ import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/List
 import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
+import CustomSelect from "../../../common/CustomSelect/CustomSelect";
 
 const ApplicationList = () => {
   const history = useHistory();
@@ -89,6 +90,9 @@ const ApplicationList = () => {
     };
   }, [{ ...tempFilter }]);
 
+  const defaultApplicationStatus =
+      'SENT_TO_INSURER,REVIEW_APPLICATION,UNDER_REVIEW,PENDING_INSURER_REVIEW,AWAITING_INFORMATION';
+
   const handleStartDateChange = useCallback(date => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
@@ -129,7 +133,7 @@ const ApplicationList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'status',
-      value: event?.value,
+      value: event?.map(value => value.value).join(','),
     });
   }, []);
   const handleMinLimitChange = useCallback(event => {
@@ -333,7 +337,7 @@ const ApplicationList = () => {
           ? paramDebtorId
           : applicationListFilters?.debtorId,
       status:
-        (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status,
+        (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status || defaultApplicationStatus,
       minCreditLimit:
         (paramMinCreditLimit?.trim()?.length ?? -1) > 0
           ? paramMinCreditLimit
@@ -415,10 +419,10 @@ const ApplicationList = () => {
   }, [tempFilter?.debtorId, dropdownData]);
 
   const applicationStatusSelectedValue = useMemo(() => {
-    const foundValue = dropdownData?.applicationStatus?.find(e => {
-      return (e?.value ?? '') === tempFilter?.status;
+    const foundValue = dropdownData?.applicationStatus?.filter(e => {
+      return tempFilter?.status?.split(',').includes(e.value);
     });
-    return foundValue ? [foundValue] : [];
+    return foundValue ?? [];
   }, [tempFilter?.status, dropdownData]);
 
   const viewApplicationOnSelectRecord = useCallback(
@@ -545,15 +549,12 @@ const ApplicationList = () => {
               </div>
               <div className="filter-modal-row">
                 <div className="form-title">Application Status</div>
-                <ReactSelect
-                  className="filter-select react-select-container"
-                  classNamePrefix="react-select"
-                  placeholder="Select Status"
-                  name="role"
-                  options={dropdownData?.applicationStatus}
-                  value={applicationStatusSelectedValue}
-                  onChange={handleApplicationStatusFilterChange}
-                  isSearchble
+                <CustomSelect
+                    className="application-status-select"
+                    options={dropdownData?.applicationStatus}
+                    placeholder="Select Status"
+                    onChangeCustomSelect={handleApplicationStatusFilterChange}
+                    value={applicationStatusSelectedValue}
                 />
               </div>
               <div className="filter-modal-row">

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import AccordionItem from '../../../../common/Accordion/AccordionItem';
 import Button from '../../../../common/Button/Button';
@@ -12,9 +12,8 @@ import {
 } from '../../redux/ApplicationAction';
 import Modal from '../../../../common/Modal/Modal';
 import Input from '../../../../common/Input/Input';
-import Switch from '../../../../common/Switch/Switch';
 import DropdownMenu from '../../../../common/DropdownMenu/DropdownMenu';
-import { errorNotification } from '../../../../common/Toast';
+import {errorNotification} from '../../../../common/Toast';
 
 const NOTE_ACTIONS = {
   ADD: 'ADD',
@@ -24,7 +23,6 @@ const NOTE_ACTIONS = {
 const initialApplicationNoteState = {
   noteId: null,
   description: '',
-  isPublic: false,
   type: NOTE_ACTIONS.ADD,
 };
 
@@ -134,21 +132,9 @@ const ApplicationNotesAccordion = props => {
     [dispatchSelectedApplicationNote]
   );
 
-  const onChangeSelectedNoteSwitch = useCallback(
-    e => {
-      dispatchSelectedApplicationNote({
-        type: APPLICATION_NOTE_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
-        name: e.target.name,
-        value: e.target.checked,
-      });
-    },
-    [dispatchSelectedApplicationNote]
-  );
-
   const addOrUpdateNote = useCallback(async () => {
     const noteData = {
       description: selectedApplicationNote.description,
-      isPublic: selectedApplicationNote.isPublic,
     };
     try {
       if (noteData?.description?.trim()?.length > 0) {
@@ -172,11 +158,10 @@ const ApplicationNotesAccordion = props => {
 
   const onEditNoteClick = useCallback(() => {
     setShowActionMenu(!showActionMenu);
-    const { _id, description, isPublic } = editNoteDetails;
+    const { _id, description } = editNoteDetails;
     const data = {
       noteId: _id,
       description,
-      isPublic,
       type: NOTE_ACTIONS.EDIT,
     };
     dispatchSelectedApplicationNote({
@@ -313,13 +298,6 @@ const ApplicationNotesAccordion = props => {
               type="text"
               value={selectedApplicationNote.description}
               onChange={onChangeSelectedNoteInput}
-            />
-            <span>Private/Public</span>
-            <Switch
-              id="selected-note"
-              name="isPublic"
-              checked={selectedApplicationNote.isPublic}
-              onChange={onChangeSelectedNoteSwitch}
             />
           </div>
         </Modal>

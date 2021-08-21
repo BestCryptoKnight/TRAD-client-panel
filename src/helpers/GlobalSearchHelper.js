@@ -23,21 +23,20 @@ const handleSearchWithSubModules = (path, module, hasSubModule, subModule, histo
   history.push(path);
 };
 
-export const handleGlobalSearchSelect = (data, history) => {
+export const handleGlobalSearchSelect = (history, module, id, hasSubModule, subModule, status) => {
   try {
-    const { module, _id, hasSubModule, subModule, status } = data;
     switch (module) {
       case 'task':
-        history.push(`/dashboard/task/${_id}`);
+        history.push(`/dashboard/task/${id}`);
         break;
       case 'application':
         if (status === 'DRAFT')
-          history.push(`/applications/application/generate/?applicationId=${_id}`);
-        else history.push(`/applications/detail/view/${_id}`);
+          history.push(`/applications/application/generate/?applicationId=${id}`);
+        else history.push(`/applications/detail/view/${id}`);
         break;
       case 'creditLimit':
         handleSearchWithSubModules(
-          `/credit-limits/${_id}`,
+          `/credit-limits/${id}`,
           module,
           hasSubModule,
           subModule,
