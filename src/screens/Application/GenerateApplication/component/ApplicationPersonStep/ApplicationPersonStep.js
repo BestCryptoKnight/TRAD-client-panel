@@ -45,8 +45,8 @@ const ApplicationPersonStep = () => {
       default:
         break;
     }
-    return <PersonIndividualDetail itemHeader={itemHeader} index={index} />;
-  }, []);
+    return <PersonIndividualDetail itemHeader={itemHeader} index={index} activePersonStep={personState?.length}/>;
+  }, [personState?.length]);
 
   return (
     <>

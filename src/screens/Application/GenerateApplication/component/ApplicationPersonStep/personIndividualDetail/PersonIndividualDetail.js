@@ -46,7 +46,7 @@ const drawerReducer = (state, action) => {
       return state;
   }
 };
-const PersonIndividualDetail = ({ itemHeader, index }) => {
+const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
   const dispatch = useDispatch();
   const updateSinglePersonState = useCallback(
     (name, value) => {
@@ -989,6 +989,7 @@ const PersonIndividualDetail = ({ itemHeader, index }) => {
       )}
       <AccordionItem
         index={index}
+        setIndex={activePersonStep}
         isExpanded
         className="application-person-step-accordion"
         header={itemHeader ?? 'Director Details'}
@@ -1007,6 +1008,11 @@ const PersonIndividualDetail = ({ itemHeader, index }) => {
 PersonIndividualDetail.propTypes = {
   itemHeader: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
+  activePersonStep: PropTypes.number
 };
+
+PersonIndividualDetail.defaultProps = {
+  activePersonStep: undefined
+}
 
 export default PersonIndividualDetail;
