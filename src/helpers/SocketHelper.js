@@ -9,7 +9,7 @@ const urls = {
   test: 'https://client.trad.test.humanpixel.com.au',
 };
 
-const SOCKET_URI = urls.dev;
+const SOCKET_URI = urls.test;
 const TYPE = 'client-user';
 let socket = null;
 
@@ -20,6 +20,7 @@ export const dispatchActionsOnSocketEvents = data => {
     case HEADER_NOTIFICATION_REDUX_CONSTANTS.DUE_TASK:
     case HEADER_NOTIFICATION_REDUX_CONSTANTS.APPLICATION_APPROVED:
     case HEADER_NOTIFICATION_REDUX_CONSTANTS.APPLICATION_DECLINED:
+    case HEADER_NOTIFICATION_REDUX_CONSTANTS.APPLICATION_GENERATED:
     case HEADER_NOTIFICATION_REDUX_CONSTANTS.CLAIM_ADDED:
       store.dispatch(updateHeaderNotificationOnTaskAssignedAction(data?.data));
       break;
