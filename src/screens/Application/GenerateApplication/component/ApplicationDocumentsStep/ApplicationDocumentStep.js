@@ -1,24 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
 import ReactSelect from 'react-select';
 import Tooltip from 'rc-tooltip';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Input from '../../../../../common/Input/Input';
 import IconButton from '../../../../../common/IconButton/IconButton';
 import Modal from '../../../../../common/Modal/Modal';
 import FileUpload from '../../../../../common/Header/component/FileUpload';
-import Switch from '../../../../../common/Switch/Switch';
 import {
   deleteApplicationDocumentAction,
   getApplicationDocumentDataList,
   getDocumentTypeList,
   uploadDocument,
 } from '../../../redux/ApplicationAction';
-import { errorNotification } from '../../../../../common/Toast';
+import {errorNotification} from '../../../../../common/Toast';
 
 const initialApplicationDocumentState = {
   description: '',
   fileData: '',
-  isPublic: false,
   documentType: [],
 };
 const APPLICATION_DOCUMENT_REDUCER_ACTIONS = {
@@ -79,7 +77,7 @@ const ApplicationDocumentStep = () => {
     initialApplicationDocumentState
   );
 
-  const { documentType, description, isPublic } = useMemo(
+  const { documentType, description } = useMemo(
     () => selectedApplicationDocuments,
     [selectedApplicationDocuments]
   );
@@ -182,7 +180,6 @@ const ApplicationDocumentStep = () => {
     } else {
       const formData = new FormData();
       formData.append('description', selectedApplicationDocuments.description);
-      formData.append('isPublic', selectedApplicationDocuments.isPublic);
       formData.append('documentType', selectedApplicationDocuments.documentType.value);
       formData.append('document', selectedApplicationDocuments.fileData);
       formData.append('entityId', editApplication?._id);
@@ -246,16 +243,6 @@ const ApplicationDocumentStep = () => {
         type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
         name: e.target.name,
         value: e.target.value,
-      });
-    },
-    [dispatchSelectedApplicationDocuments]
-  );
-  const onChangeDocumentSwitch = useCallback(
-    e => {
-      dispatchSelectedApplicationDocuments({
-        type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.UPDATE_SINGLE_DATA,
-        name: e.target.name,
-        value: e.target.checked,
       });
     },
     [dispatchSelectedApplicationDocuments]
@@ -392,13 +379,6 @@ const ApplicationDocumentStep = () => {
               type="text"
               value={description}
               onChange={onchangeDocumentDescription}
-            />
-            <span>Private/Public</span>
-            <Switch
-              id="document-type"
-              name="isPublic"
-              checked={isPublic}
-              onChange={onChangeDocumentSwitch}
             />
           </div>
         </Modal>
