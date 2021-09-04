@@ -1,12 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, {useCallback, useReducer, useState} from 'react';
 import moment from 'moment';
-import ReactSelect from 'react-select';
-import { useDispatch } from 'react-redux';
 import TableApiService from '../../../common/Table/TableApiService';
 import Drawer from '../../../common/Drawer/Drawer';
-import { changeOverdueStatus } from '../redux/OverduesAction';
-import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
+import {NumberCommaSeparator} from '../../../helpers/NumberCommaSeparator';
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',
@@ -36,11 +33,6 @@ const drawerReducer = (state, action) => {
       return state;
   }
 };
-
-const overdueStatusList = [
-  { label: 'Reported to Insurer', value: 'REPORTED_TO_INSURER', name: 'status' },
-  { label: 'Not Reportable', value: 'NOT_REPORTABLE', name: 'status' },
-];
 
 const ExpandedTableHelper = props => {
   const { docs, isRowExpanded, refreshData } = props;
@@ -124,41 +116,10 @@ ExpandedTableHelper.propTypes = {
 export default ExpandedTableHelper;
 
 const TableLinkDrawer = props => {
-  const dispatch = useDispatch();
-  const { drawerState, closeDrawer, setIsStatusChanged } = props;
-  const currentStatus = useMemo(
-    () => drawerState?.data?.filter(data => data?.type === 'status')?.[0],
-    [drawerState]
-  );
-  const [status, setStatus] = useState(currentStatus?.value);
-  const handleOverdueDrawerStatusChange = useCallback(
-    async e => {
-      try {
-        const data = { status: e?.value };
-        await dispatch(changeOverdueStatus(drawerState?.id, data));
-        setStatus(e);
-        setIsStatusChanged(true);
-      } catch (err) {
-        /**/
-      }
-    },
-    [status, drawerState?.id, setIsStatusChanged]
-  );
+  const { drawerState, closeDrawer } = props;
+
   const checkValue = row => {
     switch (row.type) {
-      case 'status': {
-        return (
-          <ReactSelect
-            name="overdueStatus"
-            className="react-select-container"
-            classNamePrefix="react-select"
-            placeholder="Select Status"
-            options={overdueStatusList}
-            value={status ?? []}
-            onChange={handleOverdueDrawerStatusChange}
-          />
-        );
-      }
       case 'dollar':
         return row?.value ? `$ ${NumberCommaSeparator(row?.value)}` : '-';
       case 'percent':
@@ -169,14 +130,6 @@ const TableLinkDrawer = props => {
         return row?.value ?? '-';
     }
   };
-
-  useEffect(() => {
-    if (currentStatus?.value?.value === 'SUBMITTED') {
-      handleOverdueDrawerStatusChange({ label: 'Pending', value: 'PENDING', name: 'status' });
-    } else {
-      setStatus(currentStatus?.value);
-    }
-  }, [currentStatus?.value]);
 
   return (
     <Drawer
@@ -204,7 +157,6 @@ TableLinkDrawer.propTypes = {
     drawerHeader: PropTypes.string.isRequired,
   }).isRequired,
   closeDrawer: PropTypes.func.isRequired,
-  setIsStatusChanged: PropTypes.func.isRequired,
 };
 
 TableLinkDrawer.defaultProps = {};

@@ -23,6 +23,7 @@ import {errorNotification} from '../../../common/Toast';
 import Loader from '../../../common/Loader/Loader';
 import {NumberCommaSeparator} from '../../../helpers/NumberCommaSeparator';
 import ViewApplicationStatusComponent from './component/ViewApplicationStatusComponent';
+import ViewApplicationEditableRowComponent from "./component/ViewApplicationEditableRowComponent";
 
 export const DRAWER_ACTIONS = {
     SHOW_DRAWER: 'SHOW_DRAWER',
@@ -78,6 +79,7 @@ const ViewApplication = () => {
         country,
         acn,
         registrationNumber,
+        clientReference
     } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
 
     useEffect(() => {
@@ -221,7 +223,8 @@ const ViewApplication = () => {
                                 <div className="view-application-details-left">
                                     <div className="common-white-container">
                                         <ViewApplicationStatusComponent/>
-                                        {/*  <ViewApplicationEditableRowComponent /> */}
+                                        <ViewApplicationEditableRowComponent
+                                        />
                                         <div className="application-details-grid">
                                             {applicationDetails?.map(detail => (
                                                 <div>
@@ -263,14 +266,14 @@ const ViewApplication = () => {
                                             </>
                                         )}
                                         {/* <div className="current-business-address-title">Current Business Address</div> */}
-                                     {/*   <div className="application-comment">
+                                        {/*   <div className="application-comment">
                                             <div className="font-field mr-15">Comment</div>
                                             <div className="font-primary">{comment || '-'}</div>
-                                        </div>
+                                        </div> */}
                                         <div className="client-reference">
                                             <div className="font-field mr-15">Client reference</div>
                                             <div className="font-primary">{clientReference || '-'}</div>
-                                        </div> */}
+                                        </div>
                                         <div className="current-business-address">
                                             <div className="font-field mr-15">Address</div>
                                             <div className="font-primary">{applicationDetail?.address || '-'}</div>
@@ -298,11 +301,8 @@ const ViewApplication = () => {
                                         <Accordion className="view-application-accordion">
                                             <ApplicationTaskAccordion applicationId={id} index={1}/>
                                             <ApplicationNotesAccordion applicationId={id} index={2}/>
-                                            {/* <ApplicationAlertsAccordion index={3} /> */}
                                             <ApplicationDocumentsAccordion applicationId={id} index={3}/>
                                             <ApplicationLogsAccordion index={4}/>
-                                            {/* <ApplicationClientReferenceAccordion index={5} />
-                      <ApplicationCommentAccordion index={6} /> */}
                                         </Accordion>
                                     </div>
                                 </div>

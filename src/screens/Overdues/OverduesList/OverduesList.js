@@ -22,7 +22,7 @@ import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFilter
 const OverduesList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [newSubmissionDate, setNewSubmissionDate] = useState('');
+  const [newSubmissionDate, setNewSubmissionDate] = useState({});
   const [newSubmissionModal, setNewSubmissionModal] = useState(false);
   const [filter, dispatchFilter] = useReducer(filterReducer, {
     tempFilter: {},
@@ -270,16 +270,26 @@ const OverduesList = () => {
     [getOverdueListByFilter]
   );
 
+  const onDateSelection = useCallback(date => {
+    const formattedDate = moment(date, 'MM/YYYY');
+
+    setNewSubmissionDate({
+      month: formattedDate.format('M'),
+      year: formattedDate.format('YYYY'),
+      submissionDate: date,
+    });
+  }, []);
+
   const onAddNewSubmission = useCallback(() => {
     if (!newSubmissionDate) {
       errorNotification('Please select month/year to add new submission');
     } else {
-      history.push(`over-dues/${moment(newSubmissionDate)?.format('MMMM-YYYY')}`);
+      history.push(`over-dues/${moment(newSubmissionDate?.submissionDate)?.format('MMMM-YYYY')}`);
     }
   }, [newSubmissionDate]);
 
   const onCloseNewSubmissionModal = useCallback(() => {
-    setNewSubmissionDate('');
+    setNewSubmissionDate({});
     setNewSubmissionModal(e => !e);
   }, []);
 
@@ -353,9 +363,9 @@ const OverduesList = () => {
               <div className="date-picker-container month-year-picker">
                 <DatePicker
                   placeholderText="Select month and year"
-                  onChange={selectedDate => setNewSubmissionDate(selectedDate)}
+                  onChange={date => onDateSelection(date)}
                   dateFormat="MM/yyyy"
-                  selected={newSubmissionDate}
+                  selected={newSubmissionDate?.submissionDate}
                   showMonthYearPicker
                   showYearDropdown
                   showFullMonthYearPicker

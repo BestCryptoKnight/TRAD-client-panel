@@ -94,11 +94,13 @@ const AddOverdues = () => {
   const { saveOverdueToBackEndPageLoaderAction } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
-
+  const selectedDate = useMemo(() => moment(period, 'MMM/YYYY'), [period]);
+  const month = useMemo(() => selectedDate.format('M'), [selectedDate]);
+  const year = useMemo(() => selectedDate.format('YYYY'), [selectedDate]);
   const getOverdueList = useCallback(async () => {
-    const data = { date: moment(period, 'MMMM-YYYY').toISOString() };
+    const data = { month, year };
     await dispatch(getOverdueListByDate(data));
-  }, [period]);
+  }, [month, year]);
 
   const changeOverdueFields = useCallback((name, value) => {
     dispatch(handleOverdueFieldChange(name, value));

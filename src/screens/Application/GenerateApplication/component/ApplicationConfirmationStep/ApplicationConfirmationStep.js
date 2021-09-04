@@ -353,7 +353,7 @@ const ApplicationConfirmationStep = () => {
       type: 'line',
     },
     partners?.length > 0 && {
-      title: 'Director Details',
+      title: 'Entity Details',
       type: 'main-title-director-details',
     },
     partners?.length > 0 && {

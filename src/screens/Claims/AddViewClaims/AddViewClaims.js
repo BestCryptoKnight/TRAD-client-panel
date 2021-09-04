@@ -304,19 +304,19 @@ const AddViewClaims = () => {
               {type === 'view' ? (
                 <span className="view-claim-detail">
                   {input?.value
-                    ? moment(input?.value, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY')
-                    : '-'}
+                    ?  moment(input?.value).format('DD/MM/YYYY') : '-'}
                 </span>
               ) : (
                 <div className={`date-picker-container ${type === 'view' && 'disabled-control'}`}>
                   <DatePicker
                     placeholderText={input.placeholder}
-                    selected={(input.value && new Date(input.value)) || null}
+                    selected={input.value || null}
                     onChange={date => handleDateInputChange(input.name, date)}
                     showMonthDropdown
                     showYearDropdown
                     scrollableYearDropdown
                     popperProps={{ positionFixed: true }}
+                    dateFormat="dd/MM/yyyy"
                   />
                   <span className="material-icons-round">event</span>
                 </div>

@@ -130,11 +130,14 @@ export const addClaim = data => {
           type: CLAIMS_REDUX_CONSTANTS.RESET_CLAIMS_DETAILS,
         });
         stopGeneralLoaderOnSuccessOrFail('saveClaimsButtonLoaderAction');
+        return response?.data?.claimId;
       }
     } catch (e) {
       stopGeneralLoaderOnSuccessOrFail('saveClaimsButtonLoaderAction');
       displayErrors(e);
+      return false;
     }
+    return false;
   };
 };
 

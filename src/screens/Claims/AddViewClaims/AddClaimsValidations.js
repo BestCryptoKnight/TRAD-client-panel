@@ -107,8 +107,10 @@ export const addClaimsValidations = async (dispatch, data, history) => {
   if (validated) {
     const finalData = { ...preparedData };
     try {
-      await dispatch(addClaim(finalData));
-      history.replace('/claims');
+      const response = await dispatch(addClaim(finalData));
+      if (response) {
+        history.replace(`/claims/view/${response}`);
+      }
     } catch (e) {
       displayErrors(e);
     }
