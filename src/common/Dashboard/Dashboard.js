@@ -250,7 +250,7 @@ const Dashboard = () => {
                           %
                         </div>
                         <span className="approved-amount-ratio-total">
-                          ({approvedAmount?.approvedAmount ?? '0'}/{approvedAmount?.total ?? 0})
+                          ({NumberCommaSeparator(approvedAmount?.approvedAmount) ?? '0'}/{NumberCommaSeparator(approvedAmount?.total) ?? 0})
                         </span>
                       </span>
                     </div>
