@@ -43,6 +43,7 @@ const Header = () => {
   const [isEditProfileButton, setIsEditProfileButton] = useState(false);
   const [fileName, setFileName] = useState('Browse...');
   const [file, setFile] = useState(null);
+  const [isPasswordValidate, setIsPasswordValidate] = useState(true);
   const toggleEditProfileModal = value =>
     setShowEditProfileModal(value !== undefined ? value : e => !e);
 
@@ -95,10 +96,14 @@ const Header = () => {
     if (newPassword.toString().trim().length === 0) {
       return errorNotification('Please enter new password');
     }
+    if (!PASSWORD_REGEX.test(newPassword)) {
+      setIsPasswordValidate(false);
+      return false;
+    }
     if (confirmPassword.toString().trim().length === 0) {
       return errorNotification('Please enter confirm password');
     }
-    if (newPassword !== confirmPassword) {
+    if (PASSWORD_REGEX.test(newPassword) && newPassword !== confirmPassword) {
       return errorNotification('New password and confirm password should be same');
     }
 
@@ -145,7 +150,7 @@ const Header = () => {
       errorNotification('Name can be upto 150 char only');
     } else if (contactNumber.toString().trim().length === 0) {
       errorNotification('Please enter your contact number');
-    } else if (contactNumber && !contactNumber.match(/^\+?(\d+$)/)) {
+    } else if (contactNumber && !MOBILE_NUMBER_REGEX.test(contactNumber)) {
       errorNotification('Please enter valid contact number');
     } else {
       try {
@@ -389,7 +394,13 @@ const Header = () => {
                 placeholder="Enter New Password"
                 value={newPassword}
                 onChange={onChangeNewPassword}
-              />{' '}
+              />
+              {!isPasswordValidate && (
+                  <div className="ui-state-error">
+                    Your password should include 8 or more than 8 characters with at least one special
+                    character, a number, one uppercase character and a lowercase character
+                  </div>
+              )}
             </div>
             <span className="form-title">Re Enter Password</span>
             <div>
