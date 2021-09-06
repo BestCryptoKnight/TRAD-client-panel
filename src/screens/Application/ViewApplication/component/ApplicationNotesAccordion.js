@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
+import Tooltip from "rc-tooltip";
 import AccordionItem from '../../../../common/Accordion/AccordionItem';
 import Button from '../../../../common/Button/Button';
 import {
@@ -256,25 +257,34 @@ const ApplicationNotesAccordion = props => {
           {applicationNoteList?.length > 0 ? (
             applicationNoteList.map(note => (
               <div className="common-accordion-item-content-box" key={note._id}>
-                <div className="note-title-row just-end">
+                <div className="d-flex just-bet align-center">
+                  <div>
+                    <span className="title font-field mr-5">Date:</span>
+                    <span className="details font-primary">
+                      {moment(note.createdAt).format('DD-MMM-YYYY')}
+                    </span>
+                  </div>
                   <span
-                    className="material-icons-round font-placeholder just-end"
+                    className="material-icons-round font-placeholder cursor-pointer"
                     onClick={e => onClickActionToggleButton(e, note)}
                   >
                     more_vert
                   </span>
                 </div>
-                <div className="date-owner-row">
-                  <span className="title mr-5">Date:</span>
-                  <span className="details">{moment(note.createdAt).format('DD-MMM-YYYY')}</span>
-
-                  <span className="title">Owner:</span>
-                  <span className="details">{note.createdById || '-'}</span>
+                <div className="d-flex">
+                  <span className="font-field mr-5">Owner:</span>
+                  <Tooltip
+                      overlayClassName="tooltip-left-class"
+                      overlay={note.createdById || 'No owner name added'}
+                      placement="left"
+                  >
+                    <span className="note-owner-name">{note.createdById || '-'}</span>
+                  </Tooltip>
                 </div>
-                <div className="font-field">Note Description:</div>
-                <div className="view-application-accordion-description">
+                <span className="font-field mr-5">Note Description:</span>
+                <span className="view-application-accordion-description">
                   {note.description || '-'}
-                </div>
+                </span>
               </div>
             ))
           ) : (

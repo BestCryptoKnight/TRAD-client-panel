@@ -82,6 +82,14 @@
   }
 }
 
+.note-owner-name {
+  color: $primary-color;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .report-row {
   display: grid;
   grid-template-columns: 40px 2fr;
