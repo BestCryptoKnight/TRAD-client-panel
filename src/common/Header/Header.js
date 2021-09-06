@@ -23,7 +23,7 @@ import { connectWebSocket, disconnectWebSocket } from '../../helpers/SocketHelpe
 import GlobalSearch from './component/GlobalSearch';
 import audio from '../../assets/Sounds/notification_high-intensity.wav';
 import HeaderNotification from './component/HeaderNotification';
-import {MOBILE_NUMBER_REGEX} from "../../constants/RegexConstants";
+import {MOBILE_NUMBER_REGEX, PASSWORD_REGEX} from "../../constants/RegexConstants";
 
 const Header = () => {
   const history = useHistory();
