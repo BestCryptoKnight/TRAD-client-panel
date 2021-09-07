@@ -10,7 +10,7 @@ const NotesDescription = props => {
     [noteRef?.current, noteRef?.current?.offsetWidth]
   );
   const isReadMoreNeeded = useMemo(() => noteHeight > 92, [noteHeight]);
-  console.log(noteHeight);
+
   return (
     <div className="note-container" ref={noteRef}>
       <div
