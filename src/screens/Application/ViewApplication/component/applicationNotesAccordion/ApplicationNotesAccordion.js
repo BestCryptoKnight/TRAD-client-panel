@@ -3,18 +3,19 @@ import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'reac
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import Tooltip from "rc-tooltip";
-import AccordionItem from '../../../../common/Accordion/AccordionItem';
-import Button from '../../../../common/Button/Button';
+import AccordionItem from '../../../../../common/Accordion/AccordionItem';
+import Button from '../../../../../common/Button/Button';
 import {
   addApplicationNoteAction,
   deleteApplicationNoteAction,
   getApplicationNotesList,
   updateApplicationNoteAction,
-} from '../../redux/ApplicationAction';
-import Modal from '../../../../common/Modal/Modal';
-import Input from '../../../../common/Input/Input';
-import DropdownMenu from '../../../../common/DropdownMenu/DropdownMenu';
-import {errorNotification} from '../../../../common/Toast';
+} from '../../../redux/ApplicationAction';
+import Modal from '../../../../../common/Modal/Modal';
+import Input from '../../../../../common/Input/Input';
+import DropdownMenu from '../../../../../common/DropdownMenu/DropdownMenu';
+import {errorNotification} from '../../../../../common/Toast';
+import NotesDescription from "./NotesDescription";
 
 const NOTE_ACTIONS = {
   ADD: 'ADD',
@@ -282,9 +283,7 @@ const ApplicationNotesAccordion = props => {
                   </Tooltip>
                 </div>
                 <span className="font-field mr-5">Note Description:</span>
-                <span className="view-application-accordion-description">
-                  {note.description || '-'}
-                </span>
+                <NotesDescription description={note?.description} />
               </div>
             ))
           ) : (

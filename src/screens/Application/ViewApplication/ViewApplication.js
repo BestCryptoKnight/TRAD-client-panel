@@ -16,7 +16,7 @@ import {
 import TableApiService from '../../../common/Table/TableApiService';
 import Drawer from '../../../common/Drawer/Drawer';
 import ApplicationTaskAccordion from './component/ApplicationTaskAccordion';
-import ApplicationNotesAccordion from './component/ApplicationNotesAccordion';
+import ApplicationNotesAccordion from './component/applicationNotesAccordion/ApplicationNotesAccordion';
 import ApplicationDocumentsAccordion from './component/ApplicationDocumentsAccordion';
 import ApplicationLogsAccordion from './component/ApplicationLogsAccordion';
 import {errorNotification} from '../../../common/Toast';
