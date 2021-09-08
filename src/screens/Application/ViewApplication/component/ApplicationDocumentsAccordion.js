@@ -329,7 +329,7 @@ const ApplicationDocumentsAccordion = props => {
                   <div className="view-application-document-action-buttons">
                     <span
                         title="Download this document"
-                        className="download-link material-icons-round"
+                        className="download-icon material-icons-round"
                         onClick={() => onDocumentDownloadClick(doc?._id)}
                     >
                       cloud_download

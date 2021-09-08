@@ -119,6 +119,12 @@
   .material-icons-round:hover {
     color: $field-color;
   }
+  .font-danger.material-icons-round:hover {
+    color: red;
+  }
+  .download-icon:hover {
+    color: #26466D;
+  }
 }
 
 .document-title-row .document-title {
@@ -145,7 +151,7 @@
   }
 }
 
-.download-link {
+.download-icon {
   margin-right: 20px;
   color: $primary-color;
   cursor: pointer;
