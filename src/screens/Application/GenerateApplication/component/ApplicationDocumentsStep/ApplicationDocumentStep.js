@@ -58,6 +58,7 @@ const ApplicationDocumentStep = () => {
 
   const [applicationDocId, setApplicationDocId] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [fileExtensionErrorMessage, setFileExtensionErrorMessage] = useState(false);
   const toggleConfirmationModal = useCallback(
     value => setShowConfirmModal(value !== undefined ? value : e => !e),
     [setShowConfirmModal]
@@ -111,6 +112,7 @@ const ApplicationDocumentStep = () => {
           'tex',
           'xls',
           'xlsx',
+            'csv',
           'doc',
           'docx',
           'odt',
@@ -129,6 +131,7 @@ const ApplicationDocumentStep = () => {
           'image/gif',
           'application/x-tex',
           'application/vnd.ms-excel',
+            'text/csv',
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           'application/msword',
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -142,8 +145,11 @@ const ApplicationDocumentStep = () => {
           fileExtension.indexOf(e.target.files[0].name.split('.').splice(-1)[0]) !== -1;
         const checkMimeTypes = mimeType.indexOf(e.target.files[0].type) !== -1;
 
+        const checkFileSize = e.target.files[0].size > 10485760;
         if (!(checkExtension || checkMimeTypes)) {
-          errorNotification('Only image and document type files are allowed');
+          setFileExtensionErrorMessage(true);
+        } else if (checkFileSize) {
+          errorNotification('File size should be less than 10MB.');
         } else {
           setFileData(e.target.files[0]);
           dispatchSelectedApplicationDocuments({
@@ -158,6 +164,7 @@ const ApplicationDocumentStep = () => {
   );
 
   const onCloseUploadDocumentButton = useCallback(() => {
+    setFileExtensionErrorMessage(false);
     dispatchSelectedApplicationDocuments({
       type: APPLICATION_DOCUMENT_REDUCER_ACTIONS.RESET_STATE,
     });
@@ -173,6 +180,7 @@ const ApplicationDocumentStep = () => {
   }, [editApplication._id]);
 
   const onClickUploadDocument = useCallback(async () => {
+    setFileExtensionErrorMessage(false);
     if (selectedApplicationDocuments?.documentType?.length <= 0) {
       errorNotification('Please select document type');
     } else if (!fileData) {
@@ -366,11 +374,19 @@ const ApplicationDocumentStep = () => {
               onChange={handleDocumentChange}
             />
             <span>Please upload your documents here</span>
-            <FileUpload
-              isProfile={false}
-              fileName={fileData.name ?? 'Browse'}
-              handleChange={onUploadClick}
-            />
+            <div>
+              <FileUpload
+                  isProfile={false}
+                  fileName={fileData.name ?? 'Browse...'}
+                  handleChange={onUploadClick}
+              />
+              {fileExtensionErrorMessage && (
+                  <div className="ui-state-error">
+                    Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
+                    pptx, ppt or rtf file types are accepted
+                  </div>
+              )}
+            </div>
             <span>Description</span>
             <Input
               prefixClass="font-placeholder"

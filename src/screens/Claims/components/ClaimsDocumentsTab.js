@@ -61,6 +61,7 @@ const ClaimsDocumentsTab = () => {
   const searchInputRef = useRef();
 
   const [uploadModel, setUploadModel] = useState(false);
+  const [fileExtensionErrorMessage, setFileExtensionErrorMessage] = useState(false);
 
   const toggleUploadModel = useCallback(
     value => setUploadModel(value !== undefined ? value : e => !e),
@@ -102,6 +103,7 @@ const ClaimsDocumentsTab = () => {
   );
 
   const onClickUploadDocument = useCallback(async () => {
+    setFileExtensionErrorMessage(false);
     if (!fileData) {
       errorNotification('Select document to upload');
     } else {
@@ -139,6 +141,7 @@ const ClaimsDocumentsTab = () => {
         'tex',
         'xls',
         'xlsx',
+          'csv',
         'doc',
         'docx',
         'odt',
@@ -157,6 +160,7 @@ const ClaimsDocumentsTab = () => {
         'image/gif',
         'application/x-tex',
         'application/vnd.ms-excel',
+          'text/csv',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -170,15 +174,21 @@ const ClaimsDocumentsTab = () => {
         fileExtension.indexOf(e.target.files[0].name.split('.').splice(-1)[0]) !== -1;
       const checkMimeTypes = mimeType.indexOf(e.target.files[0].type) !== -1;
 
+      const checkFileSize = e.target.files[0].size > 10485760;
       if (!(checkExtension || checkMimeTypes)) {
-        errorNotification('Only image and document type files are allowed');
+        setFileExtensionErrorMessage(true);
+      } else if (checkFileSize) {
+        setFileExtensionErrorMessage(false);
+        errorNotification('File size should be less than 10MB.');
       } else {
+        setFileExtensionErrorMessage(false);
         onChangeDocumentUploadData('fileData', e.target.files[0]);
       }
     }
   }, []);
 
   const onCloseUploadDocumentButton = useCallback(() => {
+    setFileExtensionErrorMessage(false);
     dispatchSelectedClaimsDocument({
       type: CLAIMS_DOCUMENT_REDUCER_ACTIONS.RESET_STATE,
     });
@@ -316,11 +326,19 @@ const ClaimsDocumentsTab = () => {
         >
           <div className="document-upload-popup-container">
             <span>Please upload your document here</span>
-            <FileUpload
-              isProfile={false}
-              fileName={fileData?.name || 'Browse...'}
-              handleChange={onUploadClick}
-            />
+            <div>
+              <FileUpload
+                  isProfile={false}
+                  fileName={fileData.name ?? 'Browse...'}
+                  handleChange={onUploadClick}
+              />
+              {fileExtensionErrorMessage && (
+                  <div className="ui-state-error">
+                    Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
+                    pptx, ppt or rtf file types are accepted
+                  </div>
+              )}
+            </div>
             <span>Description</span>
             <Input
               prefixClass="font-placeholder"
