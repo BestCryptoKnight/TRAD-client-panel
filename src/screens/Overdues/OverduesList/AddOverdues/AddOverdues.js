@@ -20,6 +20,7 @@ import AddOverdueTable from './AddOverdueTable';
 import { NumberCommaSeparator } from '../../../../helpers/NumberCommaSeparator';
 import Loader from '../../../../common/Loader/Loader';
 import { OVERDUE_REDUX_CONSTANTS } from '../../redux/OverduesReduxConstants';
+import {DECIMAL_REGEX, usdConverter} from "../../../../constants/RegexConstants";
 
 const AddOverdues = () => {
   const history = useHistory();
@@ -265,11 +266,14 @@ const AddOverdues = () => {
     [setShowSaveAlertModal, isPrompt, alertOnLeftModal, toggleAlertOnLeftModal]
   );
 
-  const handleAmountInputChange = useCallback(e => {
-    const { name, value } = e?.target;
-    const updatedVal = value?.toString()?.replaceAll(',', '');
-    changeOverdueFields(name, updatedVal);
-  }, []);
+  const handleAmountInputChange = useCallback(
+      e => {
+        const { name, value } = e?.target;
+        const updatedVal = value?.toString()?.replaceAll(',', '');
+        if (DECIMAL_REGEX.test(updatedVal)) changeOverdueFields(name, updatedVal);
+      },
+      [DECIMAL_REGEX]
+  );
 
   const handleSelectInputChange = useCallback(e => {
     changeOverdueFields(e?.name, e);
@@ -363,7 +367,7 @@ const AddOverdues = () => {
         case 'total-amount':
           component = (
             <div className="add-overdue-total-amount">
-              {input?.value && input.value !== 'NaN' ? NumberCommaSeparator(input?.value) : 0}
+                {input?.value && input.value !== 'NaN' ? usdConverter(input?.value) : 0}
             </div>
           );
           break;
