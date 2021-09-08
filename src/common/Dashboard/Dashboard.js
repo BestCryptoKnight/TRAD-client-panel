@@ -245,7 +245,7 @@ const Dashboard = () => {
                             ? (
                                 (approvedAmount?.approvedAmount / approvedAmount?.total) *
                                 100
-                              ).toFixed(3)
+                              ).toFixed(2)
                             : 0}
                           %
                         </div>
