@@ -136,6 +136,21 @@
   color:$primary-color;
 }
 
+.view-application-document-action-buttons {
+  display: flex;
+  align-items: center;
+
+  .font-danger {
+    width: 24px;
+  }
+}
+
+.download-link {
+  margin-right: 20px;
+  color: $primary-color;
+  cursor: pointer;
+}
+
 .application-status {
   padding: 7px 10px;
   color: white;

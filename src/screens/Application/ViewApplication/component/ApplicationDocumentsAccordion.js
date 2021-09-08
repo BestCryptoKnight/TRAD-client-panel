@@ -5,7 +5,7 @@ import moment from 'moment';
 import ReactSelect from 'react-select';
 import Tooltip from 'rc-tooltip';
 import {
-  deleteViewApplicationDocumentAction,
+  deleteViewApplicationDocumentAction, downloadDocuments,
   getApplicationModuleList,
   viewApplicationUploadDocument,
 } from '../../redux/ApplicationAction';
@@ -15,6 +15,7 @@ import Modal from '../../../../common/Modal/Modal';
 import FileUpload from '../../../../common/Header/component/FileUpload';
 import Input from '../../../../common/Input/Input';
 import {errorNotification} from '../../../../common/Toast';
+import {downloadAll} from "../../../../helpers/DownloadHelper";
 
 const initialApplicationDocumentState = {
   description: '',
@@ -284,6 +285,16 @@ const ApplicationDocumentsAccordion = props => {
     [toggleConfirmationModal, applicationDocId, viewDocumentDeleteDocumentButtonLoaderAction]
   );
 
+  const onDocumentDownloadClick = useCallback(
+      async documentId => {
+        const response = await downloadDocuments(documentId);
+        if (response) {
+          downloadAll(response);
+        }
+      },
+      [downloadAll]
+  );
+
   return (
     <>
       {applicationDocsList !== undefined && (
@@ -315,12 +326,21 @@ const ApplicationDocumentsAccordion = props => {
                   >
                     <div className="document-title">{doc.documentTypeId || '-'}</div>
                   </Tooltip>
-                  <span
-                    className="material-icons-round font-danger cursor-pointer"
-                    onClick={() => deleteDocument(doc._id)}
-                  >
-                    delete_outline
-                  </span>
+                  <div className="view-application-document-action-buttons">
+                    <span
+                        title="Download this document"
+                        className="download-link material-icons-round"
+                        onClick={() => onDocumentDownloadClick(doc?._id)}
+                    >
+                      cloud_download
+                    </span>
+                    <span
+                        className="material-icons-round font-danger cursor-pointer"
+                        onClick={() => deleteDocument(doc._id)}
+                    >
+                      delete_outline
+                    </span>
+                  </div>
                 </div>
                 <div className="date-owner-row">
                   <span className="title mr-5">Date:</span>

@@ -63,6 +63,7 @@ export const APPLICATION_URLS = {
       GET_APPLICATION_TASK_DETAIL: `${BASE_URL}task/details/`,
       SAVE_NEW_TASK: `${BASE_URL}task/`,
     },
+    DOWNLOAD_DOCUMENTS_URL: `${BASE_URL}document/download`,
     APPLICATION_MODULES: {
       GET_MODULE_LIST: `${BASE_URL}application/modules/`,
       UPLOAD_DOCUMENT_URL: `${BASE_URL}document/upload/`,

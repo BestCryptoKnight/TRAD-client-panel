@@ -131,6 +131,24 @@ export const saveApplicationColumnNameList = ({
   };
 };
 
+export const downloadDocuments = async data => {
+  const str = data.toString();
+  try {
+    const config = {
+      documentIds: str,
+      action: 'download',
+    };
+
+    const response = await ApplicationApiServices.downloadDocument(config);
+    if (response?.statusText === 'OK') {
+      return response;
+    }
+  } catch (e) {
+    displayErrors(e);
+  }
+  return false;
+};
+
 // for filter of Application list
 export const getApplicationFilter = () => {
   return async dispatch => {
