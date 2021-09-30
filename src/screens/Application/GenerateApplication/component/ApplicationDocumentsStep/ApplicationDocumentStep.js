@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import ReactSelect from 'react-select';
 import Tooltip from 'rc-tooltip';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../../../../common/Input/Input';
 import IconButton from '../../../../../common/IconButton/IconButton';
 import Modal from '../../../../../common/Modal/Modal';
@@ -12,7 +12,7 @@ import {
   getDocumentTypeList,
   uploadDocument,
 } from '../../../redux/ApplicationAction';
-import {errorNotification} from '../../../../../common/Toast';
+import { errorNotification } from '../../../../../common/Toast';
 
 const initialApplicationDocumentState = {
   description: '',
@@ -112,7 +112,7 @@ const ApplicationDocumentStep = () => {
           'tex',
           'xls',
           'xlsx',
-            'csv',
+          'csv',
           'doc',
           'docx',
           'odt',
@@ -131,7 +131,7 @@ const ApplicationDocumentStep = () => {
           'image/gif',
           'application/x-tex',
           'application/vnd.ms-excel',
-            'text/csv',
+          'text/csv',
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           'application/msword',
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -376,15 +376,15 @@ const ApplicationDocumentStep = () => {
             <span>Please upload your documents here</span>
             <div>
               <FileUpload
-                  isProfile={false}
-                  fileName={fileData.name ?? 'Browse...'}
-                  handleChange={onUploadClick}
+                isProfile={false}
+                fileName={fileData.name ?? 'Browse...'}
+                handleChange={onUploadClick}
               />
               {fileExtensionErrorMessage && (
-                  <div className="ui-state-error">
-                    Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
-                    pptx, ppt or rtf file types are accepted
-                  </div>
+                <div className="ui-state-error">
+                  Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
+                  pptx, ppt or rtf file types are accepted
+                </div>
               )}
             </div>
             <span>Description</span>

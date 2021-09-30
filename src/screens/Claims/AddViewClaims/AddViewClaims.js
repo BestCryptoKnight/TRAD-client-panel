@@ -303,8 +303,7 @@ const AddViewClaims = () => {
             <>
               {type === 'view' ? (
                 <span className="view-claim-detail">
-                  {input?.value
-                    ?  moment(input?.value).format('DD/MM/YYYY') : '-'}
+                  {input?.value ? moment(input?.value).format('DD/MM/YYYY') : '-'}
                 </span>
               ) : (
                 <div className={`date-picker-container ${type === 'view' && 'disabled-control'}`}>

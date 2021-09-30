@@ -890,7 +890,7 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
                 popperProps={{ positionFixed: true }}
                 // isDisabled={isDisabled}
               />
-              <span className="material-icons-round">event_available</span>
+              <span className="material-icons-round">event</span>
             </div>
           );
           break;
@@ -1008,11 +1008,11 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
 PersonIndividualDetail.propTypes = {
   itemHeader: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-  activePersonStep: PropTypes.number
+  activePersonStep: PropTypes.number,
 };
 
 PersonIndividualDetail.defaultProps = {
-  activePersonStep: undefined
-}
+  activePersonStep: undefined,
+};
 
 export default PersonIndividualDetail;

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import React, {useCallback, useReducer, useState} from 'react';
+import React, { useCallback, useReducer, useState } from 'react';
 import moment from 'moment';
 import TableApiService from '../../../common/Table/TableApiService';
 import Drawer from '../../../common/Drawer/Drawer';
-import {NumberCommaSeparator} from '../../../helpers/NumberCommaSeparator';
+import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',

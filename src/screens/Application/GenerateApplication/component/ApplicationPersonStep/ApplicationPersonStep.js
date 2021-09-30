@@ -29,24 +29,33 @@ const ApplicationPersonStep = () => {
     dispatch(getApplicationCompanyDropDownData());
   }, []);
 
-  const getAccordionAccordingEntityType = useCallback((person, index) => {
-    let itemHeader = 'Director Details';
+  const getAccordionAccordingEntityType = useCallback(
+    (person, index) => {
+      let itemHeader = 'Director Details';
 
-    switch (entityTypeFromCompany) {
-      case 'PARTNERSHIP':
-        itemHeader = 'Partner Details';
-        break;
-      case 'TRUST':
-        itemHeader = 'Trustee Details';
-        break;
-      case 'SOLE_TRADER':
-        itemHeader = 'Person Details';
-        break;
-      default:
-        break;
-    }
-    return <PersonIndividualDetail itemHeader={itemHeader} index={index} activePersonStep={personState?.length}/>;
-  }, [personState?.length]);
+      switch (entityTypeFromCompany) {
+        case 'PARTNERSHIP':
+          itemHeader = 'Partner Details';
+          break;
+        case 'TRUST':
+          itemHeader = 'Trustee Details';
+          break;
+        case 'SOLE_TRADER':
+          itemHeader = 'Person Details';
+          break;
+        default:
+          break;
+      }
+      return (
+        <PersonIndividualDetail
+          itemHeader={itemHeader}
+          index={index}
+          activePersonStep={personState?.length}
+        />
+      );
+    },
+    [personState?.length]
+  );
 
   return (
     <>

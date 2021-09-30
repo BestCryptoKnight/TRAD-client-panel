@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useReducer, useState } from 're
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import ReactSelect from 'react-select';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import IconButton from '../../../common/IconButton/IconButton';
@@ -15,6 +14,7 @@ import {
   changeApplicationColumnNameList,
   getApplicationColumnNameList,
   getApplicationFilter,
+  getApplicationFilterDropDownDataBySearch,
   getApplicationsListByFilter,
   resetApplicationListData,
   resetApplicationListPaginationData,
@@ -32,7 +32,8 @@ import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/List
 import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
-import CustomSelect from "../../../common/CustomSelect/CustomSelect";
+import CustomSelect from '../../../common/CustomSelect/CustomSelect';
+import Select from '../../../common/Select/Select';
 
 const ApplicationList = () => {
   const history = useHistory();
@@ -91,7 +92,7 @@ const ApplicationList = () => {
   }, [{ ...tempFilter }]);
 
   const defaultApplicationStatus =
-      'SENT_TO_INSURER,REVIEW_APPLICATION,UNDER_REVIEW,PENDING_INSURER_REVIEW,AWAITING_INFORMATION';
+    'SENT_TO_INSURER,REVIEW_APPLICATION,UNDER_REVIEW,PENDING_INSURER_REVIEW,AWAITING_INFORMATION';
 
   const handleStartDateChange = useCallback(date => {
     dispatchFilter({
@@ -203,15 +204,20 @@ const ApplicationList = () => {
     [setFilterModal]
   );
   const onClickApplyFilter = useCallback(async () => {
-    await getApplicationsByFilter({ page: 1 }, toggleFilterModal);
-  }, [getApplicationsByFilter]);
+    await getApplicationsByFilter({ page: 1, limit }, toggleFilterModal);
+  }, [page, limit, toggleFilterModal, getApplicationsByFilter]);
 
-  const onClickResetFilter = useCallback(() => {
+  const onClickResetFilter = useCallback(async () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
     });
-    onClickApplyFilter();
-  }, []);
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'status',
+      value: defaultApplicationStatus,
+    });
+    await onClickApplyFilter();
+  }, [defaultApplicationStatus]);
 
   const filterModalButtons = useMemo(
     () => [
@@ -337,7 +343,9 @@ const ApplicationList = () => {
           ? paramDebtorId
           : applicationListFilters?.debtorId,
       status:
-        (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status || defaultApplicationStatus,
+        (paramStatus?.trim()?.length ?? -1) > 0
+          ? paramStatus
+          : applicationListFilters?.status || defaultApplicationStatus,
       minCreditLimit:
         (paramMinCreditLimit?.trim()?.length ?? -1) > 0
           ? paramMinCreditLimit
@@ -375,7 +383,7 @@ const ApplicationList = () => {
     history.push(`/applications/application/generate/`);
   }, []);
   useEffect(() => {
-    dispatch(getApplicationFilter());
+    dispatch(getApplicationFilter({ isForFilter: true }));
   }, []);
 
   // for params in url
@@ -448,6 +456,16 @@ const ApplicationList = () => {
       errorNotification('No records to download');
     }
   }, [docs?.length, appliedFilters]);
+
+  const handleOnSelectSearchInputChange = useCallback((searchEntity, text) => {
+    const options = {
+      searchString: text,
+      entityType: searchEntity,
+      requestFrom: 'application',
+      isForFilter: true,
+    };
+    dispatch(getApplicationFilterDropDownDataBySearch(options));
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -523,9 +541,8 @@ const ApplicationList = () => {
             >
               <div className="filter-modal-row">
                 <div className="form-title">Entity Type</div>
-                <ReactSelect
-                  className="filter-select react-select-container"
-                  classNamePrefix="react-select"
+                <Select
+                  className="filter-select"
                   placeholder="Select Entity Type"
                   name="role"
                   options={dropdownData?.entityType}
@@ -536,25 +553,25 @@ const ApplicationList = () => {
               </div>
               <div className="filter-modal-row">
                 <div className="form-title">Debtor Name</div>
-                <ReactSelect
-                  className="filter-select react-select-container"
-                  classNamePrefix="react-select"
+                <Select
+                  className="filter-select"
                   placeholder="Select Debtor"
                   name="role"
                   options={dropdownData?.debtors}
                   value={debtorIdSelectedValue}
                   onChange={handleDebtorIdFilterChange}
+                  onInputChange={text => handleOnSelectSearchInputChange('debtors', text)}
                   isSearchble
                 />
               </div>
               <div className="filter-modal-row">
                 <div className="form-title">Application Status</div>
                 <CustomSelect
-                    className="application-status-select"
-                    options={dropdownData?.applicationStatus}
-                    placeholder="Select Status"
-                    onChangeCustomSelect={handleApplicationStatusFilterChange}
-                    value={applicationStatusSelectedValue}
+                  className="application-status-select"
+                  options={dropdownData?.applicationStatus}
+                  placeholder="Select Status"
+                  onChangeCustomSelect={handleApplicationStatusFilterChange}
+                  value={applicationStatusSelectedValue}
                 />
               </div>
               <div className="filter-modal-row">
@@ -590,7 +607,7 @@ const ApplicationList = () => {
                     scrollableYearDropdown
                     dateFormat="dd/MM/yyyy"
                   />
-                  <span className="material-icons-round">event_available</span>
+                  <span className="material-icons-round">event</span>
                 </div>
                 <div className="date-picker-container filter-date-picker-container">
                   <DatePicker
@@ -603,7 +620,7 @@ const ApplicationList = () => {
                     scrollableYearDropdown
                     dateFormat="dd/MM/yyyy"
                   />
-                  <span className="material-icons-round">event_available</span>
+                  <span className="material-icons-round">event</span>
                 </div>
               </div>
             </Modal>

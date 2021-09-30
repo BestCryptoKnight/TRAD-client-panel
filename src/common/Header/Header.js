@@ -7,6 +7,7 @@ import {
   getHeaderNotificationListURL,
   getLoggedUserDetails,
   logoutUser,
+  removeProfileDP,
   turnOffNotifire,
   updateUserProfile,
   uploadProfilePicture,
@@ -23,7 +24,7 @@ import { connectWebSocket, disconnectWebSocket } from '../../helpers/SocketHelpe
 import GlobalSearch from './component/GlobalSearch';
 import audio from '../../assets/Sounds/notification_high-intensity.wav';
 import HeaderNotification from './component/HeaderNotification';
-import {MOBILE_NUMBER_REGEX, PASSWORD_REGEX} from "../../constants/RegexConstants";
+import { MOBILE_NUMBER_REGEX, PASSWORD_REGEX } from '../../constants/RegexConstants';
 
 const Header = () => {
   const history = useHistory();
@@ -273,6 +274,10 @@ const Header = () => {
     return () => disconnectWebSocket();
   }, []);
 
+  const handleOnDeleteClick = useCallback(() => {
+    dispatch(removeProfileDP());
+  }, []);
+
   return (
     <div className="header-container">
       <div className="screen-title">
@@ -320,6 +325,8 @@ const Header = () => {
                   handleChange={handleChange}
                   fileName={fileName}
                   file={file}
+                  isDeleteIcon={profilePictureUrl}
+                  onDeleteClick={handleOnDeleteClick}
                 />
               )}
               <div className="form-title">Name</div>
@@ -397,10 +404,10 @@ const Header = () => {
                 onChange={onChangeNewPassword}
               />
               {!isPasswordValidate && (
-                  <div className="ui-state-error">
-                    Your password should include 8 or more than 8 characters with at least one special
-                    character, a number, one uppercase character and a lowercase character
-                  </div>
+                <div className="ui-state-error">
+                  Your password should include 8 or more than 8 characters with at least one special
+                  character, a number, one uppercase character and a lowercase character
+                </div>
               )}
             </div>
             <span className="form-title">Re Enter Password</span>

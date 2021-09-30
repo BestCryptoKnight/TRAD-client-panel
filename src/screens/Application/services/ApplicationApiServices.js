@@ -8,7 +8,8 @@ const ApplicationApiServices = {
     ApiService.getData(APPLICATION_URLS.APPLICATION_COLUMN_NAME_LIST_URL),
   updateApplicationColumnNameList: data =>
     ApiService.putData(APPLICATION_URLS.APPLICATION_COLUMN_NAME_LIST_UPDATE_URL, data),
-  getApplicationFilter: () => ApiService.getData(APPLICATION_URLS.APPLICATION_FILTER_LIST_URL),
+  getApplicationFilter: params =>
+    ApiService.getData(APPLICATION_URLS.APPLICATION_FILTER_LIST_URL, { params }),
   saveApplicationStepDataToBackend: data =>
     ApiService.putData(`${APPLICATION_URLS.APPLICATION_SAVE_STEP_DATA}`, data),
   getApplicationDetail: appId =>
@@ -20,12 +21,12 @@ const ApplicationApiServices = {
       method: 'GET',
       responseType: 'blob',
     }),
-    downloadDocument: params =>
-        ApiService.request({
-            url: `${APPLICATION_URLS.VIEW_APPLICATION.DOWNLOAD_DOCUMENTS_URL}`,
-            params,
-            method: 'GET',
-            responseType: 'blob',
-        }),
+  downloadDocument: params =>
+    ApiService.request({
+      url: `${APPLICATION_URLS.VIEW_APPLICATION.DOWNLOAD_DOCUMENTS_URL}`,
+      params,
+      method: 'GET',
+      responseType: 'blob',
+    }),
 };
 export default ApplicationApiServices;

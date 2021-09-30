@@ -12,6 +12,7 @@ export const AUTH_URLS = {
 export const HEADER_URLS = {
   LOGGED_USER_DETAILS_URL: `${BASE_URL}user/profile`,
   UPLOAD_PROFILE_PICTURE: `${BASE_URL}user/upload/profile-picture/`,
+  DELETE_PROFILE_PICTURE: `${BASE_URL}user/profile-picture`,
   CHANGE_PASSWORD_URL: `${BASE_URL}auth/change-password/`,
   LOGOUT_URL: `${BASE_URL}auth/logout/`,
   HEADER_NOTIFICATIONS: {
@@ -28,6 +29,7 @@ export const DASHBOARD_URLS = {
   DASHBOARD_TASK_DETAILS_URL: `${BASE_URL}task/details/`,
   DASHBOARD_NOTIFICATION_LIST: `${BASE_URL}notification/`,
   UPDATE_TASK: `${BASE_URL}task/`,
+  SEARCH_ENTITIES: `${BASE_URL}entity-search/`,
 };
 
 export const APPLICATION_URLS = {

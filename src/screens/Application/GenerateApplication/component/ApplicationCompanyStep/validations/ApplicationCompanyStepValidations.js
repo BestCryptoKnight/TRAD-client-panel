@@ -67,9 +67,15 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.streetNumber = 'Street number should be number';
   }
-  if (!data?.state && data?.entityType?.value === 'TRUST' || data?.state?.length <= 0 && data?.entityType?.value === 'TRUST') {
+  if (
+    (!data?.state && data?.entityType?.value === 'TRUST') ||
+    (data?.state?.length <= 0 && data?.entityType?.value === 'TRUST')
+  ) {
     validated = false;
-    if (data?.country?.value === 'AUS' && data?.entityType?.value === 'TRUST' || data?.country?.value === 'NZL' && data?.entityType?.value === 'TRUST') {
+    if (
+      (data?.country?.value === 'AUS' && data?.entityType?.value === 'TRUST') ||
+      (data?.country?.value === 'NZL' && data?.entityType?.value === 'TRUST')
+    ) {
       errors.state = 'Please select state before continue';
     } else {
       errors.state = 'Please enter state before continue';
@@ -92,7 +98,10 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.state = 'Please enter valid state';
   }
-  if (!data?.postCode && data?.entityType?.value === 'TRUST' || data?.postCode?.length <= 0 && data?.entityType?.value === 'TRUST') {
+  if (
+    (!data?.postCode && data?.entityType?.value === 'TRUST') ||
+    (data?.postCode?.length <= 0 && data?.entityType?.value === 'TRUST')
+  ) {
     validated = false;
     errors.postCode = 'Please enter post code before continue';
   }
@@ -100,9 +109,9 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
     validated = false;
     errors.postCode = 'Post code should be number';
   }
-  if (data?.phoneNumber && !NUMBER_REGEX.test(data?.phoneNumber?.toString()?.trim())) {
+  if (data?.contactNumber && !NUMBER_REGEX.test(data?.contactNumber?.toString()?.trim())) {
     validated = false;
-    errors.phoneNumber = 'Phone number should be number';
+    errors.contactNumber = 'Phone number should be number';
   }
   if (validated) {
     const {
@@ -115,17 +124,15 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       unitNumber,
       property,
       entityType,
-      phoneNumber,
+      contactNumber,
       entityName,
       acn,
       abn,
       tradingName,
-      outstandingAmount,
       debtorId,
       country,
       isActive,
       registrationNumber,
-      wipeOutDetails,
     } = data;
 
     delete country?.name;
@@ -136,10 +143,8 @@ export const applicationCompanyStepValidations = async (dispatch, data, editAppl
       isActive: typeof isActive === 'string' ? isActive === 'Active' : isActive,
       entityName: entityName?.label,
       tradingName,
-      contactNumber: phoneNumber,
-      outstandingAmount,
+      contactNumber,
       entityType: entityType?.value,
-      wipeOutDetails,
       address: {
         property: property?.trim()?.length > 0 ? property : undefined,
         unitNumber: unitNumber?.trim()?.length > 0 ? unitNumber : undefined,

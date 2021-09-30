@@ -215,9 +215,7 @@ const CompanyProfilePolicies = () => {
                 />
               </>
             ) : (
-              <div className="common-white-container">
-                <div className="no-record-found">No record found</div>
-              </div>
+              <div className="no-record-found">No record found</div>
             ))()
         ) : (
           <Loader />

@@ -423,7 +423,7 @@ const OverduesList = () => {
                 />
               </div>
               <div className="filter-modal-row">
-                <div className="form-title">Date</div>
+                <div className="form-title">Month-Year Range</div>
                 <div className="date-picker-container month-year-picker mr-15">
                   <DatePicker
                     className="filter-date-picker"
@@ -435,7 +435,7 @@ const OverduesList = () => {
                     showYearDropdown
                     showFullMonthYearPicker
                   />
-                  <span className="material-icons-round">event_available</span>
+                  <span className="material-icons-round">event</span>
                 </div>
                 <div className="date-picker-container month-year-picker">
                   <DatePicker
@@ -448,7 +448,7 @@ const OverduesList = () => {
                     showYearDropdown
                     showFullMonthYearPicker
                   />
-                  <span className="material-icons-round">event_available</span>
+                  <span className="material-icons-round">event</span>
                 </div>
               </div>
             </Modal>

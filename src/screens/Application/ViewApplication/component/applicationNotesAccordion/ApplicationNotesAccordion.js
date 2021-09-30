@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import Tooltip from "rc-tooltip";
+import Tooltip from 'rc-tooltip';
 import AccordionItem from '../../../../../common/Accordion/AccordionItem';
 import Button from '../../../../../common/Button/Button';
 import {
@@ -12,10 +12,9 @@ import {
   updateApplicationNoteAction,
 } from '../../../redux/ApplicationAction';
 import Modal from '../../../../../common/Modal/Modal';
-import Input from '../../../../../common/Input/Input';
 import DropdownMenu from '../../../../../common/DropdownMenu/DropdownMenu';
-import {errorNotification} from '../../../../../common/Toast';
-import NotesDescription from "./NotesDescription";
+import { errorNotification } from '../../../../../common/Toast';
+import NotesDescription from './NotesDescription';
 
 const NOTE_ACTIONS = {
   ADD: 'ADD',
@@ -57,7 +56,7 @@ const ApplicationNotesAccordion = props => {
   const dispatch = useDispatch();
   const { applicationId, index } = props;
   const { applicationDetail } = useSelector(
-      ({ application }) => application?.viewApplication ?? {}
+    ({ application }) => application?.viewApplication ?? {}
   );
 
   const { status } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
@@ -249,12 +248,14 @@ const ApplicationNotesAccordion = props => {
           }
           suffix="expand_more"
         >
-          {status.value !== 'APPROVED' && status.value !== 'DECLINED' &&<Button
-            buttonType="primary-1"
-            title="Add Note"
-            className="add-note-button"
-            onClick={toggleModifyNotes}
-          />}
+          {status.value !== 'APPROVED' && status.value !== 'DECLINED' && (
+            <Button
+              buttonType="primary-1"
+              title="Add Note"
+              className="add-note-button"
+              onClick={toggleModifyNotes}
+            />
+          )}
           {applicationNoteList?.length > 0 ? (
             applicationNoteList.map(note => (
               <div className="common-accordion-item-content-box" key={note._id}>
@@ -275,14 +276,13 @@ const ApplicationNotesAccordion = props => {
                 <div className="d-flex">
                   <span className="font-field mr-5">Owner:</span>
                   <Tooltip
-                      overlayClassName="tooltip-left-class"
-                      overlay={note.createdById || 'No owner name added'}
-                      placement="left"
+                    overlayClassName="tooltip-left-class"
+                    overlay={note.createdById || 'No owner name added'}
+                    placement="left"
                   >
                     <span className="note-owner-name">{note.createdById || '-'}</span>
                   </Tooltip>
                 </div>
-                <span className="font-field mr-5">Note Description:</span>
                 <NotesDescription description={note?.description} />
               </div>
             ))
@@ -296,15 +296,13 @@ const ApplicationNotesAccordion = props => {
           header={`${selectedApplicationNote.type === 'EDIT' ? 'Edit Note' : 'Add Note'} `}
           className="add-notes-modal"
           buttons={noteCRUDButtons}
-          // hideModal={toggleModifyNotes}
         >
           <div className="add-notes-popup-container">
             <span>Description</span>
-            <Input
-              prefixClass="font-placeholder"
+            <textarea
               placeholder="Note description"
               name="description"
-              type="text"
+              rows={5}
               value={selectedApplicationNote.description}
               onChange={onChangeSelectedNoteInput}
             />

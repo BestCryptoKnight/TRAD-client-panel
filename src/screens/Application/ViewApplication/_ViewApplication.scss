@@ -324,3 +324,12 @@
     color: $primary-color;
   }
 }
+
+.add-notes-modal {
+  max-width: 600px;
+  width: 60vw;
+}
+
+.add-notes-popup-container {
+  grid-template-columns: 100px 1fr;
+}

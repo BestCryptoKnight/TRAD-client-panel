@@ -13,6 +13,7 @@ import {
   startGeneralLoaderOnRequest,
   stopGeneralLoaderOnSuccessOrFail,
 } from '../../../common/GeneralLoader/redux/GeneralLoaderAction';
+import { DashboardApiService } from '../../../common/Dashboard/services/DashboardApiService';
 
 export const getApplicationsListByFilter = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
@@ -150,10 +151,10 @@ export const downloadDocuments = async data => {
 };
 
 // for filter of Application list
-export const getApplicationFilter = () => {
+export const getApplicationFilter = params => {
   return async dispatch => {
     try {
-      const response = await ApplicationApiServices.getApplicationFilter();
+      const response = await ApplicationApiServices.getApplicationFilter(params);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_FILTER_LIST_REDUX_CONSTANTS.APPLICATION_FILTER_LIST_ACTION,
@@ -880,4 +881,40 @@ export const applicationDownloadAction = async filter => {
     displayErrors(e);
   }
   return false;
+};
+
+export const getApplicationFilterDropDownDataBySearch = options => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getEntitiesBySearch(options);
+
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: APPLICATION_FILTER_LIST_REDUX_CONSTANTS.APPLICATION_FILTER_LIST_BY_SEARCH,
+          data: response?.data?.data,
+          name: options.entityType,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+
+export const getApplicationCompanyStepDropDownDataBySearch = options => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getEntitiesBySearch(options);
+
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_SEARCH_DROP_DOWN_DATA,
+          data: response?.data?.data,
+          name: options.entityType,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
 };

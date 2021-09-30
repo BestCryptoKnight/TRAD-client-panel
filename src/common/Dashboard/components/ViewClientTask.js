@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import Button from '../../Button/Button';
 import Loader from '../../Loader/Loader';
-import {getTaskById, markTaskAsComplete} from '../redux/DashboardActions';
+import { getTaskById, markTaskAsComplete } from '../redux/DashboardActions';
 
 const ViewClientTask = () => {
   const history = useHistory();
@@ -113,7 +113,7 @@ const ViewClientTask = () => {
           component = (
             <>
               <span>{input.label}</span>
-                <div className="font-field f-14 mt-5">{taskFieldValues(input.name)}</div>
+              <div className="font-field f-14 mt-5">{taskFieldValues(input.name)}</div>
             </>
           );
           break;

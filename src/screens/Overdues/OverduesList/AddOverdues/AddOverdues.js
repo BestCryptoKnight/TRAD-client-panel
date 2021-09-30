@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useHistory, useParams, Prompt } from 'react-router-dom';
-import ReactSelect from 'react-select';
+import { Prompt, useHistory, useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
@@ -10,6 +9,7 @@ import Modal from '../../../../common/Modal/Modal';
 import Button from '../../../../common/Button/Button';
 import {
   getEntityDetails,
+  getOverdueFilterDropDownDataBySearch,
   getOverdueListByDate,
   handleOverdueFieldChange,
   resetOverdueFormData,
@@ -20,7 +20,8 @@ import AddOverdueTable from './AddOverdueTable';
 import { NumberCommaSeparator } from '../../../../helpers/NumberCommaSeparator';
 import Loader from '../../../../common/Loader/Loader';
 import { OVERDUE_REDUX_CONSTANTS } from '../../redux/OverduesReduxConstants';
-import {DECIMAL_REGEX, usdConverter} from "../../../../constants/RegexConstants";
+import { DECIMAL_REGEX, usdConverter } from '../../../../constants/RegexConstants';
+import Select from '../../../../common/Select/Select';
 
 const AddOverdues = () => {
   const history = useHistory();
@@ -114,6 +115,7 @@ const AddOverdues = () => {
 
   const handleDebtorChange = useCallback(
     (e, isAcnChanged = false) => {
+      console.log('here');
       changeOverdueFields('debtorId', e);
 
       setSelectedDebtor(e);
@@ -149,6 +151,16 @@ const AddOverdues = () => {
     [entityList, handleDebtorChange, selectedDebtor]
   );
 
+  const handleOnSelectSearchInputChange = useCallback((searchEntity, text) => {
+    const options = {
+      searchString: text,
+      entityType: searchEntity,
+      requestFrom: 'overdue',
+      isForRisk: false,
+    };
+    dispatch(getOverdueFilterDropDownDataBySearch(options));
+  }, []);
+
   const addModalInputs = useMemo(
     () => [
       {
@@ -159,6 +171,7 @@ const AddOverdues = () => {
         data: entityList?.debtorId,
         value: overdueDetails?.debtorId ?? [],
         isOr: true,
+        onInputChange: text => handleOnSelectSearchInputChange('debtors', text),
       },
       {
         title: 'Month/ Year',
@@ -255,7 +268,7 @@ const AddOverdues = () => {
         value: overdueDetails?.outstandingAmount ?? '',
       },
     ],
-    [overdueDetails, entityList, period]
+    [overdueDetails, entityList, period, handleOnSelectSearchInputChange]
   );
 
   const toggleSaveAlertModal = useCallback(
@@ -267,12 +280,12 @@ const AddOverdues = () => {
   );
 
   const handleAmountInputChange = useCallback(
-      e => {
-        const { name, value } = e?.target;
-        const updatedVal = value?.toString()?.replaceAll(',', '');
-        if (DECIMAL_REGEX.test(updatedVal)) changeOverdueFields(name, updatedVal);
-      },
-      [DECIMAL_REGEX]
+    e => {
+      const { name, value } = e?.target;
+      const updatedVal = value?.toString()?.replaceAll(',', '');
+      if (DECIMAL_REGEX.test(updatedVal)) changeOverdueFields(name, updatedVal);
+    },
+    [DECIMAL_REGEX]
   );
 
   const handleSelectInputChange = useCallback(e => {
@@ -302,10 +315,8 @@ const AddOverdues = () => {
         case 'select':
           component = (
             <>
-              <ReactSelect
+              <Select
                 name={input.name}
-                className="react-select-container"
-                classNamePrefix="react-select"
                 placeholder={input.placeholder}
                 options={input?.data}
                 value={input?.value}
@@ -314,6 +325,7 @@ const AddOverdues = () => {
                     ? e => handleDebtorChange(e, false)
                     : handleSelectInputChange
                 }
+                onInputChange={input?.onInputChange}
               />
               {input?.isOr && <div className="or-text">OR</div>}
             </>
@@ -334,7 +346,7 @@ const AddOverdues = () => {
                   scrollableYearDropdown
                   onChange={e => handleDateInputChange(input?.name, e)}
                 />
-                <span className="material-icons-round">event_available</span>
+                <span className="material-icons-round">event</span>
               </div>
             );
           break;
@@ -367,7 +379,7 @@ const AddOverdues = () => {
         case 'total-amount':
           component = (
             <div className="add-overdue-total-amount">
-                {input?.value && input.value !== 'NaN' ? usdConverter(input?.value) : 0}
+              {input?.value && input.value !== 'NaN' ? usdConverter(input?.value) : 0}
             </div>
           );
           break;

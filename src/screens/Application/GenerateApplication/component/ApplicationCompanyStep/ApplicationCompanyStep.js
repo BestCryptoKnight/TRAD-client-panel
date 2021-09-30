@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactSelect from 'react-select';
 import Input from '../../../../../common/Input/Input';
 import {
   getApplicationCompanyDataFromABNOrACN,
   getApplicationCompanyDataFromDebtor,
   getApplicationCompanyDropDownData,
+  getApplicationCompanyStepDropDownDataBySearch,
   resetEntityTableData,
   searchApplicationCompanyEntityName,
   updateEditApplicationData,
@@ -18,6 +18,7 @@ import IconButton from '../../../../../common/IconButton/IconButton';
 import { errorNotification } from '../../../../../common/Toast';
 import { applicationErrorHelper } from '../../../../../helpers/applicationErrorHelper';
 import { APPLICATION_REDUX_CONSTANTS } from '../../../redux/ApplicationReduxConstants';
+import Select from '../../../../../common/Select/Select';
 
 export const DRAWER_ACTIONS = {
   SHOW_DRAWER: 'SHOW_DRAWER',
@@ -117,6 +118,16 @@ const ApplicationCompanyStep = () => {
     [toggleConfirmationModal]
   );
 
+  const handleOnSelectSearchInputChange = useCallback((searchEntity, text) => {
+    const options = {
+      searchString: text,
+      entityType: searchEntity,
+      requestFrom: 'application',
+      isForRisk: false,
+    };
+    dispatch(getApplicationCompanyStepDropDownDataBySearch(options));
+  }, []);
+
   const INPUTS = useMemo(
     () => [
       {
@@ -137,6 +148,7 @@ const ApplicationCompanyStep = () => {
         isOr: isAusOrNew,
         name: 'debtorId',
         data: debtors,
+        onInputChange: text => handleOnSelectSearchInputChange('debtors', text),
       },
       {
         label: 'ABN/NZBN*',
@@ -239,7 +251,7 @@ const ApplicationCompanyStep = () => {
         label: 'Phone Number',
         placeholder: '1234567890',
         type: 'text',
-        name: 'phoneNumber',
+        name: 'contactNumber',
         data: [],
       },
     ],
@@ -299,7 +311,9 @@ const ApplicationCompanyStep = () => {
     data => {
       if (data?.name === 'country') {
         dispatch(updateEditApplicationField('company', 'state', null));
-
+        dispatch({
+          type: APPLICATION_REDUX_CONSTANTS.COMPANY.APPLICATION_COMPANY_WIPE_OUT_DATA_IF_EXIST,
+        });
         const finalErrors = { ...errors };
         delete finalErrors.state;
 
@@ -607,15 +621,14 @@ const ApplicationCompanyStep = () => {
             handleOnChange = handleDebtorSelectChange;
           }
           component = (
-            <ReactSelect
-              className="react-select-container"
-              classNamePrefix="react-select"
+            <Select
               placeholder={input.placeholder}
-              name={input.name}
-              options={input.data}
+              name={input?.name}
+              options={input?.data ?? []}
               isSearchable
               value={companyState?.[input?.name] ?? []}
               onChange={handleOnChange}
+              onInputChange={input?.onInputChange}
             />
           );
           break;

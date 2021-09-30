@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import BigInput from '../../../common/BigInput/BigInput';
 import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
 import Loader from '../../../common/Loader/Loader';
-import {errorNotification} from '../../../common/Toast';
+import { errorNotification } from '../../../common/Toast';
 import {
   addCreditLimitsNote,
   deleteCreditLimitsNote,
@@ -13,7 +13,6 @@ import {
   updateCreditLimitsNote,
 } from '../redux/CreditLimitsAction';
 import Modal from '../../../common/Modal/Modal';
-import Input from '../../../common/Input/Input';
 
 const NOTE_ACTIONS = {
   ADD: 'ADD_ROW',
@@ -281,11 +280,10 @@ const CreditLimitsNotesTab = props => {
         >
           <div className="add-notes-popup-container align-center">
             <span>Description</span>
-            <Input
-              prefixClass="font-placeholder"
+            <textarea
               placeholder="Note description"
               name="description"
-              type="text"
+              rows={5}
               value={selectedCreditLimitsNote?.description}
               onChange={onChangeSelectedNoteInput}
             />

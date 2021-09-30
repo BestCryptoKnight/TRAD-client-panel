@@ -1,11 +1,12 @@
-import React, {useCallback, useMemo, useReducer, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useCallback, useMemo, useReducer, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import ReactSelect from 'react-select';
 import Tooltip from 'rc-tooltip';
 import {
-  deleteViewApplicationDocumentAction, downloadDocuments,
+  deleteViewApplicationDocumentAction,
+  downloadDocuments,
   getApplicationModuleList,
   viewApplicationUploadDocument,
 } from '../../redux/ApplicationAction';
@@ -14,8 +15,8 @@ import IconButton from '../../../../common/IconButton/IconButton';
 import Modal from '../../../../common/Modal/Modal';
 import FileUpload from '../../../../common/Header/component/FileUpload';
 import Input from '../../../../common/Input/Input';
-import {errorNotification} from '../../../../common/Toast';
-import {downloadAll} from "../../../../helpers/DownloadHelper";
+import { errorNotification } from '../../../../common/Toast';
+import { downloadAll } from '../../../../helpers/DownloadHelper';
 
 const initialApplicationDocumentState = {
   description: '',
@@ -127,7 +128,7 @@ const ApplicationDocumentsAccordion = props => {
           'tex',
           'xls',
           'xlsx',
-            'csv',
+          'csv',
           'doc',
           'docx',
           'odt',
@@ -146,7 +147,7 @@ const ApplicationDocumentsAccordion = props => {
           'image/gif',
           'application/x-tex',
           'application/vnd.ms-excel',
-            'text/csv',
+          'text/csv',
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           'application/msword',
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -286,13 +287,13 @@ const ApplicationDocumentsAccordion = props => {
   );
 
   const onDocumentDownloadClick = useCallback(
-      async documentId => {
-        const response = await downloadDocuments(documentId);
-        if (response) {
-          downloadAll(response);
-        }
-      },
-      [downloadAll]
+    async documentId => {
+      const response = await downloadDocuments(documentId);
+      if (response) {
+        downloadAll(response);
+      }
+    },
+    [downloadAll]
   );
 
   return (
@@ -328,15 +329,15 @@ const ApplicationDocumentsAccordion = props => {
                   </Tooltip>
                   <div className="view-application-document-action-buttons">
                     <span
-                        title="Download this document"
-                        className="download-icon material-icons-round"
-                        onClick={() => onDocumentDownloadClick(doc?._id)}
+                      title="Download this document"
+                      className="download-icon material-icons-round"
+                      onClick={() => onDocumentDownloadClick(doc?._id)}
                     >
                       cloud_download
                     </span>
                     <span
-                        className="material-icons-round font-danger cursor-pointer"
-                        onClick={() => deleteDocument(doc._id)}
+                      className="material-icons-round font-danger cursor-pointer"
+                      onClick={() => deleteDocument(doc._id)}
                     >
                       delete_outline
                     </span>
@@ -349,9 +350,11 @@ const ApplicationDocumentsAccordion = props => {
                   <span className="title">Owner:</span>
                   <span className="details">{doc.uploadById || '-'}</span>
                 </div>
-                <div className="font-field">Document Description:</div>
-                <div className="view-application-accordion-description">
-                  {doc.description || '-'}
+                <div className="d-flex">
+                  <div className="font-field">Description:</div>
+                  <div className="view-application-accordion-description">
+                    {doc.description || '-'}
+                  </div>
                 </div>
               </div>
             ))}
@@ -378,15 +381,15 @@ const ApplicationDocumentsAccordion = props => {
             <span>Please upload your documents here</span>
             <div>
               <FileUpload
-                  isProfile={false}
-                  fileName={fileData.name ?? 'Browse...'}
-                  handleChange={onUploadClick}
+                isProfile={false}
+                fileName={fileData.name ?? 'Browse...'}
+                handleChange={onUploadClick}
               />
               {fileExtensionErrorMessage && (
-                  <div className="ui-state-error">
-                    Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
-                    pptx, ppt or rtf file types are accepted
-                  </div>
+                <div className="ui-state-error">
+                  Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
+                  pptx, ppt or rtf file types are accepted
+                </div>
               )}
             </div>
             <span>Document Description:</span>

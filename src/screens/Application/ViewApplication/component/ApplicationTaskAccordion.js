@@ -91,9 +91,7 @@ const ApplicationTaskAccordion = props => {
                   </Tooltip>
                 </div>
                 <div className="font-field">Comments:</div>
-                <div className="view-application-accordion-description">
-                  {task.comments || '-'}
-                </div>
+                <div className="view-application-accordion-description">{task.comments || '-'}</div>
               </div>
             ))
           ) : (

@@ -6,6 +6,7 @@ import {
   startGeneralLoaderOnRequest,
   stopGeneralLoaderOnSuccessOrFail,
 } from '../../../common/GeneralLoader/redux/GeneralLoaderAction';
+import { DashboardApiService } from '../../../common/Dashboard/services/DashboardApiService';
 
 export const getEntityDetails = () => {
   return async dispatch => {
@@ -179,5 +180,23 @@ export const resetOverdueListData = () => {
     dispatch({
       type: OVERDUE_REDUX_CONSTANTS.RESET_OVERDUE_LIST_DATA,
     });
+  };
+};
+
+export const getOverdueFilterDropDownDataBySearch = options => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getEntitiesBySearch(options);
+
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: OVERDUE_REDUX_CONSTANTS.GET_OVERDUE_ENTITY_DATA_BY_SEARCH,
+          data: response?.data?.data,
+          name: options?.entityType,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
   };
 };

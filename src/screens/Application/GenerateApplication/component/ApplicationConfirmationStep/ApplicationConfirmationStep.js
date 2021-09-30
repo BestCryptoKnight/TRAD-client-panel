@@ -81,6 +81,7 @@ const ApplicationConfirmationStep = () => {
               value: person?.allowToCheckCreditHistory || false,
               label: 'directorLastName',
               type: 'checkbox',
+              isDisabled: true,
             },
             {
               title: 'Identification Details',
@@ -433,7 +434,11 @@ const ApplicationConfirmationStep = () => {
         case 'checkbox':
           return (
             <>
-              <Checkbox className="grid-checkbox" title={detail.title} />
+              <Checkbox
+                className="grid-checkbox"
+                title={detail.title}
+                disabled={detail.isDisabled}
+              />
             </>
           );
         case 'main-title':

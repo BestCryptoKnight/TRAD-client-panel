@@ -14,7 +14,7 @@ import { usdConverter } from '../../helpers/usdConverter';
 import { getLabelFromValues } from '../../helpers/chartHelper';
 import { dashboardPendingApplicationsMapper } from '../../helpers/Mappers';
 import DashBoardNotification from './components/DashBoardNotification';
-import {NumberCommaSeparator} from "../../helpers/NumberCommaSeparator";
+import { NumberCommaSeparator } from '../../helpers/NumberCommaSeparator';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -44,10 +44,13 @@ const Dashboard = () => {
       {
         label: '',
         data: [
-          0,
-          endorsedLimit?.totalCount === 0
-            ? 1
-            : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
+          endorsedLimit?.totalCount &&
+            (endorsedLimit?.totalCount === 0 ? 0 : endorsedLimit?.totalCount),
+          endorsedLimit?.totalCount &&
+            endorsedLimit?.endorsedLimitCount &&
+            (endorsedLimit?.totalCount === 0
+              ? 1
+              : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount),
         ],
         backgroundColor: ['#003A78', '#CBD7E4'],
       },
@@ -250,7 +253,8 @@ const Dashboard = () => {
                           %
                         </div>
                         <span className="approved-amount-ratio-total">
-                          ({NumberCommaSeparator(approvedAmount?.approvedAmount) ?? '0'}/{NumberCommaSeparator(approvedAmount?.total) ?? 0})
+                          ({NumberCommaSeparator(approvedAmount?.approvedAmount) ?? '0'}/
+                          {NumberCommaSeparator(approvedAmount?.total) ?? 0})
                         </span>
                       </span>
                     </div>

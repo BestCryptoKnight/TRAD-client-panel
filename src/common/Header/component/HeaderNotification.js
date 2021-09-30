@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useCallback, useMemo, useState } from 'react';
-import {useHistory} from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   DATE_FORMAT,
@@ -13,7 +13,7 @@ import {
   markNotificationAsReadAndDeleteAction,
 } from '../redux/HeaderAction';
 import { errorNotification } from '../../Toast';
-import {handleGlobalSearchSelect} from "../../../helpers/GlobalSearchHelper";
+import { handleGlobalSearchSelect } from '../../../helpers/GlobalSearchHelper';
 
 const HeaderNotification = () => {
   const dispatch = useDispatch();
@@ -73,7 +73,7 @@ const HeaderNotification = () => {
     const { entityType, entityId, hasSubModule, subModule, description } = notification;
     handleGlobalSearchSelect(history, entityType, entityId, hasSubModule, subModule, description);
     setNotificationDrawer(false);
-  },[])
+  }, []);
 
   const markAllAsRead = useCallback(() => {
     if (sortedNotificationList?.length > 0 && !markAllAsReadLoader) {

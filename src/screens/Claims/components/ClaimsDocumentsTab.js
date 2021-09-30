@@ -1,21 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import BigInput from '../../../common/BigInput/BigInput';
+import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
 import IconButton from '../../../common/IconButton/IconButton';
 import Pagination from '../../../common/Pagination/Pagination';
 import Table from '../../../common/Table/Table';
 import Loader from '../../../common/Loader/Loader';
-import { errorNotification } from '../../../common/Toast';
+import {errorNotification} from '../../../common/Toast';
 import Modal from '../../../common/Modal/Modal';
 import Input from '../../../common/Input/Input';
 import FileUpload from '../../../common/Header/component/FileUpload';
-import {
-  downloadDocumentFromServer,
-  getClaimsDocumentsListData,
-  uploadClaimDocument,
-} from '../redux/ClaimsAction';
-import { downloadAll } from '../../../helpers/DownloadHelper';
+import {downloadDocumentFromServer, getClaimsDocumentsListData, uploadClaimDocument,} from '../redux/ClaimsAction';
+import {downloadAll} from '../../../helpers/DownloadHelper';
 
 const initialClaimDocumentState = {
   description: '',
@@ -58,7 +53,6 @@ const ClaimsDocumentsTab = () => {
   );
   const dispatch = useDispatch();
   const { id } = useParams();
-  const searchInputRef = useRef();
 
   const [uploadModel, setUploadModel] = useState(false);
   const [fileExtensionErrorMessage, setFileExtensionErrorMessage] = useState(false);
@@ -141,7 +135,7 @@ const ClaimsDocumentsTab = () => {
         'tex',
         'xls',
         'xlsx',
-          'csv',
+        'csv',
         'doc',
         'docx',
         'odt',
@@ -160,7 +154,7 @@ const ClaimsDocumentsTab = () => {
         'image/gif',
         'application/x-tex',
         'application/vnd.ms-excel',
-          'text/csv',
+        'text/csv',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -207,19 +201,6 @@ const ClaimsDocumentsTab = () => {
     ],
     [onCloseUploadDocumentButton, onClickUploadDocument, viewClaimUploadDocumentButtonLoaderAction]
   );
-
-  const checkIfEnterKeyPressed = e => {
-    const searchKeyword = searchInputRef?.current?.value;
-    if (searchKeyword?.trim()?.toString()?.length === 0 && e.key !== 'Enter') {
-      getClaimsDocumentsList();
-    } else if (e.key === 'Enter') {
-      if (searchKeyword?.trim()?.toString()?.length !== 0) {
-        getClaimsDocumentsList({ search: searchKeyword?.trim()?.toString() });
-      } else {
-        errorNotification('Please enter search text to search');
-      }
-    }
-  };
 
   const pageActionClick = useCallback(
     newPage => {
@@ -268,23 +249,13 @@ const ClaimsDocumentsTab = () => {
     <>
       <div className="tab-content-header-row">
         <div className="tab-content-header">Documents</div>
-        <div className="buttons-row">
-          <BigInput
-            ref={searchInputRef}
-            type="text"
-            className="search"
-            borderClass="tab-search"
-            prefix="search"
-            prefixClass="font-placeholder"
-            placeholder="Search here"
-            onKeyUp={checkIfEnterKeyPressed}
-          />
+
           <IconButton
             buttonType="primary"
             title="cloud_upload"
             onClick={() => toggleUploadModel()}
           />
-        </div>
+
       </div>
       {/* eslint-disable-next-line no-nested-ternary */}
       {!isLoading && docs ? (
@@ -328,15 +299,15 @@ const ClaimsDocumentsTab = () => {
             <span>Please upload your document here</span>
             <div>
               <FileUpload
-                  isProfile={false}
-                  fileName={fileData.name ?? 'Browse...'}
-                  handleChange={onUploadClick}
+                isProfile={false}
+                fileName={fileData.name ?? 'Browse...'}
+                handleChange={onUploadClick}
               />
               {fileExtensionErrorMessage && (
-                  <div className="ui-state-error">
-                    Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
-                    pptx, ppt or rtf file types are accepted
-                  </div>
+                <div className="ui-state-error">
+                  Only jpeg, jpg, png, bmp, gif, tex, xls, xlsx, csv, doc, docx, odt, txt, pdf, png,
+                  pptx, ppt or rtf file types are accepted
+                </div>
               )}
             </div>
             <span>Description</span>
