@@ -839,7 +839,9 @@ export const downloadCreditLimitDecisionLetter = id => {
       }
     } catch (e) {
       stopGeneralLoaderOnSuccessOrFail('decisionLetterDownloadButtonLoaderAction');
-      displayErrors(e);
+      if (e?.response?.statusText === 'Bad Request') {
+        errorNotification('No decision letter found');
+      }
       throw Error();
     }
     return false;
