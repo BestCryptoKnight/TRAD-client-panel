@@ -1,24 +1,18 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useMemo} from 'react';
+import {useHistory, useParams} from 'react-router-dom';
 import ReactSelect from 'react-select';
 import DatePicker from 'react-datepicker';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import Button from '../../../common/Button/Button';
 import Input from '../../../common/Input/Input';
-import Switch from '../../../common/Switch/Switch';
-import {
-  DL_JUSTIFICATION,
-  POD_RECEIVED,
-  REIMBURSEMENT_REQUESTED,
-  SECTOR,
-  STAGE,
-  UNDERWRITER,
-} from './AddClaimsDropdownHelper';
-import { getClaimDetails, handleClaimChange, resetClaimDetails } from '../redux/ClaimsAction';
-import { addClaimsValidations } from './AddClaimsValidations';
+import {STAGE, UNDERWRITER,} from './AddClaimsDropdownHelper';
+import {getClaimDetails, handleClaimChange, resetClaimDetails} from '../redux/ClaimsAction';
+import {addClaimsValidations} from './AddClaimsValidations';
 import Loader from '../../../common/Loader/Loader';
 import ClaimsTabContainer from '../components/ClaimsTabContainer';
+import {NumberCommaSeparator} from "../../../helpers/NumberCommaSeparator";
+import {DECIMAL_REGEX} from "../../../constants/RegexConstants";
 
 const AddViewClaims = () => {
   const history = useHistory();
@@ -38,6 +32,9 @@ const AddViewClaims = () => {
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
+  const changeClaimFields = useCallback((name, value) => {
+    dispatch(handleClaimChange(name, value));
+  }, []);
   const onHandleInputTextChange = useCallback(e => {
     const { name, value } = e.target;
     changeClaimDetails(name, value);
@@ -51,10 +48,11 @@ const AddViewClaims = () => {
     changeClaimDetails(name, e);
   }, []);
 
-  const onHandleSwitchChange = useCallback(e => {
-    const { name, checked } = e.target;
-    changeClaimDetails(name, checked);
-  }, []);
+  const onHandleAmountInputTextChange = useCallback(e => {
+    const { name, value } = e.target;
+    const updatedVal = value?.toString()?.replaceAll(',', '');
+    if (DECIMAL_REGEX.test(updatedVal)) changeClaimFields(name, updatedVal);
+  }, [DECIMAL_REGEX]);
 
   const inputClaims = useMemo(
     () => [
@@ -67,88 +65,18 @@ const AddViewClaims = () => {
         value: claimDetails?.name,
       },
       {
-        name: 'podreceived',
-        title: 'POD Received',
-        placeholder: 'Select',
-        type: 'select',
-        options: POD_RECEIVED,
-        value: claimDetails?.podreceived,
-      },
-      {
-        name: 'podsenttouw',
-        title: 'POD Sent to U/W',
-        placeholder: 'Select',
-        type: 'date',
-        value: claimDetails?.podsenttouw,
-      },
-      {
-        name: 'codrequested',
-        title: 'COD Requested',
-        placeholder: '',
-        type: 'date',
-        value: claimDetails?.codrequested,
-      },
-      {
-        name: 'notifiedofcase',
-        title: 'Notified of Case',
-        placeholder: 'Select',
-        type: 'date',
-        value: claimDetails?.notifiedofcase,
-      },
-      {
-        name: 'codreceived',
-        title: 'COD Received',
-        placeholder: '',
-        type: 'date',
-        value: claimDetails?.codreceived,
-      },
-      {
-        name: 'claimsinforequested',
-        title: 'Claims Info Requested',
-        isRequired: true,
-        type: 'switch',
-        value: claimDetails?.claimsinforequested,
-      },
-      {
         name: 'grossdebtamount',
         title: 'Gross Debt Amount',
-        placeholder: '',
-        type: 'input',
+        placeholder: '$00.00',
+        type: 'amount',
         value: claimDetails?.grossdebtamount,
-      },
-      {
-        name: 'claimsinforeviewed',
-        title: 'Claims Info Reviewed',
-        type: 'switch',
-        value: claimDetails?.claimsinforeviewed,
       },
       {
         name: 'amountpaid',
         title: 'Amount Paid',
-        placeholder: '',
-        type: 'input',
+        placeholder: '$00.00',
+        type: 'amount',
         value: claimDetails?.amountpaid,
-      },
-      {
-        name: 'tradinghistory',
-        title: 'Trading History',
-        type: 'switch',
-        value: claimDetails?.tradinghistory,
-      },
-      {
-        name: 'receivedlolfromuw',
-        title: 'Received LOL from U/ W',
-        placeholder: 'Select',
-        type: 'date',
-        value: claimDetails?.receivedlolfromuw,
-      },
-      {
-        name: 'dljustification',
-        title: 'D/ L Justification',
-        placeholder: 'Select',
-        type: 'select',
-        options: DL_JUSTIFICATION,
-        value: claimDetails?.dljustification,
       },
       {
         name: 'claimpaidbyuw',
@@ -167,34 +95,6 @@ const AddViewClaims = () => {
         value: claimDetails?.underwriter,
       },
       {
-        name: 'reimbursementrequired',
-        title: 'Reimbursement Required',
-        type: 'switch',
-        value: claimDetails?.reimbursementrequired,
-      },
-      {
-        name: 'reimbursementreceived',
-        title: 'Reimbursement Received',
-        type: 'date',
-        placeholder: 'Select',
-        value: claimDetails?.reimbursementreceived,
-      },
-      {
-        name: 'note',
-        title: 'Notes',
-        placeholder: '',
-        type: 'input',
-        value: claimDetails?.note,
-      },
-      {
-        name: 'reimbursementrequested',
-        title: 'Reimbursement Requested',
-        placeholder: 'Select',
-        type: 'select',
-        options: REIMBURSEMENT_REQUESTED,
-        value: claimDetails?.reimbursementrequested,
-      },
-      {
         name: 'stage',
         title: 'Stage',
         placeholder: 'Select',
@@ -202,71 +102,6 @@ const AddViewClaims = () => {
         isRequired: true,
         options: STAGE,
         value: claimDetails?.stage,
-      },
-      {
-        name: 'reimbursementspaid',
-        title: 'Reimbursement Paid',
-        placeholder: '',
-        type: 'input',
-        value: claimDetails?.reimbursementspaid,
-      },
-      {
-        name: 'repaymentplanamount',
-        title: 'Repayment Plan Amount',
-        placeholder: '',
-        type: 'input',
-        value: claimDetails?.repaymentplanamount,
-      },
-      {
-        name: 'dateofoldestinvoice',
-        title: 'Date of Oldest Invoice',
-        placeholder: 'Select',
-        type: 'date',
-        value: claimDetails?.dateofoldestinvoice,
-      },
-      {
-        name: 'instalmentamounts',
-        title: 'Instalment Amount',
-        placeholder: '$00.00',
-        type: 'input',
-        value: claimDetails?.instalmentamounts,
-      },
-      {
-        name: 'sector',
-        title: 'Sector',
-        placeholder: 'Select',
-        type: 'select',
-        options: SECTOR,
-        dropdownPlacement: 'top',
-        value: claimDetails?.sector ?? [],
-      },
-      {
-        name: 'frequency',
-        title: 'Frequency',
-        placeholder: '',
-        type: 'input',
-        value: claimDetails?.frequency,
-      },
-      {
-        name: 'datesubmittedtouw',
-        title: 'Date Submitted to U/ W',
-        placeholder: 'Select',
-        type: 'date',
-        value: claimDetails?.datesubmittedtouw,
-      },
-      {
-        name: 'repaymentplanlength',
-        title: 'Repayment Plan Length',
-        placeholder: '',
-        type: 'input',
-        value: claimDetails?.repaymentplanlength,
-      },
-      {
-        name: 'finalpaymentdate',
-        title: 'Final Payment Date',
-        placeholder: '',
-        type: 'date',
-        value: claimDetails?.finalpaymentdate,
       },
     ],
     [claimDetails]
@@ -324,16 +159,21 @@ const AddViewClaims = () => {
           );
           break;
 
-        case 'switch':
+        case 'amount':
           component = (
-            <Switch
-              id={input.name}
-              disabled={type === 'view'}
-              name={input?.name}
-              className={type === 'view' && 'view-claim-switch-disabled'}
-              onChange={onHandleSwitchChange}
-              checked={input?.value ?? false}
-            />
+              <>
+                {type === 'view' ? (
+                    <div className="view-claim-detail">{NumberCommaSeparator(input?.value) ?? '-'}</div>
+                ) : (
+                    <Input
+                        type="text"
+                        name={input?.name}
+                        placeholder={input.placeholder}
+                        onChange={onHandleAmountInputTextChange}
+                        value={NumberCommaSeparator(input.value) ?? ''}
+                    />
+                )}
+              </>
           );
           break;
 

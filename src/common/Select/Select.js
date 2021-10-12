@@ -1,8 +1,10 @@
 import ReactSelect from 'react-select';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { useState } from 'react';
 
 const Select = props => {
+  const [IsFocus, setIsFocus] = useState(false);
   const {
     className,
     placeholder,
@@ -16,27 +18,35 @@ const Select = props => {
     ...restProps
   } = props;
 
-  const handleInputChange = _.debounce(onInputChange, 800);
+  const inputChangeEventHandling = e => {
+    if (IsFocus) {
+      onInputChange(e);
+    }
+  };
+
+  const handleInputChange = _.debounce(inputChangeEventHandling, 800);
 
   return (
-    <ReactSelect
-      className={`${className} react-select-container`}
-      classNamePrefix="react-select"
-      placeholder={placeholder}
-      name={name}
-      options={options}
-      isSearchable={isSearchable}
-      value={value}
-      onChange={onChange}
-      onInputChange={handleInputChange}
-      isDisabled={isDisabled}
-      color={restProps?.color}
-      dropdownHandle={restProps?.dropdownHandle}
-      keepSelectedInList={restProps?.keepSelectedInList}
-      isMulti={restProps?.isMulti}
-      menuPlacement={restProps?.menuPlacement}
-      dropdownPosition={restProps?.dropdownPosition}
-    />
+      <ReactSelect
+          className={`${className} react-select-container`}
+          classNamePrefix="react-select"
+          placeholder={placeholder}
+          name={name}
+          options={options}
+          isSearchable={isSearchable}
+          value={value}
+          onChange={onChange}
+          onInputChange={handleInputChange}
+          isDisabled={isDisabled}
+          color={restProps?.color}
+          dropdownHandle={restProps?.dropdownHandle}
+          keepSelectedInList={restProps?.keepSelectedInList}
+          isMulti={restProps?.isMulti}
+          menuPlacement={restProps?.menuPlacement}
+          dropdownPosition={restProps?.dropdownPosition}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+      />
   );
 };
 

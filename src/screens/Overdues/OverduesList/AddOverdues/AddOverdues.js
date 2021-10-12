@@ -115,7 +115,6 @@ const AddOverdues = () => {
 
   const handleDebtorChange = useCallback(
     (e, isAcnChanged = false) => {
-      console.log('here');
       changeOverdueFields('debtorId', e);
 
       setSelectedDebtor(e);

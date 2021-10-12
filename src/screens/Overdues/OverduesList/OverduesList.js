@@ -1,23 +1,28 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
 import DatePicker from 'react-datepicker';
-import ReactSelect from 'react-select';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import IconButton from '../../../common/IconButton/IconButton';
 import Button from '../../../common/Button/Button';
 import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
 import Modal from '../../../common/Modal/Modal';
-import { useQueryParams } from '../../../hooks/GetQueryParamHook';
-import { getEntityDetails, getOverdueList, resetOverdueListData } from '../redux/OverduesAction';
-import { errorNotification } from '../../../common/Toast';
+import {useQueryParams} from '../../../hooks/GetQueryParamHook';
+import {
+  getEntityDetails,
+  getOverdueFilterDropDownDataBySearch,
+  getOverdueList,
+  resetOverdueListData
+} from '../redux/OverduesAction';
+import {errorNotification} from '../../../common/Toast';
 import Input from '../../../common/Input/Input';
 import Loader from '../../../common/Loader/Loader';
-import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
-import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
-import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
-import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
+import {NumberCommaSeparator} from '../../../helpers/NumberCommaSeparator';
+import {filterReducer, LIST_FILTER_REDUCER_ACTIONS} from '../../../common/ListFilters/filter';
+import {useUrlParamsUpdate} from '../../../hooks/useUrlParamsUpdate';
+import {saveAppliedFilters} from '../../../common/ListFilters/redux/ListFiltersAction';
+import Select from "../../../common/Select/Select";
 
 const OverduesList = () => {
   const dispatch = useDispatch();
@@ -40,7 +45,7 @@ const OverduesList = () => {
   const {
     page: paramPage,
     limit: paramLimit,
-    debtorId: paramDebtorId,
+  //  debtorId: paramDebtorId,
     minOutstandingAmount: paramMinOutstandingAmount,
     maxOutstandingAmount: paramMaxOutstandingAmount,
     startDate: paramStartDate,
@@ -72,7 +77,7 @@ const OverduesList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'debtorId',
-      value: event?.value,
+      value: event,
     });
   }, []);
 
@@ -92,13 +97,6 @@ const OverduesList = () => {
       value: parseInt(updatedVal, 10),
     });
   }, []);
-
-  const debtorIdSelectedValue = useMemo(() => {
-    const foundValue = entityList?.debtorId?.find(e => {
-      return (e?.value ?? '') === tempFilter?.debtorId;
-    });
-    return foundValue ?? [];
-  }, [tempFilter?.debtorId, entityList]);
 
   // listing
   const overdueListWithPageData = useSelector(({ overdue }) => overdue?.overdueList ?? {});
@@ -125,7 +123,7 @@ const OverduesList = () => {
           limit: limit ?? 15,
           debtorId:
             (tempFilter?.debtorId?.toString()?.trim()?.length ?? -1) > 0
-              ? tempFilter?.debtorId
+              ? tempFilter?.debtorId?.value
               : undefined,
           minOutstandingAmount:
             (tempFilter?.minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
@@ -204,8 +202,7 @@ const OverduesList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      debtorId:
-        (paramDebtorId?.trim()?.length ?? -1) > 0 ? paramDebtorId : overdueListFilters?.debtorId,
+      debtorId: overdueListFilters?.debtorId,
       minOutstandingAmount:
         (paramMinOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
           ? paramMinOutstandingAmount
@@ -239,10 +236,7 @@ const OverduesList = () => {
     {
       page: page ?? 1,
       limit: limit ?? 15,
-      debtorId:
-        (finalFilter?.debtorId?.toString()?.trim()?.length ?? -1) > 0
-          ? finalFilter?.debtorId
-          : undefined,
+      debtorId: finalFilter?.debtorId?.value ?? undefined,
       minOutstandingAmount:
         (finalFilter?.minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
           ? finalFilter?.minOutstandingAmount
@@ -304,7 +298,14 @@ const OverduesList = () => {
     ],
     [onAddNewSubmission, onCloseNewSubmissionModal]
   );
-
+  const handleOnSelectSearchInputChange = (searchEntity, text) => {
+    const options = {
+      searchString: text,
+      entityType: searchEntity,
+      requestFrom: 'overdue',
+    };
+    dispatch(getOverdueFilterDropDownDataBySearch(options));
+  };
   return (
     <>
       {!overdueListPageLoaderAction ? (
@@ -383,15 +384,15 @@ const OverduesList = () => {
             >
               <div className="filter-modal-row">
                 <div className="form-title">Debtor Name</div>
-                <ReactSelect
-                  className="filter-select react-select-container"
-                  classNamePrefix="react-select"
-                  placeholder="Select Debtor"
-                  name="role"
-                  options={entityList?.debtorId}
-                  value={debtorIdSelectedValue}
-                  onChange={handleDebtorIdFilterChange}
-                  isSearchble
+                <Select
+                    className="filter-select"
+                    placeholder="Select Debtor"
+                    name="debtorId"
+                    options={entityList?.debtorId}
+                    value={tempFilter?.debtorId}
+                    onChange={handleDebtorIdFilterChange}
+                    onInputChange={text => handleOnSelectSearchInputChange('debtorId', text)}
+                    isSearchble
                 />
               </div>
               <div className="filter-modal-row">

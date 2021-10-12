@@ -16,8 +16,13 @@ const CreditLimitsApiService = {
     ApiService.putData(`${CREDIT_LIMITS_URLS.CREDIT_LIMIT_ACTIONS}${id}`, data),
   surrenderClientCreditLimitData: (id, data) =>
     ApiService.putData(`${CREDIT_LIMITS_URLS.CREDIT_LIMIT_ACTIONS}${id}`, data),
-  downloadCreditLimitCSVFile: () =>
-    ApiService.request(`${CREDIT_LIMITS_URLS.DOWNLOAD_CREDIT_LIMIT_CSV}`),
+  downloadCreditLimitCSVFile: params =>
+    ApiService.request({
+      url: CREDIT_LIMITS_URLS.DOWNLOAD_CREDIT_LIMIT_CSV,
+      params,
+      method: 'GET',
+      responseType: 'blob',
+    }),
   downloadCreditLimitDecisionLetter: id =>
     ApiService.request({
       url: `${CREDIT_LIMITS_URLS.DOWNLOAD_DEBTOR_CREDIT_LIMIT_DECISION_LETTER}${id}`,

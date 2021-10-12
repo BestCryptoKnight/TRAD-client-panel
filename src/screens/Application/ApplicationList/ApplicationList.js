@@ -76,7 +76,7 @@ const ApplicationList = () => {
       entityType:
         tempFilter?.entityType?.toString()?.trim()?.length > 0 ? tempFilter?.entityType : undefined,
       debtorId:
-        tempFilter?.debtorId?.toString()?.trim()?.length > 0 ? tempFilter?.debtorId : undefined,
+        tempFilter?.debtorId?.value?.toString()?.trim()?.length > 0 ? tempFilter?.debtorId : undefined,
       status: tempFilter?.status?.toString()?.trim()?.length > 0 ? tempFilter?.status : undefined,
       minCreditLimit:
         tempFilter?.minCreditLimit?.toString()?.trim()?.length > 0
@@ -127,7 +127,7 @@ const ApplicationList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'debtorId',
-      value: event?.value,
+      value: event,
     });
   }, []);
   const handleApplicationStatusFilterChange = useCallback(event => {
@@ -156,7 +156,7 @@ const ApplicationList = () => {
   );
 
   const getApplicationsByFilter = useCallback(
-    async (params = {}, cb) => {
+    async (params = {}, cb, overrideParams = false) => {
       if (
         tempFilter?.startDate &&
         tempFilter?.endDate &&
@@ -165,12 +165,17 @@ const ApplicationList = () => {
         errorNotification('Please enter a valid date range');
         resetFilterDates();
       } else {
-        const data = {
-          page: page || 1,
-          limit: limit || 10,
+        let data = {
+          page: page ?? 1,
+          limit: limit ?? 15,
           ...appliedFilters,
           ...params,
         };
+        if (overrideParams) {
+          data = {
+            ...params,
+          };
+        }
         await dispatch(getApplicationsListByFilter(data));
         dispatchFilter({
           type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
@@ -180,7 +185,7 @@ const ApplicationList = () => {
         }
       }
     },
-    [page, limit, appliedFilters]
+    [page, limit, appliedFilters, tempFilter]
   );
 
   // on record limit changed
@@ -203,9 +208,17 @@ const ApplicationList = () => {
     value => setFilterModal(value !== undefined ? value : e => !e),
     [setFilterModal]
   );
-  const onClickApplyFilter = useCallback(async () => {
-    await getApplicationsByFilter({ page: 1, limit }, toggleFilterModal);
-  }, [page, limit, toggleFilterModal, getApplicationsByFilter]);
+  const onClickApplyFilter = async params => {
+    let data = {
+      page: 1,
+      limit,
+    };
+    toggleFilterModal();
+    if (params) {
+      data = {...data, ...params};
+    }
+    await getApplicationsByFilter(data, null, !!params);
+  }
 
   const onClickResetFilter = useCallback(async () => {
     dispatchFilter({
@@ -216,7 +229,7 @@ const ApplicationList = () => {
       name: 'status',
       value: defaultApplicationStatus,
     });
-    await onClickApplyFilter();
+    await onClickApplyFilter({ status: defaultApplicationStatus });
   }, [defaultApplicationStatus]);
 
   const filterModalButtons = useMemo(
@@ -236,7 +249,7 @@ const ApplicationList = () => {
           toggleFilterModal();
         },
       },
-      { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
+      { title: 'Apply', buttonType: 'primary', onClick: () => onClickApplyFilter() },
     ],
     [toggleFilterModal, onClickApplyFilter]
   );
@@ -320,7 +333,6 @@ const ApplicationList = () => {
     page: paramPage,
     limit: paramLimit,
     entityType: paramEntityType,
-    debtorId: paramDebtorId,
     status: paramStatus,
     minCreditLimit: paramMinCreditLimit,
     maxCreditLimit: paramMaxCreditLimit,
@@ -338,10 +350,7 @@ const ApplicationList = () => {
         (paramEntityType?.trim()?.length ?? -1) > 0
           ? paramEntityType
           : applicationListFilters?.entityType ?? undefined,
-      debtorId:
-        (paramDebtorId?.trim()?.length ?? -1) > 0
-          ? paramDebtorId
-          : applicationListFilters?.debtorId,
+      debtorId: applicationListFilters?.debtorId,
       status:
         (paramStatus?.trim()?.length ?? -1) > 0
           ? paramStatus
@@ -396,7 +405,7 @@ const ApplicationList = () => {
           ? finalFilter?.entityType
           : undefined,
       debtorId:
-        finalFilter?.debtorId?.toString()?.trim()?.length > 0 ? finalFilter?.debtorId : undefined,
+        finalFilter?.debtorId?.value?.toString()?.trim()?.length > 0 ? finalFilter?.debtorId?.value : undefined,
       status: finalFilter?.status?.toString()?.trim()?.length > 0 ? finalFilter?.status : undefined,
       minCreditLimit:
         finalFilter?.minCreditLimit?.toString()?.trim()?.length > 0
@@ -418,13 +427,6 @@ const ApplicationList = () => {
     });
     return foundValue ? [foundValue] : [];
   }, [tempFilter?.entityType, dropdownData]);
-
-  const debtorIdSelectedValue = useMemo(() => {
-    const foundValue = dropdownData?.debtors?.find(e => {
-      return (e?.value ?? '') === tempFilter?.debtorId;
-    });
-    return foundValue ? [foundValue] : [];
-  }, [tempFilter?.debtorId, dropdownData]);
 
   const applicationStatusSelectedValue = useMemo(() => {
     const foundValue = dropdownData?.applicationStatus?.filter(e => {
@@ -479,7 +481,7 @@ const ApplicationList = () => {
       {!applicationListPageLoader ? (
         <>
           <div className="page-header">
-            <div className="page-header-name">Application List</div>
+            <div className="page-header-name">Pending Application List</div>
             <div className="page-header-button-container">
               <IconButton
                 buttonType="primary-1"
@@ -556,9 +558,9 @@ const ApplicationList = () => {
                 <Select
                   className="filter-select"
                   placeholder="Select Debtor"
-                  name="role"
+                  name="debtors"
                   options={dropdownData?.debtors}
-                  value={debtorIdSelectedValue}
+                  value={tempFilter?.debtorId}
                   onChange={handleDebtorIdFilterChange}
                   onInputChange={text => handleOnSelectSearchInputChange('debtors', text)}
                   isSearchble

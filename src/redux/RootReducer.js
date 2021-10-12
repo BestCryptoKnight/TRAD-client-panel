@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import storageSession from 'redux-persist/lib/storage/session';
 import { creditLimits } from '../screens/CreditLimits/redux/CreditLimitsReducer';
 import { claims } from '../screens/Claims/redux/ClaimsReducer';
 import { dashboard } from '../common/Dashboard/redux/DashboardReducer';
@@ -18,6 +19,17 @@ import { generalLoaderReducer } from '../common/GeneralLoader/redux/GeneralLoade
 import { overdue } from '../screens/Overdues/redux/OverduesReducer';
 import { listFilterReducer } from '../common/ListFilters/redux/ListFiltersReducer';
 
+const filterPersistConfig = {
+  key: 'allFilters',
+  storage: storageSession,
+}
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['loggedUserProfile'],
+};
+
 const appReducer = combineReducers({
   dashboard,
   creditLimits,
@@ -31,7 +43,7 @@ const appReducer = combineReducers({
   globalSearchReducer,
   headerNotificationReducer,
   overdue,
-  listFilterReducer,
+  listFilterReducer: persistReducer(filterPersistConfig, listFilterReducer),
 });
 const rootReducer = (state, action) => {
   if (action.type === LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION) {
@@ -43,11 +55,6 @@ const rootReducer = (state, action) => {
   }
 
   return appReducer(state, action);
-};
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['loggedUserProfile'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

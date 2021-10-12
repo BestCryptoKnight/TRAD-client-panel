@@ -42,11 +42,6 @@ const CompanyProfile = () => {
         data: clientData?.contactNumber,
       },
       {
-        label: 'Sales Person',
-        name: 'salesPerson',
-        data: clientData?.salesPerson,
-      },
-      {
         label: 'ACN',
         name: 'acn',
         data: clientData?.acn,
@@ -65,16 +60,6 @@ const CompanyProfile = () => {
         label: 'Service Person',
         name: 'serviceManager',
         data: clientData?.serviceManagerId?.name,
-      },
-      {
-        label: 'Sector',
-        name: 'sector',
-        data: clientData?.sector,
-      },
-      {
-        label: 'Website',
-        name: 'website',
-        data: clientData?.website,
       },
     ],
     [clientData]

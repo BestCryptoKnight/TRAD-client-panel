@@ -10,11 +10,6 @@ const LimitTypeOptions = [
     name: 'limitType',
   },
   {
-    label: 'Discretionary Limit',
-    value: 'DISCRETIONARY_LIMIT',
-    name: 'limitType',
-  },
-  {
     label: 'Credit Check',
     value: 'CREDIT_CHECK',
     name: 'limitType',
@@ -25,8 +20,8 @@ const LimitTypeOptions = [
     name: 'limitType',
   },
   {
-    label: 'Monitoring',
-    value: 'MONITORING',
+    label: '24/7 Alerts',
+    value: '247_ALERT',
     name: 'limitType',
   },
 ];

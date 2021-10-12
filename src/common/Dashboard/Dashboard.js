@@ -188,7 +188,7 @@ const Dashboard = () => {
                   <div className="dashboard-white-container doughnut-white-card">
                     <div className="dashboard-title-date-row">
                       <span className="dashboard-card-title">
-                        Applications processed out of RES Checks Assigned
+                        Applications processed out of Credit Checks Assigned
                       </span>
                     </div>
                     <div className="doughnut-chart-container">
@@ -287,7 +287,7 @@ const Dashboard = () => {
                       <div className="approved-application-sign rejected-sign">
                         <span className="material-icons-round">thumb_down</span>
                       </div>
-                      <div className="mt-15 title">Rejected</div>
+                      <div className="mt-15 title">Declined</div>
                       <div className="mt-5 reading">{approvedApplication?.rejected ?? 0}</div>
                       <div className="approved-application-stripe rejected-stripe" />
                     </div>

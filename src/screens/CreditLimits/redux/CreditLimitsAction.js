@@ -135,17 +135,22 @@ export const getCreditLimitsFilter = () => {
   };
 };
 
-export const downloadCreditLimitCSV = () => {
+export const downloadCreditLimitCSV = (params) => {
   return async () => {
     try {
       startGeneralLoaderOnRequest('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
-      const response = await CreditLimitsApiService.downloadCreditLimitCSVFile();
+      const response = await CreditLimitsApiService.downloadCreditLimitCSVFile(params);
       if (response?.statusText === 'OK') {
         stopGeneralLoaderOnSuccessOrFail(`creditLimitDownloadCreditLimitCSVButtonLoaderAction`);
         return response;
       }
     } catch (e) {
       stopGeneralLoaderOnSuccessOrFail('creditLimitDownloadCreditLimitCSVButtonLoaderAction');
+      if (e.response.status === 400) {
+        errorNotification(
+          'User cannot download more than 500 records at a time. Please apply filter to narrow down the list'
+        );
+      }
       displayErrors(e);
       throw Error();
     }

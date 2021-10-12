@@ -23,8 +23,8 @@ import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 
 const filterDropdownData = [
-  { value: 'true', label: 'Yes', name: 'decisionMaker' },
-  { value: 'false', label: 'No', name: 'decisionMaker' },
+  { value: 'true', label: 'Yes', name: 'hasPortalAccess' },
+  { value: 'false', label: 'No', name: 'hasPortalAccess' },
 ];
 
 const EmployeeList = () => {
@@ -32,7 +32,7 @@ const EmployeeList = () => {
   const {
     page: paramPage,
     limit: paramLimit,
-    isDecisionMaker: paramDecisionMaker,
+    hasPortalAccess: paramHasPortalAccess,
   } = useQueryParams();
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const employeeListWithPageData = useSelector(({ employee }) => employee?.employeeList ?? {});
@@ -80,9 +80,9 @@ const EmployeeList = () => {
       const data = {
         page: page ?? 1,
         limit: limit ?? 15,
-        isDecisionMaker:
-          (tempFilter?.isDecisionMaker?.trim()?.length ?? -1) > 0
-            ? tempFilter?.isDecisionMaker
+        hasPortalAccess:
+          (tempFilter?.hasPortalAccess?.trim()?.length ?? -1) > 0
+            ? tempFilter?.hasPortalAccess
             : undefined,
         ...params,
       };
@@ -99,7 +99,7 @@ const EmployeeList = () => {
         /**/
       }
     },
-    [tempFilter?.isDecisionMaker, limit, page]
+    [tempFilter?.hasPortalAccess, limit, page]
   );
 
   const onClickApplyFilter = useCallback(async () => {
@@ -204,18 +204,18 @@ const EmployeeList = () => {
     [dispatch]
   );
 
-  const decisionMakingTypeSelected = useMemo(() => {
+  const HasPortalAccessSelected = useMemo(() => {
     const foundValue = filterDropdownData?.find(e => {
-      return (e?.value ?? '') === tempFilter?.isDecisionMaker;
+      return (e?.value ?? '') === tempFilter?.hasPortalAccess;
     });
     return foundValue ?? [];
-  }, [tempFilter?.isDecisionMaker, filterDropdownData]);
+  }, [tempFilter?.hasPortalAccess, filterDropdownData]);
 
-  const handleDecisionMakingTypeFilterChange = useCallback(
+  const handleHasPortalAccessFilterChange = useCallback(
     event => {
       dispatchFilter({
         type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'isDecisionMaker',
+        name: 'hasPortalAccess',
         value: event?.value,
       });
     },
@@ -233,10 +233,10 @@ const EmployeeList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      isDecisionMaker:
-        (paramDecisionMaker?.trim()?.length ?? -1) > 0
-          ? paramDecisionMaker
-          : employeeListFilters?.isDecisionMaker,
+      hasPortalAccess:
+        (paramHasPortalAccess?.trim()?.length ?? -1) > 0
+          ? paramHasPortalAccess
+          : employeeListFilters?.hasPortalAccess,
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
@@ -258,9 +258,9 @@ const EmployeeList = () => {
     {
       page: page ?? 1,
       limit: limit ?? 15,
-      isDecisionMaker:
-        (finalFilter?.isDecisionMaker?.trim()?.length ?? -1) > 0
-          ? finalFilter?.isDecisionMaker
+      hasPortalAccess:
+        (finalFilter?.hasPortalAccess?.trim()?.length ?? -1) > 0
+          ? finalFilter?.hasPortalAccess
           : undefined,
     },
     [page, limit, { ...finalFilter }]
@@ -338,15 +338,15 @@ const EmployeeList = () => {
               className="filter-modal application-filter-modal"
             >
               <div className="filter-modal-row">
-                <div className="form-title">Decision Maker</div>
+                <div className="form-title">Portal Access</div>
                 <ReactSelect
                   className="filter-select react-select-container"
                   classNamePrefix="react-select"
                   placeholder="Select.."
                   name="role"
                   options={filterDropdownData}
-                  value={decisionMakingTypeSelected}
-                  onChange={handleDecisionMakingTypeFilterChange}
+                  value={HasPortalAccessSelected}
+                  onChange={handleHasPortalAccessFilterChange}
                   isSearchble
                 />
               </div>

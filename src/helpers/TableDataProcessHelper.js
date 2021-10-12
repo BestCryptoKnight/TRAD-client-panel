@@ -12,7 +12,7 @@ export const processTableDataByType = ({ header, row, actions }) => {
     case 'date':
       return currentData ? moment(currentData).format('DD-MMM-YYYY') : '-';
     case 'modal':
-      if (currentData?.value) {
+      if (currentData?.value && currentData?.value.toString().trim().length > 0) {
         return (
           <div
             className="link"
@@ -41,15 +41,15 @@ export const processTableDataByType = ({ header, row, actions }) => {
       return currentData ? 'Yes' : 'No';
     case 'link':
       return (
-        <div className="link" onClick={() => handleViewDocument(header, row)}>
+        currentData && currentData.toString().trim().length > 0 ? <div className="link" onClick={() => handleViewDocument(header, row)}>
           {currentData}
-        </div>
+        </div> : '-'
       );
 
     case 'amount':
-      return currentData ? NumberCommaSeparator(currentData) : '-';
+      return currentData && currentData.toString().trim().length > 0 ? NumberCommaSeparator(currentData) : '-';
 
     default:
-      return currentData;
+      return currentData && currentData.toString().trim().length > 0 ? currentData : '-';
   }
 };

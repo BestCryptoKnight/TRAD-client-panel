@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactSelect from 'react-select';
 import { useHistory } from 'react-router-dom';
+import Select from '../../../common/Select/Select';
 import IconButton from '../../../common/IconButton/IconButton';
 import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
@@ -78,11 +78,8 @@ const CreditLimitsList = () => {
   }, []);
 
   const entityTypeSelectedValue = useMemo(() => {
-    const foundValue = dropdownData?.entityType?.find(e => {
-      return (e?.value ?? '') === tempFilter?.entityType;
-    });
-    return foundValue ?? [];
-  }, [tempFilter?.entity, dropdownData]);
+    return tempFilter?.entityType;
+  }, [tempFilter?.entityType]);
 
   const { page: paramPage, limit: paramLimit, entityType: paramEntity } = useQueryParams();
 
@@ -102,7 +99,7 @@ const CreditLimitsList = () => {
         page: page ?? 1,
         limit: limit ?? 15,
         entityType:
-          (tempFilter?.entityType?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
+          (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType?.value : undefined,
         ...params,
       };
       try {
@@ -187,7 +184,9 @@ const CreditLimitsList = () => {
     };
     const filters = {
       entityType:
-        (paramEntity?.trim()?.length ?? -1) > 0 ? paramEntity : creditLimitListFilters?.entityType,
+        (paramEntity?.trim()?.length ?? -1) > 0
+          ? paramEntity
+          : creditLimitListFilters?.entityType?.value,
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
@@ -219,7 +218,7 @@ const CreditLimitsList = () => {
       page: page ?? 1,
       limit: limit ?? 15,
       entityType:
-        (finalFilter?.entityType?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType : undefined,
+        (finalFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType?.value : undefined,
     },
     [page, limit, finalFilter?.entityType]
   );
@@ -282,7 +281,7 @@ const CreditLimitsList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'entityType',
-      value: event?.value,
+      value: event,
     });
   }, []);
 
@@ -428,7 +427,11 @@ const CreditLimitsList = () => {
   const onClickDownloadButton = useCallback(async () => {
     if (docs?.length !== 0) {
       try {
-        const res = await dispatch(downloadCreditLimitCSV());
+        const data = {
+          entityType:
+            (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType?.value : undefined,
+        };
+        const res = await dispatch(downloadCreditLimitCSV(data));
         if (res) downloadAll(res);
       } catch (e) {
         errorNotification(e?.response?.request?.statusText ?? 'Internal server error');
@@ -505,7 +508,7 @@ const CreditLimitsList = () => {
             >
               <div className="filter-modal-row">
                 <div className="form-title">Entity Type</div>
-                <ReactSelect
+                <Select
                   className="filter-select react-select-container"
                   classNamePrefix="react-select"
                   placeholder="Select Entity Type"

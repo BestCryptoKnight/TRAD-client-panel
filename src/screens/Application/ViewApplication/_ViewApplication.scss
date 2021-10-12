@@ -173,7 +173,9 @@
 
 .view-application-status {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
   margin-top: 5px;
 
   .react-select-container {
@@ -240,7 +242,6 @@
 .current-business-address, .client-reference, .application-comment {
   display: grid;
   grid-template-columns: 150px auto;
-  align-items: center;
   margin: 10px 0;
 }
 

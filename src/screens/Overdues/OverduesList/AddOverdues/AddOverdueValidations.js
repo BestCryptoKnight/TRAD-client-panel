@@ -38,6 +38,42 @@ export const addOverdueValidations = async (
       errors.debtorId = 'Overdue for selected debtor is already exist, you can amend that.';
     }
   }
+  if (
+      data?.currentAmount.toString()?.trim().includes('.') &&
+      data?.currentAmount?.toString()?.trim()?.length <= 1
+  ) {
+    validated = false;
+    errors.currentAmount = 'Please enter valid current amount';
+  }
+  if (
+      data?.thirtyDaysAmount.toString()?.trim().includes('.') &&
+      data?.thirtyDaysAmount?.toString()?.trim()?.length <= 1
+  ) {
+    validated = false;
+    errors.thirtyDaysAmount = 'Please enter valid amount';
+  }
+
+  if (
+      data?.sixtyDaysAmount.toString()?.trim().includes('.') &&
+      data?.sixtyDaysAmount?.toString()?.trim()?.length <= 1
+  ) {
+    validated = false;
+    errors.sixtyDaysAmount = 'Please enter valid amount';
+  }
+  if (
+      data?.ninetyDaysAmount.toString()?.trim().includes('.') &&
+      data?.ninetyDaysAmount?.toString()?.trim()?.length <= 1
+  ) {
+    validated = false;
+    errors.ninetyDaysAmount = 'Please enter valid amount';
+  }
+  if (
+      data?.ninetyPlusDaysAmount.toString()?.trim().includes('.') &&
+      data?.ninetyPlusDaysAmount?.toString()?.trim()?.length <= 1
+  ) {
+    validated = false;
+    errors.ninetyPlusDaysAmount = 'Please enter valid amount';
+  }
 
   if (data?.debtorId && isAmendOverdueModal) {
     const isExist = docs?.filter(

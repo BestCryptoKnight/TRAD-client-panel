@@ -18,8 +18,12 @@ import { DashboardApiService } from '../../../common/Dashboard/services/Dashboar
 export const getApplicationsListByFilter = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
     try {
+      const finalParams = {
+        ...params,
+        debtorId: params?.debtorId?.value
+      }
       startGeneralLoaderOnRequest('applicationListPageLoader');
-      const response = await ApplicationApiServices.getApplicationListByFilter(params);
+      const response = await ApplicationApiServices.getApplicationListByFilter(finalParams);
 
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
@@ -917,4 +921,22 @@ export const getApplicationCompanyStepDropDownDataBySearch = options => {
       displayErrors(e);
     }
   };
+};
+
+export const downloadDecisionLetterForApplication = async (id, param) => {
+  try {
+    const response = await ApplicationViewApiServices.downloadDecisionLetterForApplication(
+        id,
+        param
+    );
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    if (e?.response?.statusText === 'Bad Request') {
+      errorNotification('No decision letter found');
+    }
+    return false;
+  }
+  return false;
 };
