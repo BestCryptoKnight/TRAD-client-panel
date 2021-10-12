@@ -219,7 +219,9 @@ const AddViewClaims = () => {
   }, [claimDetails]);
 
   useEffect(() => {
+    if(id) {
     dispatch(getClaimDetails(id));
+    }
     return () => {
       dispatch(resetClaimDetails());
     };
