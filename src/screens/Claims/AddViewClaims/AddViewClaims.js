@@ -219,7 +219,7 @@ const AddViewClaims = () => {
   }, [claimDetails]);
 
   useEffect(() => {
-    if(id) {
+    if(type === 'view') {
     dispatch(getClaimDetails(id));
     }
     return () => {
