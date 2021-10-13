@@ -153,6 +153,12 @@
       opacity: 1;
     }
   }
+
+  li.global-search-loading-text {
+    display: block;
+    color: $field-color;
+  }
+
   li:hover{ background-color: #DEEBFF; }
   .header-active-search{
     background-color: #DEEBFF;
