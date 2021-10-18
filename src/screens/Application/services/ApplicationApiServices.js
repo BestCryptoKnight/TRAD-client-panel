@@ -20,6 +20,7 @@ const ApplicationApiServices = {
       params,
       method: 'GET',
       responseType: 'blob',
+      timeout: 60000,
     }),
   downloadDocument: params =>
     ApiService.request({

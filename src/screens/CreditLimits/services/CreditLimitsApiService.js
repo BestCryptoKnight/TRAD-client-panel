@@ -22,6 +22,7 @@ const CreditLimitsApiService = {
       params,
       method: 'GET',
       responseType: 'blob',
+      timeout: 60000,
     }),
   downloadCreditLimitDecisionLetter: id =>
     ApiService.request({
