@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import _ from 'lodash';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Select from '../../../common/Select/Select';
@@ -81,7 +83,7 @@ const CreditLimitsList = () => {
     return tempFilter?.entityType;
   }, [tempFilter?.entityType]);
 
-  const { page: paramPage, limit: paramLimit, entityType: paramEntity } = useQueryParams();
+  const { page: paramPage, limit: paramLimit, entityType: paramEntity, startDate: paramStartDate, endDate: paramEndDate, } = useQueryParams();
 
   const { defaultFields, customFields } = useMemo(
     () => creditLimitsColumnList || { defaultFields: [], customFields: [] },
@@ -92,14 +94,43 @@ const CreditLimitsList = () => {
     value => setCustomFieldModal(value !== undefined ? value : e => !e),
     [setCustomFieldModal]
   );
+  const handleStartDateChange = useCallback(date => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'startDate',
+      value: date ? new Date(date).toISOString() : null,
+    });
+  }, []);
 
+  const handleEndDateChange = useCallback(date => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'endDate',
+      value: date ? new Date(date).toISOString() : null,
+    });
+  }, []);
+
+  const resetFilterDates = useCallback(() => {
+    handleStartDateChange(null);
+    handleEndDateChange(null);
+  }, [handleStartDateChange, handleEndDateChange]);
   const getCreditLimitListByFilter = useCallback(
     async (params = {}, cb) => {
+      if (
+        tempFilter?.startDate &&
+        tempFilter?.endDate &&
+        moment(tempFilter?.endDate).isBefore(tempFilter?.startDate)
+      ) {
+        errorNotification('Please enter a valid date range');
+        resetFilterDates();
+      } else {
       const data = {
         page: page ?? 1,
         limit: limit ?? 15,
         entityType:
           (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType?.value : undefined,
+          startDate: tempFilter?.startDate,
+          endDate: tempFilter?.endDate,
         ...params,
       };
       try {
@@ -113,8 +144,9 @@ const CreditLimitsList = () => {
       } catch (e) {
         /**/
       }
+    }
     },
-    [page, limit, tempFilter?.entityType]
+    [page, limit, tempFilter]
   );
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
@@ -187,6 +219,8 @@ const CreditLimitsList = () => {
         (paramEntity?.trim()?.length ?? -1) > 0
           ? paramEntity
           : creditLimitListFilters?.entityType?.value,
+          startDate: paramStartDate || creditLimitListFilters?.startDate,
+          endDate: paramEndDate || creditLimitListFilters?.endDate,
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
@@ -219,8 +253,10 @@ const CreditLimitsList = () => {
       limit: limit ?? 15,
       entityType:
         (finalFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType?.value : undefined,
+        startDate: finalFilter?.startDate || undefined,
+        endDate: finalFilter?.endDate || undefined,
     },
-    [page, limit, finalFilter?.entityType]
+    [page, limit, finalFilter]
   );
 
   const [filterModal, setFilterModal] = React.useState(false);
@@ -430,6 +466,8 @@ const CreditLimitsList = () => {
         const data = {
           entityType:
             (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType?.value : undefined,
+            startDate: tempFilter?.startDate,
+            endDate: tempFilter?.endDate
         };
         const res = await dispatch(downloadCreditLimitCSV(data));
         if (res) downloadAll(res);
@@ -518,6 +556,35 @@ const CreditLimitsList = () => {
                   onChange={handleEntityTypeFilterChange}
                   isSearchble
                 />
+              </div>
+              <div className="filter-modal-row">
+              <div className="form-title">Expiry Date</div>
+                <div className="date-picker-container filter-date-picker-container mr-15">
+                  <DatePicker
+                    className="filter-date-picker"
+                    selected={tempFilter?.startDate ? new Date(tempFilter?.startDate) : null}
+                    onChange={handleStartDateChange}
+                    placeholderText="From Date"
+                    showMonthDropdown
+                    showYearDropdown
+                    scrollableYearDropdown
+                    dateFormat="dd/MM/yyyy"
+                  />
+                  <span className="material-icons-round">event</span>
+                </div>
+                <div className="date-picker-container filter-date-picker-container">
+                  <DatePicker
+                    className="filter-date-picker"
+                    selected={tempFilter?.endDate ? new Date(tempFilter?.endDate) : null}
+                    onChange={handleEndDateChange}
+                    placeholderText="To Date"
+                    showMonthDropdown
+                    showYearDropdown
+                    scrollableYearDropdown
+                    dateFormat="dd/MM/yyyy"
+                  />
+                  <span className="material-icons-round">event</span>
+                </div>
               </div>
             </Modal>
           )}
