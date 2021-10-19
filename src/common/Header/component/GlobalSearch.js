@@ -32,7 +32,7 @@ const GlobalSearch = () => {
 
   const onSearchEnterKeyPress = useCallback(
     e => {
-      if (globalSearchResult?.length > 0) {
+      if (globalSearchResult?.length > 0 && searchedString.toString().trim().length > 0) {
         if (e.keyCode === 40) {
           setHeaderSearchFocused(false);
           if (cursor === -1 || cursor >= globalSearchResult?.length - 1) {
@@ -105,15 +105,16 @@ const GlobalSearch = () => {
         <span className="material-icons-round ga-search-icon">search</span>
       </div>
       {searchStart && (
-        <ul className="header-search-results">
-            {gloabalSearchLoaderAction ? (<li className="global-search-loading-text">
+        <div className="header-search-results">
+            {gloabalSearchLoaderAction ? (<div className="global-search-loading-text">
             Loading
             <span className="loader__dot">.</span>
             <span className="loader__dot">.</span>
             <span className="loader__dot">.</span>
-            </li>) :
+            </div>) :
            [searchStart && globalSearchResult?.length > 0 ? (
-            globalSearchResult?.map((searchResult, index) => (
+             <ul>
+            {globalSearchResult?.map((searchResult, index) => (
               <li
                 className={index === cursor && 'header-active-search'}
                 onClick={() => {
@@ -129,11 +130,12 @@ const GlobalSearch = () => {
                     searchResult?.module?.substring(1)}
                 </span>
               </li>
-            ))
-          ) : (
-            <li>No Record Found</li>
+            ))}
+          </ul>) : (
+            <div className="ml-10">No Record Found</div>
           )]}
-        </ul>
+          <div className="got-dummy-bottom-block"/>
+        </div>
       )}
     </div>
   );
