@@ -163,7 +163,7 @@ const AddViewClaims = () => {
           component = (
               <>
                 {type === 'view' ? (
-                    <div className="view-claim-detail">{NumberCommaSeparator(input?.value) ?? '-'}</div>
+                    <div className="view-claim-detail">{input?.value ? NumberCommaSeparator(input?.value) : '-'}</div>
                 ) : (
                     <Input
                         type="text"
