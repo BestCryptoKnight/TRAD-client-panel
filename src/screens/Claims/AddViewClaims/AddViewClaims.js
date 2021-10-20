@@ -181,7 +181,7 @@ const AddViewClaims = () => {
           component = (
             <>
               {type === 'view' ? (
-                <div className="view-claim-detail">{input?.value ?? '-'}</div>
+                <div className="view-claim-detail">{input?.value?.toString().trim().length > 0 ? input?.value : '-'}</div>
               ) : (
                 <Input
                   type="text"
