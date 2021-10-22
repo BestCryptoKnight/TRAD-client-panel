@@ -14,12 +14,12 @@ const ViewApplicationStatusComponent = () => {
     );
   const { status } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
     const downloadDecisionLetter = useCallback(async () => {
-        if (applicationDetail?.clientDebtorId) {
+        if (applicationDetail?._id) {
             try {
                 const param = {
                     requestFrom: 'application',
                 };
-                const res = await downloadDecisionLetterForApplication(applicationDetail?.clientDebtorId, param);
+                const res = await downloadDecisionLetterForApplication(applicationDetail?._id, param);
                 if (res) downloadAll(res);
             } catch (e) {
                 // errorNotification(e?.response?.request?.statusText ?? 'Internal server error');
