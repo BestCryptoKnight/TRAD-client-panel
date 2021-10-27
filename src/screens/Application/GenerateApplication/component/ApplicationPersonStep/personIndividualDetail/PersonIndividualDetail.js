@@ -221,7 +221,7 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
         data: companyEntityType ?? [],
       },
       {
-        label: 'ACN/NCN',
+        label: 'ACN/NCN*',
         placeholder: '01234',
         type: 'search',
         name: 'acn',
@@ -787,6 +787,7 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
           break;
         case 'search':
           component = (
+            <div className={input?.isOr && 'application-input-or is-or-person-step'}>
             <Input
               type="text"
               name={input.name}
@@ -797,8 +798,8 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
               value={input?.value}
               onKeyDown={handleSearchTextInputKeyDown}
               onChange={handleTextInputChange}
-              // disabled={isDisabled}
             />
+            </div>
           );
           break;
         case 'select':
