@@ -361,17 +361,17 @@ const CreditLimitsList = () => {
     () => [
       data => (
         <span className="table-action-buttons">
-          <IconButton
-            buttonType="primary-1"
-            title="cloud_download"
-            buttonTitle="Click to download applications"
-            className="download-decision-letter-icon"
-            onClick={e => {
-              e.stopPropagation();
-              if (!decisionLetterDownloadButtonLoaderAction) downloadDecisionLetter(data?.id);
-            }}
-            // isLoading={decisionLetterDownloadButtonLoaderAction}
-          />
+        <IconButton
+        buttonType="primary-1"
+        title="cloud_download"
+        disabled={data?.limitType !== 'Credit Check'}
+        buttonTitle={data?.limitType === 'Credit Check' && 'Click to download decision letter'}
+        className={`download-decision-letter-icon ${data?.limitType !== 'Credit Check' && 'disable-download-button'}`}
+        onClick={e => {
+          e.stopPropagation();
+          if (!decisionLetterDownloadButtonLoaderAction) downloadDecisionLetter(data?.id);
+        }}
+      />
           <Button
             buttonType="outlined-primary-small"
             title="Modify"

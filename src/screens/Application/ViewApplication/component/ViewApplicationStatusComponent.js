@@ -12,7 +12,7 @@ const ViewApplicationStatusComponent = () => {
     const { applicationDecisionLetterDownloadButtonLoaderAction } = useSelector(
         ({ generalLoaderReducer }) => generalLoaderReducer ?? false
     );
-  const { status } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
+  const { status, limitType } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
     const downloadDecisionLetter = useCallback(async () => {
         if (applicationDetail?._id) {
             try {
@@ -48,7 +48,7 @@ const ViewApplicationStatusComponent = () => {
                   </div>
                 )}
                   </div>
-                  <Button
+                  {limitType === 'CREDIT_CHECK' && <Button
                       buttonType="primary"
                       title="Download Decision Letter"
                       buttonTitle="Click to download decision letter"
@@ -56,7 +56,7 @@ const ViewApplicationStatusComponent = () => {
                       onClick={() => {
                           if (!applicationDecisionLetterDownloadButtonLoaderAction) downloadDecisionLetter();
                       }}
-                  />
+                  />}
               </div>
             ) : (
               <div className="view-application-status font-primary">{status?.label ?? '-'}</div>
