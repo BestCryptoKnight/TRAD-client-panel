@@ -145,7 +145,6 @@ const ApplicationCompanyStep = () => {
         label: 'Existing Debtors',
         placeholder: 'Select',
         type: 'select',
-        isOr: isAusOrNew,
         name: 'debtorId',
         data: debtors,
         onInputChange: text => handleOnSelectSearchInputChange('debtors', text),
@@ -154,23 +153,22 @@ const ApplicationCompanyStep = () => {
         label: 'ABN/NZBN*',
         placeholder: '01234',
         type: 'search',
-        isOr: isAusOrNew,
+        isOr: true,
         name: 'abn',
-        data: [],
-      },
-      {
-        label: 'ACN/NCN',
-        placeholder: '01234',
-        type: 'search',
-        name: 'acn',
         data: [],
       },
       {
         label: 'Entity Name*',
         placeholder: 'Enter Entity',
         type: 'entityName',
-        isOr: isAusOrNew,
         name: 'entityName',
+        data: [],
+      },
+      {
+        label: 'ACN/NCN*',
+        placeholder: '01234',
+        type: 'search',
+        name: 'acn',
         data: [],
       },
       {
@@ -643,7 +641,7 @@ const ApplicationCompanyStep = () => {
       return (
         <React.Fragment key={input?.label}>
           <span>{input?.label}</span>
-          <div>
+          <div className={input.name === 'abn' && 'application-input-or'}>
             {component}
             {companyState?.errors?.[input?.name] && (
               <div className={`ui-state-error ${input?.isOr && 'mt-10'}`}>

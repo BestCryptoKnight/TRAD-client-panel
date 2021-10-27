@@ -80,3 +80,16 @@
   margin: 10px 0;
   border-top: 1px solid $primary-color-1;
 }
+
+.application-input-or {
+  position: relative;
+}
+
+.application-input-or::after {
+  content: 'OR';
+  position: absolute;
+  bottom: -15px;
+  left: calc(50% - 10px);
+  font: $text $font-medium;
+  color: $primary-color;
+}
