@@ -1,7 +1,5 @@
-import ReactSelect from 'react-select';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import DatePicker from 'react-datepicker';
 
 const LimitTypeOptions = [
   {
@@ -31,36 +29,19 @@ const ViewApplicationEditableRowComponent = () => {
   );
 
   const { limitType, expiryDate } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
-
+console.log(applicationDetail);
   return (
     <div className="application-editable-row-grid font-primary">
       <div>
         <div className="font-field mt-10">Limit Type</div>
-        <div className="view-application-status">
-          <ReactSelect
-            className="react-select-container"
-            classNamePrefix="react-select"
-            placeholder="-"
-            name="applicationStatus"
-            value={limitType ?? '-'}
-            options={LimitTypeOptions}
-            isDisabled
-          />
+        <div className="view-application-editable-row-detail">
+         {LimitTypeOptions.find(e => e.value === limitType)?.label ?? '-'}
         </div>
       </div>
       <div>
         <div className="font-field mt-10">Expiry Date</div>
-        <div className="date-picker-container disabled-control view-application-status">
-          <DatePicker
-            selected={expiryDate ? new Date(expiryDate) : null}
-            placeholderText="-"
-            minDate={new Date()}
-            showMonthDropdown
-            showYearDropdown
-            scrollableYearDropdown
-            disabled
-            dateFormat="dd/MM/yyyy"
-          />
+        <div className="view-application-editable-row-detail">
+         {expiryDate ? new Date(expiryDate) : '-'}
         </div>
       </div>
     </div>

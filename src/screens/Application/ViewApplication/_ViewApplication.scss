@@ -209,7 +209,7 @@
 
   .detail {
     margin-top: 5px;
-    font-size: $text;
+    font-size: $subtitle;
     color: $primary-color;
   }
 }
@@ -333,4 +333,10 @@
 
 .add-notes-popup-container {
   grid-template-columns: 100px 1fr;
+}
+
+.view-application-editable-row-detail {
+  min-width: 180px;
+  font: $subtitle $font-regular;
+  color: $primary-color;
 }
