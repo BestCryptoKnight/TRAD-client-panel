@@ -24,40 +24,45 @@ const CustomSelect = props => {
   const [inputVal, setInputVal] = useState('');
 
   const onItemSelection = useCallback(
-      clickedItem => {
-        setSelectedList([...selectedList, clickedItem]);
-      },
-      [selectedList, setSelectedList]
+    clickedItem => {
+      setSelectedList([...selectedList, clickedItem]);
+    },
+    [selectedList, setSelectedList]
   );
 
   const onItemUnselect = useCallback(
-      clickedItem => {
-        setSelectedList(selectedList?.filter(item => item?.value !== clickedItem?.value));
-      },
-      [selectedList, setSelectedList]
+    clickedItem => {
+      setSelectedList(selectedList?.filter(item => item?.value !== clickedItem?.value));
+    },
+    [selectedList, setSelectedList]
   );
   useOnClickOutside(customDropdownRef, () => {
     setIsOpenCustomSelect(false);
   });
 
   const onSearchCustomSelect = useCallback(
-      e => {
+    (e, isBlur) => {
+      if(isBlur) {
+        setSearchedText('');
+        onSearchChange('');
+      } else {
         setSearchedText(e?.target?.value);
         onSearchChange(e?.target?.value);
-      },
-      [isSearching, onSearchChange]
+      }
+    },
+    [isSearching, onSearchChange, options]
   );
 
   useEffect(() => {
     const selectedItems = selectedList.map(item => item.value);
     setNotSelectedList(
-        options?.filter(
-            item =>
-                !selectedItems.includes(item.value) &&
-                item.label.toLowerCase().includes(searchedText.toString().toLowerCase())
-        )
+      options?.filter(
+        item =>
+          !selectedItems.includes(item.value) &&
+          item.label.toLowerCase().includes(searchedText.toString().toLowerCase())
+      )
     );
-  }, [selectedList, searchedText]);
+  }, [selectedList, searchedText, options]);
 
   useEffect(() => {
     if (selectedList !== value) onChangeCustomSelect(selectedList);
@@ -71,70 +76,72 @@ const CustomSelect = props => {
   }, [selectedList, searchedText, isSearching]);
 
   return (
-      <>
-        <div className={selectClassName} {...restProps}>
-          <div className="custom-select__control" onClick={() => setIsOpenCustomSelect(e => !e)}>
-            <Input
-                type="text"
-                value={inputVal}
-                placeholder={placeholder}
-                onChange={onSearchCustomSelect}
-                onBlur={() => {
-                  setIsSearching(false);
-                }}
-                onFocus={() => {
-                  setIsSearching(true);
-                  setInputVal('');
-                }}
-            />
-            {selectedList.length > 1 && (
-                <Tooltip
-                    overlayClassName="tooltip-top-class"
-                    overlay={
-                      <span>
+    <>
+      <div className={selectClassName} {...restProps}>
+        <div className="custom-select__control" onClick={() => setIsOpenCustomSelect(e => !e)}>
+          <Input
+            type="text"
+            value={inputVal}
+            placeholder={placeholder}
+            onChange={onSearchCustomSelect}
+            onBlur={e => {
+              setIsSearching(false);
+              onSearchCustomSelect(e, 'isBlur');
+              setInputVal(selectedList.length > 0 ? selectedList[0].label : '');
+            }}
+            onFocus={() => {
+              setIsSearching(true);
+              setInputVal('');
+            }}
+          />
+          {selectedList.length > 1 && (
+            <Tooltip
+              overlayClassName="tooltip-top-class"
+              overlay={
+                <span>
                   {selectedList
-                      ?.filter((record, index) => index !== 0)
-                      .map(record => record.label)
-                      .join(', ')}
+                    ?.filter((record, index) => index !== 0)
+                    .map(record => record.label)
+                    .join(', ')}
                 </span>
-                    }
-                    placement="topLeft"
-                >
-                  <div className="more-text">+{selectedList.length - 1} more</div>
-                </Tooltip>
-            )}
-            <span className={`material-icons-round ${isOpenCustomSelect && 'font-field'}`}>
+              }
+              placement="topLeft"
+            >
+              <div className="more-text">+{selectedList.length - 1} more</div>
+            </Tooltip>
+          )}
+          <span className={`material-icons-round ${isOpenCustomSelect && 'font-field'}`}>
             expand_more
           </span>
-          </div>
-          <div
-              ref={customDropdownRef}
-              className={`custom-select-dropdown ${
-                  isOpenCustomSelect && 'active-custom-select-dropdown'
-              }`}
-          >
-            {selectedList?.length > 0 || notSelectedList?.length > 0 ? (
-                <>
-                  <ul className="selected-list">
-                    {selectedList?.map(selectedItem => (
-                        <li onClick={() => onItemUnselect(selectedItem)}>
-                          <>{selectedItem?.label || ''}</>
-                          <span className="material-icons-round">task_alt</span>
-                        </li>
-                    ))}
-                  </ul>
-                  <ul>
-                    {notSelectedList?.map(unselectedItem => (
-                        <li onClick={() => onItemSelection(unselectedItem)}>{unselectedItem?.label}</li>
-                    ))}
-                  </ul>
-                </>
-            ) : (
-                <div className="no-option-text">No options</div>
-            )}
-          </div>
         </div>
-      </>
+        <div
+          ref={customDropdownRef}
+          className={`custom-select-dropdown ${
+            isOpenCustomSelect && 'active-custom-select-dropdown'
+          }`}
+        >
+          {selectedList?.length > 0 || notSelectedList?.length > 0 ? (
+            <>
+              <ul className="selected-list">
+                {selectedList?.map(selectedItem => (
+                  <li onClick={() => onItemUnselect(selectedItem)}>
+                    <>{selectedItem?.label || ''}</>
+                    <span className="material-icons-round">task_alt</span>
+                  </li>
+                ))}
+              </ul>
+              <ul>
+                {notSelectedList?.map(unselectedItem => (
+                  <li onClick={() => onItemSelection(unselectedItem)}>{unselectedItem?.label}</li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <div className="no-option-text">No options</div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
