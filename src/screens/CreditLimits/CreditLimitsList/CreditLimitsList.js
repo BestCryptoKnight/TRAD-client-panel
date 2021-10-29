@@ -364,9 +364,9 @@ const CreditLimitsList = () => {
         <IconButton
         buttonType="primary-1"
         title="cloud_download"
-        disabled={data?.limitType !== 'Credit Check'}
-        buttonTitle={data?.limitType === 'Credit Check' && 'Click to download decision letter'}
-        className={`download-decision-letter-icon ${data?.limitType !== 'Credit Check' && 'disable-download-button'}`}
+        disabled={docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check'}
+        buttonTitle={docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType === 'Credit Check' && 'Click to download decision letter'}
+        className={`download-decision-letter-icon ${docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check' && 'disable-download-button'}`}
         onClick={e => {
           e.stopPropagation();
           if (!decisionLetterDownloadButtonLoaderAction) downloadDecisionLetter(data?.id);
