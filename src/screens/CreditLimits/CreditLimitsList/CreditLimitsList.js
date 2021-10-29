@@ -377,7 +377,7 @@ const CreditLimitsList = () => {
             title="Modify"
             onClick={e => {
               e.stopPropagation();
-              setCurrentCreditLimitData(data);
+              setCurrentCreditLimitData(docs?.length > 0 && docs.find(record => record?._id === data.id));
               toggleModifyLimitModal();
             }}
           />
