@@ -29,7 +29,7 @@ const ViewApplicationEditableRowComponent = () => {
   );
 
   const { limitType, expiryDate } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
-console.log(applicationDetail);
+  
   return (
     <div className="application-editable-row-grid font-primary">
       <div>
