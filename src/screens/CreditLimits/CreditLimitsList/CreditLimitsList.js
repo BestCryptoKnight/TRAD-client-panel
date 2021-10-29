@@ -79,11 +79,8 @@ const CreditLimitsList = () => {
     dispatch(getCreditLimitsFilter());
   }, []);
 
-  const entityTypeSelectedValue = useMemo(() => {
-    return tempFilter?.entityType;
-  }, [tempFilter?.entityType]);
 
-  const { page: paramPage, limit: paramLimit, entityType: paramEntity, startDate: paramStartDate, endDate: paramEndDate, } = useQueryParams();
+  const { page: paramPage, limit: paramLimit, startDate: paramStartDate, endDate: paramEndDate, } = useQueryParams();
 
   const { defaultFields, customFields } = useMemo(
     () => creditLimitsColumnList || { defaultFields: [], customFields: [] },
@@ -128,7 +125,7 @@ const CreditLimitsList = () => {
         page: page ?? 1,
         limit: limit ?? 15,
         entityType:
-          (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType?.value : undefined,
+          (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
           startDate: tempFilter?.startDate,
           endDate: tempFilter?.endDate,
         ...params,
@@ -215,10 +212,7 @@ const CreditLimitsList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      entityType:
-        (paramEntity?.trim()?.length ?? -1) > 0
-          ? paramEntity
-          : creditLimitListFilters?.entityType?.value,
+      entityType: creditLimitListFilters?.entityType,
           startDate: paramStartDate || creditLimitListFilters?.startDate,
           endDate: paramEndDate || creditLimitListFilters?.endDate,
     };
@@ -550,9 +544,9 @@ const CreditLimitsList = () => {
                   className="filter-select react-select-container"
                   classNamePrefix="react-select"
                   placeholder="Select Entity Type"
-                  name="role"
+                  name="entityType"
                   options={dropdownData?.entityType}
-                  value={entityTypeSelectedValue}
+                  value={tempFilter?.entityType}
                   onChange={handleEntityTypeFilterChange}
                   isSearchble
                 />

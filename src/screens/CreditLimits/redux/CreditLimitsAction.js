@@ -19,9 +19,13 @@ import { store } from '../../../redux/store';
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
+    const finalParams = {
+      ...params,
+      entityType: params?.entityType?.value
+    }
     try {
       startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
-      const response = await CreditLimitsApiService.getAllCreditLimitsList(params);
+      const response = await CreditLimitsApiService.getAllCreditLimitsList(finalParams);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
