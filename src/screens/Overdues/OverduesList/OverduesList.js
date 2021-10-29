@@ -366,6 +366,7 @@ const OverduesList = () => {
                   placeholderText="Select month and year"
                   onChange={date => onDateSelection(date)}
                   dateFormat="MM/yyyy"
+                  maxDate={moment().toDate()}
                   selected={newSubmissionDate?.submissionDate}
                   showMonthYearPicker
                   showYearDropdown
