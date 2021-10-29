@@ -49,7 +49,9 @@ const rootReducer = (state, action) => {
   if (action.type === LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION) {
     const emptyState = {};
     Object.keys(state).forEach(key => {
-      emptyState[key] = null;
+      if (key !== 'listFilterReducer') {
+        emptyState[key] = null;
+      }
     });
     return emptyState;
   }
