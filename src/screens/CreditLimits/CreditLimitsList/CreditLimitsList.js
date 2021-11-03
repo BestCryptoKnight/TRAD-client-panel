@@ -407,7 +407,7 @@ const CreditLimitsList = () => {
           action: 'modify',
           creditLimit: newCreditLimit,
         };
-        await dispatch(modifyClientCreditLimit(currentCreditLimitData?.id, data));
+        await dispatch(modifyClientCreditLimit(currentCreditLimitData?._id, data));
         await getCreditLimitListByFilter();
         toggleModifyLimitModal();
       }
