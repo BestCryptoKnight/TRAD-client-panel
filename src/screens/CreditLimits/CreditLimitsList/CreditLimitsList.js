@@ -388,6 +388,7 @@ const CreditLimitsList = () => {
       ),
     ],
     [
+      docs,
       toggleModifyLimitModal,
       toggleSurrenderModal,
       setCurrentCreditLimitData,
