@@ -123,7 +123,7 @@ const OverduesList = () => {
           limit: limit ?? 15,
           debtorId:
             (tempFilter?.debtorId?.toString()?.trim()?.length ?? -1) > 0
-              ? tempFilter?.debtorId?.value
+              ? tempFilter?.debtorId
               : undefined,
           minOutstandingAmount:
             (tempFilter?.minOutstandingAmount?.toString()?.trim()?.length ?? -1) > 0
