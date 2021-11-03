@@ -38,22 +38,16 @@ import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFilter
 const CreditLimitsList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const creditLimitListWithPageData = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitList ?? {}
-  );
+  const creditLimitListWithPageData = useSelector(({ creditLimits }) => creditLimits?.creditLimitList ?? {});
   const { total, pages, page, limit, docs, headers } = useMemo(
     () => creditLimitListWithPageData,
-    [creditLimitListWithPageData]
+    [creditLimitListWithPageData],
   );
-  const creditLimitsColumnList = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitsColumnList ?? {}
-  );
+  const creditLimitsColumnList = useSelector(({ creditLimits }) => creditLimits?.creditLimitsColumnList ?? {});
   const creditLimitsDefaultColumnList = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitsDefaultColumnList ?? {}
+    ({ creditLimits }) => creditLimits?.creditLimitsDefaultColumnList ?? {},
   );
-  const dropdownData = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitsFilterList?.dropdownData ?? {}
-  );
+  const dropdownData = useSelector(({ creditLimits }) => creditLimits?.creditLimitsFilterList?.dropdownData ?? {});
   const {
     CreditLimitListColumnSaveButtonLoaderAction,
     CreditLimitListColumnResetButtonLoaderAction,
@@ -71,25 +65,22 @@ const CreditLimitsList = () => {
 
   const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
-  const { creditLimitListFilters } = useSelector(
-    ({ listFilterReducer }) => listFilterReducer ?? {}
-  );
+  const { creditLimitListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
 
   useEffect(() => {
     dispatch(getCreditLimitsFilter());
   }, []);
 
-
-  const { page: paramPage, limit: paramLimit, startDate: paramStartDate, endDate: paramEndDate, } = useQueryParams();
+  const { page: paramPage, limit: paramLimit, startDate: paramStartDate, endDate: paramEndDate } = useQueryParams();
 
   const { defaultFields, customFields } = useMemo(
     () => creditLimitsColumnList || { defaultFields: [], customFields: [] },
-    [creditLimitsColumnList]
+    [creditLimitsColumnList],
   );
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const toggleCustomField = useCallback(
     value => setCustomFieldModal(value !== undefined ? value : e => !e),
-    [setCustomFieldModal]
+    [setCustomFieldModal],
   );
   const handleStartDateChange = useCallback(date => {
     dispatchFilter({
@@ -113,37 +104,32 @@ const CreditLimitsList = () => {
   }, [handleStartDateChange, handleEndDateChange]);
   const getCreditLimitListByFilter = useCallback(
     async (params = {}, cb) => {
-      if (
-        tempFilter?.startDate &&
-        tempFilter?.endDate &&
-        moment(tempFilter?.endDate).isBefore(tempFilter?.startDate)
-      ) {
+      if (tempFilter?.startDate && tempFilter?.endDate && moment(tempFilter?.endDate).isBefore(tempFilter?.startDate)) {
         errorNotification('Please enter a valid date range');
         resetFilterDates();
       } else {
-      const data = {
-        page: page ?? 1,
-        limit: limit ?? 15,
-        entityType:
-          (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
+        const data = {
+          page: page ?? 1,
+          limit: limit ?? 15,
+          entityType: (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
           startDate: tempFilter?.startDate,
           endDate: tempFilter?.endDate,
-        ...params,
-      };
-      try {
-        await dispatch(getCreditLimitsList(data));
-        dispatchFilter({
-          type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
-        });
-        if (cb && typeof cb === 'function') {
-          cb();
+          ...params,
+        };
+        try {
+          await dispatch(getCreditLimitsList(data));
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
+          });
+          if (cb && typeof cb === 'function') {
+            cb();
+          }
+        } catch (e) {
+          /**/
         }
-      } catch (e) {
-        /**/
       }
-    }
     },
-    [page, limit, tempFilter]
+    [page, limit, tempFilter],
   );
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
@@ -166,12 +152,7 @@ const CreditLimitsList = () => {
     } catch (e) {
       /**/
     }
-  }, [
-    toggleCustomField,
-    getCreditLimitListByFilter,
-    creditLimitsColumnList,
-    creditLimitsDefaultColumnList,
-  ]);
+  }, [toggleCustomField, getCreditLimitListByFilter, creditLimitsColumnList, creditLimitsDefaultColumnList]);
 
   const onClickCloseCustomFieldModal = useCallback(() => {
     dispatch({
@@ -203,7 +184,7 @@ const CreditLimitsList = () => {
       onClickSaveColumnSelection,
       CreditLimitListColumnSaveButtonLoaderAction,
       CreditLimitListColumnResetButtonLoaderAction,
-    ]
+    ],
   );
 
   useEffect(async () => {
@@ -213,8 +194,8 @@ const CreditLimitsList = () => {
     };
     const filters = {
       entityType: creditLimitListFilters?.entityType,
-          startDate: paramStartDate || creditLimitListFilters?.startDate,
-          endDate: paramEndDate || creditLimitListFilters?.endDate,
+      startDate: paramStartDate || creditLimitListFilters?.startDate,
+      endDate: paramEndDate || creditLimitListFilters?.endDate,
     };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
@@ -237,7 +218,7 @@ const CreditLimitsList = () => {
       const data = { type, name, value };
       dispatch(changeCreditColumnList(data));
     },
-    [dispatch]
+    [dispatch],
   );
 
   // for params in url
@@ -247,16 +228,16 @@ const CreditLimitsList = () => {
       limit: limit ?? 15,
       entityType:
         (finalFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType?.value : undefined,
-        startDate: finalFilter?.startDate || undefined,
-        endDate: finalFilter?.endDate || undefined,
+      startDate: finalFilter?.startDate || undefined,
+      endDate: finalFilter?.endDate || undefined,
     },
-    [page, limit, finalFilter]
+    [page, limit, finalFilter],
   );
 
   const [filterModal, setFilterModal] = React.useState(false);
   const toggleFilterModal = useCallback(
     value => setFilterModal(value !== undefined ? value : e => !e),
-    [setFilterModal]
+    [setFilterModal],
   );
   const onClickApplyFilter = useCallback(async () => {
     await getCreditLimitListByFilter({ page: 1, limit }, toggleFilterModal);
@@ -288,7 +269,7 @@ const CreditLimitsList = () => {
       },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
-    [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
+    [toggleFilterModal, onClickApplyFilter, onClickResetFilter],
   );
 
   // on record limit changed
@@ -296,7 +277,7 @@ const CreditLimitsList = () => {
     async newLimit => {
       await getCreditLimitListByFilter({ page: 1, limit: newLimit });
     },
-    [getCreditLimitListByFilter]
+    [getCreditLimitListByFilter],
   );
 
   // on pagination changed
@@ -304,7 +285,7 @@ const CreditLimitsList = () => {
     async newPage => {
       await getCreditLimitListByFilter({ page: newPage, limit });
     },
-    [getCreditLimitListByFilter, limit]
+    [getCreditLimitListByFilter, limit],
   );
 
   const handleEntityTypeFilterChange = useCallback(event => {
@@ -319,7 +300,7 @@ const CreditLimitsList = () => {
     id => {
       history.push(`credit-limits/${id}`);
     },
-    [history]
+    [history],
   );
 
   // actions
@@ -355,17 +336,25 @@ const CreditLimitsList = () => {
     () => [
       data => (
         <span className="table-action-buttons">
-        <IconButton
-        buttonType="primary-1"
-        title="cloud_download"
-        disabled={docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check'}
-        buttonTitle={docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType === 'Credit Check' && 'Click to download decision letter'}
-        className={`download-decision-letter-icon ${docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check' && 'disable-download-button'}`}
-        onClick={e => {
-          e.stopPropagation();
-          if (!decisionLetterDownloadButtonLoaderAction) downloadDecisionLetter(data?.id);
-        }}
-      />
+          <IconButton
+            buttonType="primary-1"
+            title="cloud_download"
+            disabled={docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check'}
+            buttonTitle={
+              docs?.length > 0 &&
+              docs.find(record => record._id === data?.id)?.limitType === 'Credit Check' &&
+              'Click to download decision letter'
+            }
+            className={`download-decision-letter-icon ${
+              docs?.length > 0 &&
+              docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check' &&
+              'disable-download-button'
+            }`}
+            onClick={e => {
+              e.stopPropagation();
+              if (!decisionLetterDownloadButtonLoaderAction) downloadDecisionLetter(data?.id);
+            }}
+          />
           <Button
             buttonType="outlined-primary-small"
             title="Modify"
@@ -393,7 +382,7 @@ const CreditLimitsList = () => {
       toggleSurrenderModal,
       setCurrentCreditLimitData,
       decisionLetterDownloadButtonLoaderAction,
-    ]
+    ],
   );
 
   const modifyLimit = useCallback(async () => {
@@ -440,7 +429,7 @@ const CreditLimitsList = () => {
         isLoading: modifyCreditLimitButtonLoaderAction,
       },
     ],
-    [toggleModifyLimitModal, modifyLimit, modifyCreditLimitButtonLoaderAction]
+    [toggleModifyLimitModal, modifyLimit, modifyCreditLimitButtonLoaderAction],
   );
   const surrenderLimitButtons = useMemo(
     () => [
@@ -452,7 +441,7 @@ const CreditLimitsList = () => {
         isLoading: surrenderCreditLimitButtonLoaderAction,
       },
     ],
-    [toggleSurrenderModal, surrenderLimit, modifyCreditLimitButtonLoaderAction]
+    [toggleSurrenderModal, surrenderLimit, modifyCreditLimitButtonLoaderAction],
   );
 
   const onClickDownloadButton = useCallback(async () => {
@@ -461,8 +450,8 @@ const CreditLimitsList = () => {
         const data = {
           entityType:
             (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType?.value : undefined,
-            startDate: tempFilter?.startDate,
-            endDate: tempFilter?.endDate
+          startDate: tempFilter?.startDate,
+          endDate: tempFilter?.endDate,
         };
         const res = await dispatch(downloadCreditLimitCSV(data));
         if (res) downloadAll(res);
@@ -553,7 +542,7 @@ const CreditLimitsList = () => {
                 />
               </div>
               <div className="filter-modal-row">
-              <div className="form-title">Expiry Date</div>
+                <div className="form-title">Expiry Date</div>
                 <div className="date-picker-container filter-date-picker-container mr-15">
                   <DatePicker
                     className="filter-date-picker"
@@ -594,19 +583,13 @@ const CreditLimitsList = () => {
             />
           )}
           {modifyLimitModal && (
-            <Modal
-              header="Modify Credit Limit"
-              buttons={modifyLimitButtons}
-              hideModal={toggleModifyLimitModal}
-            >
+            <Modal header="Modify Credit Limit" buttons={modifyLimitButtons} hideModal={toggleModifyLimitModal}>
               <div className="modify-credit-limit-container align-center">
                 <span>Credit Limit</span>
                 <Input
                   type="text"
                   value={
-                    currentCreditLimitData?.creditLimit
-                      ? NumberCommaSeparator(currentCreditLimitData?.creditLimit)
-                      : ''
+                    currentCreditLimitData?.creditLimit ? NumberCommaSeparator(currentCreditLimitData?.creditLimit) : ''
                   }
                   disabled
                   borderClass="disabled-control"
@@ -620,7 +603,9 @@ const CreditLimitsList = () => {
                   value={newCreditLimit ? NumberCommaSeparator(newCreditLimit) : ''}
                   onChange={e =>
                     setNewCreditLimit(
-                      parseInt(e?.target?.value?.toString()?.replaceAll(',', ''), 10)
+                      e.target.value * 1 === 0
+                        ? e.target.value.replace(/^0+(\d)/, '$1')
+                        : e.target.value.toString().replaceAll(',', ''),
                     )
                   }
                 />
@@ -628,14 +613,8 @@ const CreditLimitsList = () => {
             </Modal>
           )}
           {surrenderModal && (
-            <Modal
-              header="Modify Credit Limit"
-              buttons={surrenderLimitButtons}
-              hideModal={toggleSurrenderModal}
-            >
-              <span className="confirmation-message">
-                Are you sure you want to surrender this credit limit?
-              </span>
+            <Modal header="Modify Credit Limit" buttons={surrenderLimitButtons} hideModal={toggleSurrenderModal}>
+              <span className="confirmation-message">Are you sure you want to surrender this credit limit?</span>
             </Modal>
           )}
         </>
