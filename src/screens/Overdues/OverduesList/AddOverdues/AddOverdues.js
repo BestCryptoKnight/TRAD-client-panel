@@ -524,7 +524,7 @@ const AddOverdues = () => {
         /**/
       }
     }
-  }, [toggleSaveAlertModal, docs, isPrompt, setIsPrompt]);
+  }, [toggleSaveAlertModal, docs, isPrompt, setIsPrompt, isNilOverdue]);
 
   const alertOnLeftModalButtons = useMemo(
     () => [
