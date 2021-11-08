@@ -50,7 +50,7 @@ const AddOverdues = () => {
     ({ overdue }) => overdue ?? {},
   );
 
-  const { docs } = useMemo(() => overdueListByDate ?? [], [overdueListByDate]);
+  const { docs, isNilOverdue:nilOverdue } = useMemo(() => overdueListByDate ?? [], [overdueListByDate]);
 
   const callbackOnFormAddORAmend = useCallback(() => {
     toggleOverdueFormModal();
@@ -430,6 +430,11 @@ const AddOverdues = () => {
     await getOverdueList();
   }, [period]);
 
+
+  useEffect(() => {
+    setIsNilOverdue(nilOverdue ?? false)
+  }, [nilOverdue]);
+
   useEffect(() => {
     const currentAmount =
       overdueDetails?.currentAmount?.toString()?.trim()?.length > 0 &&
@@ -516,6 +521,7 @@ const AddOverdues = () => {
         list: finalData,
         nilOverdue: isNilOverdue,
       };
+      console.log(withListData);
       try {
         await dispatch(saveOverdueList(finalData?.length === 0 ? withoutListData : withListData));
         if (isPrompt) setIsPrompt(false);
