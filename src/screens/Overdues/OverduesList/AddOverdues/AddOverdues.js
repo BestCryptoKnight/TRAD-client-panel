@@ -521,7 +521,6 @@ const AddOverdues = () => {
         list: finalData,
         nilOverdue: isNilOverdue,
       };
-      console.log(withListData);
       try {
         await dispatch(saveOverdueList(finalData?.length === 0 ? withoutListData : withListData));
         if (isPrompt) setIsPrompt(false);
