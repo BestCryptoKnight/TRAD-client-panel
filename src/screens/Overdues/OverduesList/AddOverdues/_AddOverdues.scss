@@ -1,0 +1,121 @@
+.common-white-container.add-overdues-container {
+  padding: 15px 0;
+}
+
+.client-entry-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 40px;
+
+  span {
+    font: $title $font-bold;
+    color: $field-color
+  }
+}
+
+.add-overdue-modal {
+  width:80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  .modal-body{
+    flex-grow: 1;
+    overflow-y:auto ;
+  }
+}
+
+.add-modal-full-width-row {
+  font: $subtitle $font-bold;
+  color: $secondary-color;
+}
+
+.add-overdue-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 5%;
+
+  .add-overdue-field-container {
+    display: flex;
+
+    > div, input, textarea, .react-select-container, .react-select-container .react-select__control, .date-picker-container {
+      width: 100%;
+    }
+  }
+
+  .add-overdue-textarea {
+    grid-column: 2;
+    grid-row: 7/span 7;
+  }
+
+  .add-overdue-amount-input, .add-overdue-total-amount {
+    width: 100%;
+    text-align: right;
+  }
+
+  .add-overdue-total-amount-title, .add-overdue-total-amount {
+    font: $subtitle $font-medium;
+    color: $secondary-color!important;
+  }
+
+  .add-overdue-total-amount {
+    padding-right: 5px;
+    .ui-state-error {
+      text-align: right ;
+    }
+  }
+}
+
+.add-overdue-content .add-overdue-field-container .add-overdue-title {
+  width: 35%;
+  min-width: 180px;
+  margin-top: 5px;
+  font: $subtitle $font-regular;
+  color: $field-color;
+}
+
+.add-overdues-save-button {
+  margin-top: 25px;
+  width: 100%;
+  text-align: right;
+}
+
+.table-class.add-overdue-table {
+  margin-top: 10px;
+
+  thead {
+    border: 1px solid #ffffff;
+    th {
+      text-align: left;
+    }
+  }
+
+  td:first-child, th:first-child {
+    padding: 8px 0 8px 40px;
+  }
+
+  td:last-child, th:last-child {
+    padding: 8px 40px 8px 0;
+  }
+
+  tr:nth-child(1) td:first-child, tr:nth-child(1) td:last-child {
+    border-radius: unset;
+  }
+}
+
+.table-class td.add-overdue-buttons {
+  max-width: unset;
+}
+
+.date-picker-container .add-overdue-month-picker {
+  font: $subtitle $font-regular;
+  color: $field-color;
+}
+
+.or-text {
+  margin-top: 7px;
+  font: $text $font-medium;
+  color: $primary-color;
+  text-align: center;
+}

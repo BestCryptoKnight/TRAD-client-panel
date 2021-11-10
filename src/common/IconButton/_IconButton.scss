@@ -1,0 +1,30 @@
+.outlined-bg-button {
+  background-color: $background-color;
+  border: 1px solid white;
+}
+
+.outlined-bg-button:hover {
+  background-color: $border-color;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.notification-badge{
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  background-color: $secondary-color;
+  color: white;
+  font-size: $text;
+  border-radius: 50%;
+}

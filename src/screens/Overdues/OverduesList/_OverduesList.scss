@@ -1,0 +1,49 @@
+.react-select-container.overdue-month-picker {
+  min-height: 47px;
+  max-height: 47px;
+  width: 200px;
+  margin-right: 10px;
+
+  .react-select__indicators {
+    align-self: center;
+  }
+
+  .react-select__control {
+    min-height: 47px;
+    max-height: 47px;
+    border-radius: 10px;
+  }
+}
+
+.new-submission-modal .date-picker-container {
+  height: 47px;
+}
+
+.overdue-filter-modal {
+  .form-title {
+    width: 215px;
+  }
+
+  .input-container, .date-picker-container {
+    width: 200px;
+  }
+}
+
+.expandable-table {
+  tr:nth-child(1) td:first-child, tr:nth-child(1) td:last-child {
+    border-radius: unset;
+  }
+
+  tbody tr {
+    cursor: pointer;
+  }
+
+  tbody tr:hover {
+    background-color: $primary-color-1-variant-color;
+    td {color: black}
+  }
+
+  tbody tr:last-child td{
+   border-bottom: 1px solid $background-color;
+  }
+}

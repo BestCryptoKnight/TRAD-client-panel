@@ -1,0 +1,20 @@
+.common-white-container.company-profile-container {
+  display: grid!important;
+  grid-template-columns: 100px calc(50% - 145px) 135px calc(50% - 145px);
+  padding: 25px 30px;
+  gap: 15px;
+
+  * {
+    min-height: 32px;
+  }
+
+  > span {
+    color: $primary-color;
+  }
+
+  > div {
+    width: 95%;
+    min-width: 170px;
+    color: $field-color;
+  }
+}
