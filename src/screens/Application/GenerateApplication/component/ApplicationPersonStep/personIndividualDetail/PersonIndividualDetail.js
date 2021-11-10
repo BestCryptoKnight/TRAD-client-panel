@@ -22,6 +22,7 @@ import ApplicationEntityNameTable from '../../components/ApplicationEntityNameTa
 import Modal from '../../../../../../common/Modal/Modal';
 import IconButton from '../../../../../../common/IconButton/IconButton';
 import { errorNotification } from '../../../../../../common/Toast';
+import { ALPHA_NEUMERIC_REGEX } from '../../../../../../constants/RegexConstants';
 
 const drawerInitialState = {
   visible: false,
@@ -457,7 +458,14 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
   const handleTextInputChange = useCallback(
     e => {
       const { name, value } = e.target;
+      if(name === 'driverLicenceNumber') {
+        if(ALPHA_NEUMERIC_REGEX.test(value)) {
+          updateSinglePersonState(name, value);
+        }
+      }
+     else {
       updateSinglePersonState(name, value);
+     }
     },
     [updateSinglePersonState]
   );
