@@ -394,7 +394,7 @@ const CreditLimitsList = () => {
       } else {
         const data = {
           action: 'modify',
-          creditLimit: newCreditLimit,
+          creditLimit: parseInt(newCreditLimit, 10),
         };
         await dispatch(modifyClientCreditLimit(currentCreditLimitData?._id, data));
         await getCreditLimitListByFilter();
