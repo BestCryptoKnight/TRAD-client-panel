@@ -1,27 +1,23 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Doughnut, Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-labels';
 import _ from 'lodash';
-import Table from '../Table/Table';
-import {
-  getDashboardDetails,
-  getDashboardTaskList,
-  resetDashboardDetails,
-} from './redux/DashboardActions';
-import Loader from '../Loader/Loader';
-import { usdConverter } from '../../helpers/usdConverter';
+import React, { useEffect, useMemo } from 'react';
+import { Doughnut, Pie } from 'react-chartjs-2';
+import { useDispatch, useSelector } from 'react-redux';
 import { getLabelFromValues } from '../../helpers/chartHelper';
 import { dashboardPendingApplicationsMapper } from '../../helpers/Mappers';
-import DashBoardNotification from './components/DashBoardNotification';
 import { NumberCommaSeparator } from '../../helpers/NumberCommaSeparator';
+import { usdConverter } from '../../helpers/usdConverter';
+import Loader from '../Loader/Loader';
+import DashBoardNotification from './components/DashBoardNotification';
+import DashboardTask from './components/DashboardTask';
+import {
+  getDashboardDetails, resetDashboardDetails
+} from './redux/DashboardActions';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
 
   const dashboardDetails = useSelector(({ dashboard }) => dashboard?.dashboardDetails ?? {});
-
-  const dashboardTaskList = useSelector(({ dashboard }) => dashboard?.dashboardTask ?? {});
 
   const {
     endorsedLimit,
@@ -31,8 +27,6 @@ const Dashboard = () => {
     applicationStatus,
     resChecksCount,
   } = useMemo(() => dashboardDetails, [dashboardDetails]);
-
-  const { docs, headers, isLoading } = useMemo(() => dashboardTaskList, [dashboardTaskList]);
 
   const { dashboardDetailsLoader } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
@@ -138,15 +132,11 @@ const Dashboard = () => {
     },
   };
 
-  const getTaskList = useCallback(() => {
-    dispatch(getDashboardTaskList());
-  }, []);
-
   useEffect(() => {
     dispatch(getDashboardDetails());
-    dispatch(getDashboardTaskList());
     return dispatch(resetDashboardDetails());
   }, []);
+
   return (
     <>
       {!dashboardDetailsLoader ? (
@@ -293,29 +283,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="dashboard-table-white-container">
-                  <div className="dashboard-title-date-row">
-                    <div className="dashboard-card-title">Tasks</div>
-                  </div>
-                  <div className="dashboard-table-container">
-                    {/* eslint-disable-next-line no-nested-ternary */}
-                    {!isLoading && docs ? (
-                      docs.length > 0 ? (
-                        <Table
-                          data={docs}
-                          headers={headers}
-                          headerClass="bg-white"
-                          refreshData={getTaskList}
-                          rowClass="task-row"
-                        />
-                      ) : (
-                        <div className="no-record-found">No records found</div>
-                      )
-                    ) : (
-                      <Loader />
-                    )}
-                  </div>
-                </div>
+                <DashboardTask/>
                 <DashBoardNotification />
               </div>
             </>
