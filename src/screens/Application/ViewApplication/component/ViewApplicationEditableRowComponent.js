@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -41,7 +42,7 @@ const ViewApplicationEditableRowComponent = () => {
       <div>
         <div className="font-field mt-10">Expiry Date</div>
         <div className="view-application-editable-row-detail">
-         {expiryDate ? new Date(expiryDate) : '-'}
+         {expiryDate ? moment(expiryDate).format('DD-MM-yyyy') : '-'}
         </div>
       </div>
     </div>
