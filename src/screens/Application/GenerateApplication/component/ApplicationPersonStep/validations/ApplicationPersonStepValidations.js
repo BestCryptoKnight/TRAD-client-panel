@@ -137,7 +137,7 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
         errors.driverLicenceNumber =
           'Please provide at least one - either a driver licence number or date of birth';
       }
-      console.log(item?.driverLicenceNumber);
+    
       if (item?.dateOfBirthitem && item?.driverLicenceNumber?.toString().trim().length < 0) {
         validated = false;
         errors.driverLicenceNumber = 'Please enter valid driver licence number';
