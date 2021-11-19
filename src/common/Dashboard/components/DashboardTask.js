@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback, useState, useReducer } from 'react';
+import React, { useEffect, useState, useCallback, useReducer, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '../../IconButton/IconButton';
 import Loader from '../../Loader/Loader';
@@ -11,10 +11,9 @@ import { saveAppliedFilters } from '../../ListFilters/redux/ListFiltersAction';
 
 const DashboardTask = () => {
   const dispatch = useDispatch();
-  
-  const [filterModal, setFilterModal] = useState(false);
 
   const dashboardTask = useSelector(({dashboard}) => dashboard?.dashboardTask ?? {})
+  const { docs, headers, isLoading } = useMemo(() => dashboardTask ?? {}, [dashboardTask]);
 
   const [filter, dispatchFilter] = useReducer(filterReducer, {
     tempFilter: {},
@@ -25,16 +24,13 @@ const DashboardTask = () => {
 
   const { dashboardTaskListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
 
-  const { docs, headers, isLoading } = useMemo(() => dashboardTask ?? {}, [dashboardTask]);
-  
-  const toggleFilterModal = value => setFilterModal(value !== undefined ? value : e => !e);
-
-  const getDashboardTaskListByFilter = async (params = {}, cb) => {
-    const data = {
+  const getDashboardTaskListByFilter = useCallback(
+    async (params = {}, cb) => {
+     const data = {
       isCompleted: tempFilter?.isCompleted || undefined,
       columnFor: 'task',
-      ...params,
-    };
+      ...params
+     }
         try {
           await dispatch(getDashboardTaskList(data));
           dispatchFilter({
@@ -44,9 +40,11 @@ const DashboardTask = () => {
             cb();
           }
         } catch (e) {/**/}
-    };
+    },
+    [tempFilter],
+  );
 
-    const getTaskListOnRefresh = useCallback(() => {
+    const getTaskListOnRefresh = () => {
       const filters = {
         isCompleted: dashboardTaskListFilters?.isCompleted || undefined,
       };
@@ -58,72 +56,74 @@ const DashboardTask = () => {
         });
       });
       getDashboardTaskListByFilter(filters);
-    }, []);
-
-    const applyFilterOnClick = () => {
-      toggleFilterModal();
-      getDashboardTaskListByFilter();
     };
 
-    const resetFilterOnClick = () => {
-      dispatchFilter({
-        type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
-      });
-      applyFilterOnClick();
-    };
+    const [filterModal, setFilterModal] = useState(false);
 
-    const filterModalButtons = useMemo(
-      () => [
-        {
-          title: 'Reset Defaults',
-          buttonType: 'outlined-primary',
-          onClick: resetFilterOnClick
-        },
-        {
-          title: 'Close',
-          buttonType: 'primary-1',
-          onClick: () => {
-            dispatchFilter({
-              type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
-            });
-            toggleFilterModal();
-          },
-        },
-        { title: 'Apply',
-         buttonType: 'primary',
-        onClick: applyFilterOnClick },
-      ],
-      [toggleFilterModal],
-    );
+  const toggleFilterModal = useCallback(
+    value => setFilterModal(value !== undefined ? value : e => !e),
+    [setFilterModal],
+  );
+  const onClickApplyFilter = useCallback(async () => {
+    await getDashboardTaskListByFilter({}, toggleFilterModal);
+  }, [getDashboardTaskListByFilter, toggleFilterModal]);
 
-  const handleIsCompletedFilterChange = useCallback(
-    event => {
+  const onClickResetFilter = useCallback(async () => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
+    });
+    await onClickApplyFilter();
+  }, [dispatchFilter]);
+
+  const filterModalButtons = useMemo(
+    () => [
+      {
+        title: 'Reset Defaults',
+        buttonType: 'outlined-primary',
+        onClick: onClickResetFilter,
+      },
+      {
+        title: 'Close',
+        buttonType: 'primary-1',
+        onClick: () => {
+          console.log(267);
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
+          });
+          toggleFilterModal();
+        },
+      },
+      { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
+    ],
+    [toggleFilterModal, onClickApplyFilter, onClickResetFilter],
+  );
+
+  const handleIsCompletedFilterChange = event => {
       dispatchFilter({
         type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
         name: 'isCompleted',
         value: event.target.checked,
       });
-    },
-    [tempFilter?.isCompleted]
-  );
-
-  useEffect(async () => {
-    const filters = {
-      isCompleted: dashboardTaskListFilters?.isCompleted || undefined,
     };
-    Object.entries(filters)?.forEach(([name, value]) => {
-      dispatchFilter({
-        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name,
-        value,
-      });
-    });
-    await getDashboardTaskListByFilter(filters);
-  }, []);
 
-  useEffect(() => {
-    dispatch(saveAppliedFilters('dashboardTaskListFilters', finalFilter));
-  }, [finalFilter]);
+    useEffect(async () => {
+      const filters = {
+        isCompleted: dashboardTaskListFilters?.isCompleted || undefined,
+      };
+     Object.entries(filters)?.forEach(([name, value]) => {
+        dispatchFilter({
+          type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+          name,
+          value,
+        });
+      });
+      await getDashboardTaskListByFilter(filters);
+    }, []);
+
+    useEffect(() => {
+      dispatch(saveAppliedFilters('dashboardTaskListFilters', finalFilter));
+    }, [finalFilter]);
+
 
   return (
     <div className="dashboard-table-white-container">
