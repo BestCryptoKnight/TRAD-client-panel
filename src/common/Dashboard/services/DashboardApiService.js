@@ -22,4 +22,11 @@ export const DashboardApiService = {
   getTaskDetailById: id => ApiService.getData(`${DASHBOARD_URLS.DASHBOARD_TASK_DETAILS_URL}${id}`),
   updateTask: (id, data) => ApiService.putData(`${DASHBOARD_URLS.UPDATE_TASK}${id}`, data),
   getEntitiesBySearch: params => ApiService.getData(DASHBOARD_URLS.SEARCH_ENTITIES, { params }),
+  downloadDashboardTask: params => ApiService.request({
+    url: DASHBOARD_URLS.DASHBOARD_DOWNLOAD_TASK,
+    params,
+    method: 'GET',
+    responseType: 'blob',
+  }
+  )
 };

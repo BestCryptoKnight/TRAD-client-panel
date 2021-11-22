@@ -4,10 +4,12 @@ import IconButton from '../../IconButton/IconButton';
 import Loader from '../../Loader/Loader';
 import Modal from '../../Modal/Modal';
 import Table from '../../Table/Table';
-import { getDashboardTaskList } from '../redux/DashboardActions';
+import { downloadDashboardTask, getDashboardTaskList } from '../redux/DashboardActions';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../ListFilters/filter';
 import Checkbox from '../../Checkbox/Checkbox';
 import { saveAppliedFilters } from '../../ListFilters/redux/ListFiltersAction';
+import { downloadAll } from '../../../helpers/DownloadHelper';
+import { errorNotification } from '../../Toast';
 
 const DashboardTask = () => {
   const dispatch = useDispatch();
@@ -107,6 +109,21 @@ const DashboardTask = () => {
     [tempFilter?.isCompleted]
   );
 
+  const downloadTask = async() => {
+    if (docs?.length !== 0) {
+      try {
+    const res = await dispatch(downloadDashboardTask(finalFilter));
+    if(res) {
+      downloadAll(res)
+    }
+  } catch(e) {
+    errorNotification(e?.response?.request?.statusText ?? 'Internal server error');
+  }
+  } else {
+  errorNotification('You have no records to download');
+  }
+  }
+
   useEffect(async () => {
     const filters = {
       isCompleted: dashboardTaskListFilters?.isCompleted || undefined,
@@ -131,6 +148,13 @@ const DashboardTask = () => {
         <div className="dashboard-card-title">Tasks</div>
         {docs && 
         <div className="page-header-button-container">
+          <IconButton
+              className="mr-10"
+              buttonType="primary"
+              title="cloud_download"
+              buttonTitle="Click to apply filters on task list"
+              onClick={downloadTask}
+            />
         <IconButton
                 buttonType="secondary"
                 title="filter_list"
