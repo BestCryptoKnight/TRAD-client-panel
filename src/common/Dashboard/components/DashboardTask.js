@@ -86,7 +86,6 @@ const DashboardTask = () => {
         title: 'Close',
         buttonType: 'primary-1',
         onClick: () => {
-          console.log(267);
           dispatchFilter({
             type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
           });
