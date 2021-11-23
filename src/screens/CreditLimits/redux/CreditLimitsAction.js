@@ -36,7 +36,6 @@ export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
      }
    });
    
-    console.log(finalParams);
     try {
       startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(finalParams);

@@ -315,7 +315,6 @@ const CreditLimitsList = () => {
   }, []);
 
   const handleDebtorFilterChange = useCallback(event => {
-    console.log(event);
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'debtorIds',
