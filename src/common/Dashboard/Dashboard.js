@@ -26,6 +26,7 @@ const Dashboard = () => {
     approvedApplication,
     applicationStatus,
     resChecksCount,
+    showGraphs
   } = useMemo(() => dashboardDetails, [dashboardDetails]);
 
   const { dashboardDetailsLoader } = useSelector(
@@ -175,7 +176,7 @@ const Dashboard = () => {
                     </div>
                   )}
 
-                  <div className="dashboard-white-container doughnut-white-card">
+                {!showGraphs && <div className="dashboard-white-container doughnut-white-card">
                     <div className="dashboard-title-date-row">
                       <span className="dashboard-card-title">
                         Applications processed out of Credit Checks Assigned
@@ -201,7 +202,8 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div>}
+
                   <div className="dashboard-white-container">
                     <div className="dashboard-title-date-row">
                       <span className="dashboard-card-title">Pending Applications by Status</span>
@@ -215,19 +217,21 @@ const Dashboard = () => {
                       )}
                     </div>
                   </div>
+
                   <div
                     className={`dashboard-nested-grid-container ${
                       !endorsedLimit && 'no-endorsed-limit-nested-grid-container'
                     }`}
                   >
-                    <div className="dashboard-white-container">
+                    {!showGraphs && <div className="dashboard-white-container">
                       <div className="dashboard-title-date-row">
                         <div className="dashboard-card-title">Discretionary Limit</div>
                       </div>
                       <span className="dashboard-readings discretionary-limit">
                         {usdConverter(discretionaryLimit)}
                       </span>
-                    </div>
+                    </div>}
+
                     <div className="dashboard-white-container">
                       <div className="dashboard-title-date-row">
                         <div className="dashboard-card-title">Approved Amount Ratio</div>
