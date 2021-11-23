@@ -30,6 +30,7 @@ export const DASHBOARD_URLS = {
   DASHBOARD_NOTIFICATION_LIST: `${BASE_URL}notification/`,
   UPDATE_TASK: `${BASE_URL}task/`,
   SEARCH_ENTITIES: `${BASE_URL}entity-search/`,
+  DASHBOARD_DOWNLOAD_TASK: `${BASE_URL}/task/download`
 };
 
 export const APPLICATION_URLS = {

@@ -143,3 +143,21 @@ export const resetDashboardDetails = () => {
     });
   };
 };
+
+export const downloadDashboardTask = params => {
+  return async () => {
+    try {
+      startGeneralLoaderOnRequest('dahsboardTaskDownloadLoaderAction');
+      const response = await DashboardApiService.downloadDashboardTask(params);
+      if (response?.statusText === 'OK') {
+        stopGeneralLoaderOnSuccessOrFail('dahsboardTaskDownloadLoaderAction');
+        return response;
+      }
+    } catch (e) {
+      stopGeneralLoaderOnSuccessOrFail('dahsboardTaskDownloadLoaderAction');
+      displayErrors(e);
+      throw Error();
+    }
+    return false;
+  }
+}
