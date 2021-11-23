@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback, useState, useReducer } from 'react';
+import React, { useEffect, useState, useCallback, useReducer, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '../../IconButton/IconButton';
 import Loader from '../../Loader/Loader';
@@ -13,10 +13,9 @@ import { errorNotification } from '../../Toast';
 
 const DashboardTask = () => {
   const dispatch = useDispatch();
-  
-  const [filterModal, setFilterModal] = useState(false);
 
-  const dashboardTask = useSelector(({dashboard}) => dashboard?.dashboardTask ?? {})
+  const dashboardTask = useSelector(({ dashboard }) => dashboard?.dashboardTask ?? {});
+  const { docs, headers, isLoading } = useMemo(() => dashboardTask ?? {}, [dashboardTask]);
 
   const [filter, dispatchFilter] = useReducer(filterReducer, {
     tempFilter: {},
@@ -25,109 +24,110 @@ const DashboardTask = () => {
 
   const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
-  const { dashboardTaskListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
-
-  const { docs, headers, isLoading } = useMemo(() => dashboardTask ?? {}, [dashboardTask]);
-  
-  const toggleFilterModal = value => setFilterModal(value !== undefined ? value : e => !e);
-
-  const getDashboardTaskListByFilter = async (params = {}, cb) => {
-    const data = {
-      isCompleted: tempFilter?.isCompleted || undefined,
-      columnFor: 'task',
-      ...params,
-    };
-        try {
-          await dispatch(getDashboardTaskList(data));
-          dispatchFilter({
-            type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
-          });
-          if (cb && typeof cb === 'function') {
-            cb();
-          }
-        } catch (e) {/**/}
-    };
-
-    const getTaskListOnRefresh = useCallback(() => {
-      const filters = {
-        isCompleted: dashboardTaskListFilters?.isCompleted || undefined,
-      };
-      Object.entries(filters).forEach(([name, value]) => {
-        dispatchFilter({
-          type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-          name,
-          value,
-        });
-      });
-      getDashboardTaskListByFilter(filters);
-    }, []);
-
-    const applyFilterOnClick = () => {
-      toggleFilterModal();
-      getDashboardTaskListByFilter();
-    };
-
-    const resetFilterOnClick = () => {
-      dispatchFilter({
-        type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
-      });
-      applyFilterOnClick();
-    };
-
-    const filterModalButtons = useMemo(
-      () => [
-        {
-          title: 'Reset Defaults',
-          buttonType: 'outlined-primary',
-          onClick: resetFilterOnClick
-        },
-        {
-          title: 'Close',
-          buttonType: 'primary-1',
-          onClick: () => {
-            dispatchFilter({
-              type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
-            });
-            toggleFilterModal();
-          },
-        },
-        { title: 'Apply',
-         buttonType: 'primary',
-        onClick: applyFilterOnClick },
-      ],
-      [toggleFilterModal],
-    );
-
-  const handleIsCompletedFilterChange = useCallback(
-    event => {
-      dispatchFilter({
-        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
-        name: 'isCompleted',
-        value: event.target.checked,
-      });
-    },
-    [tempFilter?.isCompleted]
+  const { dashboardTaskListFilters } = useSelector(
+    ({ listFilterReducer }) => listFilterReducer ?? {}
   );
 
-  const downloadTask = async() => {
-    if (docs?.length !== 0) {
+  const getDashboardTaskListByFilter = useCallback(
+    async (params = {}, cb) => {
+      const data = {
+        isCompleted: tempFilter?.isCompleted || undefined,
+        columnFor: 'task',
+        ...params,
+      };
       try {
-    const res = await dispatch(downloadDashboardTask(finalFilter));
-    if(res) {
-      downloadAll(res)
-    }
-  } catch(e) {
-    errorNotification(e?.response?.request?.statusText ?? 'Internal server error');
-  }
-  } else {
-  errorNotification('You have no records to download');
-  }
-  }
+        await dispatch(getDashboardTaskList(data));
+        dispatchFilter({
+          type: LIST_FILTER_REDUCER_ACTIONS.APPLY_DATA,
+        });
+        if (cb && typeof cb === 'function') {
+          cb();
+        }
+      } catch (e) {
+        /**/
+      }
+    },
+    [tempFilter]
+  );
 
-  useEffect(async () => {
+  const getTaskListOnRefresh = () => {
     const filters = {
       isCompleted: dashboardTaskListFilters?.isCompleted || undefined,
     };
+    Object.entries(filters).forEach(([name, value]) => {
+      dispatchFilter({
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        name,
+        value,
+      });
+    });
+    getDashboardTaskListByFilter(filters);
+  };
+
+  const [filterModal, setFilterModal] = useState(false);
+
+  const toggleFilterModal = useCallback(
+    value => setFilterModal(value !== undefined ? value : e => !e),
+    [setFilterModal]
+  );
+  const onClickApplyFilter = useCallback(async () => {
+    await getDashboardTaskListByFilter({}, toggleFilterModal);
+  }, [getDashboardTaskListByFilter, toggleFilterModal]);
+
+  const onClickResetFilter = useCallback(async () => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.RESET_STATE,
+    });
+    await onClickApplyFilter();
+  }, [dispatchFilter]);
+
+  const filterModalButtons = useMemo(
+    () => [
+      {
+        title: 'Reset Defaults',
+        buttonType: 'outlined-primary',
+        onClick: onClickResetFilter,
+      },
+      {
+        title: 'Close',
+        buttonType: 'primary-1',
+        onClick: () => {
+          dispatchFilter({
+            type: LIST_FILTER_REDUCER_ACTIONS.CLOSE_FILTER,
+          });
+          toggleFilterModal();
+        },
+      },
+      { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
+    ],
+    [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
+  );
+
+  const handleIsCompletedFilterChange = event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'isCompleted',
+      value: event.target.checked,
+    });
+  };
+
+  const downloadTask = async () => {
+    if (docs?.length !== 0) {
+      try {
+        const res = await dispatch(downloadDashboardTask(finalFilter));
+        if (res) {
+          downloadAll(res);
+        }
+      } catch (e) {
+        errorNotification(e?.response?.request?.statusText ?? 'Internal server error');
+      }
+    } else {
+      errorNotification('You have no records to download');
+    }
+  };
+
+  useEffect(async () => {
+    const filters = { isCompleted: dashboardTaskListFilters?.isCompleted || undefined };
     Object.entries(filters)?.forEach(([name, value]) => {
       dispatchFilter({
         type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
@@ -146,28 +146,35 @@ const DashboardTask = () => {
     <div className="dashboard-table-white-container">
       <div className="dashboard-title-date-row">
         <div className="dashboard-card-title">Tasks</div>
-        {docs && 
-        <div className="page-header-button-container">
-          <IconButton
+        {docs && (
+          <div className="page-header-button-container">
+            <IconButton
               className="mr-10"
               buttonType="primary"
               title="cloud_download"
               buttonTitle="Click to apply filters on task list"
               onClick={downloadTask}
             />
-        <IconButton
-                buttonType="secondary"
-                title="filter_list"
-                buttonTitle="Click to apply filters on task list"
-                onClick={toggleFilterModal}
-              />
-               </div>}
+            <IconButton
+              buttonType="secondary"
+              title="filter_list"
+              buttonTitle="Click to apply filters on task list"
+              onClick={toggleFilterModal}
+            />
+          </div>
+        )}
       </div>
       <div className="dashboard-table-container">
         {/* eslint-disable-next-line no-nested-ternary */}
         {!isLoading && docs ? (
           docs.length > 0 ? (
-            <Table data={docs} headers={headers} headerClass="bg-white" refreshData={getTaskListOnRefresh} rowClass="task-row" />
+            <Table
+              data={docs}
+              headers={headers}
+              headerClass="bg-white"
+              refreshData={getTaskListOnRefresh}
+              rowClass="task-row"
+            />
           ) : (
             <div className="no-record-found">No records found</div>
           )
@@ -175,19 +182,22 @@ const DashboardTask = () => {
           <Loader />
         )}
       </div>
-      {filterModal && <Modal
-       headerIcon="filter_list"
-       header="filter"
-       buttons={filterModalButtons}
-       className="filter-modal application-filter-modal">
-         <div className="d-flex align-center">
-         <div className="form-title">Completed Task</div>
-                <Checkbox
-                  checked={tempFilter?.isCompleted}
-                  onChange={e => handleIsCompletedFilterChange(e)}
-                />
-              </div>
-         </Modal>}
+      {filterModal && (
+        <Modal
+          headerIcon="filter_list"
+          header="filter"
+          buttons={filterModalButtons}
+          className="filter-modal application-filter-modal"
+        >
+          <div className="d-flex align-center">
+            <div className="form-title">Completed Task</div>
+            <Checkbox
+              checked={tempFilter?.isCompleted}
+              onChange={e => handleIsCompletedFilterChange(e)}
+            />
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
