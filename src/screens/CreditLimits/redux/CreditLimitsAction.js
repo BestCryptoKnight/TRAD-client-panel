@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { errorNotification, successNotification } from '../../../common/Toast';
 import CreditLimitsApiService from '../services/CreditLimitsApiService';
 import {
@@ -19,10 +20,23 @@ import { store } from '../../../redux/store';
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
-    const finalParams = {
-      ...params,
-      entityType: params?.entityType?.value
-    }
+    const finalParams = {}
+    // eslint-disable-next-line no-unused-vars
+    Object.entries(params).forEach(([key, value]) => {
+    if (_.isArray(value)) {
+     finalParams[key] = value
+         ?.map(record =>
+           record?.value
+         )
+         .join(',');
+     } else if (_.isObject(value)) {
+       finalParams[key] = value?.value;
+     } else {
+       finalParams[key] = value || undefined;
+     }
+   });
+   
+    console.log(finalParams);
     try {
       startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(finalParams);
