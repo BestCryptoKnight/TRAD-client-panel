@@ -65,7 +65,7 @@ const CustomSelect = props => {
   }, [selectedList, searchedText, options]);
 
   useEffect(() => {
-    if (selectedList !== value) onChangeCustomSelect(selectedList);
+    onChangeCustomSelect(selectedList);
   }, [selectedList]);
 
   useEffect(() => {
