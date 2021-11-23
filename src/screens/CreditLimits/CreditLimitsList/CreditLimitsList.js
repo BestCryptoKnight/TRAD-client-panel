@@ -1,14 +1,26 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import _ from 'lodash';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import Select from '../../../common/Select/Select';
+import Button from '../../../common/Button/Button';
+import CustomSelect from '../../../common/CustomSelect/CustomSelect';
 import IconButton from '../../../common/IconButton/IconButton';
-import Table from '../../../common/Table/Table';
-import Pagination from '../../../common/Pagination/Pagination';
+import Input from '../../../common/Input/Input';
+import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
+import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 import Loader from '../../../common/Loader/Loader';
+import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
+import Modal from '../../../common/Modal/Modal';
+import Pagination from '../../../common/Pagination/Pagination';
+import Select from '../../../common/Select/Select';
+import Table from '../../../common/Table/Table';
+import { errorNotification } from '../../../common/Toast';
+import { NUMBER_REGEX } from '../../../constants/RegexConstants';
+import { downloadAll } from '../../../helpers/DownloadHelper';
+import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
+import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import {
   changeCreditColumnList,
   downloadCreditLimitCSV,
@@ -19,21 +31,9 @@ import {
   modifyClientCreditLimit,
   resetCreditLimitListData,
   saveCreditLimitColumnList,
-  surrenderClientCreditLimit,
+  surrenderClientCreditLimit
 } from '../redux/CreditLimitsAction';
-import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
-import { errorNotification } from '../../../common/Toast';
-import { useQueryParams } from '../../../hooks/GetQueryParamHook';
-import Modal from '../../../common/Modal/Modal';
 import { CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
-import Input from '../../../common/Input/Input';
-import { NUMBER_REGEX } from '../../../constants/RegexConstants';
-import Button from '../../../common/Button/Button';
-import { downloadAll } from '../../../helpers/DownloadHelper';
-import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
-import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
-import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
-import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 
 const CreditLimitsList = () => {
   const dispatch = useDispatch();
@@ -111,9 +111,10 @@ const CreditLimitsList = () => {
         const data = {
           page: page ?? 1,
           limit: limit ?? 15,
-          entityType: (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
+          entityType: tempFilter?.entityType,
           startDate: tempFilter?.startDate,
           endDate: tempFilter?.endDate,
+          debtorIds: tempFilter?.debtorIds,
           ...params,
         };
         try {
@@ -194,6 +195,7 @@ const CreditLimitsList = () => {
     };
     const filters = {
       entityType: creditLimitListFilters?.entityType,
+      debtorIds: creditLimitListFilters?.debtorIds,
       startDate: paramStartDate || creditLimitListFilters?.startDate,
       endDate: paramEndDate || creditLimitListFilters?.endDate,
     };
@@ -222,17 +224,33 @@ const CreditLimitsList = () => {
   );
 
   // for params in url
-  useUrlParamsUpdate(
-    {
+  useEffect(() => {
+    const otherFilters = {}
+    // eslint-disable-next-line no-unused-vars
+    Object.entries(finalFilter).forEach(([key, value]) => {
+    if (_.isArray(value)) {
+      otherFilters[key] = value
+         ?.map(record =>
+           record?.value
+         )
+         .join(',');
+     } else if (_.isObject(value)) {
+      otherFilters[key] = value?.value;
+     } else {
+      otherFilters[key] = value || undefined;
+     }
+   });
+    const params = {
       page: page ?? 1,
       limit: limit ?? 15,
-      entityType:
-        (finalFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType?.value : undefined,
-      startDate: finalFilter?.startDate || undefined,
-      endDate: finalFilter?.endDate || undefined,
-    },
-    [page, limit, finalFilter],
-  );
+      ...otherFilters,
+    };
+    const url = Object.entries(params)
+      ?.filter(arr => arr[1] !== undefined)
+      ?.map(([k, v]) => `${k}=${v}`)
+      ?.join('&');
+    history.push(`${history?.location?.pathname}?${url}`);
+  }, [history, total, pages, page, limit, finalFilter]);
 
   const [filterModal, setFilterModal] = React.useState(false);
   const toggleFilterModal = useCallback(
@@ -292,6 +310,14 @@ const CreditLimitsList = () => {
     dispatchFilter({
       type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
       name: 'entityType',
+      value: event,
+    });
+  }, []);
+
+  const handleDebtorFilterChange = useCallback(event => {
+    dispatchFilter({
+      type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+      name: 'debtorIds',
       value: event,
     });
   }, []);
@@ -448,8 +474,8 @@ const CreditLimitsList = () => {
     if (docs?.length !== 0) {
       try {
         const data = {
-          entityType:
-            (tempFilter?.entityType?.value?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType?.value : undefined,
+          entityType: tempFilter?.entityType?.value,
+          debtorIds: tempFilter?.debtorIds?.value,
           startDate: tempFilter?.startDate,
           endDate: tempFilter?.endDate,
         };
@@ -539,6 +565,17 @@ const CreditLimitsList = () => {
                   value={tempFilter?.entityType}
                   onChange={handleEntityTypeFilterChange}
                   isSearchble
+                />
+              </div>
+              <div className="filter-modal-row">
+                <div className="form-title">Debtor Name</div>
+                <CustomSelect
+                  className="credit-limit-custom-select"
+                  placeholder="Select Entity Type"
+                  name="debtorIds"
+                  options={dropdownData?.debtors}
+                  value={tempFilter?.debtorIds}
+                  onChangeCustomSelect={handleDebtorFilterChange}
                 />
               </div>
               <div className="filter-modal-row">

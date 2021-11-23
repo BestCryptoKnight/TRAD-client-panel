@@ -152,7 +152,7 @@ const DashboardTask = () => {
               className="mr-10"
               buttonType="primary"
               title="cloud_download"
-              buttonTitle="Click to apply filters on task list"
+              buttonTitle="Click to download task list"
               onClick={downloadTask}
             />
             <IconButton
