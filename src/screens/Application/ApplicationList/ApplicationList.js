@@ -449,7 +449,11 @@ const ApplicationList = () => {
   const downloadApplication = useCallback(async () => {
     if (docs?.length > 0) {
       try {
-        const response = await applicationDownloadAction(appliedFilters);
+        const finalFilters = {
+          ...appliedFilters,
+          debtorId: appliedFilters?.debtorId?.value
+        };
+        const response = await applicationDownloadAction(finalFilters);
         if (response) downloadAll(response);
       } catch (e) {
         /**/
