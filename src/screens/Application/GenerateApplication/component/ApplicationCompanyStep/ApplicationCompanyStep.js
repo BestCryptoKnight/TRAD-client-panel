@@ -268,7 +268,7 @@ const ApplicationCompanyStep = () => {
       name: 'registrationNumber',
       data: [],
     });
-    filteredData.splice(4, 1);
+    filteredData.splice(5, 1);
     return filteredData;
   }, [INPUTS, isAusOrNew]);
 
