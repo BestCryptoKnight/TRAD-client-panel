@@ -135,7 +135,7 @@ const AddOverdueTable = props => {
                         button?.status === overdue?.overdueAction ? 'primary' : 'outlined-primary'
                       }`}
                       className="small-button"
-                      title={button?.title}
+                      title={overdue?.overdueAction === 'MARK_AS_PAID' && button.status === "MARK_AS_PAID" ? 'Paid' : button?.title}
                       onClick={() =>
                         onClickOverdueActionButtons(overdue?._id, button, overdue?.overdueAction)
                       }
