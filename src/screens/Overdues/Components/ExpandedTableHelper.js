@@ -82,8 +82,10 @@ const ExpandedTableHelper = props => {
                 <th>Name</th>
                 <th>ACN</th>
                 <th>Overdue Type</th>
-                <th>Status</th>
                 <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Submitted By</th>
               </tr>
               <tbody>
                 {docs?.map(data => (
@@ -96,8 +98,10 @@ const ExpandedTableHelper = props => {
                     <td>{data?.name?.toString().trim().length > 0 ? data?.name : '-'}</td>
                     <td>{data?.acn?.toString().trim().length > 0 ? data?.acn : '-'}</td>
                     <td>{data?.overdueType}</td>
-                    <td>{data?.status}</td>
                     <td>{data?.amount?.toString().trim().length > 0 ? NumberCommaSeparator(data?.amount) : '-'}</td>
+                    <td>{data?.overdueAction ?? '-'}</td>
+                    <td>{data?.status ?? '-'}</td>
+                    <td>{data?.createdById ?? '-'}</td>
                   </tr>
                 ))}
               </tbody>
