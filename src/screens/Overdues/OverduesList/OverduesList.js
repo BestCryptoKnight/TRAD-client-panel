@@ -27,7 +27,7 @@ import Select from "../../../common/Select/Select";
 const OverduesList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [newSubmissionDate, setNewSubmissionDate] = useState({});
+  const [newSubmissionDate, setNewSubmissionDate] = useState(null);
   const [newSubmissionModal, setNewSubmissionModal] = useState(false);
   const [filter, dispatchFilter] = useReducer(filterReducer, {
     tempFilter: {},
@@ -366,7 +366,7 @@ const OverduesList = () => {
                   placeholderText="Select month and year"
                   onChange={date => onDateSelection(date)}
                   dateFormat="MM/yyyy"
-                  maxDate={moment().toDate()}
+                  maxDate={moment().subtract(1,'month').toDate()}
                   selected={newSubmissionDate?.submissionDate}
                   showMonthYearPicker
                   showYearDropdown
