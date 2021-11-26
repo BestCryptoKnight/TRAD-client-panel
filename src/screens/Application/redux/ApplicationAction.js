@@ -940,3 +940,21 @@ export const downloadDecisionLetterForApplication = async (id, param) => {
   }
   return false;
 };
+
+export const generateRandomRegistrationNumber = params => {
+  return async(dispatch) => {
+    try {
+      const response = await ApplicationCompanyStepApiServices.generateRandomRegistrationNumber(params);
+      if(response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: APPLICATION_REDUX_CONSTANTS.COMPANY.SET_RANDOM_GENERATED_REGISTRATION_NUMBER,
+          data: response.data.data
+        })
+      return response.data.data;
+      }
+    } catch(e) {
+      displayErrors(e);
+    }
+    return false;
+  }
+}
