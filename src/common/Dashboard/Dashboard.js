@@ -221,16 +221,16 @@ const Dashboard = () => {
                   <div
                     className={`dashboard-nested-grid-container ${
                       !endorsedLimit && 'no-endorsed-limit-nested-grid-container'
-                    }`}
+                    }`} style={{display: !showGraphs ? 'grid' : 'contents'}}
                   >
-                    {!showGraphs && <div className="dashboard-white-container">
+                   <div className="dashboard-white-container">
                       <div className="dashboard-title-date-row">
                         <div className="dashboard-card-title">Discretionary Limit</div>
                       </div>
                       <span className="dashboard-readings discretionary-limit">
                         {usdConverter(discretionaryLimit)}
                       </span>
-                    </div>}
+                    </div>
 
                     <div className="dashboard-white-container">
                       <div className="dashboard-title-date-row">
