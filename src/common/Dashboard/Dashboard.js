@@ -176,7 +176,7 @@ const Dashboard = () => {
                     </div>
                   )}
 
-                {!showGraphs && <div className="dashboard-white-container doughnut-white-card">
+                {showGraphs && <div className="dashboard-white-container doughnut-white-card">
                     <div className="dashboard-title-date-row">
                       <span className="dashboard-card-title">
                         Applications processed out of Credit Checks Assigned
@@ -221,7 +221,7 @@ const Dashboard = () => {
                   <div
                     className={`dashboard-nested-grid-container ${
                       !endorsedLimit && 'no-endorsed-limit-nested-grid-container'
-                    }`} style={{display: !showGraphs ? 'grid' : 'contents'}}
+                    }`} style={{display: showGraphs ? 'grid' : 'contents'}}
                   >
                    <div className="dashboard-white-container">
                       <div className="dashboard-title-date-row">
