@@ -363,6 +363,10 @@
   color: $primary-color;
 }
 
+.page-not-found__back-button {
+  text-decoration: none;
+}
+
 .modal-header.left-aligned-modal-header > div {
   justify-content: flex-start;
 }
