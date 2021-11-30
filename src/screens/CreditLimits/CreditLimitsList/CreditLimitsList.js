@@ -626,7 +626,7 @@ const CreditLimitsList = () => {
                 <Input
                   type="text"
                   value={
-                    currentCreditLimitData?.creditLimit ? NumberCommaSeparator(currentCreditLimitData?.creditLimit) : ''
+                    currentCreditLimitData?.creditLimit ? NumberCommaSeparator(currentCreditLimitData?.creditLimit) : 0
                   }
                   disabled
                   borderClass="disabled-control"
