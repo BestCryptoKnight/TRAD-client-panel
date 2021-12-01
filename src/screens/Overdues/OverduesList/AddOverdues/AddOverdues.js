@@ -523,6 +523,11 @@ const AddOverdues = () => {
       };
       const withListData = {
         list: finalData,
+        month:
+        Number(moment().month(selectedMonth).format('M')) < 10
+        ? `0${moment().month(selectedMonth).format('M')}`
+        : moment().month(selectedMonth).format('M'),
+        year: selectedYear,
         nilOverdue: isNilOverdue,
         oldNilOverdue
       };
