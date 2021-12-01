@@ -51,7 +51,7 @@ const AddOverdues = () => {
   );
 
   const { docs, isNilOverdue:nilOverdue } = useMemo(() => overdueListByDate ?? [], [overdueListByDate]);
-
+  const oldNilOverdue = nilOverdue;
   const callbackOnFormAddORAmend = useCallback(() => {
     toggleOverdueFormModal();
     if (isAmendOverdueModal) setIsAmendOverdueModal(false);
@@ -519,10 +519,12 @@ const AddOverdues = () => {
         : moment().month(selectedMonth).format('M'),
         year: selectedYear,
         nilOverdue: isNilOverdue,
+        oldNilOverdue
       };
       const withListData = {
         list: finalData,
         nilOverdue: isNilOverdue,
+        oldNilOverdue
       };
       try {
         await dispatch(saveOverdueList(finalData?.length === 0 ? withoutListData : withListData));
