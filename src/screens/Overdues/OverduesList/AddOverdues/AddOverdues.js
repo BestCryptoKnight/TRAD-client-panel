@@ -488,7 +488,7 @@ const AddOverdues = () => {
     if (!validated) {
       toggleSaveAlertModal();
     } else {
-      const finalData = docs?.map(doc => {
+      const listData = docs?.map(doc => {
         const data = {};
         if (doc?.isExistingData) data._id = doc?._id;
         data.isExistingData = doc?.isExistingData ? doc?.isExistingData : false;
@@ -511,8 +511,8 @@ const AddOverdues = () => {
         return data;
       });
 
-      const withoutListData = {
-        list: [],
+      const finalData = {
+        list: listData?.length === 0 ? [] : listData,
         month:
         Number(moment().month(selectedMonth).format('M')) < 10
         ? `0${moment().month(selectedMonth).format('M')}`
@@ -521,18 +521,9 @@ const AddOverdues = () => {
         nilOverdue: isNilOverdue,
         oldNilOverdue
       };
-      const withListData = {
-        list: finalData,
-        month:
-        Number(moment().month(selectedMonth).format('M')) < 10
-        ? `0${moment().month(selectedMonth).format('M')}`
-        : moment().month(selectedMonth).format('M'),
-        year: selectedYear,
-        nilOverdue: isNilOverdue,
-        oldNilOverdue
-      };
+      
       try {
-        await dispatch(saveOverdueList(finalData?.length === 0 ? withoutListData : withListData));
+        await dispatch(saveOverdueList(finalData));
         if (isPrompt) setIsPrompt(false);
         history.replace('/over-dues');
       } catch (e) {
