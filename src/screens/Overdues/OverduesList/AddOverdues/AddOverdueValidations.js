@@ -122,6 +122,7 @@ export const addOverdueValidations = async (
     ninetyPlusDaysAmount,
     outstandingAmount,
     status,
+    index
   } = data;
   preparedData = {
     debtorId,
@@ -141,6 +142,7 @@ export const addOverdueValidations = async (
     overdueAction: isAmendOverdueModal && 'AMEND',
     status: !isAmendOverdueModal ? { label: 'Submitted', value: 'SUBMITTED' } : status,
     _id: !isAmendOverdueModal ? Math?.random().toString() : _id,
+    index: !isAmendOverdueModal ? Math?.random().toString() : index,
   };
   dispatch(handleOverdueFieldChange('errors', errors));
 
