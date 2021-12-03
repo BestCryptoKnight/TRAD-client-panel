@@ -1,8 +1,8 @@
 .button.icon-button.download-decision-letter-icon{
   display: inline-flex;
-  background-color: #ffffff;
-  //color: $primary-color;
   padding: 3px 15px;
+  background-color: #ffffff;
+  white-space: nowrap ;
   border-radius: 8px;
   border: 1px solid $primary-color;
 }
