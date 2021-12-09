@@ -57,6 +57,7 @@ const ApplicationDocumentsAccordion = props => {
   const applicationDocsList = useSelector(
     ({ application }) => application?.viewApplication?.applicationModulesList?.documents || []
   );
+ 
   const documentTypeList = useSelector(
     ({ application }) =>
       application?.viewApplication?.applicationModulesList?.viewApplicationDocumentType || []
@@ -335,12 +336,12 @@ const ApplicationDocumentsAccordion = props => {
                     >
                       cloud_download
                     </span>
-                    <span
+                    {doc?.uploadByType === 'client-user' && <span
                       className="material-icons-round font-danger cursor-pointer"
                       onClick={() => deleteDocument(doc._id)}
                     >
                       delete_outline
-                    </span>
+                    </span>}
                   </div>
                 </div>
                 <div className="date-owner-row">
