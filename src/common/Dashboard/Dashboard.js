@@ -35,14 +35,9 @@ const Dashboard = () => {
       {
         label: '',
         data: [
-          endorsedLimit?.totalCount &&
-            endorsedLimit?.totalCount >= 0 &&
-            (endorsedLimit?.totalCount === 0 || endorsedLimit?.endorsedLimitCount === 0
-              ? 0
-              : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount),
-          endorsedLimit?.totalCount &&
-            endorsedLimit?.endorsedLimitCount >= 0 &&
-            (endorsedLimit?.totalCount === 0 ? 1 : endorsedLimit?.totalCount),
+         endorsedLimit?.totalCount === 0 || endorsedLimit?.endorsedLimitCount === 0 ? 0: 
+         endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
+          endorsedLimit?.totalCount === 0 ? 1 : endorsedLimit?.totalCount,
         ],
         backgroundColor: ['#003A78', '#CBD7E4'],
       },
@@ -78,7 +73,7 @@ const Dashboard = () => {
       {
         label: '',
         data: [
-          resChecksCount?.totalCount === 0 ? 0 : resChecksCount?.applicationCount,
+          resChecksCount?.totalCount === 0 || resChecksCount?.applicationCount === 0 ? 0 : resChecksCount?.applicationCount,
           resChecksCount?.totalCount === 0 ? 1 : resChecksCount?.totalCount - resChecksCount?.applicationCount,
         ],
         backgroundColor: ['#62d493', '#CBD7E4'],
