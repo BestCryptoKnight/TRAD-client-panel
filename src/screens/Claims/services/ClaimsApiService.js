@@ -19,7 +19,6 @@ export const ClaimsApiServices = {
       data,
       config,
       method: 'POST',
-      responseType: 'blob',
       timeout: 60000,
     }),
     downloadClaimDocument: id =>

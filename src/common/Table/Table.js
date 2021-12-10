@@ -385,6 +385,7 @@ function Row(props) {
         {Object.entries(data).map(([key, value], index) => {
           switch (key) {
             case 'id':
+            case 'uploadByType':
               return null;
             case 'priority':
               return (
