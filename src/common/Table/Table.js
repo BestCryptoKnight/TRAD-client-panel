@@ -140,6 +140,7 @@ const Table = props => {
     return data.map((e, index) => {
       const finalObj = {
         id: e._id ?? e.id ?? index,
+        uploadByType: e?.uploadByType
       };
       headers.forEach(f => {
         finalObj[`${f.name}`] = processTableDataByType({ header: f, row: e, actions });
