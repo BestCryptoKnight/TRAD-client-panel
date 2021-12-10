@@ -34,7 +34,7 @@ const Dashboard = () => {
     datasets: [
       {
         label: '',
-        data: endorsedLimit?.totalCount < endorsedLimit?.endorsedLimitCount ? [1,0] : [
+        data: endorsedLimit?.totalCount !== 0 && endorsedLimit?.totalCount < endorsedLimit?.endorsedLimitCount ? [1,0] : [
          endorsedLimit?.totalCount === 0 || endorsedLimit?.endorsedLimitCount === 0 ? 0: 
          endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
           endorsedLimit?.totalCount === 0 ? 1 : endorsedLimit?.totalCount,
@@ -72,7 +72,7 @@ const Dashboard = () => {
     datasets: [
       {
         label: '',
-        data: resChecksCount?.totalCount < resChecksCount?.applicationCount ? [1,0] : [
+        data: resChecksCount?.totalCount !== 0 && resChecksCount?.totalCount < resChecksCount?.applicationCount ? [1,0] : [
           resChecksCount?.totalCount === 0 || resChecksCount?.applicationCount === 0 ? 0 : resChecksCount?.applicationCount,
           resChecksCount?.totalCount === 0 ? 1 : resChecksCount?.totalCount - resChecksCount?.applicationCount,
         ],
