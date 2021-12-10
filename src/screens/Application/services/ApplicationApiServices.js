@@ -28,6 +28,7 @@ const ApplicationApiServices = {
       params,
       method: 'GET',
       responseType: 'blob',
+      timeout: 60000
     }),
 };
 export default ApplicationApiServices;

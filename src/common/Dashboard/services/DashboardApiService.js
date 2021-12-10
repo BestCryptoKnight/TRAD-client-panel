@@ -27,6 +27,7 @@ export const DashboardApiService = {
     params,
     method: 'GET',
     responseType: 'blob',
+    timeout: 60000
   }
   )
 };

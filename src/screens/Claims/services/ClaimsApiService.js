@@ -14,12 +14,20 @@ export const ClaimsApiServices = {
     getClaimsDocumentsList: (id, params) =>
       ApiService.getData(`${CLAIMS_URLS.DOCUMENTS.DOCUMENTS_LIST}${id}`, { params }),
     uploadClaimDocument: (data, config) =>
-      ApiService.postData(CLAIMS_URLS.DOCUMENTS.DOCUMENTS_LIST, data, config),
+    ApiService.request({
+      url: `${CLAIMS_URLS.DOCUMENTS.DOCUMENTS_LIST}`,
+      data,
+      config,
+      method: 'POST',
+      responseType: 'blob',
+      timeout: 60000,
+    }),
     downloadClaimDocument: id =>
       ApiService.request({
         url: `${CLAIMS_URLS.DOCUMENTS.DOWNLOAD_DOCUMENTS}${id}`,
         method: 'GET',
         responseType: 'blob',
+        timeout: 60000,
       }),
   },
 };

@@ -19,3 +19,8 @@
   height: 32px;
   width: 200px;
 }
+
+.disable-delete-button {
+  opacity: .3;
+  cursor: not-allowed;
+}
