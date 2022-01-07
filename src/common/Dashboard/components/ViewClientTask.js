@@ -23,10 +23,10 @@ const ViewClientTask = () => {
   const INPUTS = useMemo(
     () => [
       {
-        label: 'Title',
+        label: 'Description',
         placeholder: '-',
         type: 'text',
-        name: 'title',
+        name: 'description',
       },
       {
         label: 'Assignee',
@@ -65,10 +65,10 @@ const ViewClientTask = () => {
         type: 'blank',
       },
       {
-        label: 'Description',
+        label: 'Comments',
         placeholder: '-',
         type: 'text',
-        name: 'description',
+        name: 'comments',
       },
     ],
     []
@@ -77,26 +77,26 @@ const ViewClientTask = () => {
   const taskFieldValues = useCallback(
     fieldFor => {
       switch (fieldFor) {
-        case 'title': {
-          return taskDetails?.title ?? '';
+        case 'description': {
+          return taskDetails?.description ?? '-';
         }
         case 'assigneeId': {
-          return taskDetails?.assigneeId?.label ?? '';
+          return taskDetails?.assigneeId?.label ?? '-';
         }
         case 'priority': {
-          return taskDetails?.priority?.label ?? '';
+          return taskDetails?.priority?.label ?? '-';
         }
         case 'entityType': {
-          return taskDetails?.entityType?.label ?? '';
+          return taskDetails?.entityType?.label ?? '-';
         }
         case 'entityId': {
           return taskDetails?.entityId?.label ?? [];
         }
         case 'dueDate': {
-          return moment(taskDetails?.dueDate).format('MM/DD/YYYY');
+          return taskDetails?.dueDate ? moment(taskDetails?.dueDate).format('MM/DD/YYYY') : '-';
         }
-        case 'description': {
-          return taskDetails?.description ?? '';
+        case 'comments': {
+          return taskDetails?.comments ?? '-';
         }
         default:
           return '';
