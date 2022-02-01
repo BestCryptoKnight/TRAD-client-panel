@@ -30,6 +30,7 @@ export const DASHBOARD_URLS = {
   DASHBOARD_NOTIFICATION_LIST: `${BASE_URL}notification/`,
   UPDATE_TASK: `${BASE_URL}task/`,
   SEARCH_ENTITIES: `${BASE_URL}entity-search/`,
+  DASHBOARD_DOWNLOAD_TASK: `${BASE_URL}/task/download`
 };
 
 export const APPLICATION_URLS = {
@@ -47,6 +48,7 @@ export const APPLICATION_URLS = {
     SEARCH_APPLICATION_BY_ABN_ACN_DETAILS: `${BASE_URL}application/search-entity/`,
     SEARCH_APPLICATION_ENTITY_TYPE: `${BASE_URL}application/search-entity-list/`,
     DELETE_APPLICATION_ENTITY_TYPE: `${BASE_URL}debtor/stakeholder/`,
+    GENERATE_RANDOM_REGISTRATION_NUMBER: `${BASE_URL}debtor/generate/registration-number`,
   },
   DOCUMENTS: {
     DOCUMENTS_LIST: `${BASE_URL}document/`,

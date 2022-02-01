@@ -384,6 +384,19 @@ export const application = (state = initialApplicationList, action) => {
       };
     }
 
+    case APPLICATION_REDUX_CONSTANTS.COMPANY.SET_RANDOM_GENERATED_REGISTRATION_NUMBER: {
+      return {
+        ...state,
+        editApplication: {
+          ...state.editApplication,
+          company: {
+            ...state.editApplication.company,
+            registrationNumber: action.data
+          }
+        }
+      }
+    }
+
     case APPLICATION_REDUX_CONSTANTS.PERSON.EDIT_APPLICATION_PERSON: {
       const partners = [...state?.editApplication?.partners];
       partners[action?.index] = {

@@ -39,14 +39,14 @@ export const addOverdueValidations = async (
     }
   }
   if (
-      data?.currentAmount.toString()?.trim().includes('.') &&
+      data?.currentAmount?.toString()?.trim().includes('.') &&
       data?.currentAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.currentAmount = 'Please enter valid current amount';
   }
   if (
-      data?.thirtyDaysAmount.toString()?.trim().includes('.') &&
+      data?.thirtyDaysAmount?.toString()?.trim().includes('.') &&
       data?.thirtyDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
@@ -54,21 +54,21 @@ export const addOverdueValidations = async (
   }
 
   if (
-      data?.sixtyDaysAmount.toString()?.trim().includes('.') &&
+      data?.sixtyDaysAmount?.toString()?.trim().includes('.') &&
       data?.sixtyDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.sixtyDaysAmount = 'Please enter valid amount';
   }
   if (
-      data?.ninetyDaysAmount.toString()?.trim().includes('.') &&
+      data?.ninetyDaysAmount?.toString()?.trim().includes('.') &&
       data?.ninetyDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.ninetyDaysAmount = 'Please enter valid amount';
   }
   if (
-      data?.ninetyPlusDaysAmount.toString()?.trim().includes('.') &&
+      data?.ninetyPlusDaysAmount?.toString()?.trim().includes('.') &&
       data?.ninetyPlusDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
@@ -122,6 +122,7 @@ export const addOverdueValidations = async (
     ninetyPlusDaysAmount,
     outstandingAmount,
     status,
+    index
   } = data;
   preparedData = {
     debtorId,
@@ -141,6 +142,7 @@ export const addOverdueValidations = async (
     overdueAction: isAmendOverdueModal && 'AMEND',
     status: !isAmendOverdueModal ? { label: 'Submitted', value: 'SUBMITTED' } : status,
     _id: !isAmendOverdueModal ? Math?.random().toString() : _id,
+    index: !isAmendOverdueModal ? Math?.random().toString() : index,
   };
   dispatch(handleOverdueFieldChange('errors', errors));
 
@@ -149,7 +151,7 @@ export const addOverdueValidations = async (
     try {
       validated = true;
       if (isAmendOverdueModal) {
-        await dispatch(amendOverdue(data?._id, finalData));
+        await dispatch(amendOverdue(data?.index, finalData));
       } else {
         await dispatch(addNewOverdueDetails(finalData));
       }

@@ -1,8 +1,8 @@
 .button.icon-button.download-decision-letter-icon{
   display: inline-flex;
-  background-color: #ffffff;
-  //color: $primary-color;
   padding: 3px 15px;
+  background-color: #ffffff;
+  white-space: nowrap ;
   border-radius: 8px;
   border: 1px solid $primary-color;
 }
@@ -13,4 +13,14 @@
 .button.icon-button.download-decision-letter-icon.disable-download-button {
   background-color: $border-color;
   opacity: .3;
+}
+
+.credit-limit-custom-select .custom-select__control {
+  height: 32px;
+  width: 200px;
+}
+
+.disable-delete-button {
+  opacity: .3;
+  cursor: not-allowed;
 }

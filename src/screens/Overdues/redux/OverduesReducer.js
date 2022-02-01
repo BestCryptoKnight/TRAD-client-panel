@@ -134,7 +134,7 @@ export const overdue = (state = initialOverdueState, action) => {
 
     case OVERDUE_REDUX_CONSTANTS.OVERDUE_CRUD_CONSTANTS.GET_OVERDUE_DETAILS: {
       const docs = state?.overdueListByDate?.docs;
-      const overdueDetail = docs?.find(doc => doc?._id === action?.id);
+      const overdueDetail = docs?.find(doc => doc?.index === action?.id);
       return {
         ...state,
         overdueDetails: overdueDetail,
@@ -143,7 +143,7 @@ export const overdue = (state = initialOverdueState, action) => {
 
     case OVERDUE_REDUX_CONSTANTS.OVERDUE_CRUD_CONSTANTS.CHANGE_OVERDUE_DETAILS_ACTION: {
       const finalDoc = state?.overdueListByDate?.docs?.map(doc => {
-        if (doc?._id === action?.id) {
+        if (doc?.index === action?.id) {
           return { ...doc, overdueAction: action?.status };
         }
         return doc;
@@ -158,7 +158,7 @@ export const overdue = (state = initialOverdueState, action) => {
     }
     case OVERDUE_REDUX_CONSTANTS.OVERDUE_CRUD_CONSTANTS.UPDATE_OVERDUE_LIST_AFTER_AMEND: {
       const finalDoc = state?.overdueListByDate?.docs?.map(doc => {
-        if (doc?._id === action?.id) {
+        if (doc?.index === action?.id) {
           return { ...doc, ...action?.data, overdueAction: 'AMEND' };
         }
         return doc;

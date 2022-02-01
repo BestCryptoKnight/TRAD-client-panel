@@ -1,27 +1,21 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Doughnut, Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-labels';
 import _ from 'lodash';
-import Table from '../Table/Table';
-import {
-  getDashboardDetails,
-  getDashboardTaskList,
-  resetDashboardDetails,
-} from './redux/DashboardActions';
-import Loader from '../Loader/Loader';
-import { usdConverter } from '../../helpers/usdConverter';
+import React, { useEffect, useMemo } from 'react';
+import { Doughnut, Pie } from 'react-chartjs-2';
+import { useDispatch, useSelector } from 'react-redux';
 import { getLabelFromValues } from '../../helpers/chartHelper';
 import { dashboardPendingApplicationsMapper } from '../../helpers/Mappers';
-import DashBoardNotification from './components/DashBoardNotification';
 import { NumberCommaSeparator } from '../../helpers/NumberCommaSeparator';
+import { usdConverter } from '../../helpers/usdConverter';
+import Loader from '../Loader/Loader';
+import DashBoardNotification from './components/DashBoardNotification';
+import DashboardTask from './components/DashboardTask';
+import { getDashboardDetails, resetDashboardDetails } from './redux/DashboardActions';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
 
   const dashboardDetails = useSelector(({ dashboard }) => dashboard?.dashboardDetails ?? {});
-
-  const dashboardTaskList = useSelector(({ dashboard }) => dashboard?.dashboardTask ?? {});
 
   const {
     endorsedLimit,
@@ -30,27 +24,20 @@ const Dashboard = () => {
     approvedApplication,
     applicationStatus,
     resChecksCount,
+    showGraphs,
   } = useMemo(() => dashboardDetails, [dashboardDetails]);
 
-  const { docs, headers, isLoading } = useMemo(() => dashboardTaskList, [dashboardTaskList]);
-
-  const { dashboardDetailsLoader } = useSelector(
-    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
-  );
+  const { dashboardDetailsLoader } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const endorsedLimitsData = {
     labels: [''],
     datasets: [
       {
         label: '',
-        data: [
-          endorsedLimit?.totalCount &&
-            (endorsedLimit?.totalCount === 0 ? 0 : endorsedLimit?.totalCount),
-          endorsedLimit?.totalCount &&
-            endorsedLimit?.endorsedLimitCount &&
-            (endorsedLimit?.totalCount === 0
-              ? 1
-              : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount),
+        data: endorsedLimit?.totalCount !== 0 && endorsedLimit?.totalCount < endorsedLimit?.endorsedLimitCount ? [1,0] : [
+         endorsedLimit?.totalCount === 0 || endorsedLimit?.endorsedLimitCount === 0 ? 0: 
+         endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
+          endorsedLimit?.totalCount === 0 ? 1 : endorsedLimit?.totalCount,
         ],
         backgroundColor: ['#003A78', '#CBD7E4'],
       },
@@ -85,11 +72,9 @@ const Dashboard = () => {
     datasets: [
       {
         label: '',
-        data: [
-          resChecksCount?.totalCount === 0 ? 0 : resChecksCount?.applicationCount,
-          resChecksCount?.totalCount === 0
-            ? 1
-            : resChecksCount?.totalCount - resChecksCount?.applicationCount,
+        data: resChecksCount?.totalCount !== 0 && resChecksCount?.totalCount < resChecksCount?.applicationCount ? [1,0] : [
+          resChecksCount?.totalCount === 0 || resChecksCount?.applicationCount === 0 ? 0 : resChecksCount?.applicationCount,
+          resChecksCount?.totalCount === 0 ? 1 : resChecksCount?.totalCount - resChecksCount?.applicationCount,
         ],
         backgroundColor: ['#62d493', '#CBD7E4'],
       },
@@ -98,8 +83,7 @@ const Dashboard = () => {
 
   const pendingApplicationsData = {
     labels:
-      applicationStatus &&
-      applicationStatus?.map(e => getLabelFromValues(e._id, dashboardPendingApplicationsMapper)),
+      applicationStatus && applicationStatus?.map(e => getLabelFromValues(e._id, dashboardPendingApplicationsMapper)),
     datasets: [
       {
         label: '',
@@ -138,15 +122,11 @@ const Dashboard = () => {
     },
   };
 
-  const getTaskList = useCallback(() => {
-    dispatch(getDashboardTaskList());
-  }, []);
-
   useEffect(() => {
     dispatch(getDashboardDetails());
-    dispatch(getDashboardTaskList());
     return dispatch(resetDashboardDetails());
   }, []);
+
   return (
     <>
       {!dashboardDetailsLoader ? (
@@ -158,9 +138,7 @@ const Dashboard = () => {
                   {endorsedLimit && (
                     <div className="dashboard-white-container doughnut-white-card">
                       <div className="dashboard-title-date-row">
-                        <span className="dashboard-card-title">
-                          Endorsed limits out of Aggregated Credit Limits
-                        </span>
+                        <span className="dashboard-card-title">Endorsed limits out of Aggregated Credit Limits</span>
                       </div>
                       <div className="doughnut-chart-container">
                         <div className="doughnut-chart">
@@ -168,10 +146,7 @@ const Dashboard = () => {
                           <div className="doughnut-center-text">
                             <div>
                               {endorsedLimit?.totalCount > 0
-                                ? (
-                                    (endorsedLimit?.endorsedLimitCount * 100) /
-                                    endorsedLimit?.totalCount
-                                  ).toFixed(0)
+                                ? ((endorsedLimit?.endorsedLimitCount * 100) / endorsedLimit?.totalCount).toFixed(0)
                                 : 0}
                               %
                             </div>
@@ -185,59 +160,59 @@ const Dashboard = () => {
                     </div>
                   )}
 
-                  <div className="dashboard-white-container doughnut-white-card">
-                    <div className="dashboard-title-date-row">
-                      <span className="dashboard-card-title">
-                        Applications processed out of Credit Checks Assigned
-                      </span>
-                    </div>
-                    <div className="doughnut-chart-container">
-                      <div className="doughnut-chart">
-                        <Doughnut data={applicationProcessedData} options={doughnutOptions} />
-                        <div className="doughnut-center-text">
-                          <div>
-                            {resChecksCount && resChecksCount?.totalCount > 0
-                              ? (
-                                  (resChecksCount?.applicationCount / resChecksCount?.totalCount) *
-                                  100
-                                ).toFixed(0)
-                              : 0}
-                            %
+                  {showGraphs && (
+                    <div className="dashboard-white-container doughnut-white-card">
+                      <div className="dashboard-title-date-row">
+                        <span className="dashboard-card-title">
+                          Applications processed out of Credit Checks Assigned
+                        </span>
+                      </div>
+                      <div className="doughnut-chart-container">
+                        <div className="doughnut-chart">
+                          <Doughnut data={applicationProcessedData} options={doughnutOptions} />
+                          <div className="doughnut-center-text">
+                            <div>
+                              {resChecksCount && resChecksCount?.totalCount > 0
+                                ? ((resChecksCount?.applicationCount / resChecksCount?.totalCount) * 100).toFixed(0)
+                                : 0}
+                              %
+                            </div>
+                            <span>
+                              {NumberCommaSeparator(resChecksCount?.applicationCount) || 0}/
+                              {NumberCommaSeparator(resChecksCount?.totalCount) || 0}
+                            </span>
                           </div>
-                          <span>
-                            {NumberCommaSeparator(resChecksCount?.applicationCount) || 0}/
-                            {NumberCommaSeparator(resChecksCount?.totalCount) || 0}
-                          </span>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
                   <div className="dashboard-white-container">
                     <div className="dashboard-title-date-row">
                       <span className="dashboard-card-title">Pending Applications by Status</span>
                     </div>
                     <div className="d-flex align-center h-100 mt-10">
-                      {pendingApplicationsData &&
-                      pendingApplicationsData?.datasets?.[0]?.data?.length > 0 ? (
+                      {pendingApplicationsData && pendingApplicationsData?.datasets?.[0]?.data?.length > 0 ? (
                         <Pie data={pendingApplicationsData} options={pendingApplicationsOptions} />
                       ) : (
                         <div className="no-record-found">No record found</div>
                       )}
                     </div>
                   </div>
+
                   <div
                     className={`dashboard-nested-grid-container ${
                       !endorsedLimit && 'no-endorsed-limit-nested-grid-container'
                     }`}
+                    style={{ display: showGraphs ? 'grid' : 'contents' }}
                   >
                     <div className="dashboard-white-container">
                       <div className="dashboard-title-date-row">
                         <div className="dashboard-card-title">Discretionary Limit</div>
                       </div>
-                      <span className="dashboard-readings discretionary-limit">
-                        {usdConverter(discretionaryLimit)}
-                      </span>
+                      <span className="dashboard-readings discretionary-limit">{usdConverter(discretionaryLimit)}</span>
                     </div>
+
                     <div className="dashboard-white-container">
                       <div className="dashboard-title-date-row">
                         <div className="dashboard-card-title">Approved Amount Ratio</div>
@@ -245,10 +220,7 @@ const Dashboard = () => {
                       <span className="approved-amount-ratio  font-primary">
                         <div>
                           {approvedAmount?.total
-                            ? (
-                                (approvedAmount?.approvedAmount / approvedAmount?.total) *
-                                100
-                              ).toFixed(2)
+                            ? ((approvedAmount?.approvedAmount / approvedAmount?.total) * 100).toFixed(2)
                             : 0}
                           %
                         </div>
@@ -278,9 +250,7 @@ const Dashboard = () => {
                         <span className="material-icons-round">watch_later</span>
                       </div>
                       <div className="mt-15 title">Partially Approved</div>
-                      <div className="mt-5 reading">
-                        {approvedApplication?.partiallyApproved ?? 0}
-                      </div>
+                      <div className="mt-5 reading">{approvedApplication?.partiallyApproved ?? 0}</div>
                       <div className="approved-application-stripe partially-approved-stripe" />
                     </div>
                     <div className="approved-application-block rejected-block">
@@ -293,29 +263,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="dashboard-table-white-container">
-                  <div className="dashboard-title-date-row">
-                    <div className="dashboard-card-title">Tasks</div>
-                  </div>
-                  <div className="dashboard-table-container">
-                    {/* eslint-disable-next-line no-nested-ternary */}
-                    {!isLoading && docs ? (
-                      docs.length > 0 ? (
-                        <Table
-                          data={docs}
-                          headers={headers}
-                          headerClass="bg-white"
-                          refreshData={getTaskList}
-                          rowClass="task-row"
-                        />
-                      ) : (
-                        <div className="no-record-found">No records found</div>
-                      )
-                    ) : (
-                      <Loader />
-                    )}
-                  </div>
-                </div>
+                <DashboardTask />
                 <DashBoardNotification />
               </div>
             </>

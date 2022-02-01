@@ -4,6 +4,7 @@ import Input from '../../../../../common/Input/Input';
 import {
   getApplicationCompanyDataFromABNOrACN,
   getApplicationCompanyDataFromDebtor,
+  generateRandomRegistrationNumber,
   getApplicationCompanyDropDownData,
   getApplicationCompanyStepDropDownDataBySearch,
   resetEntityTableData,
@@ -14,6 +15,7 @@ import {
 import Loader from '../../../../../common/Loader/Loader';
 import ApplicationEntityNameTable from '../components/ApplicationEntityNameTable/ApplicationEntityNameTable';
 import Modal from '../../../../../common/Modal/Modal';
+import Button from '../../../../../common/Button/Button';
 import IconButton from '../../../../../common/IconButton/IconButton';
 import { errorNotification } from '../../../../../common/Toast';
 import { applicationErrorHelper } from '../../../../../helpers/applicationErrorHelper';
@@ -128,6 +130,10 @@ const ApplicationCompanyStep = () => {
     dispatch(getApplicationCompanyStepDropDownDataBySearch(options));
   }, []);
 
+  const onGenerateRegistrationNumber = () => {
+    dispatch(generateRandomRegistrationNumber({ requestFrom: 'application' }));
+  };
+
   const INPUTS = useMemo(
     () => [
       {
@@ -170,6 +176,12 @@ const ApplicationCompanyStep = () => {
         type: 'search',
         name: 'acn',
         data: [],
+      },
+      {
+        label: 'Generate Registration Number',
+        type: 'button',
+        name: 'randomNumber',
+        onClick: onGenerateRegistrationNumber,
       },
       {
         type: 'section',
@@ -253,7 +265,7 @@ const ApplicationCompanyStep = () => {
         data: [],
       },
     ],
-    [debtors, streetType, entityType, stateValue, isAusOrNew]
+    [debtors, streetType, entityType, stateValue, isAusOrNew, onGenerateRegistrationNumber]
   );
 
   const finalInputs = useMemo(() => {
@@ -268,7 +280,7 @@ const ApplicationCompanyStep = () => {
       name: 'registrationNumber',
       data: [],
     });
-    filteredData.splice(4, 1);
+    filteredData.splice(5, 1);
     return filteredData;
   }, [INPUTS, isAusOrNew]);
 
@@ -631,6 +643,12 @@ const ApplicationCompanyStep = () => {
           );
           break;
         }
+        case 'button': {
+          component = !isAusOrNew && (
+            <Button buttonType="primary-small" title={input.label} onClick={input.onClick} />
+          );
+          break;
+        }
         default:
           return (
             <div className="application-stepper-divider">
@@ -640,7 +658,7 @@ const ApplicationCompanyStep = () => {
       }
       return (
         <React.Fragment key={input?.label}>
-          <span>{input?.label}</span>
+          {input.type === 'button' ? <div /> : <span>{input.label}</span>}
           <div className={input.name === 'abn' && 'application-input-or'}>
             {component}
             {companyState?.errors?.[input?.name] && (
