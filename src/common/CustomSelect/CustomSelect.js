@@ -15,6 +15,7 @@ const CustomSelect = props => {
     ...restProps
   } = props;
   const selectClassName = `custom-select ${className}`;
+  const customSelectRef = useRef();
   const customDropdownRef = useRef();
   const [isOpenCustomSelect, setIsOpenCustomSelect] = useState(false);
   const [selectedList, setSelectedList] = useState(value || []);
@@ -27,17 +28,23 @@ const CustomSelect = props => {
     clickedItem => {
       setSelectedList([...selectedList, clickedItem]);
     },
-    [selectedList, setSelectedList]
+    [selectedList, setSelectedList],
   );
 
   const onItemUnselect = useCallback(
     clickedItem => {
       setSelectedList(selectedList?.filter(item => item?.value !== clickedItem?.value));
     },
-    [selectedList, setSelectedList]
+    [selectedList, setSelectedList],
   );
   useOnClickOutside(customDropdownRef, () => {
     setIsOpenCustomSelect(false);
+  });
+
+  useOnClickOutside(customSelectRef, () => {
+    setIsSearching(false);
+    setSearchedText('');
+    onSearchChange('');
   });
 
   const onSearchCustomSelect = useCallback(
@@ -45,7 +52,7 @@ const CustomSelect = props => {
       setSearchedText(e?.target?.value);
       onSearchChange(e?.target?.value);
     },
-    [isSearching, onSearchChange]
+    [isSearching, onSearchChange],
   );
 
   useEffect(() => {
@@ -54,13 +61,13 @@ const CustomSelect = props => {
       options?.filter(
         item =>
           !selectedItems.includes(item.value) &&
-          item.label.toLowerCase().includes(searchedText.toString().toLowerCase())
-      )
+          item.label.toLowerCase().includes(searchedText.toString().toLowerCase()),
+      ),
     );
   }, [selectedList, searchedText, options]);
 
   useEffect(() => {
-    onChangeCustomSelect(selectedList);
+    if (selectedList !== value) onChangeCustomSelect(selectedList);
   }, [selectedList]);
 
   useEffect(() => {
@@ -72,7 +79,7 @@ const CustomSelect = props => {
 
   return (
     <>
-      <div className={selectClassName} {...restProps}>
+      <div ref={customSelectRef} className={selectClassName} {...restProps}>
         <div className="custom-select__control" onClick={() => setIsOpenCustomSelect(e => !e)}>
           <Input
             type="text"
@@ -81,7 +88,7 @@ const CustomSelect = props => {
             onChange={onSearchCustomSelect}
             onBlur={e => {
               setIsSearching(false);
-              onSearchCustomSelect(e, 'isBlur');
+              onSearchCustomSelect(e, true);
               setInputVal(selectedList.length > 0 ? selectedList[0].label : '');
             }}
             onFocus={() => {
@@ -105,15 +112,11 @@ const CustomSelect = props => {
               <div className="more-text">+{selectedList.length - 1} more</div>
             </Tooltip>
           )}
-          <span className={`material-icons-round ${isOpenCustomSelect && 'font-field'}`}>
-            expand_more
-          </span>
+          <span className={`material-icons-round ${isOpenCustomSelect && 'font-field'}`}>expand_more</span>
         </div>
         <div
           ref={customDropdownRef}
-          className={`custom-select-dropdown ${
-            isOpenCustomSelect && 'active-custom-select-dropdown'
-          }`}
+          className={`custom-select-dropdown ${isOpenCustomSelect && 'active-custom-select-dropdown'}`}
         >
           {selectedList?.length > 0 || notSelectedList?.length > 0 ? (
             <>
