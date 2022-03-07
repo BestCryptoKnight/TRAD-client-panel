@@ -230,7 +230,7 @@ const Table = props => {
         <tbody className="main-table">
           {tableData.map((e, index) => (
             <Row
-              key={e.id}
+              key={e?.id}
               data={e}
               dataIndex={index}
               align={align}

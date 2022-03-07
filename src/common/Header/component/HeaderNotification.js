@@ -27,7 +27,7 @@ const HeaderNotification = () => {
     ({ headerNotificationReducer }) => headerNotificationReducer ?? {},
   );
 
-  const { notificationList, page, pages, total } = notificationData ?? {};
+  const { notificationList, page, pages, total, hasMoreData } = notificationData ?? {};
   const { markAllAsReadLoader } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false,
   );
@@ -101,8 +101,8 @@ const HeaderNotification = () => {
 
   useEffect(() => {
     if (!isFetching) return;
-    if (pages > page) fetchMoreListItems();
-  }, [isFetching, pages, page]);
+    if (hasMoreData) fetchMoreListItems();
+  }, [isFetching, hasMoreData]);
 
   return (
     <>
