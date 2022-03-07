@@ -1,14 +1,16 @@
 import moment from 'moment';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   DATE_FORMAT,
   DATE_FORMAT_CONSTANT_FOR_CALENDER,
 } from '../../../constants/DateFormatConstants';
+import Loader from '../../Loader/Loader';
 import Drawer from '../../Drawer/Drawer';
 import IconButton from '../../IconButton/IconButton';
 import {
+  getHeaderNotificationListURL,
   markAllNotificationAsRead,
   markNotificationAsReadAndDeleteAction,
 } from '../redux/HeaderAction';
@@ -20,12 +22,14 @@ const HeaderNotification = () => {
   const history = useHistory();
   const [notificationDrawer, setNotificationDrawer] = useState(false);
 
-  const { notificationList } = useSelector(
-    ({ headerNotificationReducer }) => headerNotificationReducer ?? []
+  const [isFetching, setIsFetching] = useState(false);
+  const { notificationData } = useSelector(
+    ({ headerNotificationReducer }) => headerNotificationReducer ?? {},
   );
 
+  const { notificationList, page, pages } = notificationData ?? {};
   const { markAllAsReadLoader } = useSelector(
-    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false,
   );
 
   const sortedNotificationList = useMemo(() => {
@@ -83,6 +87,30 @@ const HeaderNotification = () => {
     }
   }, [sortedNotificationList, markAllAsReadLoader]);
 
+  const fetchMoreListItems = () => {
+    try {
+      setTimeout(async () => {
+        const changedPage = page + 1;
+        await dispatch(getHeaderNotificationListURL({ page: changedPage }));
+        setIsFetching(false);
+      }, [500]);
+    } catch (e) {
+      /**/
+    }
+  };
+
+  const handleScroll = e => {
+    if (e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight)
+      if (sortedNotificationList?.length > 0) {
+        setIsFetching(true);
+      }
+  };
+
+  useEffect(() => {
+    if (!isFetching) return;
+    if (pages > page) fetchMoreListItems();
+  }, [isFetching, pages, page]);
+
   return (
     <>
       <IconButton
@@ -97,6 +125,7 @@ const HeaderNotification = () => {
         header={<NotificationDrawerHeader />}
         drawerState={notificationDrawer}
         closeDrawer={() => setNotificationDrawer(false)}
+        onDrawerScroll={handleScroll}
       >
         <>
           {sortedNotificationList?.length > 0 && (
@@ -150,8 +179,9 @@ const HeaderNotification = () => {
               </div>
             ))
           ) : (
-            <div className="no-record-found">No new notification</div>
+            !notificationList?.length && <div className="no-record-found">No new notification</div>
           )}
+           {pages > page && <Loader />}
         </>
       </Drawer>
     </>
