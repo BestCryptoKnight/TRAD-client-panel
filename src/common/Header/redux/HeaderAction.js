@@ -176,10 +176,12 @@ export const logoutUser = () => {
 
 // socket actions
 
-export const getHeaderNotificationListURL = () => {
+export const getHeaderNotificationListURL = page => {
   return async dispatch => {
     try {
-      const response = await HeaderApiService.notificationApiServices.getHeaderNotificationList();
+      const response = await HeaderApiService.notificationApiServices.getHeaderNotificationList(
+        page
+      );
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: HEADER_NOTIFICATION_REDUX_CONSTANTS.GET_HEADER_NOTIFICATION,
@@ -187,7 +189,7 @@ export const getHeaderNotificationListURL = () => {
         });
       }
     } catch (e) {
-      /**/
+      displayErrors(e);
     }
   };
 };
@@ -208,10 +210,7 @@ export const updateHeaderNotificationOnTaskAssignedAction = data => {
 export const markNotificationAsReadAndDeleteAction = notificationId => {
   return async dispatch => {
     try {
-      const response =
-        await HeaderApiService.notificationApiServices.markNotificationAsReadAndDelete(
-          notificationId
-        );
+      const response = await HeaderApiService.notificationApiServices.markNotificationAsReadAndDelete(notificationId);
       if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message ?? 'Notification deleted successfully');
         dispatch({
