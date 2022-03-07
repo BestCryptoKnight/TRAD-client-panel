@@ -29,7 +29,7 @@ export const headerNotificationReducer = (
   switch (action.type) {
     case HEADER_NOTIFICATION_REDUX_CONSTANTS.GET_HEADER_NOTIFICATION: {
       const list = state?.notificationData?.notificationList ?? [];
-      const { page, pages, docs } = action?.data;
+      const { page, pages, docs, total } = action?.data;
       let notificationReceived = false;
       if (action?.data?.length > 0) notificationReceived = true;
       return {
@@ -38,6 +38,7 @@ export const headerNotificationReducer = (
           notificationList: [...new Set([...list, ...docs])],
           page,
           pages,
+          total,
         },
         notificationReceived,
       };
