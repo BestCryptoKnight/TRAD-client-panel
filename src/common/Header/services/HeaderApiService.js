@@ -10,8 +10,10 @@ const HeaderApiService = {
   changePassword: data => ApiService.putData(HEADER_URLS.CHANGE_PASSWORD_URL, data),
   logoutUser: () => ApiService.deleteData(HEADER_URLS.LOGOUT_URL),
   notificationApiServices: {
-    getHeaderNotificationList: () =>
-      ApiService.getData(HEADER_URLS.HEADER_NOTIFICATIONS.GET_HEADER_NOTIFICATION_LIST_URL),
+    getHeaderNotificationList: params =>
+      ApiService.getData(HEADER_URLS.HEADER_NOTIFICATIONS.GET_HEADER_NOTIFICATION_LIST_URL, {
+        params,
+      }),
     markNotificationAsReadAndDelete: notificationId =>
       ApiService.putData(
         `${HEADER_URLS.HEADER_NOTIFICATIONS.MARK_AS_READ_NOTIFICATION_URL}${notificationId}`
