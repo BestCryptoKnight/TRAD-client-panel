@@ -19,7 +19,8 @@ export const displayErrors = e => {
         errorNotification(e?.response?.data?.message || 'Bad request');
         break;
       default:
-        errorNotification(e?.message ?? 'Error');
+        if (e?.message !== 'Previous same call cancellation')
+          errorNotification(e?.message ?? 'Error');
         throw e;
     }
   }
