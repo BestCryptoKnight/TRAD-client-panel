@@ -83,7 +83,6 @@ const HeaderNotification = () => {
   };
 
   const handleScroll = e => {
-    console.log(Math.abs(e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight));
     if (
       Math.abs(e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight) < 5 &&
       sortedNotificationList?.length > 0
