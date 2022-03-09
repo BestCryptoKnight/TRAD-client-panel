@@ -105,7 +105,7 @@ const Table = props => {
         /**/
       }
     },
-    [refreshData]
+    [refreshData],
   );
 
   const handleViewDocument = useCallback(async (header, row) => {
@@ -140,7 +140,7 @@ const Table = props => {
     return data.map((e, index) => {
       const finalObj = {
         id: e._id ?? e.id ?? index,
-        uploadByType: e?.uploadByType
+        uploadByType: e?.uploadByType,
       };
       headers.forEach(f => {
         finalObj[`${f.name}`] = processTableDataByType({ header: f, row: e, actions });
@@ -166,7 +166,7 @@ const Table = props => {
         return finalData;
       });
     },
-    [setSelectedRowData, selectedRowData]
+    [setSelectedRowData, selectedRowData],
   );
 
   const onSelectAllRow = useCallback(() => {
@@ -189,7 +189,7 @@ const Table = props => {
 
       recordSelected(id);
     },
-    [expandedRowId]
+    [expandedRowId],
   );
 
   useEffect(() => {
@@ -216,27 +216,21 @@ const Table = props => {
               headers.map(heading => (
                 <th
                   key={heading.label}
-                  align={
-                    data?.isCompleted?.props?.className === 'table-checkbox' ? 'center' : align
-                  }
+                  align={data?.isCompleted?.props?.className === 'table-checkbox' ? 'center' : align}
                   valign={valign}
-                  className={`${headerClass} ${
-                    heading.type === 'boolean' ? 'table-checkbox-header' : ''
-                  }  `}
+                  className={`${headerClass} ${heading.type === 'boolean' ? 'table-checkbox-header' : ''}  `}
                 >
                   {heading.label}
                 </th>
               ))}
-            {(haveActions || extraColumns.length > 0) && (
-              <th style={{ position: 'sticky', right: 0 }} />
-            )}
+            {(haveActions || extraColumns.length > 0) && <th style={{ position: 'sticky', right: 0 }} />}
             {tableButtonActions.length > 0 && <th align={align}>Credit Limit Actions</th>}
           </tr>
         </thead>
         <tbody className="main-table">
           {tableData.map((e, index) => (
             <Row
-              key={index.toString()}
+              key={e?.id}
               data={e}
               dataIndex={index}
               align={align}
@@ -337,7 +331,7 @@ function Row(props) {
       //    const remainingBottomDistance = window.outerHeight - e.screenY;
       //    const remainingRightDistance = window.outerWidth - e.screenX;
     },
-    [setShowActionMenu, setMenuPosition]
+    [setShowActionMenu, setMenuPosition],
   );
   const onClickAction = useCallback(
     (e, type) => {
@@ -345,7 +339,7 @@ function Row(props) {
       recordActionClick(type, data.id, data);
       setShowActionMenu(false);
     },
-    [recordActionClick, data, showActionMenu]
+    [recordActionClick, data, showActionMenu],
   );
 
   const onRowSelected = useCallback(() => {
@@ -355,16 +349,10 @@ function Row(props) {
   return (
     <>
       <tr
-        onClick={() =>
-          isExpandable ? handleRowExpansion(data?.id) : recordSelected(data.id, data)
-        }
+        onClick={() => (isExpandable ? handleRowExpansion(data?.id) : recordSelected(data.id, data))}
         className={`
           main-table-row
-          ${
-            data?.isCompleted?.props?.children?.props?.checked
-              ? `completedTask ${rowClass}`
-              : rowClass
-          } 
+          ${data?.isCompleted?.props?.children?.props?.checked ? `completedTask ${rowClass}` : rowClass} 
           ${dataIndex % 2 === 0 ? 'bg-white' : 'bg-background-color'}
         `}
       >
@@ -375,27 +363,25 @@ function Row(props) {
         )}
         {isExpandable && (
           <td align="center" className="expandable-arrow">
-            <span
-              className={`material-icons-round ${isRowExpanded ? 'rotate-expandable-arrow' : ''}`}
-            >
+            <span className={`material-icons-round ${isRowExpanded ? 'rotate-expandable-arrow' : ''}`}>
               keyboard_arrow_right
             </span>
           </td>
         )}
-        {Object.entries(data).map(([key, value], index) => {
+        {Object.entries(data).map(([key, value]) => {
           switch (key) {
             case 'id':
             case 'uploadByType':
               return null;
             case 'priority':
               return (
-                <td key={index.toString()} align={align}>
+                <td key={key} align={align}>
                   <span className={`task-priority-${value}`}>{value ?? '-'}</span>
                 </td>
               );
             case 'isCompleted':
               return (
-                <td key={index.toString()} align={align}>
+                <td key={key} align={align}>
                   {value ?? '-'}
                 </td>
               );
@@ -403,7 +389,7 @@ function Row(props) {
               return null;
             default:
               return (
-                <td key={index.toString()} align={align}>
+                <td key={key} align={align}>
                   {value?.length > 50 ? (
                     <Tooltip
                       overlayClassName="tooltip-top-class"
@@ -428,17 +414,14 @@ function Row(props) {
               dataIndex % 2 === 0 ? 'bg-white' : 'bg-background-color'
             }`}
           >
-            <span
-              className="material-icons-round cursor-pointer table-action"
-              onClick={onClickActionToggleButton}
-            >
+            <span className="material-icons-round cursor-pointer table-action" onClick={onClickActionToggleButton}>
               more_vert
             </span>
           </td>
         )}
-        {extraColumns.map((element, index) => (
+        {extraColumns.map(element => (
           <td
-            key={index.toString()}
+            key={JSON.stringify(element)}
             width={10}
             align={align}
             valign={valign}
@@ -453,8 +436,14 @@ function Row(props) {
             {element(data)}
           </td>
         ))}
-        {tableButtonActions?.map((element, index) => (
-          <td key={index.toString()} width={10} align={align} valign={valign} className={rowClass}>
+        {tableButtonActions?.map(element => (
+          <td
+            key={JSON.stringify(element)}
+            width={10}
+            align={align}
+            valign={valign}
+            className={rowClass}
+          >
             {element(data)}
           </td>
         ))}
@@ -531,11 +520,7 @@ function TableLinkDrawer(props) {
   };
 
   return (
-    <Drawer
-      header={drawerState.drawerHeader}
-      drawerState={drawerState?.visible}
-      closeDrawer={closeDrawer}
-    >
+    <Drawer header={drawerState.drawerHeader} drawerState={drawerState?.visible} closeDrawer={closeDrawer}>
       <div className="contacts-grid">
         {drawerState?.data?.map(row => (
           <>
