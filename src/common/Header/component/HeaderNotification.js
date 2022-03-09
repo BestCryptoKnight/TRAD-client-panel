@@ -84,7 +84,7 @@ const HeaderNotification = () => {
 
   const handleScroll = e => {
     if (
-      Math.abs(e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight) < 5 &&
+      Math.abs(e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight) < 100 &&
       sortedNotificationList?.length > 0
     )
       setIsFetching(true);

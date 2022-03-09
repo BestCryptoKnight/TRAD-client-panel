@@ -236,6 +236,11 @@
   margin: 0 0 5px 25px;
 }
 
+.notification-list-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
 .notification-detail-row {
   flex: 1;
   display: grid;
