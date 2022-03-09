@@ -12,7 +12,7 @@ const instance = axios.create({
 });
 
 // Store requests
-const sourceRequest = {};
+// const sourceRequest = {};
 
 // Add a request interceptor
 instance.interceptors.request.use(
@@ -23,15 +23,15 @@ instance.interceptors.request.use(
       request.headers.common.authorization = token;
     }
 
-    // If the application exists cancel
-    if (sourceRequest[request.url]) {
-      sourceRequest[request.url].cancel('Previous same call cancellation');
-    }
+    // // If the application exists cancel
+    // if (sourceRequest[request.url]) {
+    //   sourceRequest[request.url].cancel('Previous same call cancellation');
+    // }
 
-    // Store or update application token
-    const axiosSource = axios.CancelToken.source();
-    sourceRequest[request.url] = { cancel: axiosSource.cancel };
-    request.cancelToken = axiosSource.token;
+    // // Store or update application token
+    // const axiosSource = axios.CancelToken.source();
+    // sourceRequest[request.url] = { cancel: axiosSource.cancel };
+    // request.cancelToken = axiosSource.token;
 
     return request;
   },
