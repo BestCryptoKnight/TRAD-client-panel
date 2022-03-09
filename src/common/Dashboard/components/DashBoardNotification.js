@@ -12,7 +12,7 @@ import {
 const DashBoardNotification = () => {
   const dispatch = useDispatch();
   const [isFetching, setIsFetching] = useState(false);
-  const { isLoading, notificationList, page, pages, total, hasMoreData } = useSelector(
+  const { notificationList, page, pages, total, hasMoreData } = useSelector(
     ({ dashboard }) => dashboard?.dashboardNotification ?? {},
   );
 
