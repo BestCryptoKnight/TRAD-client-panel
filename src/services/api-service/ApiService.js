@@ -11,15 +11,29 @@ const instance = axios.create({
   params: {}, // do not remove this, its added to add params later in the config
 });
 
+// Store requests
+// const sourceRequest = {};
+
 // Add a request interceptor
 instance.interceptors.request.use(
-  async config => {
+  async request => {
     const token = getAuthTokenLocalStorage();
 
     if (token) {
-      config.headers.common.authorization = token;
+      request.headers.common.authorization = token;
     }
-    return config;
+
+    // // If the application exists cancel
+    // if (sourceRequest[request.url]) {
+    //   sourceRequest[request.url].cancel('Previous same call cancellation');
+    // }
+
+    // // Store or update application token
+    // const axiosSource = axios.CancelToken.source();
+    // sourceRequest[request.url] = { cancel: axiosSource.cancel };
+    // request.cancelToken = axiosSource.token;
+
+    return request;
   },
   error => {
     return Promise.reject(error);
