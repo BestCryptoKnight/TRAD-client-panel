@@ -518,6 +518,17 @@ const CreditLimitsList = () => {
               />
             </div>
           </div>
+          <div>
+            <div className="disclaimer-title">Disclaimer</div>
+            <div className="disclaimer-body">
+              Full details of the terms and conditions relating to individual credit limits can only
+              only be determined by reference to the original limit endorsements issued by your The
+              list provided is a summary of your credit limits only, based on obtained from the
+              insurer&apos;s website. Whilst every precaution has been TCR to TCR to provide you
+              with accurate and up-to-date information, TCR cannot be held responsible for any
+              errors or omissions contained herein.
+            </div>
+          </div>
           {docs?.length > 0 ? (
             <>
               <div className="common-list-container">
