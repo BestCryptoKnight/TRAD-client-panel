@@ -5,7 +5,6 @@ import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Button from '../../../common/Button/Button';
-// import CustomSelect from '../../../common/CustomSelect/CustomSelect';
 import IconButton from '../../../common/IconButton/IconButton';
 import Input from '../../../common/Input/Input';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
