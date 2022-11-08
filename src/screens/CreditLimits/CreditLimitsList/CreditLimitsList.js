@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Button from '../../../common/Button/Button';
+import CustomSelect from '../../../common/CustomSelect/CustomSelect';
 import IconButton from '../../../common/IconButton/IconButton';
 import Input from '../../../common/Input/Input';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
@@ -590,14 +591,14 @@ const CreditLimitsList = () => {
               </div>
               <div className="filter-modal-row">
                 <div className="form-title">Debtor Name</div>
-                <Select
-                  className="filter-select"
+                <CustomSelect
+                  className="credit-limit-custom-select"
                   placeholder="Select Entity Type"
                   name="debtorIds"
                   options={dropdownData?.debtors}
                   value={tempFilter?.debtorIds}
                   onChangeCustomSelect={handleDebtorFilterChange}
-                  onInputChange={text => handleOnSelectSearchInputChange('debtorIds', text)}
+                  onSearchChange={text => handleOnSelectSearchInputChange('debtorIds', text)}
                   isSearchble
                 />
               </div>
