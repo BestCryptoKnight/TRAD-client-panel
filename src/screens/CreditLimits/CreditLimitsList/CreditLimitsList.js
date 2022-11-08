@@ -594,11 +594,11 @@ const CreditLimitsList = () => {
                 <Select
                   className="filter-select"
                   placeholder="Select Entity Type"
-                  name="debtorId"
+                  name="debtorIds"
                   options={dropdownData?.debtors}
                   value={tempFilter?.debtorIds}
                   onChangeCustomSelect={handleDebtorFilterChange}
-                  onInputChange={text => handleOnSelectSearchInputChange('debtorId', text)}
+                  onInputChange={text => handleOnSelectSearchInputChange('debtorIds', text)}
                   isSearchble
                 />
               </div>
