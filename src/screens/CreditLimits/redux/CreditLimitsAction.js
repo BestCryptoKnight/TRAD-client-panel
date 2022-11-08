@@ -17,6 +17,7 @@ import {
   stopGeneralLoaderOnSuccessOrFail,
 } from '../../../common/GeneralLoader/redux/GeneralLoaderAction';
 import { store } from '../../../redux/store';
+import { DashboardApiService } from '../../../common/Dashboard/services/DashboardApiService';
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
@@ -144,6 +145,23 @@ export const getCreditLimitsFilter = () => {
         dispatch({
           type: CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST,
           data: response?.data?.data,
+        });
+      }
+    } catch (e) {
+      displayErrors(e);
+    }
+  };
+};
+export const getCreditLimitsFilterDropDownDataBySearch = options => {
+  return async dispatch => {
+    try {
+      const response = await DashboardApiService.getEntitiesBySearch(options);
+
+      if (response?.data?.status === 'SUCCESS') {
+        dispatch({
+          type: CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST,
+          data: response?.data?.data,
+          name: options.entityType,
         });
       }
     } catch (e) {

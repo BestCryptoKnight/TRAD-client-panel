@@ -5,7 +5,6 @@ import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Button from '../../../common/Button/Button';
-import CustomSelect from '../../../common/CustomSelect/CustomSelect';
 import IconButton from '../../../common/IconButton/IconButton';
 import Input from '../../../common/Input/Input';
 import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
@@ -31,7 +30,8 @@ import {
   modifyClientCreditLimit,
   resetCreditLimitListData,
   saveCreditLimitColumnList,
-  surrenderClientCreditLimit
+  surrenderClientCreditLimit,
+  getCreditLimitsFilterDropDownDataBySearch
 } from '../redux/CreditLimitsAction';
 import { CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
 
@@ -489,6 +489,16 @@ const CreditLimitsList = () => {
     }
   }, [docs]);
 
+  const handleOnSelectSearchInputChange = useCallback((searchEntity, text) => {
+    const options = {
+      searchString: text,
+      entityType: searchEntity,
+      requestFrom: 'creditLimits',
+      isForFilter: true,
+    };
+    dispatch(getCreditLimitsFilterDropDownDataBySearch(options));
+  }, []);
+
   return (
     <>
       {!creditLimitListPageLoaderAction ? (
@@ -580,13 +590,15 @@ const CreditLimitsList = () => {
               </div>
               <div className="filter-modal-row">
                 <div className="form-title">Debtor Name</div>
-                <CustomSelect
-                  className="credit-limit-custom-select"
+                <Select
+                  className="filter-select"
                   placeholder="Select Entity Type"
                   name="debtorIds"
                   options={dropdownData?.debtors}
                   value={tempFilter?.debtorIds}
                   onChangeCustomSelect={handleDebtorFilterChange}
+                  onInputChange={text => handleOnSelectSearchInputChange('debtorIds', text)}
+                  isSearchble
                 />
               </div>
               <div className="filter-modal-row">
