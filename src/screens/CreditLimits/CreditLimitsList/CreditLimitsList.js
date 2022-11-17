@@ -31,7 +31,8 @@ import {
   modifyClientCreditLimit,
   resetCreditLimitListData,
   saveCreditLimitColumnList,
-  surrenderClientCreditLimit
+  surrenderClientCreditLimit,
+  getCreditLimitsFilterDropDownDataBySearch
 } from '../redux/CreditLimitsAction';
 import { CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
 
@@ -489,6 +490,16 @@ const CreditLimitsList = () => {
     }
   }, [docs]);
 
+  const handleOnSelectSearchInputChange = useCallback((searchEntity, text) => {
+    const options = {
+      searchString: text,
+      entityType: searchEntity,
+      requestFrom: 'creditLimits',
+      isForFilter: true,
+    };
+    dispatch(getCreditLimitsFilterDropDownDataBySearch(options));
+  }, []);
+
   return (
     <>
       {!creditLimitListPageLoaderAction ? (
@@ -587,6 +598,8 @@ const CreditLimitsList = () => {
                   options={dropdownData?.debtors}
                   value={tempFilter?.debtorIds}
                   onChangeCustomSelect={handleDebtorFilterChange}
+                  onSearchChange={_.debounce(text => handleOnSelectSearchInputChange('debtorIds', text),800)}
+                  isSearchble
                 />
               </div>
               <div className="filter-modal-row">
