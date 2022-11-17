@@ -14,7 +14,7 @@ const CreditLimitTabMapper = {
 const handleSearchWithSubModules = (path, module, hasSubModule, subModule, history) => {
   if (hasSubModule) {
     switch (module) {
-      case 'debtor':
+      case 'debtors':
         setViewCreditLimitActiveTabIndex(CreditLimitTabMapper?.[subModule]);
         break;
       case 'credit limit':
@@ -38,7 +38,7 @@ export const handleGlobalSearchSelect = (history, module, id, hasSubModule, subM
           history.push(`/applications/application/generate/?applicationId=${id}`);
         else history.push(`/applications/detail/view/${id}`);
         break;
-      case 'debtor':
+      case 'debtors':
         handleSearchWithSubModules(
           `/credit-limits/${id}`,
           module,

@@ -598,7 +598,7 @@ const CreditLimitsList = () => {
                   options={dropdownData?.debtors}
                   value={tempFilter?.debtorIds}
                   onChangeCustomSelect={handleDebtorFilterChange}
-                  onSearchChange={text => handleOnSelectSearchInputChange('debtorIds', text)}
+                  onSearchChange={_.debounce(text => handleOnSelectSearchInputChange('debtorIds', text),800)}
                   isSearchble
                 />
               </div>
