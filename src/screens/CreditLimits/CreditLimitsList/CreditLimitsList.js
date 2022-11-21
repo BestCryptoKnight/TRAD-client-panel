@@ -595,7 +595,7 @@ const CreditLimitsList = () => {
                   className="credit-limit-custom-select"
                   placeholder="Select Entity Type"
                   name="debtorIds"
-                  options={dropdownData?.debtors}
+                  options={dropdownData?.debtorIds}
                   value={tempFilter?.debtorIds}
                   onChangeCustomSelect={handleDebtorFilterChange}
                   onSearchChange={_.debounce(text => handleOnSelectSearchInputChange('debtorIds', text),800)}
