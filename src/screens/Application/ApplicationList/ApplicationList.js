@@ -20,6 +20,7 @@ import {
   resetApplicationListPaginationData,
   saveApplicationColumnNameList,
   updateEditApplicationField,
+  deleteApplicationApiCall
 } from '../redux/ApplicationAction';
 import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
@@ -487,15 +488,53 @@ const ApplicationList = () => {
     [setShowConfirmModal]
   );
 
+  const { generateApplicationDeleteButtonLoaderAction } = useSelector(
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false,
+  );
+
+  const callBack = useCallback(() => {
+    toggleConfirmationModal();
+    const filters = {
+      entityType:
+        (paramEntityType?.trim()?.length ?? -1) > 0 ? paramEntityType : applicationListFilters?.entityType ?? undefined,
+      clientId: applicationListFilters?.clientId,
+      debtorId: applicationListFilters?.debtorId,
+
+      status: (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status,
+      minCreditLimit:
+        (paramMinCreditLimit?.trim()?.length ?? -1) > 0 ? paramMinCreditLimit : applicationListFilters?.minCreditLimit,
+      maxCreditLimit:
+        (paramMaxCreditLimit?.trim()?.length ?? -1) > 0 ? paramMaxCreditLimit : applicationListFilters?.maxCreditLimit,
+      startDate: paramStartDate || applicationListFilters?.startDate,
+      endDate: paramEndDate || applicationListFilters?.endDate,
+    };
+    Object.entries(filters)?.forEach(([name, value]) => {
+      dispatchFilter({
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        name,
+        value,
+      });
+    });
+    getApplicationsByFilter({ ...filters });
+  }, [getApplicationsByFilter]);
+
   const deleteButtons = useMemo(
     () => [
       { title: 'Close', buttonType: 'primary-1', onClick: () => toggleConfirmationModal() },
       {
         title: 'Delete',
         buttonType: 'danger',
-        onClick : console.log(applicationId)
+        onClick: async () => {
+          try {
+            await dispatch(deleteApplicationApiCall(applicationId, callBack));
+          } catch (e) {
+            /**/
+          }
+        },
+        isLoading: generateApplicationDeleteButtonLoaderAction,
       },
     ],
+    [toggleConfirmationModal, applicationId, generateApplicationDeleteButtonLoaderAction],
   );
 
   const deleteApplication = (appId) => {
