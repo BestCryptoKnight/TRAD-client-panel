@@ -196,15 +196,6 @@ const Table = props => {
   useEffect(() => {
     onChangeRowSelection(selectedRowData);
   }, [selectedRowData, onChangeRowSelection]);
-  const [applicationDeleteHeader, setApplicationDeleteHeader] = useState(false);
-
-  useEffect(() => {
-    data.forEach(item => {
-      if ('applicationId' in item) {
-        setApplicationDeleteHeader(true);
-      }
-    });
-  }, [applicationDeleteHeader]);
 
   return (
     <>
@@ -233,7 +224,6 @@ const Table = props => {
                   {heading.label}
                 </th>
               ))}
-            {applicationDeleteHeader && <th> </th>}
             {(haveActions || extraColumns.length > 0) && <th style={{ position: 'sticky', right: 0 }} />}
             {tableButtonActions.length > 0 && <th align={align}>Credit Limit Actions</th>}
           </tr>
@@ -385,6 +375,24 @@ function Row(props) {
         )}
         {Object.entries(data).map(([key, value]) => {
           switch (key) {
+            case 'delete':
+              return (
+                <td align="right">
+                  {data.status === 'Draft' ? (
+                    <span
+                      className="material-icons-round font-danger cursor-pointer"
+                      onClick={e => {
+                        e.stopPropagation();
+                        deleteApplication(data?.id);
+                      }}
+                    >
+                      delete_outline
+                    </span>
+                  ) : (
+                    <span> </span>
+                  )}
+                </td>
+              );
             case 'id':
             case 'uploadByType':
               return null;
@@ -452,21 +460,6 @@ function Row(props) {
             {element(data)}
           </td>
         ))}
-        {data.status === 'Draft' ? (
-          <td align="right">
-            <span
-              className="material-icons-round font-danger cursor-pointer"
-              onClick={e => {
-                e.stopPropagation();
-                deleteApplication(data?.id);
-              }}
-            >
-              delete_outline
-            </span>
-          </td>
-        ) : (
-          <td> </td>
-        )}
       </tr>
       <ExpandedTableHelper docs={data?.dataToExpand} isRowExpanded={isRowExpanded} refreshData={refreshData} />
       {showActionMenu && (
