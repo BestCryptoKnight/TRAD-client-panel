@@ -62,6 +62,7 @@ const Table = props => {
     haveActions,
     showCheckbox,
     onChangeRowSelection,
+    deleteApplication,
   } = props;
   const tableClassName = `table-class ${tableClass}`;
   const [drawerState, dispatchDrawerState] = useReducer(drawerReducer, drawerInitialState);
@@ -248,6 +249,7 @@ const Table = props => {
               isSelected={selectedRowData.some(f => f.id === e.id)}
               onRowSelectedDataChange={onRowSelectedDataChange}
               refreshData={refreshData}
+              deleteApplication={deleteApplication}
             />
           ))}
         </tbody>
@@ -273,6 +275,7 @@ Table.propTypes = {
   haveActions: PropTypes.bool,
   showCheckbox: PropTypes.bool,
   onChangeRowSelection: PropTypes.func,
+  deleteApplication: PropTypes.func,
 };
 
 Table.defaultProps = {
@@ -292,6 +295,7 @@ Table.defaultProps = {
   recordActionClick: () => {},
   refreshData: () => {},
   onChangeRowSelection: () => {},
+  deleteApplication: () => {},
 };
 
 export default Table;
@@ -315,6 +319,7 @@ function Row(props) {
     isSelected,
     onRowSelectedDataChange,
     refreshData,
+    deleteApplication,
   } = props;
 
   const [showActionMenu, setShowActionMenu] = useState(false);
@@ -370,6 +375,24 @@ function Row(props) {
         )}
         {Object.entries(data).map(([key, value]) => {
           switch (key) {
+            case 'delete':
+              return (
+                <td align="right">
+                  {data.status === 'Draft' ? (
+                    <span
+                      className="material-icons-round font-danger cursor-pointer"
+                      onClick={e => {
+                        e.stopPropagation();
+                        deleteApplication(data?.id);
+                      }}
+                    >
+                      delete_outline
+                    </span>
+                  ) : (
+                    <span> </span>
+                  )}
+                </td>
+              );
             case 'id':
             case 'uploadByType':
               return null;
@@ -425,11 +448,7 @@ function Row(props) {
             width={10}
             align={align}
             valign={valign}
-            className={`${
-              data?.isCompleted?.props?.children?.props?.checked
-                ? `completedTask ${rowClass}`
-                : rowClass
-            } 
+            className={`${data?.isCompleted?.props?.children?.props?.checked ? `completedTask ${rowClass}` : rowClass} 
             ${dataIndex % 2 === 0 ? 'bg-white' : 'bg-background-color'}
             fixed-action-menu`}
           >
@@ -437,22 +456,12 @@ function Row(props) {
           </td>
         ))}
         {tableButtonActions?.map(element => (
-          <td
-            key={JSON.stringify(element)}
-            width={10}
-            align={align}
-            valign={valign}
-            className={rowClass}
-          >
+          <td key={JSON.stringify(element)} width={10} align={align} valign={valign} className={rowClass}>
             {element(data)}
           </td>
         ))}
       </tr>
-      <ExpandedTableHelper
-        docs={data?.dataToExpand}
-        isRowExpanded={isRowExpanded}
-        refreshData={refreshData}
-      />
+      <ExpandedTableHelper docs={data?.dataToExpand} isRowExpanded={isRowExpanded} refreshData={refreshData} />
       {showActionMenu && (
         <DropdownMenu style={menuPosition} toggleMenu={setShowActionMenu}>
           <div className="menu-name" onClick={e => onClickAction(e, TABLE_ROW_ACTIONS.EDIT_ROW)}>
@@ -485,6 +494,7 @@ Row.propTypes = {
   onRowSelectedDataChange: PropTypes.func,
   showCheckbox: PropTypes.bool,
   refreshData: PropTypes.func,
+  deleteApplication: PropTypes.func,
 };
 
 Row.defaultProps = {
@@ -502,6 +512,7 @@ Row.defaultProps = {
   recordActionClick: () => {},
   onRowSelectedDataChange: () => {},
   refreshData: () => {},
+  deleteApplication: () => {},
 };
 
 function TableLinkDrawer(props) {
