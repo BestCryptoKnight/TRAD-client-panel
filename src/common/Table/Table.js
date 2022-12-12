@@ -377,7 +377,7 @@ function Row(props) {
           switch (key) {
             case 'delete':
               return (
-                <td align="right">
+                <td align={align}>
                   {data.status === 'Draft' ? (
                     <span
                       className="material-icons-round font-danger cursor-pointer"
@@ -389,7 +389,7 @@ function Row(props) {
                       delete_outline
                     </span>
                   ) : (
-                    <span> </span>
+                    <span>-</span>
                   )}
                 </td>
               );
