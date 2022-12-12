@@ -377,7 +377,7 @@ function Row(props) {
           switch (key) {
             case 'delete':
               return (
-                <td align={align}>
+                <td align="center">
                   {data.status === 'Draft' ? (
                     <span
                       className="material-icons-round font-danger cursor-pointer"
