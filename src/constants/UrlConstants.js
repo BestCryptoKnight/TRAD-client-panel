@@ -93,6 +93,7 @@ export const CREDIT_LIMITS_URLS = {
     APPLICATION_LIST: `${BASE_URL}application/`,
     COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
     UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
+    DOWNLOAD_APPLICATION_CSV: `${BASE_URL}application/download/`,
   },
 
   TASKS: {
