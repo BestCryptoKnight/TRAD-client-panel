@@ -887,3 +887,18 @@ export const downloadCreditLimitDecisionLetter = id => {
     return false;
   };
 };
+
+export const CreditLimitApplicationDownloadTab = async id => {
+  startGeneralLoaderOnRequest('CreditLimitapplicationDownloadButtonLoaderAction');
+  try {
+    const response = await CreditLimitsApiService.downloadApplicationCSVFile(id);
+    if (response?.statusText === 'OK') {
+      stopGeneralLoaderOnSuccessOrFail(`CreditLimitapplicationDownloadButtonLoaderAction`);
+      return response;
+    }
+  } catch (e) {
+    stopGeneralLoaderOnSuccessOrFail(`CreditLimitapplicationDownloadButtonLoaderAction`);
+    displayErrors(e);
+  }
+  return false;
+};
