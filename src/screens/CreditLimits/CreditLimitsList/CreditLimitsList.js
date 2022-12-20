@@ -674,7 +674,7 @@ const CreditLimitsList = () => {
             </Modal>
           )}
           {surrenderModal && (
-            <Modal header="Modify Credit Limit" buttons={surrenderLimitButtons} hideModal={toggleSurrenderModal}>
+            <Modal header="Surrender Credit Limit" buttons={surrenderLimitButtons} hideModal={toggleSurrenderModal}>
               <span className="confirmation-message">Are you sure you want to surrender this credit limit?</span>
             </Modal>
           )}
