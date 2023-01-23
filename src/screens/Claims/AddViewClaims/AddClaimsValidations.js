@@ -29,7 +29,7 @@ export const addClaimsValidations = async (dispatch, data, history) => {
 
   if (!data.claimsmanager || data?.claimsmanager?.length <= 0) {
     validated = false;
-    errors.name = 'Please select claims manager';
+    errors.claimsmanager = 'Please select claims manager';
   }
 
   const { name, underwriter, grossdebtamount, amountpaid, claimpaidbyuw, stage, claimsmanager } =
