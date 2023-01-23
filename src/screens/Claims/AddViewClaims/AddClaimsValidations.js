@@ -27,14 +27,13 @@ export const addClaimsValidations = async (dispatch, data, history) => {
     errors.grossdebtamount = 'Amount should be number';
   }
 
-  const {
-    name,
-    underwriter,
-    grossdebtamount,
-    amountpaid,
-    claimpaidbyuw,
-    stage,
-  } = data;
+  if (!data.claimsmanager || data?.claimsmanager?.length <= 0) {
+    validated = false;
+    errors.claimsmanager = 'Please select claims manager';
+  }
+
+  const { name, underwriter, grossdebtamount, amountpaid, claimpaidbyuw, stage, claimsmanager } =
+    data;
 
   preparedData = {
     name,
@@ -43,6 +42,7 @@ export const addClaimsValidations = async (dispatch, data, history) => {
     claimpaidbyuw,
     underwriter: underwriter?.value,
     stage: stage?.value,
+    claimsmanager: claimsmanager?.value?.toString(),
   };
 
   if (validated) {

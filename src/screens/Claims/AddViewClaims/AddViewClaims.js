@@ -1,24 +1,31 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import ReactSelect from 'react-select';
 import DatePicker from 'react-datepicker';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import Button from '../../../common/Button/Button';
 import Input from '../../../common/Input/Input';
-import {STAGE, UNDERWRITER,} from './AddClaimsDropdownHelper';
-import {getClaimDetails, handleClaimChange, resetClaimDetails} from '../redux/ClaimsAction';
-import {addClaimsValidations} from './AddClaimsValidations';
+import { STAGE, UNDERWRITER } from './AddClaimsDropdownHelper';
+import {
+  getClaimDetails,
+  getCliamsManagerListAction,
+  handleClaimChange,
+  resetClaimDetails,
+} from '../redux/ClaimsAction';
+import { addClaimsValidations } from './AddClaimsValidations';
 import Loader from '../../../common/Loader/Loader';
 import ClaimsTabContainer from '../components/ClaimsTabContainer';
-import {NumberCommaSeparator} from "../../../helpers/NumberCommaSeparator";
-import {DECIMAL_REGEX} from "../../../constants/RegexConstants";
+import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
+import { DECIMAL_REGEX } from '../../../constants/RegexConstants';
 
 const AddViewClaims = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { type, id } = useParams();
   const claimDetails = useSelector(({ claims }) => claims?.claimDetails ?? {});
+  const claimsmanager = useSelector(({ claims }) => claims?.claimsmanager ?? []);
+
   const backToClaimsList = useCallback(() => {
     history.replace('/claims');
   }, [history]);
@@ -31,6 +38,10 @@ const AddViewClaims = () => {
   const { viewClaimLoader, saveClaimsButtonLoaderAction } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
+
+  const managerList = claimsmanager?.map(client => {
+    return { name: 'claimsmanager', label: client?.label, value: client?.value };
+  });
 
   const changeClaimFields = useCallback((name, value) => {
     dispatch(handleClaimChange(name, value));
@@ -48,11 +59,14 @@ const AddViewClaims = () => {
     changeClaimDetails(name, e);
   }, []);
 
-  const onHandleAmountInputTextChange = useCallback(e => {
-    const { name, value } = e.target;
-    const updatedVal = value?.toString()?.replaceAll(',', '');
-    if (DECIMAL_REGEX.test(updatedVal)) changeClaimFields(name, updatedVal);
-  }, [DECIMAL_REGEX]);
+  const onHandleAmountInputTextChange = useCallback(
+    e => {
+      const { name, value } = e.target;
+      const updatedVal = value?.toString()?.replaceAll(',', '');
+      if (DECIMAL_REGEX.test(updatedVal)) changeClaimFields(name, updatedVal);
+    },
+    [DECIMAL_REGEX]
+  );
 
   const inputClaims = useMemo(
     () => [
@@ -103,6 +117,15 @@ const AddViewClaims = () => {
         options: STAGE,
         value: claimDetails?.stage,
       },
+      {
+        name: 'claimsmanager',
+        title: 'Claims Manager',
+        placeholder: 'Select',
+        type: 'select',
+        options: managerList,
+        isRequired: true,
+        value: claimDetails?.claimsmanager ?? [],
+      },
     ],
     [claimDetails]
   );
@@ -120,6 +143,7 @@ const AddViewClaims = () => {
                 </div>
               ) : (
                 <ReactSelect
+                  name={input?.name}
                   placeholder={input.placeholder}
                   options={input?.options}
                   className="react-select-container"
@@ -161,19 +185,21 @@ const AddViewClaims = () => {
 
         case 'amount':
           component = (
-              <>
-                {type === 'view' ? (
-                    <div className="view-claim-detail">{input?.value ? NumberCommaSeparator(input?.value) : '-'}</div>
-                ) : (
-                    <Input
-                        type="text"
-                        name={input?.name}
-                        placeholder={input.placeholder}
-                        onChange={onHandleAmountInputTextChange}
-                        value={NumberCommaSeparator(input.value) ?? ''}
-                    />
-                )}
-              </>
+            <>
+              {type === 'view' ? (
+                <div className="view-claim-detail">
+                  {input?.value ? NumberCommaSeparator(input?.value) : '-'}
+                </div>
+              ) : (
+                <Input
+                  type="text"
+                  name={input?.name}
+                  placeholder={input.placeholder}
+                  onChange={onHandleAmountInputTextChange}
+                  value={NumberCommaSeparator(input.value) ?? ''}
+                />
+              )}
+            </>
           );
           break;
 
@@ -181,7 +207,9 @@ const AddViewClaims = () => {
           component = (
             <>
               {type === 'view' ? (
-                <div className="view-claim-detail">{input?.value?.toString().trim().length > 0 ? input?.value : '-'}</div>
+                <div className="view-claim-detail">
+                  {input?.value?.toString().trim().length > 0 ? input?.value : '-'}
+                </div>
               ) : (
                 <Input
                   type="text"
@@ -219,8 +247,12 @@ const AddViewClaims = () => {
   }, [claimDetails]);
 
   useEffect(() => {
-    if(type === 'view') {
-    dispatch(getClaimDetails(id));
+    dispatch(getCliamsManagerListAction());
+  }, [id, type]);
+
+  useEffect(() => {
+    if (type === 'view') {
+      dispatch(getClaimDetails(id));
     }
     return () => {
       dispatch(resetClaimDetails());

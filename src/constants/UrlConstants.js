@@ -140,6 +140,8 @@ export const CLAIMS_URLS = {
     DOCUMENTS_LIST: `${BASE_URL}claim/document/`,
     DOWNLOAD_DOCUMENTS: `${BASE_URL}claim/document/download/`,
   },
+
+  GET_CLAIMS_MANAGER_LIST: `${BASE_URL}claim/rss-users`,
 };
 
 export const EMPLOYEE_URLS = {
