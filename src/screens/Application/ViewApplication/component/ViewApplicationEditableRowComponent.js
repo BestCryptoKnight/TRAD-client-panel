@@ -14,6 +14,11 @@ const LimitTypeOptions = [
     name: 'limitType',
   },
   {
+    label: 'Credit Check NZ',
+    value: 'CREDIT_CHECK_NZ',
+    name: 'limitType',
+  },
+  {
     label: 'Health Check',
     value: 'HEALTH_CHECK',
     name: 'limitType',
@@ -30,19 +35,19 @@ const ViewApplicationEditableRowComponent = () => {
   );
 
   const { limitType, expiryDate } = useMemo(() => applicationDetail ?? {}, [applicationDetail]);
-  
+
   return (
     <div className="application-editable-row-grid font-primary">
       <div>
         <div className="font-field mt-10">Limit Type</div>
         <div className="view-application-editable-row-detail">
-         {LimitTypeOptions.find(e => e.value === limitType)?.label ?? '-'}
+          {LimitTypeOptions.find(e => e.value === limitType)?.label ?? '-'}
         </div>
       </div>
       <div>
         <div className="font-field mt-10">Expiry Date</div>
         <div className="view-application-editable-row-detail">
-         {expiryDate ? moment(expiryDate).format('DD-MM-yyyy') : '-'}
+          {expiryDate ? moment(expiryDate).format('DD-MM-yyyy') : '-'}
         </div>
       </div>
     </div>
