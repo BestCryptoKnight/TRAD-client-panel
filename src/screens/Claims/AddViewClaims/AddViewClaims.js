@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import Button from '../../../common/Button/Button';
 import Input from '../../../common/Input/Input';
-import { STAGE, UNDERWRITER } from './AddClaimsDropdownHelper';
 import {
   getClaimDetails,
   getCliamsManagerListAction,
@@ -24,7 +23,6 @@ const AddViewClaims = () => {
   const dispatch = useDispatch();
   const { type, id } = useParams();
   const claimDetails = useSelector(({ claims }) => claims?.claimDetails ?? {});
-  const claimsmanager = useSelector(({ claims }) => claims?.claimsmanager ?? []);
 
   const backToClaimsList = useCallback(() => {
     history.replace('/claims');
@@ -38,10 +36,6 @@ const AddViewClaims = () => {
   const { viewClaimLoader, saveClaimsButtonLoaderAction } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
-
-  const managerList = claimsmanager?.map(client => {
-    return { name: 'claimsmanager', label: client?.label, value: client?.value };
-  });
 
   const changeClaimFields = useCallback((name, value) => {
     dispatch(handleClaimChange(name, value));
@@ -84,47 +78,6 @@ const AddViewClaims = () => {
         placeholder: '$00.00',
         type: 'amount',
         value: claimDetails?.grossdebtamount,
-      },
-      {
-        name: 'amountpaid',
-        title: 'Amount Paid',
-        placeholder: '$00.00',
-        type: 'amount',
-        value: claimDetails?.amountpaid,
-      },
-      {
-        name: 'claimpaidbyuw',
-        title: 'Claim Paid by U/ W',
-        placeholder: 'Select',
-        type: 'date',
-        value: claimDetails?.claimpaidbyuw,
-      },
-      {
-        name: 'underwriter',
-        title: 'Underwriter',
-        placeholder: 'Select',
-        type: 'select',
-        isRequired: true,
-        options: UNDERWRITER,
-        value: claimDetails?.underwriter,
-      },
-      {
-        name: 'stage',
-        title: 'Stage',
-        placeholder: 'Select',
-        type: 'select',
-        isRequired: true,
-        options: STAGE,
-        value: claimDetails?.stage,
-      },
-      {
-        name: 'claimsmanager',
-        title: 'Claims Manager',
-        placeholder: 'Select',
-        type: 'select',
-        options: managerList,
-        isRequired: true,
-        value: claimDetails?.claimsmanager ?? [],
       },
     ],
     [claimDetails]
