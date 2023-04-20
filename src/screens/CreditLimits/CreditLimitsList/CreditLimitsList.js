@@ -32,29 +32,23 @@ import {
   resetCreditLimitListData,
   saveCreditLimitColumnList,
   surrenderClientCreditLimit,
-  getCreditLimitsFilterDropDownDataBySearch,
+  getCreditLimitsFilterDropDownDataBySearch
 } from '../redux/CreditLimitsAction';
 import { CREDIT_LIMITS_COLUMN_LIST_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
 
 const CreditLimitsList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const creditLimitListWithPageData = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitList ?? {}
-  );
+  const creditLimitListWithPageData = useSelector(({ creditLimits }) => creditLimits?.creditLimitList ?? {});
   const { total, pages, page, limit, docs, headers } = useMemo(
     () => creditLimitListWithPageData,
-    [creditLimitListWithPageData]
+    [creditLimitListWithPageData],
   );
-  const creditLimitsColumnList = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitsColumnList ?? {}
-  );
+  const creditLimitsColumnList = useSelector(({ creditLimits }) => creditLimits?.creditLimitsColumnList ?? {});
   const creditLimitsDefaultColumnList = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitsDefaultColumnList ?? {}
+    ({ creditLimits }) => creditLimits?.creditLimitsDefaultColumnList ?? {},
   );
-  const dropdownData = useSelector(
-    ({ creditLimits }) => creditLimits?.creditLimitsFilterList?.dropdownData ?? {}
-  );
+  const dropdownData = useSelector(({ creditLimits }) => creditLimits?.creditLimitsFilterList?.dropdownData ?? {});
   const {
     CreditLimitListColumnSaveButtonLoaderAction,
     CreditLimitListColumnResetButtonLoaderAction,
@@ -72,29 +66,22 @@ const CreditLimitsList = () => {
 
   const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
-  const { creditLimitListFilters } = useSelector(
-    ({ listFilterReducer }) => listFilterReducer ?? {}
-  );
+  const { creditLimitListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
 
   useEffect(() => {
     dispatch(getCreditLimitsFilter());
   }, []);
 
-  const {
-    page: paramPage,
-    limit: paramLimit,
-    startDate: paramStartDate,
-    endDate: paramEndDate,
-  } = useQueryParams();
+  const { page: paramPage, limit: paramLimit, startDate: paramStartDate, endDate: paramEndDate } = useQueryParams();
 
   const { defaultFields, customFields } = useMemo(
     () => creditLimitsColumnList || { defaultFields: [], customFields: [] },
-    [creditLimitsColumnList]
+    [creditLimitsColumnList],
   );
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const toggleCustomField = useCallback(
     value => setCustomFieldModal(value !== undefined ? value : e => !e),
-    [setCustomFieldModal]
+    [setCustomFieldModal],
   );
   const handleStartDateChange = useCallback(date => {
     dispatchFilter({
@@ -118,11 +105,7 @@ const CreditLimitsList = () => {
   }, [handleStartDateChange, handleEndDateChange]);
   const getCreditLimitListByFilter = useCallback(
     async (params = {}, cb) => {
-      if (
-        tempFilter?.startDate &&
-        tempFilter?.endDate &&
-        moment(tempFilter?.endDate).isBefore(tempFilter?.startDate)
-      ) {
+      if (tempFilter?.startDate && tempFilter?.endDate && moment(tempFilter?.endDate).isBefore(tempFilter?.startDate)) {
         errorNotification('Please enter a valid date range');
         resetFilterDates();
       } else {
@@ -148,7 +131,7 @@ const CreditLimitsList = () => {
         }
       }
     },
-    [page, limit, tempFilter]
+    [page, limit, tempFilter],
   );
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
@@ -171,12 +154,7 @@ const CreditLimitsList = () => {
     } catch (e) {
       /**/
     }
-  }, [
-    toggleCustomField,
-    getCreditLimitListByFilter,
-    creditLimitsColumnList,
-    creditLimitsDefaultColumnList,
-  ]);
+  }, [toggleCustomField, getCreditLimitListByFilter, creditLimitsColumnList, creditLimitsDefaultColumnList]);
 
   const onClickCloseCustomFieldModal = useCallback(() => {
     dispatch({
@@ -208,7 +186,7 @@ const CreditLimitsList = () => {
       onClickSaveColumnSelection,
       CreditLimitListColumnSaveButtonLoaderAction,
       CreditLimitListColumnResetButtonLoaderAction,
-    ]
+    ],
   );
 
   useEffect(async () => {
@@ -243,22 +221,26 @@ const CreditLimitsList = () => {
       const data = { type, name, value };
       dispatch(changeCreditColumnList(data));
     },
-    [dispatch]
+    [dispatch],
   );
 
   // for params in url
   useEffect(() => {
-    const otherFilters = {};
+    const otherFilters = {}
     // eslint-disable-next-line no-unused-vars
     Object.entries(finalFilter).forEach(([key, value]) => {
-      if (_.isArray(value)) {
-        otherFilters[key] = value?.map(record => record?.value).join(',');
-      } else if (_.isObject(value)) {
-        otherFilters[key] = value?.value;
-      } else {
-        otherFilters[key] = value || undefined;
-      }
-    });
+    if (_.isArray(value)) {
+      otherFilters[key] = value
+         ?.map(record =>
+           record?.value
+         )
+         .join(',');
+     } else if (_.isObject(value)) {
+      otherFilters[key] = value?.value;
+     } else {
+      otherFilters[key] = value || undefined;
+     }
+   });
     const params = {
       page: page ?? 1,
       limit: limit ?? 15,
@@ -274,7 +256,7 @@ const CreditLimitsList = () => {
   const [filterModal, setFilterModal] = React.useState(false);
   const toggleFilterModal = useCallback(
     value => setFilterModal(value !== undefined ? value : e => !e),
-    [setFilterModal]
+    [setFilterModal],
   );
   const onClickApplyFilter = useCallback(async () => {
     await getCreditLimitListByFilter({ page: 1, limit }, toggleFilterModal);
@@ -306,7 +288,7 @@ const CreditLimitsList = () => {
       },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
-    [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
+    [toggleFilterModal, onClickApplyFilter, onClickResetFilter],
   );
 
   // on record limit changed
@@ -314,7 +296,7 @@ const CreditLimitsList = () => {
     async newLimit => {
       await getCreditLimitListByFilter({ page: 1, limit: newLimit });
     },
-    [getCreditLimitListByFilter]
+    [getCreditLimitListByFilter],
   );
 
   // on pagination changed
@@ -322,7 +304,7 @@ const CreditLimitsList = () => {
     async newPage => {
       await getCreditLimitListByFilter({ page: newPage, limit });
     },
-    [getCreditLimitListByFilter, limit]
+    [getCreditLimitListByFilter, limit],
   );
 
   const handleEntityTypeFilterChange = useCallback(event => {
@@ -345,7 +327,7 @@ const CreditLimitsList = () => {
     id => {
       history.push(`credit-limits/${id}`);
     },
-    [history]
+    [history],
   );
 
   // actions
@@ -384,21 +366,15 @@ const CreditLimitsList = () => {
           <IconButton
             buttonType="primary-1"
             title="cloud_download"
-            disabled={
-              docs?.length > 0 &&
-              docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check' &&
-              docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check Nz'
-            }
+            disabled={docs?.length > 0 && docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check'}
             buttonTitle={
               docs?.length > 0 &&
-              (docs.find(record => record._id === data?.id)?.limitType === 'Credit Check' ||
-                docs.find(record => record._id === data?.id)?.limitType === 'Credit Check Nz') &&
+              docs.find(record => record._id === data?.id)?.limitType === 'Credit Check' &&
               'Click to download decision letter'
             }
             className={`download-decision-letter-icon ${
               docs?.length > 0 &&
               docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check' &&
-              docs.find(record => record._id === data?.id)?.limitType !== 'Credit Check Nz' &&
               'disable-download-button'
             }`}
             onClick={e => {
@@ -411,9 +387,7 @@ const CreditLimitsList = () => {
             title="Modify"
             onClick={e => {
               e.stopPropagation();
-              setCurrentCreditLimitData(
-                docs?.length > 0 && docs.find(record => record?._id === data.id)
-              );
+              setCurrentCreditLimitData(docs?.length > 0 && docs.find(record => record?._id === data.id));
               toggleModifyLimitModal();
             }}
           />
@@ -435,7 +409,7 @@ const CreditLimitsList = () => {
       toggleSurrenderModal,
       setCurrentCreditLimitData,
       decisionLetterDownloadButtonLoaderAction,
-    ]
+    ],
   );
 
   const modifyLimit = useCallback(async () => {
@@ -482,7 +456,7 @@ const CreditLimitsList = () => {
         isLoading: modifyCreditLimitButtonLoaderAction,
       },
     ],
-    [toggleModifyLimitModal, modifyLimit, modifyCreditLimitButtonLoaderAction]
+    [toggleModifyLimitModal, modifyLimit, modifyCreditLimitButtonLoaderAction],
   );
   const surrenderLimitButtons = useMemo(
     () => [
@@ -494,7 +468,7 @@ const CreditLimitsList = () => {
         isLoading: surrenderCreditLimitButtonLoaderAction,
       },
     ],
-    [toggleSurrenderModal, surrenderLimit, modifyCreditLimitButtonLoaderAction]
+    [toggleSurrenderModal, surrenderLimit, modifyCreditLimitButtonLoaderAction],
   );
 
   const onClickDownloadButton = useCallback(async () => {
@@ -561,9 +535,9 @@ const CreditLimitsList = () => {
               Full details of the terms and conditions relating to individual credit limits can only
               be determined by reference to the original limit endorsements issued by your insurer.
               The list provided is a summary of your credit limits only, based on information
-              obtained from the insurer&apos;s website. Whilst every precaution has been taken by
-              TCR to provide you with accurate and up-to-date information, TCR cannot be held
-              responsible for any errors or omissions contained herein.
+              obtained from the insurer&apos;s website. Whilst every precaution has been taken by TCR to
+              provide you with accurate and up-to-date information, TCR cannot be held responsible
+              for any errors or omissions contained herein.
             </div>
           </div>
           {docs?.length > 0 ? (
@@ -621,13 +595,10 @@ const CreditLimitsList = () => {
                   className="credit-limit-custom-select"
                   placeholder="Select Entity Type"
                   name="debtorIds"
-                  options={dropdownData?.debtorIds}
+                  options={dropdownData?.debtors}
                   value={tempFilter?.debtorIds}
                   onChangeCustomSelect={handleDebtorFilterChange}
-                  onSearchChange={_.debounce(
-                    text => handleOnSelectSearchInputChange('debtorIds', text),
-                    800
-                  )}
+                  onSearchChange={_.debounce(text => handleOnSelectSearchInputChange('debtorIds', text),800)}
                   isSearchble
                 />
               </div>
@@ -673,19 +644,13 @@ const CreditLimitsList = () => {
             />
           )}
           {modifyLimitModal && (
-            <Modal
-              header="Modify Credit Limit"
-              buttons={modifyLimitButtons}
-              hideModal={toggleModifyLimitModal}
-            >
+            <Modal header="Modify Credit Limit" buttons={modifyLimitButtons} hideModal={toggleModifyLimitModal}>
               <div className="modify-credit-limit-container align-center">
                 <span>Credit Limit</span>
                 <Input
                   type="text"
                   value={
-                    currentCreditLimitData?.creditLimit
-                      ? NumberCommaSeparator(currentCreditLimitData?.creditLimit)
-                      : 0
+                    currentCreditLimitData?.creditLimit ? NumberCommaSeparator(currentCreditLimitData?.creditLimit) : 0
                   }
                   disabled
                   borderClass="disabled-control"
@@ -701,7 +666,7 @@ const CreditLimitsList = () => {
                     setNewCreditLimit(
                       e.target.value * 1 === 0
                         ? e.target.value.replace(/^0+(\d)/, '$1')
-                        : e.target.value.toString().replaceAll(',', '')
+                        : e.target.value.toString().replaceAll(',', ''),
                     )
                   }
                 />
@@ -709,14 +674,8 @@ const CreditLimitsList = () => {
             </Modal>
           )}
           {surrenderModal && (
-            <Modal
-              header="Surrender Credit Limit"
-              buttons={surrenderLimitButtons}
-              hideModal={toggleSurrenderModal}
-            >
-              <span className="confirmation-message">
-                Are you sure you want to surrender this credit limit?
-              </span>
+            <Modal header="Modify Credit Limit" buttons={surrenderLimitButtons} hideModal={toggleSurrenderModal}>
+              <span className="confirmation-message">Are you sure you want to surrender this credit limit?</span>
             </Modal>
           )}
         </>

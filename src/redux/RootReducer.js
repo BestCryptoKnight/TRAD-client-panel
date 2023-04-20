@@ -18,11 +18,19 @@ import { support } from '../screens/Support/redux/SupportReducer';
 import { generalLoaderReducer } from '../common/GeneralLoader/redux/GeneralLoaderReducer';
 import { overdue } from '../screens/Overdues/redux/OverduesReducer';
 import { listFilterReducer } from '../common/ListFilters/redux/ListFiltersReducer';
+import { debtorsManagement } from '../screens/Debtors/redux/DebtorsReducer';
+import { reportAllFilters } from '../screens/Reports/redux/reportFilterReducer';
+import { userPrivileges } from '../screens/Users/redux/UserManagementReducer';
 
 const filterPersistConfig = {
   key: 'allFilters',
   storage: storageSession,
-}
+};
+
+const reportFilterPersistConfig = {
+  key: 'reportFilters',
+  storage: storageSession,
+};
 
 const persistConfig = {
   key: 'root',
@@ -33,6 +41,7 @@ const persistConfig = {
 const appReducer = combineReducers({
   dashboard,
   creditLimits,
+  userPrivileges,
   claims,
   loggedUserProfile,
   application,
@@ -42,14 +51,16 @@ const appReducer = combineReducers({
   generalLoaderReducer,
   globalSearchReducer,
   headerNotificationReducer,
+  debtorsManagement,
   overdue,
   listFilterReducer: persistReducer(filterPersistConfig, listFilterReducer),
+  reportAllFilters: persistReducer(reportFilterPersistConfig, reportAllFilters),
 });
 const rootReducer = (state, action) => {
   if (action.type === LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION) {
     const emptyState = {};
     Object.keys(state).forEach(key => {
-      if (key !== 'listFilterReducer') {
+      if (key !== 'listFilterReducer' || key !== 'reportAllFilters') {
         emptyState[key] = null;
       }
     });
