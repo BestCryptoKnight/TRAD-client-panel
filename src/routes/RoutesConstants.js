@@ -9,21 +9,11 @@ const VerifyOtp = lazy(() => import('../screens/auth/otpScreen/VerifyOtp'));
 const ForbiddenAccessPage = lazy(() => import('../common/ForbiddenAccessPage/ForbiddenAccessPage'));
 const Dashboard = lazy(() => import('../common/Dashboard/Dashboard'));
 const ViewClientTask = lazy(() => import('../common/Dashboard/components/ViewClientTask'));
-const ApplicationList = lazy(() =>
-  import('../screens/Application/ApplicationList/ApplicationList')
-);
-const GenerateApplication = lazy(() =>
-  import('../screens/Application/GenerateApplication/GenerateApplication')
-);
-const ViewApplication = lazy(() =>
-  import('../screens/Application/ViewApplication/ViewApplication')
-);
-const CreditLimitsList = lazy(() =>
-  import('../screens/CreditLimits/CreditLimitsList/CreditLimitsList')
-);
-const ViewCreditLimits = lazy(() =>
-  import('../screens/CreditLimits/ViewCreditLimits/ViewCreditLimits')
-);
+const ApplicationList = lazy(() => import('../screens/Application/ApplicationList/ApplicationList'));
+const GenerateApplication = lazy(() => import('../screens/Application/GenerateApplication/GenerateApplication'));
+const ViewApplication = lazy(() => import('../screens/Application/ViewApplication/ViewApplication'));
+const CreditLimitsList = lazy(() => import('../screens/CreditLimits/CreditLimitsList/CreditLimitsList'));
+const ViewCreditLimits = lazy(() => import('../screens/CreditLimits/ViewCreditLimits/ViewCreditLimits'));
 const OverduesList = lazy(() => import('../screens/Overdues/OverduesList/OverduesList'));
 const AddOverdues = lazy(() => import('../screens/Overdues/OverduesList/AddOverdues/AddOverdues'));
 const ClaimsList = lazy(() => import('../screens/Claims/ClaimsList/ClaimsList'));
@@ -32,6 +22,8 @@ const EmployeeList = lazy(() => import('../screens/Employee/EmployeeList/Employe
 const CompanyProfile = lazy(() => import('../screens/CompanyProfile/CompanyProfile'));
 const Support = lazy(() => import('../screens/Support/Support'));
 const PageNotFound = lazy(() => import('../common/PageNotFound/PageNotFound'));
+const DebtorsList = lazy(() => import('../screens/Debtors/DebtorsList/DebtorsList'));
+const ViewDebtor = lazy(() => import('../screens/Debtors/ViewDebtor/ViewDebtor'));
 
 export const ROUTES_CONSTANTS = [
   {
@@ -86,6 +78,16 @@ export const ROUTES_CONSTANTS = [
   {
     path: '/applications/detail/:action/:id',
     component: ViewApplication,
+    authenticated: true,
+  },
+  {
+    path: '/debtors',
+    component: DebtorsList,
+    authenticated: true,
+  },
+  {
+    path: '/debtors/debtor/:action/:id',
+    component: ViewDebtor,
     authenticated: true,
   },
   {

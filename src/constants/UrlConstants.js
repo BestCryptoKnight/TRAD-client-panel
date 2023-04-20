@@ -30,7 +30,7 @@ export const DASHBOARD_URLS = {
   DASHBOARD_NOTIFICATION_LIST: `${BASE_URL}notification/`,
   UPDATE_TASK: `${BASE_URL}task/`,
   SEARCH_ENTITIES: `${BASE_URL}entity-search/`,
-  DASHBOARD_DOWNLOAD_TASK: `${BASE_URL}/task/download`
+  DASHBOARD_DOWNLOAD_TASK: `${BASE_URL}/task/download`,
 };
 
 export const APPLICATION_URLS = {
@@ -80,20 +80,95 @@ export const APPLICATION_URLS = {
   },
 };
 
-export const CREDIT_LIMITS_URLS = {
-  CREDIT_LIMITS_LIST_URL: `${BASE_URL}debtor/`,
-  CREDIT_LIMITS_COLUMN_LIST: `${BASE_URL}debtor/column-name/`,
-  CREDIT_LIMITS_FILTER: `${BASE_URL}debtor/entity-list/`,
-  VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}debtor/`,
-  CREDIT_LIMIT_ACTIONS: `${BASE_URL}debtor/credit-limit/`,
-  DOWNLOAD_CREDIT_LIMIT_CSV: `${BASE_URL}debtor/download/`,
-  DOWNLOAD_DEBTOR_CREDIT_LIMIT_DECISION_LETTER: `${BASE_URL}debtor/download/decision-letter/`,
+export const DEBTORS_URLS = {
+  DEBTORS_LIST_URL: `${BASE_URL}debtor/`,
+  DEBTORS_COLUMNS_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+  SELECTED_DEBTOR_DETAILS_URL: `${BASE_URL}debtor/`,
+  DROP_DOWN_DATA_URL: `${BASE_URL}debtor/entity-list/`,
+  DOWNLOAD_DEBTOR: `${BASE_URL}debtor/download/`,
 
+  NOTES: {
+    NOTES_LIST: `${BASE_URL}note/`,
+  },
+  DOCUMENTS: {
+    DOCUMENTS_LIST: `${BASE_URL}document/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}document/column-name/`,
+    GET_DOCUMENT_TYPE_URL: `${BASE_URL}document/document-type-list/`,
+    UPLOAD_DOCUMENT_URL: `${BASE_URL}document/upload/`,
+    DOWNLOAD_DOCUMENTS_URL: `${BASE_URL}document/download`,
+  },
+  TASK: {
+    TASK_LIST_URL: `${BASE_URL}task/`,
+    TASK_COLUMN_NAME_LIST_URL: `${BASE_URL}task/column-name`,
+    ADD_TASK: {
+      ASSIGNEE_DROP_DOWN_DATA: `${BASE_URL}task/user-list/`,
+      ENTITY_DROP_DOWN_DATA: `${BASE_URL}task/entity-list/`,
+      SAVE_NEW_TASK: `${BASE_URL}task/`,
+    },
+    EDIT_TASK: {
+      GET_DEBTOR_TASK_DETAIL: `${BASE_URL}task/details/`,
+    },
+  },
   APPLICATION: {
     APPLICATION_LIST: `${BASE_URL}application/`,
     COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
     UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
     DOWNLOAD_APPLICATION_CSV: `${BASE_URL}application/download/`,
+  },
+
+  ALERTS: {
+    ALERTS_LIST: `${BASE_URL}debtor/alert-list/`,
+    ALERTS_DETAILS: `${BASE_URL}debtor/alert/`,
+  },
+  CREDIT_LIMIT: {
+    CREDIT_LIMIT_LIST: `${BASE_URL}debtor/credit-limit/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+    CREDIT_LIMIT_ACTIONS: `${BASE_URL}debtor/credit-limit/`,
+    DOWNLOAD_DEBTOR_CREDIT_LIMIT_CSV: `${BASE_URL}debtor/download/`,
+    DOWNLOAD_DEBTOR_CREDIT_LIMIT_DECISION_LETTER: `${BASE_URL}debtor/download/decision-letter/`,
+  },
+  STAKE_HOLDER: {
+    STAKE_HOLDER_LIST: `${BASE_URL}debtor/stakeholder/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+    STAKE_HOLDER_CRUD: {
+      GET_STAKE_HOLDER_DETAIL: `${BASE_URL}debtor/stakeholder-details/`,
+      DROP_DOWN_DATA_URL: `${BASE_URL}debtor/entity-list/`,
+      SEARCH_APPLICATION_BY_DEBTOR_DETAILS: `${BASE_URL}debtor/details/`,
+      SEARCH_APPLICATION_BY_ABN_ACN_DETAILS: `${BASE_URL}debtor/search-entity/`,
+      SEARCH_APPLICATION_ENTITY_TYPE: `${BASE_URL}debtor/search-entity-list/`,
+      SAVE_NEW_STAKE_HOLDER: `${BASE_URL}debtor/stakeholder/`,
+      DELETE_STAKE_HOLDER: `${BASE_URL}debtor/stakeholder/`,
+    },
+  },
+  REPORTS: {
+    DEBTOR_REPORTS_LIST: `${BASE_URL}credit-report/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}credit-report/column-name/`,
+    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}credit-report/column-name/`,
+    DEBTOR_REPORTS_LIST_FOR_FETCH: `${BASE_URL}credit-report/list/`,
+    FETCH_SELECTED_REPORTS_FOR_DEBTOR: `${BASE_URL}credit-report/generate/`,
+    DOWNLOAD_REPORTS_FOR_DEBTOR: `${BASE_URL}credit-report/download/`,
+  },
+  DEBTOR_OVERDUE: {
+    GET_DEBTOR_OVERDUE_LIST: `${BASE_URL}overdue/`,
+    GET_DEBTOR_OVERDUE_ENTITY_LIST: `${BASE_URL}overdue/entity-list/`,
+  },
+};
+
+export const CREDIT_LIMITS_URLS = {
+  CREDIT_LIMITS_LIST_URL: `${BASE_URL}credit-limit/`,
+  CREDIT_LIMITS_COLUMN_LIST: `${BASE_URL}credit-limit/column-name/`,
+  CREDIT_LIMITS_FILTER: `${BASE_URL}credit-limit/entity-list/`,
+  VIEW_CREDIT_LIMITS_DETAILS: `${BASE_URL}credit-limit/`,
+  CREDIT_LIMIT_ACTIONS: `${BASE_URL}credit-limit/credit-limit/`,
+  DOWNLOAD_CREDIT_LIMIT_CSV: `${BASE_URL}credit-limit/download/`,
+  DOWNLOAD_DEBTOR_CREDIT_LIMIT_DECISION_LETTER: `${BASE_URL}credit-limit/download/decision-letter/`,
+
+  APPLICATION: {
+    APPLICATION_LIST: `${BASE_URL}application/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
+    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
   },
 
   TASKS: {
@@ -122,9 +197,9 @@ export const CREDIT_LIMITS_URLS = {
   },
 
   STAKE_HOLDER: {
-    STAKE_HOLDER_LIST: `${BASE_URL}debtor/stakeholder/`,
-    COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
-    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,
+    STAKE_HOLDER_LIST: `${BASE_URL}credit-limit/stakeholder/`,
+    COLUMN_NAME_LIST_URL: `${BASE_URL}credit-limit/column-name/`,
+    UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}credit-limit/column-name/`,
   },
 };
 
@@ -140,8 +215,6 @@ export const CLAIMS_URLS = {
     DOCUMENTS_LIST: `${BASE_URL}claim/document/`,
     DOWNLOAD_DOCUMENTS: `${BASE_URL}claim/document/download/`,
   },
-
-  GET_CLAIMS_MANAGER_LIST: `${BASE_URL}claim/rss-users`,
 };
 
 export const EMPLOYEE_URLS = {
@@ -166,4 +239,18 @@ export const OVERDUE_URLS = {
   GET_ENTITY_LIST: `${BASE_URL}overdue/entity-list/`,
   CHANGE_OVERDUE_STATUS: `${BASE_URL}overdue/status/`,
   SAVE_OVERDUE_LIST: `${BASE_URL}overdue/list/`,
+};
+
+export const ORGANISATION_MODULE_URLS = {
+  GET_ORGANIZATION_MODULE_LIST_URL: `${BASE_URL}organization/module`,
+};
+
+export const USER_MANAGEMENT_URLS = {
+  USER_LIST_URL: `${BASE_URL}user/`,
+  USER_PRIVILEGES_URL: `${BASE_URL}privilege/`,
+  SELECTED_USER_DETAILS_URL: `${BASE_URL}user/`,
+  USER_COLUMN_NAME_LIST_URL: `${BASE_URL}user/column-name/`,
+  USER_CLIENT_LIST_URL: `${BASE_URL}user/client-name/`,
+  UPDATE_USER_COLUMN_NAME_LIST_URL: `${BASE_URL}user/column-name/`,
+  RESEND_MAIL: `${BASE_URL}user/send-mail/`,
 };

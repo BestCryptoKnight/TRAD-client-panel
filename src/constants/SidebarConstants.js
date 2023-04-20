@@ -1,6 +1,7 @@
 export const SIDEBAR_NAMES = {
   DASHBOARD: 'dashboard',
   APPLICATION: 'application',
+  DEBTOR: 'debtor',
   CREDIT_LIMITS: 'credit-limits',
   CLAIM: 'claims',
   OVERDUE: 'over-dues',
@@ -23,6 +24,13 @@ export const SIDEBAR_URLS = [
     icon: 'business_center',
     url: '/applications',
     name: SIDEBAR_NAMES.APPLICATION,
+  },
+  {
+    label: 'Debtors',
+    title: 'Debtor Management',
+    icon: 'supervisor_account',
+    url: '/debtors',
+    name: SIDEBAR_NAMES.DEBTOR,
   },
   {
     label: 'Credit Limits',

@@ -8,7 +8,6 @@ import BigInput from '../../../common/BigInput/BigInput';
 import IconButton from '../../../common/IconButton/IconButton';
 import {
   changeCreditLimitsApplicationColumnList,
-  CreditLimitApplicationDownloadTab,
   getCreditLimitsApplicationColumnList,
   getCreditLimitsApplicationList,
   onSaveCreditLimitsApplicationColumnList,
@@ -17,8 +16,6 @@ import Loader from '../../../common/Loader/Loader';
 import { errorNotification } from '../../../common/Toast';
 import { CREDIT_LIMITS_APPLICATION_REDUX_CONSTANTS } from '../redux/CreditLimitsReduxConstants';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
-
-import { downloadAll } from '../../../helpers/DownloadHelper';
 
 const CreditLimitsApplicationTab = props => {
   const { id } = props;
@@ -46,7 +43,6 @@ const CreditLimitsApplicationTab = props => {
   const {
     CreditLimitApplicationColumnSaveButtonLoaderAction,
     CreditLimitApplicationColumnResetButtonLoaderAction,
-    CreditLimitapplicationDownloadButtonLoaderAction,
   } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const getApplicationList = useCallback(
@@ -176,19 +172,6 @@ const CreditLimitsApplicationTab = props => {
     await getApplicationList();
     dispatch(getCreditLimitsApplicationColumnList());
   }, []);
-
-  const downloadApplication = useCallback(async () => {
-    if (docs?.length > 0) {
-      try {
-        const response = await CreditLimitApplicationDownloadTab(id);
-        if (response) downloadAll(response);
-      } catch (e) {
-        /**/
-      }
-    } else {
-      errorNotification('No records to download');
-    }
-  }, [docs?.length]);
   return (
     <>
       <div className="tab-content-header-row">
@@ -203,14 +186,10 @@ const CreditLimitsApplicationTab = props => {
               borderClass="company-profile-policies-search"
               onKeyUp={checkIfEnterKeyPressed}
             />
-            <IconButton buttonType="primary" title="format_line_spacing" onClick={toggleCustomField} />
             <IconButton
-              buttonType="primary-1"
-              title="cloud_download"
-              className="mr-10"
-              buttonTitle="Click to download applications"
-              onClick={downloadApplication}
-              isLoading={CreditLimitapplicationDownloadButtonLoaderAction}
+              buttonType="primary"
+              title="format_line_spacing"
+              onClick={toggleCustomField}
             />
           </div>
         )}
@@ -221,7 +200,13 @@ const CreditLimitsApplicationTab = props => {
           docs.length > 0 ? (
             <>
               <div className="tab-table-container">
-                <Table align="left" valign="center" tableClass="white-header-table" data={docs} headers={headers} />
+                <Table
+                  align="left"
+                  valign="center"
+                  tableClass="white-header-table"
+                  data={docs}
+                  headers={headers}
+                />
               </div>
               <Pagination
                 className="common-list-pagination"

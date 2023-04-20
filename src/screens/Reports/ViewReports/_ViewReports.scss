@@ -1,0 +1,31 @@
+.filter-modal-row .custom-select {
+  .custom-select__control {
+    height: 32px;
+    width: 200px;
+    border-radius: 5px;
+  }
+
+  .custom-select-dropdown {
+    top: 40px;
+  }
+}
+
+.filter-modal-row .title {
+  font: $subtitle $font-regular;
+  color: $primary-color;
+}
+
+.review-report-month-picker {
+  height: auto;
+}
+.disclaimer-title{
+  font: 14px $font-medium;
+  color: rgba(0,58,120, .85);
+  padding-left: 10px;
+}
+.disclaimer-body{
+  padding: 5px 10px 0;
+  text-align: justify;
+  color: $field-color;
+  font-size: 14px;
+}
