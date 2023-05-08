@@ -93,6 +93,7 @@ export const CREDIT_LIMITS_URLS = {
     APPLICATION_LIST: `${BASE_URL}application/`,
     COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
     UPDATE_COLUMN_NAME_LIST_URL: `${BASE_URL}application/column-name/`,
+    DOWNLOAD_APPLICATION_CSV: `${BASE_URL}application/download/`,
   },
 
   TASKS: {
@@ -139,6 +140,8 @@ export const CLAIMS_URLS = {
     DOCUMENTS_LIST: `${BASE_URL}claim/document/`,
     DOWNLOAD_DOCUMENTS: `${BASE_URL}claim/document/download/`,
   },
+
+  GET_CLAIMS_MANAGER_LIST: `${BASE_URL}claim/rss-users`,
 };
 
 export const EMPLOYEE_URLS = {

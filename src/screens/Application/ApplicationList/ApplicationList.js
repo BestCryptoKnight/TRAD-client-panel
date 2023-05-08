@@ -20,6 +20,7 @@ import {
   resetApplicationListPaginationData,
   saveApplicationColumnNameList,
   updateEditApplicationField,
+  deleteApplicationApiCall,
 } from '../redux/ApplicationAction';
 import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
@@ -76,7 +77,9 @@ const ApplicationList = () => {
       entityType:
         tempFilter?.entityType?.toString()?.trim()?.length > 0 ? tempFilter?.entityType : undefined,
       debtorId:
-        tempFilter?.debtorId?.value?.toString()?.trim()?.length > 0 ? tempFilter?.debtorId : undefined,
+        tempFilter?.debtorId?.value?.toString()?.trim()?.length > 0
+          ? tempFilter?.debtorId
+          : undefined,
       status: tempFilter?.status?.toString()?.trim()?.length > 0 ? tempFilter?.status : undefined,
       minCreditLimit:
         tempFilter?.minCreditLimit?.toString()?.trim()?.length > 0
@@ -92,7 +95,7 @@ const ApplicationList = () => {
   }, [{ ...tempFilter }]);
 
   const defaultApplicationStatus =
-    'SENT_TO_INSURER,REVIEW_APPLICATION,UNDER_REVIEW,PENDING_INSURER_REVIEW,AWAITING_INFORMATION';
+    'SENT_TO_INSURER,REVIEW_APPLICATION,UNDER_REVIEW,PENDING_INSURER_REVIEW,AWAITING_INFORMATION,REVIEW_SURRENDERED,DRAFT';
 
   const handleStartDateChange = useCallback(date => {
     dispatchFilter({
@@ -215,10 +218,10 @@ const ApplicationList = () => {
     };
     toggleFilterModal();
     if (params) {
-      data = {...data, ...params};
+      data = { ...data, ...params };
     }
     await getApplicationsByFilter(data, null, !!params);
-  }
+  };
 
   const onClickResetFilter = useCallback(async () => {
     dispatchFilter({
@@ -352,9 +355,7 @@ const ApplicationList = () => {
           : applicationListFilters?.entityType ?? undefined,
       debtorId: applicationListFilters?.debtorId,
       status:
-        (paramStatus?.trim()?.length ?? -1) > 0
-          ? paramStatus
-          : applicationListFilters?.status,
+        (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status,
       minCreditLimit:
         (paramMinCreditLimit?.trim()?.length ?? -1) > 0
           ? paramMinCreditLimit
@@ -405,7 +406,9 @@ const ApplicationList = () => {
           ? finalFilter?.entityType
           : undefined,
       debtorId:
-        finalFilter?.debtorId?.value?.toString()?.trim()?.length > 0 ? finalFilter?.debtorId?.value : undefined,
+        finalFilter?.debtorId?.value?.toString()?.trim()?.length > 0
+          ? finalFilter?.debtorId?.value
+          : undefined,
       status: finalFilter?.status?.toString()?.trim()?.length > 0 ? finalFilter?.status : undefined,
       minCreditLimit:
         finalFilter?.minCreditLimit?.toString()?.trim()?.length > 0
@@ -451,7 +454,7 @@ const ApplicationList = () => {
       try {
         const finalFilters = {
           ...appliedFilters,
-          debtorId: appliedFilters?.debtorId?.value
+          debtorId: appliedFilters?.debtorId?.value,
         };
         const response = await applicationDownloadAction(finalFilters);
         if (response) downloadAll(response);
@@ -479,6 +482,74 @@ const ApplicationList = () => {
       dispatch(resetApplicationListData());
     };
   }, []);
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [applicationId, setApplicationId] = useState('');
+  const toggleConfirmationModal = useCallback(
+    value => setShowConfirmModal(value !== undefined ? value : e => !e),
+    [setShowConfirmModal]
+  );
+
+  const { generateApplicationDeleteButtonLoaderAction } = useSelector(
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
+  );
+
+  const callBack = useCallback(() => {
+    toggleConfirmationModal();
+    const filters = {
+      entityType:
+        (paramEntityType?.trim()?.length ?? -1) > 0
+          ? paramEntityType
+          : applicationListFilters?.entityType ?? undefined,
+      clientId: applicationListFilters?.clientId,
+      debtorId: applicationListFilters?.debtorId,
+
+      status:
+        (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status,
+      minCreditLimit:
+        (paramMinCreditLimit?.trim()?.length ?? -1) > 0
+          ? paramMinCreditLimit
+          : applicationListFilters?.minCreditLimit,
+      maxCreditLimit:
+        (paramMaxCreditLimit?.trim()?.length ?? -1) > 0
+          ? paramMaxCreditLimit
+          : applicationListFilters?.maxCreditLimit,
+      startDate: paramStartDate || applicationListFilters?.startDate,
+      endDate: paramEndDate || applicationListFilters?.endDate,
+    };
+    Object.entries(filters)?.forEach(([name, value]) => {
+      dispatchFilter({
+        type: LIST_FILTER_REDUCER_ACTIONS.UPDATE_DATA,
+        name,
+        value,
+      });
+    });
+    getApplicationsByFilter({ ...filters });
+  }, [getApplicationsByFilter]);
+
+  const deleteButtons = useMemo(
+    () => [
+      { title: 'Close', buttonType: 'primary-1', onClick: () => toggleConfirmationModal() },
+      {
+        title: 'Delete',
+        buttonType: 'danger',
+        onClick: async () => {
+          try {
+            await dispatch(deleteApplicationApiCall(applicationId, callBack));
+          } catch (e) {
+            /**/
+          }
+        },
+        isLoading: generateApplicationDeleteButtonLoaderAction,
+      },
+    ],
+    [toggleConfirmationModal, applicationId, generateApplicationDeleteButtonLoaderAction]
+  );
+
+  const deleteApplication = appId => {
+    setApplicationId(appId);
+    setShowConfirmModal(true);
+  };
 
   return (
     <>
@@ -523,6 +594,7 @@ const ApplicationList = () => {
                   headers={headers}
                   recordSelected={viewApplicationOnSelectRecord}
                   rowClass="cursor-pointer"
+                  deleteApplication={deleteApplication}
                 />
               </div>
               <Pagination
@@ -538,6 +610,19 @@ const ApplicationList = () => {
           ) : (
             <div className="no-record-found">No record found</div>
           )}
+
+          {showConfirmModal && (
+            <Modal
+              header="Delete Application"
+              buttons={deleteButtons}
+              hideModal={toggleConfirmationModal}
+            >
+              <span className="confirmation-message">
+                Are you sure you want to delete this Application?
+              </span>
+            </Modal>
+          )}
+
           {filterModal && (
             <Modal
               headerIcon="filter_list"

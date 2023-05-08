@@ -14,6 +14,7 @@ const initialClaims = {
   claimsDefaultColumnList: {},
   claimsEntityList: [],
   claimDetails: {},
+  claimsmanager: [],
 
   documents: {
     documentList: [],
@@ -86,9 +87,12 @@ export const claims = (state = initialClaims, action) => {
     }
 
     case CLAIMS_REDUX_CONSTANTS.GET_CLAIM_DETAILS: {
+      const manager = state.claimsmanager.filter(
+        item => item.value.toString() === action.data.claimsmanager
+      );
       return {
         ...state,
-        claimDetails: action.data,
+        claimDetails: { ...action.data, claimsmanager: manager[0]?.label },
       };
     }
 
@@ -113,6 +117,12 @@ export const claims = (state = initialClaims, action) => {
           ...state?.documents,
           documentList: action.data,
         },
+      };
+
+    case CLAIMS_REDUX_CONSTANTS.GET_CLAIMS_MANAGER_LIST:
+      return {
+        ...state,
+        claimsmanager: action?.data,
       };
 
     default:
