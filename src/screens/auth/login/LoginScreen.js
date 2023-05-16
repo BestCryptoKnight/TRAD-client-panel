@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import grayLogo from '../../../assets/images/logo-light.svg';
+import grayLogo from '../../../assets/images/logo.svg';
 import Button from '../../../common/Button/Button';
 import AuthScreenContainer from '../common/CommonAuthScreen/AuthScreenContainer';
 import BigInput from '../../../common/BigInput/BigInput';
@@ -32,12 +32,7 @@ function LoginScreen() {
     else {
       try {
         await dispatch(loginUser({ email, password }));
-        dispatch(
-          saveAppliedFilters('applicationListFilters', {
-            status:
-              'SENT_TO_INSURER,REVIEW_APPLICATION,UNDER_REVIEW,PENDING_INSURER_REVIEW,AWAITING_INFORMATION,DRAFT,REVIEW_SURRENDERED',
-          })
-        );
+        dispatch(saveAppliedFilters('applicationListFilters', {status:'SENT_TO_INSURER,REVIEW_APPLICATION,UNDER_REVIEW,PENDING_INSURER_REVIEW,AWAITING_INFORMATION'}));
         history.replace('/dashboard');
       } catch (e) {
         /**/

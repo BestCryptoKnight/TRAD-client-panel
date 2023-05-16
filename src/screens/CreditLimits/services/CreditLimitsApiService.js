@@ -39,13 +39,6 @@ const CreditLimitsApiService = {
     ApiService.getData(CREDIT_LIMITS_URLS.APPLICATION.COLUMN_NAME_LIST_URL, { params }),
   updateCreditLimitsApplicationColumnList: data =>
     ApiService.putData(CREDIT_LIMITS_URLS.APPLICATION.COLUMN_NAME_LIST_URL, data),
-  downloadApplicationCSVFile: id =>
-    ApiService.request({
-      url: `${CREDIT_LIMITS_URLS.APPLICATION.DOWNLOAD_APPLICATION_CSV}${id}?listFor=debtor-application`,
-      method: 'GET',
-      responseType: 'blob',
-      timeout: 60000,
-    }),
 
   // task starts here
   getCreditLimitsTasksList: params =>

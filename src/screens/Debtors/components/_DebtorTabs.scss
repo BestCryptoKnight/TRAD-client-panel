@@ -1,0 +1,170 @@
+.upload-document-modal {
+  width: 60vw;
+}
+
+.add-debtor-stake-modal {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+
+  .modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .debtor-stakeholder-modal {
+    display: grid;
+    grid-template-columns: 15% calc(35% - 15px) 15% calc(35% - 15px);
+    align-items: center;
+    padding: 5px 30px;
+    gap: 15px;
+    font: $subtitle $font-regular !important;
+
+    > span {
+      color: $primary-color;
+    }
+
+    .react-select-container,
+    .input-container,
+    .date-picker-container {
+      width: 70%;
+      min-width: 170px;
+    }
+
+    .radio-container {
+      display: flex;
+      align-items: center;
+      grid-column: 1 / span 4;
+    }
+
+    .grid-checkbox,
+    .title,
+    .main-title,
+    .horizontal-line,
+    .radio-title {
+      grid-column: 1 / span 4;
+    }
+
+    .grid-checkbox label {
+      color: $primary-color;
+    }
+
+    .main-title {
+      font: $title $font-medium;
+      color: $secondary-color;
+      padding: 5px 0;
+    }
+
+    .title {
+      color: $secondary-color;
+    }
+
+    .horizontal-line {
+      height: 1px;
+      margin: 0 -20px;
+      background-color: $border-color;
+    }
+
+    .detail-value {
+      width: 80%;
+      min-width: 180px;
+      padding: 5px 10px;
+      color: $field-color;
+      background-color: $border-color;
+      border-radius: 5px;
+      min-height: 28px;
+    }
+
+    .radio-buttons {
+      grid-column: 1 / span 4;
+    }
+
+    .long-text {
+      grid-column: 2 / span 3;
+      width: 100%;
+      padding: 5px 10px;
+      color: $field-color;
+      background-color: $border-color;
+      border-radius: 5px;
+    }
+  }
+}
+
+.document-upload-popup-container,
+.add-notes-popup-container {
+  display: grid;
+  grid-template-columns: 180px 2fr;
+  gap: 15px 5px;
+
+  > span {
+    margin-top: 5px;
+    color: $primary-color;
+  }
+
+  .upload-document-input {
+    width: 180px;
+  }
+
+  .switch-container {
+    width: 180px;
+  }
+
+  .document-upload-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border: 0.063rem solid #e7ecf2;
+    height: 32px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0.313rem;
+
+    button {
+      border: none;
+      color: #b2b9bf;
+      background: none;
+    }
+
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #b2b9bf;
+    }
+  }
+}
+
+.fetch-report-modal {
+  width: 500px;
+}
+
+.fetch-report-popup-container {
+  display: grid;
+  grid-template-columns: 150px minmax(200px, 400px);
+  gap: 10px;
+  align-items: center;
+  font-size: $subtitle;
+
+  span {
+    color: $primary-color;
+  }
+}
+
+.button.icon-button.download-decision-letter-icon {
+  display: inline-flex;
+  padding: 3px 15px;
+  white-space: nowrap;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid $primary-color;
+}
+.button.icon-button.download-decision-letter-icon:hover {
+  background-color: $border-color;
+}
+
+.button.icon-button.download-decision-letter-icon.disable-download-button {
+  background-color: $border-color;
+  opacity: .3;
+}

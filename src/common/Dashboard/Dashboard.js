@@ -27,26 +27,19 @@ const Dashboard = () => {
     showGraphs,
   } = useMemo(() => dashboardDetails, [dashboardDetails]);
 
-  const { dashboardDetailsLoader } = useSelector(
-    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
-  );
+  const { dashboardDetailsLoader } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const endorsedLimitsData = {
     labels: [''],
     datasets: [
       {
         label: '',
-        data:
-          endorsedLimit?.totalCount !== 0 &&
-          endorsedLimit?.totalCount < endorsedLimit?.endorsedLimitCount
-            ? [1, 0]
-            : [
-                endorsedLimit?.totalCount === 0 || endorsedLimit?.endorsedLimitCount === 0
-                  ? 0
-                  : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
-                endorsedLimit?.totalCount === 0 ? 1 : endorsedLimit?.totalCount,
-              ],
-        backgroundColor: ['#0073ab', '#CBD7E4'],
+        data: endorsedLimit?.totalCount !== 0 && endorsedLimit?.totalCount < endorsedLimit?.endorsedLimitCount ? [1,0] : [
+         endorsedLimit?.totalCount === 0 || endorsedLimit?.endorsedLimitCount === 0 ? 0: 
+         endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
+          endorsedLimit?.totalCount === 0 ? 1 : endorsedLimit?.totalCount,
+        ],
+        backgroundColor: ['#003A78', '#CBD7E4'],
       },
     ],
   };
@@ -79,18 +72,10 @@ const Dashboard = () => {
     datasets: [
       {
         label: '',
-        data:
-          resChecksCount?.totalCount !== 0 &&
-          resChecksCount?.totalCount < resChecksCount?.applicationCount
-            ? [1, 0]
-            : [
-                resChecksCount?.totalCount === 0 || resChecksCount?.applicationCount === 0
-                  ? 0
-                  : resChecksCount?.applicationCount,
-                resChecksCount?.totalCount === 0
-                  ? 1
-                  : resChecksCount?.totalCount - resChecksCount?.applicationCount,
-              ],
+        data: resChecksCount?.totalCount !== 0 && resChecksCount?.totalCount < resChecksCount?.applicationCount ? [1,0] : [
+          resChecksCount?.totalCount === 0 || resChecksCount?.applicationCount === 0 ? 0 : resChecksCount?.applicationCount,
+          resChecksCount?.totalCount === 0 ? 1 : resChecksCount?.totalCount - resChecksCount?.applicationCount,
+        ],
         backgroundColor: ['#62d493', '#CBD7E4'],
       },
     ],
@@ -98,8 +83,7 @@ const Dashboard = () => {
 
   const pendingApplicationsData = {
     labels:
-      applicationStatus &&
-      applicationStatus?.map(e => getLabelFromValues(e._id, dashboardPendingApplicationsMapper)),
+      applicationStatus && applicationStatus?.map(e => getLabelFromValues(e._id, dashboardPendingApplicationsMapper)),
     datasets: [
       {
         label: '',
@@ -154,9 +138,7 @@ const Dashboard = () => {
                   {endorsedLimit && (
                     <div className="dashboard-white-container doughnut-white-card">
                       <div className="dashboard-title-date-row">
-                        <span className="dashboard-card-title">
-                          Endorsed limits out of Aggregated Credit Limits
-                        </span>
+                        <span className="dashboard-card-title">Endorsed limits out of Aggregated Credit Limits</span>
                       </div>
                       <div className="doughnut-chart-container">
                         <div className="doughnut-chart">
@@ -164,10 +146,7 @@ const Dashboard = () => {
                           <div className="doughnut-center-text">
                             <div>
                               {endorsedLimit?.totalCount > 0
-                                ? (
-                                    (endorsedLimit?.endorsedLimitCount * 100) /
-                                    endorsedLimit?.totalCount
-                                  ).toFixed(0)
+                                ? ((endorsedLimit?.endorsedLimitCount * 100) / endorsedLimit?.totalCount).toFixed(0)
                                 : 0}
                               %
                             </div>
@@ -185,7 +164,7 @@ const Dashboard = () => {
                     <div className="dashboard-white-container doughnut-white-card">
                       <div className="dashboard-title-date-row">
                         <span className="dashboard-card-title">
-                          Applications processed out of Credit Checks (AU/NZ) Assigned
+                          Applications processed out of Credit Checks Assigned
                         </span>
                       </div>
                       <div className="doughnut-chart-container">
@@ -194,11 +173,7 @@ const Dashboard = () => {
                           <div className="doughnut-center-text">
                             <div>
                               {resChecksCount && resChecksCount?.totalCount > 0
-                                ? (
-                                    (resChecksCount?.applicationCount /
-                                      resChecksCount?.totalCount) *
-                                    100
-                                  ).toFixed(0)
+                                ? ((resChecksCount?.applicationCount / resChecksCount?.totalCount) * 100).toFixed(0)
                                 : 0}
                               %
                             </div>
@@ -217,8 +192,7 @@ const Dashboard = () => {
                       <span className="dashboard-card-title">Pending Applications by Status</span>
                     </div>
                     <div className="d-flex align-center h-100 mt-10">
-                      {pendingApplicationsData &&
-                      pendingApplicationsData?.datasets?.[0]?.data?.length > 0 ? (
+                      {pendingApplicationsData && pendingApplicationsData?.datasets?.[0]?.data?.length > 0 ? (
                         <Pie data={pendingApplicationsData} options={pendingApplicationsOptions} />
                       ) : (
                         <div className="no-record-found">No record found</div>
@@ -236,9 +210,7 @@ const Dashboard = () => {
                       <div className="dashboard-title-date-row">
                         <div className="dashboard-card-title">Discretionary Limit</div>
                       </div>
-                      <span className="dashboard-readings discretionary-limit">
-                        {usdConverter(discretionaryLimit)}
-                      </span>
+                      <span className="dashboard-readings discretionary-limit">{usdConverter(discretionaryLimit)}</span>
                     </div>
 
                     <div className="dashboard-white-container">
@@ -248,10 +220,7 @@ const Dashboard = () => {
                       <span className="approved-amount-ratio  font-primary">
                         <div>
                           {approvedAmount?.total
-                            ? (
-                                (approvedAmount?.approvedAmount / approvedAmount?.total) *
-                                100
-                              ).toFixed(2)
+                            ? ((approvedAmount?.approvedAmount / approvedAmount?.total) * 100).toFixed(2)
                             : 0}
                           %
                         </div>
@@ -281,9 +250,7 @@ const Dashboard = () => {
                         <span className="material-icons-round">watch_later</span>
                       </div>
                       <div className="mt-15 title">Partially Approved</div>
-                      <div className="mt-5 reading">
-                        {approvedApplication?.partiallyApproved ?? 0}
-                      </div>
+                      <div className="mt-5 reading">{approvedApplication?.partiallyApproved ?? 0}</div>
                       <div className="approved-application-stripe partially-approved-stripe" />
                     </div>
                     <div className="approved-application-block rejected-block">

@@ -12,13 +12,29 @@ export const addClaimsValidations = async (dispatch, data, history) => {
     errors.name = 'Please enter claim name';
   }
 
+  if (!data?.stage || data?.stage?.length <= 0) {
+    validated = false;
+    errors.stage = 'Please select stage';
+  }
+
+  if (!data?.underwriter || data?.underwriter?.length <= 0) {
+    validated = false;
+    errors.underwriter = 'Please select underwriter';
+  }
+
   if (data?.grossdebtamount && !NUMBER_REGEX.test(data?.grossdebtamount)) {
     validated = false;
     errors.grossdebtamount = 'Amount should be number';
   }
 
-  const { name, underwriter, grossdebtamount, amountpaid, claimpaidbyuw, stage, claimsmanager } =
-    data;
+  const {
+    name,
+    underwriter,
+    grossdebtamount,
+    amountpaid,
+    claimpaidbyuw,
+    stage,
+  } = data;
 
   preparedData = {
     name,
@@ -27,7 +43,6 @@ export const addClaimsValidations = async (dispatch, data, history) => {
     claimpaidbyuw,
     underwriter: underwriter?.value,
     stage: stage?.value,
-    claimsmanager: claimsmanager?.value?.toString(),
   };
 
   if (validated) {

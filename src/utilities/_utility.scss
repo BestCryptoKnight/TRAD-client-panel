@@ -1,20 +1,20 @@
-@import "color-palette";
-@import "typography";
-@import "common-class";
-@import "basic-styles";
-@import "node_modules/react-datepicker/dist/react-datepicker";
+@import 'color-palette';
+@import 'typography';
+@import 'common-class';
+@import 'basic-styles';
+@import 'node_modules/react-datepicker/dist/react-datepicker';
 @import '~rc-tooltip/assets/bootstrap.css';
-@import "modified-library";
+@import 'modified-library';
 
 .cursor-pointer {
   cursor: pointer;
 }
 
-.cursor-not-allowed{
+.cursor-not-allowed {
   cursor: not-allowed;
 }
 
-.cursor-default{
+.cursor-default {
   cursor: default;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .just-bet {
-  justify-content: space-between!important;
+  justify-content: space-between !important;
 }
 
 .just-end {
@@ -110,7 +110,7 @@
 }
 
 .mb-5 {
-  margin-bottom: .313rem;
+  margin-bottom: 0.313rem;
 }
 
 .mb-10 {
@@ -118,7 +118,7 @@
 }
 
 .mb-15 {
-  margin-bottom: .938rem;
+  margin-bottom: 0.938rem;
 }
 
 .mb-20 {
@@ -147,5 +147,101 @@
   min-height: 200px;
   padding: 20px;
   font: $subtitle $font-regular;
+  color: $primary-color;
+}
+
+.common-detail-container {
+  width: 100%;
+  margin-top: 25px;
+  padding: 20px;
+  font: $sub-text;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.common-detail-grid {
+  display: grid;
+  grid-template-columns: calc(50% - 5%) calc(50% - 5%);
+  grid-template-areas: 'r1c1 r1c2' 'r2c1 r2c2' 'r3c1 r3c1';
+  gap: 15px 10%;
+}
+
+.common-detail-field.user-select-client {
+  grid-column: 1 / span 2;
+}
+
+.common-detail-field {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 175px 1fr;
+}
+
+.common-detail-title {
+  min-width: 120px;
+  margin-right: 20px;
+  color: $primary-color;
+}
+
+.module-container {
+  display: grid;
+  display: -ms-grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.module {
+  padding: 20px 15px;
+  background-color: white;
+  border-radius: 10px;
+
+  label {
+    margin: 5px 0;
+  }
+}
+
+.module-title {
+  margin-bottom: 10px;
+  font: $h5 $font-medium;
+  color: $primary-color;
+}
+
+.checkbox-disabled {
+  * {
+    cursor: not-allowed;
+  }
+}
+
+.add-user-detail-container span {
+  padding: 0 10px;
+  font: $subtitle $font-medium;
+  color: $field-color;
+}
+
+.debtors-modal-header {
+  text-align: left !important;
+}
+
+.view-debtor-detail-container {
+  @extend .add-overdue-content;
+  gap: 10px 5%;
+  width: 100%;
+  padding: 15px;
+}
+
+.view-debtor-value {
+  min-height: 32px;
+  padding: 0.344rem;
+  font: $subtitle $font-medium;
+  color: $field-color;
+}
+
+.view-debtor-detail-field-container {
+  display: grid;
+  grid-template-columns: 155px 1fr;
+}
+
+.view-debtor-detail-title {
+  margin-top: 5px;
   color: $primary-color;
 }

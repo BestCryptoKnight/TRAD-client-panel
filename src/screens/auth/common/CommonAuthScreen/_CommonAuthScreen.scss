@@ -37,7 +37,9 @@
   height: 100%;
 }
 
-.blue-strip, .orange-strip {
+.blue-strip, 
+.orange-strip,
+.green-strip {
   width: 1.5rem;
   height: 100%;
   background-color: $primary-color;
@@ -46,6 +48,10 @@
 
 .orange-strip {
   background-color: $secondary-color;
+}
+
+.green-strip {
+  background-color: $third-color;
 }
 
 .logo {
@@ -106,6 +112,8 @@
   bottom: 0.625rem;
   right: 3.438rem;
   height: 5.1rem;
+  width: 6rem;
+  opacity: 0.1;
 }
 
 .login-input-icon {
