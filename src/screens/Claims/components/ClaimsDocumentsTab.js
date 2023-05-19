@@ -1,16 +1,20 @@
-import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import IconButton from '../../../common/IconButton/IconButton';
 import Pagination from '../../../common/Pagination/Pagination';
 import Table from '../../../common/Table/Table';
 import Loader from '../../../common/Loader/Loader';
-import {errorNotification} from '../../../common/Toast';
+import { errorNotification } from '../../../common/Toast';
 import Modal from '../../../common/Modal/Modal';
 import Input from '../../../common/Input/Input';
 import FileUpload from '../../../common/Header/component/FileUpload';
-import {downloadDocumentFromServer, getClaimsDocumentsListData, uploadClaimDocument,} from '../redux/ClaimsAction';
-import {downloadAll} from '../../../helpers/DownloadHelper';
+import {
+  downloadDocumentFromServer,
+  getClaimsDocumentsListData,
+  uploadClaimDocument,
+} from '../redux/ClaimsAction';
+import { downloadAll } from '../../../helpers/DownloadHelper';
 
 const initialClaimDocumentState = {
   description: '',
@@ -250,12 +254,7 @@ const ClaimsDocumentsTab = () => {
       <div className="tab-content-header-row">
         <div className="tab-content-header">Documents</div>
 
-          <IconButton
-            buttonType="primary"
-            title="cloud_upload"
-            onClick={() => toggleUploadModel()}
-          />
-
+        <IconButton buttonType="primary" title="cloud_upload" onClick={() => toggleUploadModel()} />
       </div>
       {/* eslint-disable-next-line no-nested-ternary */}
       {!isLoading && docs ? (

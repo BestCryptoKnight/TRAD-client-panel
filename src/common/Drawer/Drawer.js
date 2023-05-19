@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { useOnClickOutside } from '../../hooks/UserClickOutsideHook';
 
 const Drawer = props => {
-  const { drawerState, closeDrawer, header, className, children, onDrawerScroll, ...restProps } = props;
+  const { drawerState, closeDrawer, header, className, children, onDrawerScroll, ...restProps } =
+    props;
   const drawerMenuRef = useRef();
   useOnClickOutside(drawerMenuRef, () => {
     if (drawerState) closeDrawer();
@@ -18,7 +19,11 @@ const Drawer = props => {
         <div className="drawer-wrapper">
           <div className="drawer-header-container">
             {header}
-            <span className="material-icons-round close-drawer" title="Close drawer" onClick={closeDrawer}>
+            <span
+              className="material-icons-round close-drawer"
+              title="Close drawer"
+              onClick={closeDrawer}
+            >
               close
             </span>{' '}
           </div>

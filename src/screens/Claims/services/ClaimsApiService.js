@@ -14,13 +14,13 @@ export const ClaimsApiServices = {
     getClaimsDocumentsList: (id, params) =>
       ApiService.getData(`${CLAIMS_URLS.DOCUMENTS.DOCUMENTS_LIST}${id}`, { params }),
     uploadClaimDocument: (data, config) =>
-    ApiService.request({
-      url: `${CLAIMS_URLS.DOCUMENTS.DOCUMENTS_LIST}`,
-      data,
-      config,
-      method: 'POST',
-      timeout: 60000,
-    }),
+      ApiService.request({
+        url: `${CLAIMS_URLS.DOCUMENTS.DOCUMENTS_LIST}`,
+        data,
+        config,
+        method: 'POST',
+        timeout: 60000,
+      }),
     downloadClaimDocument: id =>
       ApiService.request({
         url: `${CLAIMS_URLS.DOCUMENTS.DOWNLOAD_DOCUMENTS}${id}`,

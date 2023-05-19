@@ -13,11 +13,11 @@ const DashBoardNotification = () => {
   const dispatch = useDispatch();
   const [isFetching, setIsFetching] = useState(false);
   const { notificationList, page, pages, total, hasMoreData } = useSelector(
-    ({ dashboard }) => dashboard?.dashboardNotification ?? {},
+    ({ dashboard }) => dashboard?.dashboardNotification ?? {}
   );
 
   const sortedNotification = useMemo(() => {
-    notificationList?.sort(function (a, b) {
+    notificationList?.sort((a, b) => {
       return new Date(b.title) - new Date(a.title);
     });
     return notificationList;
@@ -38,7 +38,7 @@ const DashBoardNotification = () => {
         /**/
       }
     },
-    [total, pages, page],
+    [total, pages, page]
   );
 
   const handleScroll = e => {
@@ -93,7 +93,9 @@ const DashBoardNotification = () => {
 
                     <div className="notification-detail-row">
                       <span className="font-field f-14">{data?.description}</span>
-                      <span className="notification-time">{moment(data?.createdAt).format('hh:mm A')}</span>
+                      <span className="notification-time">
+                        {moment(data?.createdAt).format('hh:mm A')}
+                      </span>
                       <span
                         className="material-icons-round"
                         onClick={() => {

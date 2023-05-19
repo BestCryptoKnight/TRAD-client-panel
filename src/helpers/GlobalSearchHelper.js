@@ -8,7 +8,7 @@ const CreditLimitTabMapper = {
   tasks: 3,
   documents: 4,
   notes: 5,
-  stakeholder:1
+  stakeholder: 1,
 };
 
 const handleSearchWithSubModules = (path, module, hasSubModule, subModule, history) => {
@@ -19,7 +19,7 @@ const handleSearchWithSubModules = (path, module, hasSubModule, subModule, histo
         break;
       case 'credit limit':
         setViewCreditLimitActiveTabIndex(CreditLimitTabMapper?.[subModule]);
-      break;
+        break;
       default:
         break;
     }
@@ -60,11 +60,13 @@ export const handleGlobalSearchSelect = (history, module, id, hasSubModule, subM
         handleSearchWithSubModules(`/claims/view/${id}`, module, hasSubModule, subModule, history);
         break;
       case 'credit limit':
-        handleSearchWithSubModules(`/credit-limits/${id}`,
-        module,
-        hasSubModule,
-        subModule,
-        history)
+        handleSearchWithSubModules(
+          `/credit-limits/${id}`,
+          module,
+          hasSubModule,
+          subModule,
+          history
+        );
         break;
 
       default:
