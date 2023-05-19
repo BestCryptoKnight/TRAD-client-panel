@@ -145,25 +145,6 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
       };
     }
 
-    case CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_BY_SEARCH:{
-      const dropdownData = {
-        ...state?.creditLimitsFilterList?.dropdownData,
-        [action?.name]: action?.data?.map(entity => ({
-          label: entity.name,
-          name: action?.name,
-          value: entity._id,
-        })),
-      };
-
-      return {
-        ...state,
-        creditLimitsFilterList: {
-          ...state?.creditLimitsFilterList,
-          dropdownData,
-        },
-      };
-    }
-
     case CREDIT_LIMITS_REDUX_CONSTANTS.SELECTED_CREDIT_LIMIT_DATA:
       return {
         ...state,

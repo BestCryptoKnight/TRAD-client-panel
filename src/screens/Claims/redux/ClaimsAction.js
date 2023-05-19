@@ -230,19 +230,3 @@ export const downloadDocumentFromServer = async id => {
   }
   return false;
 };
-
-export const getCliamsManagerListAction = () => {
-  return async dispatch => {
-    try {
-      const response = await ClaimsApiServices.getClaimsManagerList();
-      if (response?.data?.status === 'SUCCESS') {
-        dispatch({
-          type: CLAIMS_REDUX_CONSTANTS.GET_CLAIMS_MANAGER_LIST,
-          data: response?.data?.data,
-        });
-      }
-    } catch (e) {
-      displayErrors(e);
-    }
-  };
-};
