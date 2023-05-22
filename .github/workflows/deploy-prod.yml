@@ -30,7 +30,6 @@ jobs:
       - name: Compile
         run: |
           npm cache clean -f
-          npm run build-prod
       - name: Upload to Server
         run: |
           rsync -avrc --rsh="ssh -p ${{ env.PROD_SSH_PORT }}"  --delete  "$PWD/build/" ${{ env.PROD_SSH_USERNAME }}@${{ env.PROD_SSH_HOST }}:${{ env.PROD_PROJECT_PATH }}dist-new
