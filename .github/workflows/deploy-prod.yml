@@ -29,6 +29,7 @@ jobs:
         run: npm i
       - name: Compile
         run: |
+          npm cache clean -f
           npm run build-prod
       - name: Upload to Server
         run: |
