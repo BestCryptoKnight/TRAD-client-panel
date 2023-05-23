@@ -194,7 +194,7 @@ const ViewInsurer = () => {
         placeholder: 'Enter entity name',
         type: 'text',
         name: 'entityName',
-        value: debtorData?.entityName || '-',
+        value: debtorData?.entityName?.value || '-',
       },
       {
         isEditable: false,
