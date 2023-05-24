@@ -16,6 +16,7 @@ const ApplicationCompanyStepApiServices = {
     }),
   deleteApplicationCompanyEntityTypeData: params =>
     ApiService.deleteData(`${APPLICATION_URLS.COMPANY.DELETE_APPLICATION_ENTITY_TYPE}`, { params }),
-    generateRandomRegistrationNumber: params => ApiService.getData(APPLICATION_URLS.COMPANY.GENERATE_RANDOM_REGISTRATION_NUMBER, {params})
+  generateRandomRegistrationNumber: params =>
+    ApiService.getData(APPLICATION_URLS.COMPANY.GENERATE_RANDOM_REGISTRATION_NUMBER, { params }),
 };
 export default ApplicationCompanyStepApiServices;

@@ -39,37 +39,37 @@ export const addOverdueValidations = async (
     }
   }
   if (
-      data?.currentAmount?.toString()?.trim().includes('.') &&
-      data?.currentAmount?.toString()?.trim()?.length <= 1
+    data?.currentAmount?.toString()?.trim().includes('.') &&
+    data?.currentAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.currentAmount = 'Please enter valid current amount';
   }
   if (
-      data?.thirtyDaysAmount?.toString()?.trim().includes('.') &&
-      data?.thirtyDaysAmount?.toString()?.trim()?.length <= 1
+    data?.thirtyDaysAmount?.toString()?.trim().includes('.') &&
+    data?.thirtyDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.thirtyDaysAmount = 'Please enter valid amount';
   }
 
   if (
-      data?.sixtyDaysAmount?.toString()?.trim().includes('.') &&
-      data?.sixtyDaysAmount?.toString()?.trim()?.length <= 1
+    data?.sixtyDaysAmount?.toString()?.trim().includes('.') &&
+    data?.sixtyDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.sixtyDaysAmount = 'Please enter valid amount';
   }
   if (
-      data?.ninetyDaysAmount?.toString()?.trim().includes('.') &&
-      data?.ninetyDaysAmount?.toString()?.trim()?.length <= 1
+    data?.ninetyDaysAmount?.toString()?.trim().includes('.') &&
+    data?.ninetyDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.ninetyDaysAmount = 'Please enter valid amount';
   }
   if (
-      data?.ninetyPlusDaysAmount?.toString()?.trim().includes('.') &&
-      data?.ninetyPlusDaysAmount?.toString()?.trim()?.length <= 1
+    data?.ninetyPlusDaysAmount?.toString()?.trim().includes('.') &&
+    data?.ninetyPlusDaysAmount?.toString()?.trim()?.length <= 1
   ) {
     validated = false;
     errors.ninetyPlusDaysAmount = 'Please enter valid amount';
@@ -122,7 +122,7 @@ export const addOverdueValidations = async (
     ninetyPlusDaysAmount,
     outstandingAmount,
     status,
-    index
+    index,
   } = data;
   preparedData = {
     debtorId,

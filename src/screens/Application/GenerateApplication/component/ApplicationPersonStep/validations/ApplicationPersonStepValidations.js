@@ -18,11 +18,9 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
     if (type === 'company') {
       if (['AUS', 'NZL'].includes(item?.stakeholderCountry?.value)) {
         if (
-          (!item?.abn ||
-            item?.abn?.trim()?.length <= 0) &&
-            (!item?.acn ||
-            item?.acn?.trim()?.length <= 0) && 
-             editApplicationData?.company?.entityType?.value !== 'TRUST'
+          (!item?.abn || item?.abn?.trim()?.length <= 0) &&
+          (!item?.acn || item?.acn?.trim()?.length <= 0) &&
+          editApplicationData?.company?.entityType?.value !== 'TRUST'
         ) {
           validated = false;
           errors.acn = 'Please enter ABN or ACN number before continue';
@@ -130,14 +128,17 @@ export const applicationPersonStepValidation = async (dispatch, data, editApplic
         validated = false;
         errors.country = 'Please select country before continue';
       }
-     
-      if (item?.dateOfBirth === undefined && item?.driverLicenceNumber?.toString()?.trim()?.length === 0 || 
-      (item?.dateOfBirth === undefined && item?.driverLicenceNumber === undefined)) {
+
+      if (
+        (item?.dateOfBirth === undefined &&
+          item?.driverLicenceNumber?.toString()?.trim()?.length === 0) ||
+        (item?.dateOfBirth === undefined && item?.driverLicenceNumber === undefined)
+      ) {
         validated = false;
         errors.driverLicenceNumber =
           'Please provide at least one - either a driver licence number or date of birth';
       }
-    
+
       if (item?.dateOfBirthitem && item?.driverLicenceNumber?.toString().trim().length < 0) {
         validated = false;
         errors.driverLicenceNumber = 'Please enter valid driver licence number';

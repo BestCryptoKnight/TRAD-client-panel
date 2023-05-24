@@ -112,7 +112,10 @@ const ViewCreditLimits = () => {
       },
       {
         label: 'Review Date',
-        value: creditLimitsDetails?.reviewDate?.toString()?.trim()?.length > 0 ? moment(creditLimitsDetails?.reviewDate).format('DD/MM/yyyy') : '-',
+        value:
+          creditLimitsDetails?.reviewDate?.toString()?.trim()?.length > 0
+            ? moment(creditLimitsDetails?.reviewDate).format('DD/MM/yyyy')
+            : '-',
       },
       {
         label: 'Risk Rating',
@@ -176,7 +179,9 @@ const ViewCreditLimits = () => {
                       {finalInputs.map(detail => (
                         <>
                           <div className="title">{detail.label}</div>
-                          <div className="value">{detail?.value?.toString()?.trim()?.length > 0 ? detail.value : '-'}</div>
+                          <div className="value">
+                            {detail?.value?.toString()?.trim()?.length > 0 ? detail.value : '-'}
+                          </div>
                         </>
                       ))}
                     </div>

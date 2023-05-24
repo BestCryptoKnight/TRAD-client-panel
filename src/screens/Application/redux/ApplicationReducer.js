@@ -391,10 +391,10 @@ export const application = (state = initialApplicationList, action) => {
           ...state.editApplication,
           company: {
             ...state.editApplication.company,
-            registrationNumber: action.data
-          }
-        }
-      }
+            registrationNumber: action.data,
+          },
+        },
+      };
     }
 
     case APPLICATION_REDUX_CONSTANTS.PERSON.EDIT_APPLICATION_PERSON: {

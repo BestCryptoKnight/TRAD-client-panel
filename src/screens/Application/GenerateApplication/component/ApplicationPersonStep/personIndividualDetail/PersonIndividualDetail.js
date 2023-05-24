@@ -458,15 +458,14 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
   const handleTextInputChange = useCallback(
     e => {
       const { name, value } = e.target;
-      
-      if(name === 'driverLicenceNumber' && value.toString().trim().length > 0) {
-        if(ALPHA_NEUMERIC_REGEX.test(value)) {
+
+      if (name === 'driverLicenceNumber' && value.toString().trim().length > 0) {
+        if (ALPHA_NEUMERIC_REGEX.test(value)) {
           updateSinglePersonState(name, value);
         }
+      } else {
+        updateSinglePersonState(name, value);
       }
-     else {
-      updateSinglePersonState(name, value);
-     }
     },
     [updateSinglePersonState]
   );
@@ -797,17 +796,17 @@ const PersonIndividualDetail = ({ itemHeader, index, activePersonStep }) => {
         case 'search':
           component = (
             <div className={input?.isOr && 'application-input-or is-or-person-step'}>
-            <Input
-              type="text"
-              name={input.name}
-              suffix="search"
-              suffixClick={handleSearchTextOnSearchClick}
-              suffixClass="application-search-suffix"
-              placeholder={input.placeholder}
-              value={input?.value}
-              onKeyDown={handleSearchTextInputKeyDown}
-              onChange={handleTextInputChange}
-            />
+              <Input
+                type="text"
+                name={input.name}
+                suffix="search"
+                suffixClick={handleSearchTextOnSearchClick}
+                suffixClass="application-search-suffix"
+                placeholder={input.placeholder}
+                value={input?.value}
+                onKeyDown={handleSearchTextInputKeyDown}
+                onChange={handleTextInputChange}
+              />
             </div>
           );
           break;

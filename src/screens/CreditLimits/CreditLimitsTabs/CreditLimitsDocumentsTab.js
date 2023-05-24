@@ -416,8 +416,10 @@ const CreditLimitsDocumentsTab = props => {
   const deleteDocumentAction = useMemo(
     () => [
       data => (
-      <span
-          className={`material-icons-round font-danger cursor-pointer ${data.uploadByType === 'user' && 'disable-delete-button'}`}
+        <span
+          className={`material-icons-round font-danger cursor-pointer ${
+            data.uploadByType === 'user' && 'disable-delete-button'
+          }`}
           onClick={() => data.uploadByType === 'client-user' && deleteDocument(data)}
         >
           delete_outline

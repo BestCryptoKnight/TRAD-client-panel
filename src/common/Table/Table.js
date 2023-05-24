@@ -105,7 +105,7 @@ const Table = props => {
         /**/
       }
     },
-    [refreshData],
+    [refreshData]
   );
 
   const handleViewDocument = useCallback(async (header, row) => {
@@ -166,7 +166,7 @@ const Table = props => {
         return finalData;
       });
     },
-    [setSelectedRowData, selectedRowData],
+    [setSelectedRowData, selectedRowData]
   );
 
   const onSelectAllRow = useCallback(() => {
@@ -189,7 +189,7 @@ const Table = props => {
 
       recordSelected(id);
     },
-    [expandedRowId],
+    [expandedRowId]
   );
 
   useEffect(() => {
@@ -216,14 +216,20 @@ const Table = props => {
               headers.map(heading => (
                 <th
                   key={heading.label}
-                  align={data?.isCompleted?.props?.className === 'table-checkbox' ? 'center' : align}
+                  align={
+                    data?.isCompleted?.props?.className === 'table-checkbox' ? 'center' : align
+                  }
                   valign={valign}
-                  className={`${headerClass} ${heading.type === 'boolean' ? 'table-checkbox-header' : ''}  `}
+                  className={`${headerClass} ${
+                    heading.type === 'boolean' ? 'table-checkbox-header' : ''
+                  }  `}
                 >
                   {heading.label}
                 </th>
               ))}
-            {(haveActions || extraColumns.length > 0) && <th style={{ position: 'sticky', right: 0 }} />}
+            {(haveActions || extraColumns.length > 0) && (
+              <th style={{ position: 'sticky', right: 0 }} />
+            )}
             {tableButtonActions.length > 0 && <th align={align}>Credit Limit Actions</th>}
           </tr>
         </thead>
@@ -331,7 +337,7 @@ function Row(props) {
       //    const remainingBottomDistance = window.outerHeight - e.screenY;
       //    const remainingRightDistance = window.outerWidth - e.screenX;
     },
-    [setShowActionMenu, setMenuPosition],
+    [setShowActionMenu, setMenuPosition]
   );
   const onClickAction = useCallback(
     (e, type) => {
@@ -339,7 +345,7 @@ function Row(props) {
       recordActionClick(type, data.id, data);
       setShowActionMenu(false);
     },
-    [recordActionClick, data, showActionMenu],
+    [recordActionClick, data, showActionMenu]
   );
 
   const onRowSelected = useCallback(() => {
@@ -349,10 +355,16 @@ function Row(props) {
   return (
     <>
       <tr
-        onClick={() => (isExpandable ? handleRowExpansion(data?.id) : recordSelected(data.id, data))}
+        onClick={() =>
+          isExpandable ? handleRowExpansion(data?.id) : recordSelected(data.id, data)
+        }
         className={`
           main-table-row
-          ${data?.isCompleted?.props?.children?.props?.checked ? `completedTask ${rowClass}` : rowClass} 
+          ${
+            data?.isCompleted?.props?.children?.props?.checked
+              ? `completedTask ${rowClass}`
+              : rowClass
+          } 
           ${dataIndex % 2 === 0 ? 'bg-white' : 'bg-background-color'}
         `}
       >
@@ -363,7 +375,9 @@ function Row(props) {
         )}
         {isExpandable && (
           <td align="center" className="expandable-arrow">
-            <span className={`material-icons-round ${isRowExpanded ? 'rotate-expandable-arrow' : ''}`}>
+            <span
+              className={`material-icons-round ${isRowExpanded ? 'rotate-expandable-arrow' : ''}`}
+            >
               keyboard_arrow_right
             </span>
           </td>
@@ -414,7 +428,10 @@ function Row(props) {
               dataIndex % 2 === 0 ? 'bg-white' : 'bg-background-color'
             }`}
           >
-            <span className="material-icons-round cursor-pointer table-action" onClick={onClickActionToggleButton}>
+            <span
+              className="material-icons-round cursor-pointer table-action"
+              onClick={onClickActionToggleButton}
+            >
               more_vert
             </span>
           </td>
@@ -520,7 +537,11 @@ function TableLinkDrawer(props) {
   };
 
   return (
-    <Drawer header={drawerState.drawerHeader} drawerState={drawerState?.visible} closeDrawer={closeDrawer}>
+    <Drawer
+      header={drawerState.drawerHeader}
+      drawerState={drawerState?.visible}
+      closeDrawer={closeDrawer}
+    >
       <div className="contacts-grid">
         {drawerState?.data?.map(row => (
           <>

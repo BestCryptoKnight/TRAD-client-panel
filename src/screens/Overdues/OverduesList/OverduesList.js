@@ -1,28 +1,28 @@
-import React, {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import IconButton from '../../../common/IconButton/IconButton';
 import Button from '../../../common/Button/Button';
 import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
 import Modal from '../../../common/Modal/Modal';
-import {useQueryParams} from '../../../hooks/GetQueryParamHook';
+import { useQueryParams } from '../../../hooks/GetQueryParamHook';
 import {
   getEntityDetails,
   getOverdueFilterDropDownDataBySearch,
   getOverdueList,
-  resetOverdueListData
+  resetOverdueListData,
 } from '../redux/OverduesAction';
-import {errorNotification} from '../../../common/Toast';
+import { errorNotification } from '../../../common/Toast';
 import Input from '../../../common/Input/Input';
 import Loader from '../../../common/Loader/Loader';
-import {NumberCommaSeparator} from '../../../helpers/NumberCommaSeparator';
-import {filterReducer, LIST_FILTER_REDUCER_ACTIONS} from '../../../common/ListFilters/filter';
-import {useUrlParamsUpdate} from '../../../hooks/useUrlParamsUpdate';
-import {saveAppliedFilters} from '../../../common/ListFilters/redux/ListFiltersAction';
-import Select from "../../../common/Select/Select";
+import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
+import { filterReducer, LIST_FILTER_REDUCER_ACTIONS } from '../../../common/ListFilters/filter';
+import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
+import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
+import Select from '../../../common/Select/Select';
 
 const OverduesList = () => {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const OverduesList = () => {
   const {
     page: paramPage,
     limit: paramLimit,
-  //  debtorId: paramDebtorId,
+    //  debtorId: paramDebtorId,
     minOutstandingAmount: paramMinOutstandingAmount,
     maxOutstandingAmount: paramMaxOutstandingAmount,
     startDate: paramStartDate,
@@ -366,7 +366,7 @@ const OverduesList = () => {
                   placeholderText="Select month and year"
                   onChange={date => onDateSelection(date)}
                   dateFormat="MM/yyyy"
-                  maxDate={moment().subtract(1,'month').toDate()}
+                  maxDate={moment().subtract(1, 'month').toDate()}
                   selected={newSubmissionDate?.submissionDate}
                   showMonthYearPicker
                   showYearDropdown
@@ -386,14 +386,14 @@ const OverduesList = () => {
               <div className="filter-modal-row">
                 <div className="form-title">Debtor Name</div>
                 <Select
-                    className="filter-select"
-                    placeholder="Select Debtor"
-                    name="debtorId"
-                    options={entityList?.debtorId}
-                    value={tempFilter?.debtorId}
-                    onChange={handleDebtorIdFilterChange}
-                    onInputChange={text => handleOnSelectSearchInputChange('debtorId', text)}
-                    isSearchble
+                  className="filter-select"
+                  placeholder="Select Debtor"
+                  name="debtorId"
+                  options={entityList?.debtorId}
+                  value={tempFilter?.debtorId}
+                  onChange={handleDebtorIdFilterChange}
+                  onInputChange={text => handleOnSelectSearchInputChange('debtorId', text)}
+                  isSearchble
                 />
               </div>
               <div className="filter-modal-row">

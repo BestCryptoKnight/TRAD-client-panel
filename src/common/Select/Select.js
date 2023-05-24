@@ -27,26 +27,26 @@ const Select = props => {
   const handleInputChange = _.debounce(inputChangeEventHandling, 800);
 
   return (
-      <ReactSelect
-          className={`${className} react-select-container`}
-          classNamePrefix="react-select"
-          placeholder={placeholder}
-          name={name}
-          options={options}
-          isSearchable={isSearchable}
-          value={value}
-          onChange={onChange}
-          onInputChange={handleInputChange}
-          isDisabled={isDisabled}
-          color={restProps?.color}
-          dropdownHandle={restProps?.dropdownHandle}
-          keepSelectedInList={restProps?.keepSelectedInList}
-          isMulti={restProps?.isMulti}
-          menuPlacement={restProps?.menuPlacement}
-          dropdownPosition={restProps?.dropdownPosition}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-      />
+    <ReactSelect
+      className={`${className} react-select-container`}
+      classNamePrefix="react-select"
+      placeholder={placeholder}
+      name={name}
+      options={options}
+      isSearchable={isSearchable}
+      value={value}
+      onChange={onChange}
+      onInputChange={handleInputChange}
+      isDisabled={isDisabled}
+      color={restProps?.color}
+      dropdownHandle={restProps?.dropdownHandle}
+      keepSelectedInList={restProps?.keepSelectedInList}
+      isMulti={restProps?.isMulti}
+      menuPlacement={restProps?.menuPlacement}
+      dropdownPosition={restProps?.dropdownPosition}
+      onFocus={() => setIsFocus(true)}
+      onBlur={() => setIsFocus(false)}
+    />
   );
 };
 

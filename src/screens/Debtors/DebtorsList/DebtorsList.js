@@ -29,17 +29,21 @@ import Select from '../../../common/Select/Select';
 const DebtorsList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const debtorListWithPageData = useSelector(({ debtorsManagement }) => debtorsManagement?.debtorsList ?? {});
+  const debtorListWithPageData = useSelector(
+    ({ debtorsManagement }) => debtorsManagement?.debtorsList ?? {}
+  );
   console.log('debtorListWithPageData', debtorListWithPageData);
   const { debtorsColumnNameList, debtorsDefaultColumnNameList } = useSelector(
-    ({ debtorsManagement }) => debtorsManagement ?? {},
+    ({ debtorsManagement }) => debtorsManagement ?? {}
   );
   const { docs, headers, page, pages, limit, total } = useMemo(
     () => debtorListWithPageData ?? {},
-    [debtorListWithPageData],
+    [debtorListWithPageData]
   );
 
-  const debtorDropDownData = useSelector(({ debtorsManagement }) => debtorsManagement?.dropdownData ?? {});
+  const debtorDropDownData = useSelector(
+    ({ debtorsManagement }) => debtorsManagement?.dropdownData ?? {}
+  );
 
   const { debtorListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
 
@@ -58,7 +62,10 @@ const DebtorsList = () => {
 
   const appliedFilters = useMemo(() => {
     return {
-      entityType: (tempFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
+      entityType:
+        (tempFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0
+          ? tempFilter?.entityType
+          : undefined,
     };
   }, [{ ...tempFilter }]);
 
@@ -86,31 +93,31 @@ const DebtorsList = () => {
         cb();
       }
     },
-    [page, limit, { ...appliedFilters }],
+    [page, limit, { ...appliedFilters }]
   );
 
   const pageActionClick = useCallback(
     async newPage => {
       await getDebtorsListByFilter({ page: newPage, limit });
     },
-    [limit, getDebtorsListByFilter],
+    [limit, getDebtorsListByFilter]
   );
   const onSelectLimit = useCallback(
     async newLimit => {
       await getDebtorsListByFilter({ page: 1, limit: newLimit });
     },
-    [getDebtorsListByFilter],
+    [getDebtorsListByFilter]
   );
 
   const { defaultFields, customFields } = useMemo(
     () => debtorsColumnNameList ?? { defaultFields: [], customFields: [] },
-    [debtorsColumnNameList],
+    [debtorsColumnNameList]
   );
 
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const toggleCustomField = useCallback(
     value => setCustomFieldModal(value !== undefined ? value : e => !e),
-    [setCustomFieldModal],
+    [setCustomFieldModal]
   );
 
   const onClickCloseColumnSelection = useCallback(() => {
@@ -135,7 +142,12 @@ const DebtorsList = () => {
     } catch (e) {
       /**/
     }
-  }, [toggleCustomField, debtorsColumnNameList, getDebtorsListByFilter, debtorsDefaultColumnNameList]);
+  }, [
+    toggleCustomField,
+    debtorsColumnNameList,
+    getDebtorsListByFilter,
+    debtorsDefaultColumnNameList,
+  ]);
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
     try {
@@ -170,7 +182,7 @@ const DebtorsList = () => {
       onClickSaveColumnSelection,
       DebtorListColumnSaveButtonLoaderAction,
       DebtorListColumnResetButtonLoaderAction,
-    ],
+    ]
   );
 
   const onChangeSelectedColumn = useCallback(
@@ -178,13 +190,13 @@ const DebtorsList = () => {
       const data = { type, name, value };
       dispatch(changeDebtorsColumnListStatus(data));
     },
-    [dispatch],
+    [dispatch]
   );
 
   const [filterModal, setFilterModal] = useState(false);
   const toggleFilterModal = useCallback(
     value => setFilterModal(value !== undefined ? value : e => !e),
-    [setFilterModal],
+    [setFilterModal]
   );
 
   const onClickApplyFilter = useCallback(async () => {
@@ -218,18 +230,23 @@ const DebtorsList = () => {
       },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
-    [toggleFilterModal, onClickApplyFilter, onClickResetFilter],
+    [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
   );
   const entityTypeSelectedValue = useMemo(() => {
-    return debtorDropDownData?.entityType?.filter(entity => entity?.value === tempFilter?.entityType);
+    return debtorDropDownData?.entityType?.filter(
+      entity => entity?.value === tempFilter?.entityType
+    );
   }, [tempFilter?.entityType]);
   useUrlParamsUpdate(
     {
       page: page ?? 1,
       limit: limit ?? 15,
-      entityType: (finalFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType : undefined,
+      entityType:
+        (finalFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0
+          ? finalFilter?.entityType
+          : undefined,
     },
-    [page, limit, { ...finalFilter }],
+    [page, limit, { ...finalFilter }]
   );
 
   const { page: paramPage, limit: paramLimit, entityType: paramEntity } = useQueryParams();
@@ -239,7 +256,8 @@ const DebtorsList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      entityType: (paramEntity?.trim()?.length ?? -1) > 0 ? paramEntity : debtorListFilters?.entityType,
+      entityType:
+        (paramEntity?.trim()?.length ?? -1) > 0 ? paramEntity : debtorListFilters?.entityType,
     };
     Object.entries(filters).forEach(([name, value]) => {
       dispatchFilter({
@@ -253,7 +271,10 @@ const DebtorsList = () => {
     dispatch(getDebtorDropdownData());
   }, []);
 
-  const onClickViewDebtor = useCallback(id => history.replace(`debtors/debtor/view/${id}`), [history]);
+  const onClickViewDebtor = useCallback(
+    id => history.replace(`debtors/debtor/view/${id}`),
+    [history]
+  );
 
   const downloadDebtor = useCallback(async () => {
     if (docs?.length > 0) {

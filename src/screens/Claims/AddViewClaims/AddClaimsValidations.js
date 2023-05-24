@@ -27,14 +27,7 @@ export const addClaimsValidations = async (dispatch, data, history) => {
     errors.grossdebtamount = 'Amount should be number';
   }
 
-  const {
-    name,
-    underwriter,
-    grossdebtamount,
-    amountpaid,
-    claimpaidbyuw,
-    stage,
-  } = data;
+  const { name, underwriter, grossdebtamount, amountpaid, claimpaidbyuw, stage } = data;
 
   preparedData = {
     name,

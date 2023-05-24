@@ -32,7 +32,9 @@ export const headerNotificationReducer = (
       let hasMoreData = false;
       const { page, pages, docs, total } = action?.data;
       let notificationReceived = false;
-      if(page < pages) { hasMoreData = true; }
+      if (page < pages) {
+        hasMoreData = true;
+      }
       if (action?.data?.length > 0) notificationReceived = true;
       return {
         ...state,

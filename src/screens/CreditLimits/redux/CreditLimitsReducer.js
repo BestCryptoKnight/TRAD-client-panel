@@ -129,7 +129,7 @@ export const creditLimits = (state = initialCreditLimitsListState, action) => {
     case CREDIT_LIMITS_FILTER_LIST_REDUX_CONSTANTS.CREDIT_LIMITS_FILTER_LIST: {
       const dropdownData = { ...state?.creditLimitsFilterList?.dropdownData };
       Object.entries(action?.data)?.forEach(([key, value]) => {
-        dropdownData[key] = value?.map(entity => ({
+        dropdownData[key] = value?.data?.map(entity => ({
           label: entity?.name ?? entity.label,
           name: dropdownData[key] === 'entityType' && 'entityType',
           value: entity?._id ?? entity.value,
