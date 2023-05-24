@@ -927,7 +927,7 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
       Object.entries(action?.data)?.forEach(([key, value]) => {
         dropDownData[key] = value.map(entity => ({
           label: entity.name ?? entity.label,
-          name: value.field ?? "",
+          name: value.field ?? '',
           value: entity._id ?? entity.value,
         }));
       });
