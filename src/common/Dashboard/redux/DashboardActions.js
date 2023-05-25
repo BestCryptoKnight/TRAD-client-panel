@@ -159,5 +159,5 @@ export const downloadDashboardTask = params => {
       throw Error();
     }
     return false;
-  }
-}
+  };
+};

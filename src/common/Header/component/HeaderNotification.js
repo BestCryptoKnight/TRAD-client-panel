@@ -2,7 +2,10 @@ import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { DATE_FORMAT, DATE_FORMAT_CONSTANT_FOR_CALENDER } from '../../../constants/DateFormatConstants';
+import {
+  DATE_FORMAT,
+  DATE_FORMAT_CONSTANT_FOR_CALENDER,
+} from '../../../constants/DateFormatConstants';
 import Loader from '../../Loader/Loader';
 import Drawer from '../../Drawer/Drawer';
 import IconButton from '../../IconButton/IconButton';
@@ -20,10 +23,14 @@ const HeaderNotification = () => {
   const [notificationDrawer, setNotificationDrawer] = useState(false);
 
   const [isFetching, setIsFetching] = useState(false);
-  const { notificationData } = useSelector(({ headerNotificationReducer }) => headerNotificationReducer ?? {});
+  const { notificationData } = useSelector(
+    ({ headerNotificationReducer }) => headerNotificationReducer ?? {}
+  );
 
   const { notificationList, page, pages, total, hasMoreData } = notificationData ?? {};
-  const { markAllAsReadLoader } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
+  const { markAllAsReadLoader } = useSelector(
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
+  );
 
   const sortedNotificationList = useMemo(() => {
     let list = [];
@@ -37,16 +44,21 @@ const HeaderNotification = () => {
             };
           acc[moment(cur.createdAt).format('DD/MM/YYYY')].notifications.push(cur);
           return acc;
-        }, {}),
+        }, {})
       );
-      list?.sort(function (a, b) {
-        return moment(b.createdAt, 'DD/MM/YYYY').toDate() - moment(a.createdAt, 'DD/MM/YYYY').toDate();
+      list?.sort((a, b) => {
+        return (
+          moment(b.createdAt, 'DD/MM/YYYY').toDate() - moment(a.createdAt, 'DD/MM/YYYY').toDate()
+        );
       });
     }
     return list ?? [];
   }, [notificationList]);
 
-  const openNotificationDrawer = useCallback(value => setNotificationDrawer(value !== undefined ? value : e => !e), []);
+  const openNotificationDrawer = useCallback(
+    value => setNotificationDrawer(value !== undefined ? value : e => !e),
+    []
+  );
 
   const NotificationDrawerHeader = () => {
     return (
@@ -123,7 +135,10 @@ const HeaderNotification = () => {
             ? sortedNotificationList?.map(notification => (
                 <div className="notification-set">
                   <div className="notification-set-title">
-                    {moment(notification?.createdAt, DATE_FORMAT).calendar(null, DATE_FORMAT_CONSTANT_FOR_CALENDER)}
+                    {moment(notification?.createdAt, DATE_FORMAT).calendar(
+                      null,
+                      DATE_FORMAT_CONSTANT_FOR_CALENDER
+                    )}
                   </div>
                   {notification?.notifications?.map(singleNotification => (
                     <div
@@ -146,7 +161,9 @@ const HeaderNotification = () => {
                         </div>
                         <span
                           className="material-icons-round font-placeholder cursor-pointer"
-                          onClick={() => dispatch(markNotificationAsReadAndDeleteAction(singleNotification?._id))}
+                          onClick={() =>
+                            dispatch(markNotificationAsReadAndDeleteAction(singleNotification?._id))
+                          }
                         >
                           cancel
                         </span>
@@ -157,7 +174,9 @@ const HeaderNotification = () => {
                   ))}
                 </div>
               ))
-            : !notificationList?.length && <div className="no-record-found">No new notification</div>}
+            : !notificationList?.length && (
+                <div className="no-record-found">No new notification</div>
+              )}
           {pages > page && <Loader />}
         </>
       </Drawer>

@@ -26,7 +26,9 @@ const DashboardTask = () => {
 
   const { tempFilter, finalFilter } = useMemo(() => filter ?? {}, [filter]);
 
-  const { dashboardTaskListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
+  const { dashboardTaskListFilters } = useSelector(
+    ({ listFilterReducer }) => listFilterReducer ?? {}
+  );
 
   const getDashboardTaskListByFilter = useCallback(
     async (params = {}, cb) => {
@@ -47,7 +49,7 @@ const DashboardTask = () => {
         /**/
       }
     },
-    [tempFilter],
+    [tempFilter]
   );
 
   const getTaskListOnRefresh = () => {
@@ -68,7 +70,7 @@ const DashboardTask = () => {
 
   const toggleFilterModal = useCallback(
     value => setFilterModal(value !== undefined ? value : e => !e),
-    [setFilterModal],
+    [setFilterModal]
   );
   const onClickApplyFilter = useCallback(async () => {
     await getDashboardTaskListByFilter({}, toggleFilterModal);
@@ -100,7 +102,7 @@ const DashboardTask = () => {
       },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
-    [toggleFilterModal, onClickApplyFilter, onClickResetFilter],
+    [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
   );
 
   const handleIsCompletedFilterChange = event => {
@@ -196,7 +198,10 @@ const DashboardTask = () => {
         >
           <div className="d-flex align-center">
             <div className="form-title">Completed Task</div>
-            <Checkbox checked={tempFilter?.isCompleted} onChange={e => handleIsCompletedFilterChange(e)} />
+            <Checkbox
+              checked={tempFilter?.isCompleted}
+              onChange={e => handleIsCompletedFilterChange(e)}
+            />
           </div>
         </Modal>
       )}

@@ -76,7 +76,9 @@ const ApplicationList = () => {
       entityType:
         tempFilter?.entityType?.toString()?.trim()?.length > 0 ? tempFilter?.entityType : undefined,
       debtorId:
-        tempFilter?.debtorId?.value?.toString()?.trim()?.length > 0 ? tempFilter?.debtorId : undefined,
+        tempFilter?.debtorId?.value?.toString()?.trim()?.length > 0
+          ? tempFilter?.debtorId
+          : undefined,
       status: tempFilter?.status?.toString()?.trim()?.length > 0 ? tempFilter?.status : undefined,
       minCreditLimit:
         tempFilter?.minCreditLimit?.toString()?.trim()?.length > 0
@@ -215,10 +217,10 @@ const ApplicationList = () => {
     };
     toggleFilterModal();
     if (params) {
-      data = {...data, ...params};
+      data = { ...data, ...params };
     }
     await getApplicationsByFilter(data, null, !!params);
-  }
+  };
 
   const onClickResetFilter = useCallback(async () => {
     dispatchFilter({
@@ -352,9 +354,7 @@ const ApplicationList = () => {
           : applicationListFilters?.entityType ?? undefined,
       debtorId: applicationListFilters?.debtorId,
       status:
-        (paramStatus?.trim()?.length ?? -1) > 0
-          ? paramStatus
-          : applicationListFilters?.status,
+        (paramStatus?.trim()?.length ?? -1) > 0 ? paramStatus : applicationListFilters?.status,
       minCreditLimit:
         (paramMinCreditLimit?.trim()?.length ?? -1) > 0
           ? paramMinCreditLimit
@@ -405,7 +405,9 @@ const ApplicationList = () => {
           ? finalFilter?.entityType
           : undefined,
       debtorId:
-        finalFilter?.debtorId?.value?.toString()?.trim()?.length > 0 ? finalFilter?.debtorId?.value : undefined,
+        finalFilter?.debtorId?.value?.toString()?.trim()?.length > 0
+          ? finalFilter?.debtorId?.value
+          : undefined,
       status: finalFilter?.status?.toString()?.trim()?.length > 0 ? finalFilter?.status : undefined,
       minCreditLimit:
         finalFilter?.minCreditLimit?.toString()?.trim()?.length > 0
@@ -451,7 +453,7 @@ const ApplicationList = () => {
       try {
         const finalFilters = {
           ...appliedFilters,
-          debtorId: appliedFilters?.debtorId?.value
+          debtorId: appliedFilters?.debtorId?.value,
         };
         const response = await applicationDownloadAction(finalFilters);
         if (response) downloadAll(response);

@@ -21,22 +21,18 @@ import { DashboardApiService } from '../../../common/Dashboard/services/Dashboar
 
 export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
   return async dispatch => {
-    const finalParams = {}
+    const finalParams = {};
     // eslint-disable-next-line no-unused-vars
     Object.entries(params).forEach(([key, value]) => {
-    if (_.isArray(value)) {
-     finalParams[key] = value
-         ?.map(record =>
-           record?.value
-         )
-         .join(',');
-     } else if (_.isObject(value)) {
-       finalParams[key] = value?.value;
-     } else {
-       finalParams[key] = value || undefined;
-     }
-   });
-   
+      if (_.isArray(value)) {
+        finalParams[key] = value?.map(record => record?.value).join(',');
+      } else if (_.isObject(value)) {
+        finalParams[key] = value?.value;
+      } else {
+        finalParams[key] = value || undefined;
+      }
+    });
+
     try {
       startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(finalParams);
@@ -170,7 +166,7 @@ export const getCreditLimitsFilterDropDownDataBySearch = options => {
   };
 };
 
-export const downloadCreditLimitCSV = (params) => {
+export const downloadCreditLimitCSV = params => {
   return async () => {
     try {
       startGeneralLoaderOnRequest('creditLimitDownloadCreditLimitCSVButtonLoaderAction');

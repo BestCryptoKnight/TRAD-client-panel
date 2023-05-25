@@ -40,10 +40,12 @@ export const processTableDataByType = ({ header, row, actions }) => {
     case 'booleanString':
       return currentData ? 'Yes' : 'No';
     case 'link':
-      return (
-        currentData && currentData.toString().trim().length > 0 ? <div className="link" onClick={() => handleViewDocument(header, row)}>
+      return currentData && currentData.toString().trim().length > 0 ? (
+        <div className="link" onClick={() => handleViewDocument(header, row)}>
           {currentData}
-        </div> : '-'
+        </div>
+      ) : (
+        '-'
       );
 
     case 'amount':

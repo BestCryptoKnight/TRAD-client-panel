@@ -20,8 +20,8 @@ export const getApplicationsListByFilter = (params = { page: 1, limit: 15 }) => 
     try {
       const finalParams = {
         ...params,
-        debtorId: params?.debtorId?.value
-      }
+        debtorId: params?.debtorId?.value,
+      };
       startGeneralLoaderOnRequest('applicationListPageLoader');
       const response = await ApplicationApiServices.getApplicationListByFilter(finalParams);
 
@@ -926,8 +926,8 @@ export const getApplicationCompanyStepDropDownDataBySearch = options => {
 export const downloadDecisionLetterForApplication = async (id, param) => {
   try {
     const response = await ApplicationViewApiServices.downloadDecisionLetterForApplication(
-        id,
-        param
+      id,
+      param
     );
     if (response) {
       return response;
@@ -942,19 +942,21 @@ export const downloadDecisionLetterForApplication = async (id, param) => {
 };
 
 export const generateRandomRegistrationNumber = params => {
-  return async(dispatch) => {
+  return async dispatch => {
     try {
-      const response = await ApplicationCompanyStepApiServices.generateRandomRegistrationNumber(params);
-      if(response?.data?.status === 'SUCCESS') {
+      const response = await ApplicationCompanyStepApiServices.generateRandomRegistrationNumber(
+        params
+      );
+      if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: APPLICATION_REDUX_CONSTANTS.COMPANY.SET_RANDOM_GENERATED_REGISTRATION_NUMBER,
-          data: response.data.data
-        })
-      return response.data.data;
+          data: response.data.data,
+        });
+        return response.data.data;
       }
-    } catch(e) {
+    } catch (e) {
       displayErrors(e);
     }
     return false;
-  }
-}
+  };
+};

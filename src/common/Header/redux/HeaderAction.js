@@ -210,7 +210,10 @@ export const updateHeaderNotificationOnTaskAssignedAction = data => {
 export const markNotificationAsReadAndDeleteAction = notificationId => {
   return async dispatch => {
     try {
-      const response = await HeaderApiService.notificationApiServices.markNotificationAsReadAndDelete(notificationId);
+      const response =
+        await HeaderApiService.notificationApiServices.markNotificationAsReadAndDelete(
+          notificationId
+        );
       if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message ?? 'Notification deleted successfully');
         dispatch({

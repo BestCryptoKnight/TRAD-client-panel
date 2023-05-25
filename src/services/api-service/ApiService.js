@@ -68,9 +68,9 @@ instance.interceptors.response.use(
   async error => {
     const resType = error?.request?.responseType;
     const statusCode = error?.response?.status ?? 0;
-    if(resType === 'blob') {
+    if (resType === 'blob') {
       const err = await error?.response?.data?.text();
-      return Promise.reject(JSON.parse(err))
+      return Promise.reject(JSON.parse(err));
     }
     switch (statusCode) {
       case 401:
