@@ -28,7 +28,6 @@ export const getDebtorsList = (params = { page: 1, limit: 15 }) => {
     try {
       startGeneralLoaderOnRequest('debtorListLoader');
       const response = await DebtorsApiServices.getAllDebtorsList(params);
-      console.log('response', response);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DEBTORS_REDUX_CONSTANTS.FETCH_DEBTOR_LIST_SUCCESS,
