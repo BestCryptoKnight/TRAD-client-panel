@@ -32,7 +32,6 @@ const DebtorsList = () => {
   const debtorListWithPageData = useSelector(
     ({ debtorsManagement }) => debtorsManagement?.debtorsList ?? {}
   );
-  console.log('debtorListWithPageData', debtorListWithPageData);
   const { debtorsColumnNameList, debtorsDefaultColumnNameList } = useSelector(
     ({ debtorsManagement }) => debtorsManagement ?? {}
   );

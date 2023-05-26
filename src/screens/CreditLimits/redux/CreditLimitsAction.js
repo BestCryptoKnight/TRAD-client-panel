@@ -36,6 +36,7 @@ export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
     try {
       startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(finalParams);
+      console.log("response", response);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,
@@ -113,6 +114,7 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
           throw Error();
         }
       }
+      console.log("data", data);
       const response = await CreditLimitsApiService.updateCreditLimitsColumnList(data);
       if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
