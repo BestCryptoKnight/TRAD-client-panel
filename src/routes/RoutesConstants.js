@@ -34,6 +34,7 @@ const Support = lazy(() => import('../screens/Support/Support'));
 const PageNotFound = lazy(() => import('../common/PageNotFound/PageNotFound'));
 const DebtorsList = lazy(() => import('../screens/Debtors/DebtorsList/DebtorsList'));
 const ViewDebtor = lazy(() => import('../screens/Debtors/ViewDebtor/ViewDebtor'));
+const GenerateDebtor = lazy(() => import('../screens/Debtors/GenerateDebtor/GenerateDebtor'));
 
 export const ROUTES_CONSTANTS = [
   {
@@ -93,6 +94,11 @@ export const ROUTES_CONSTANTS = [
   {
     path: '/debtors',
     component: DebtorsList,
+    authenticated: true,
+  },
+  {
+    path: '/debtors/:action/',
+    component: GenerateDebtor,
     authenticated: true,
   },
   {

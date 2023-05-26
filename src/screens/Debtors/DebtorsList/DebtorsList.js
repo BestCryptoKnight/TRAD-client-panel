@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useReducer, useState } from 're
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import IconButton from '../../../common/IconButton/IconButton';
+import Button from '../../../common/Button/Button';
 import Table from '../../../common/Table/Table';
 import Pagination from '../../../common/Pagination/Pagination';
 import Loader from '../../../common/Loader/Loader';
@@ -14,6 +15,7 @@ import {
   getDebtorsList,
   resetDebtorListPaginationData,
   saveDebtorsColumnListName,
+  updateEditDebtorField,
 } from '../redux/DebtorsAction';
 import CustomFieldModal from '../../../common/Modal/CustomFieldModal/CustomFieldModal';
 import Modal from '../../../common/Modal/Modal';
@@ -25,6 +27,8 @@ import { useUrlParamsUpdate } from '../../../hooks/useUrlParamsUpdate';
 import { downloadAll } from '../../../helpers/DownloadHelper';
 import { saveAppliedFilters } from '../../../common/ListFilters/redux/ListFiltersAction';
 import Select from '../../../common/Select/Select';
+import { useModulePrivileges } from '../../../hooks/userPrivileges/useModulePrivilegesHook';
+import { SIDEBAR_NAMES } from '../../../constants/SidebarConstants';
 
 const DebtorsList = () => {
   const history = useHistory();
@@ -33,18 +37,18 @@ const DebtorsList = () => {
     ({ debtorsManagement }) => debtorsManagement?.debtorsList ?? {}
   );
   const { debtorsColumnNameList, debtorsDefaultColumnNameList } = useSelector(
-    ({ debtorsManagement }) => debtorsManagement ?? {}
+    ({ debtorsManagement }) => debtorsManagement ?? {},
   );
   const { docs, headers, page, pages, limit, total } = useMemo(
     () => debtorListWithPageData ?? {},
-    [debtorListWithPageData]
+    [debtorListWithPageData],
   );
 
-  const debtorDropDownData = useSelector(
-    ({ debtorsManagement }) => debtorsManagement?.dropdownData ?? {}
-  );
+  const debtorDropDownData = useSelector(({ debtorsManagement }) => debtorsManagement?.dropdownData ?? {});
 
   const { debtorListFilters } = useSelector(({ listFilterReducer }) => listFilterReducer ?? {});
+
+  const isDebtorUpdatable = useModulePrivileges(SIDEBAR_NAMES.DEBTOR).hasWriteAccess;
 
   const {
     DebtorListColumnSaveButtonLoaderAction,
@@ -61,10 +65,7 @@ const DebtorsList = () => {
 
   const appliedFilters = useMemo(() => {
     return {
-      entityType:
-        (tempFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0
-          ? tempFilter?.entityType
-          : undefined,
+      entityType: (tempFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0 ? tempFilter?.entityType : undefined,
     };
   }, [{ ...tempFilter }]);
 
@@ -92,31 +93,31 @@ const DebtorsList = () => {
         cb();
       }
     },
-    [page, limit, { ...appliedFilters }]
+    [page, limit, { ...appliedFilters }],
   );
 
   const pageActionClick = useCallback(
     async newPage => {
       await getDebtorsListByFilter({ page: newPage, limit });
     },
-    [limit, getDebtorsListByFilter]
+    [limit, getDebtorsListByFilter],
   );
   const onSelectLimit = useCallback(
     async newLimit => {
       await getDebtorsListByFilter({ page: 1, limit: newLimit });
     },
-    [getDebtorsListByFilter]
+    [getDebtorsListByFilter],
   );
 
   const { defaultFields, customFields } = useMemo(
     () => debtorsColumnNameList ?? { defaultFields: [], customFields: [] },
-    [debtorsColumnNameList]
+    [debtorsColumnNameList],
   );
 
   const [customFieldModal, setCustomFieldModal] = useState(false);
   const toggleCustomField = useCallback(
     value => setCustomFieldModal(value !== undefined ? value : e => !e),
-    [setCustomFieldModal]
+    [setCustomFieldModal],
   );
 
   const onClickCloseColumnSelection = useCallback(() => {
@@ -141,12 +142,7 @@ const DebtorsList = () => {
     } catch (e) {
       /**/
     }
-  }, [
-    toggleCustomField,
-    debtorsColumnNameList,
-    getDebtorsListByFilter,
-    debtorsDefaultColumnNameList,
-  ]);
+  }, [toggleCustomField, debtorsColumnNameList, getDebtorsListByFilter, debtorsDefaultColumnNameList]);
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
     try {
@@ -181,7 +177,7 @@ const DebtorsList = () => {
       onClickSaveColumnSelection,
       DebtorListColumnSaveButtonLoaderAction,
       DebtorListColumnResetButtonLoaderAction,
-    ]
+    ],
   );
 
   const onChangeSelectedColumn = useCallback(
@@ -189,13 +185,13 @@ const DebtorsList = () => {
       const data = { type, name, value };
       dispatch(changeDebtorsColumnListStatus(data));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const [filterModal, setFilterModal] = useState(false);
   const toggleFilterModal = useCallback(
     value => setFilterModal(value !== undefined ? value : e => !e),
-    [setFilterModal]
+    [setFilterModal],
   );
 
   const onClickApplyFilter = useCallback(async () => {
@@ -229,23 +225,18 @@ const DebtorsList = () => {
       },
       { title: 'Apply', buttonType: 'primary', onClick: onClickApplyFilter },
     ],
-    [toggleFilterModal, onClickApplyFilter, onClickResetFilter]
+    [toggleFilterModal, onClickApplyFilter, onClickResetFilter],
   );
   const entityTypeSelectedValue = useMemo(() => {
-    return debtorDropDownData?.entityType?.filter(
-      entity => entity?.value === tempFilter?.entityType
-    );
+    return debtorDropDownData?.entityType?.filter(entity => entity?.value === tempFilter?.entityType);
   }, [tempFilter?.entityType]);
   useUrlParamsUpdate(
     {
       page: page ?? 1,
       limit: limit ?? 15,
-      entityType:
-        (finalFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0
-          ? finalFilter?.entityType
-          : undefined,
+      entityType: (finalFilter?.entityType?.toString()?.trim()?.length ?? -1) > 0 ? finalFilter?.entityType : undefined,
     },
-    [page, limit, { ...finalFilter }]
+    [page, limit, { ...finalFilter }],
   );
 
   const { page: paramPage, limit: paramLimit, entityType: paramEntity } = useQueryParams();
@@ -255,8 +246,7 @@ const DebtorsList = () => {
       limit: paramLimit ?? limit ?? 15,
     };
     const filters = {
-      entityType:
-        (paramEntity?.trim()?.length ?? -1) > 0 ? paramEntity : debtorListFilters?.entityType,
+      entityType: (paramEntity?.trim()?.length ?? -1) > 0 ? paramEntity : debtorListFilters?.entityType,
     };
     Object.entries(filters).forEach(([name, value]) => {
       dispatchFilter({
@@ -267,12 +257,19 @@ const DebtorsList = () => {
     });
     await getDebtorsListByFilter({ ...params, ...filters });
     dispatch(getDebtorsColumnNameList());
+    console.log('getDebtorDropDownData________________');
     dispatch(getDebtorDropdownData());
   }, []);
 
   const onClickViewDebtor = useCallback(
-    id => history.replace(`debtors/debtor/view/${id}`),
-    [history]
+    (id, data) => {
+      if (data?.status === 'DRAFT') {
+        history.replace(`debtors/generate/?debtorId=${id}`);
+      } else {
+        history.replace(`debtors/debtor/view/${id}`);
+      }
+    },
+    [history],
   );
 
   const downloadDebtor = useCallback(async () => {
@@ -294,6 +291,17 @@ const DebtorsList = () => {
 
   useEffect(() => {
     dispatch(resetDebtorListPaginationData(page, pages, total, limit));
+  }, []);
+
+  const generateDebtorClick = useCallback(() => {
+    dispatch(
+      updateEditDebtorField('company', 'country', {
+        label: 'Australia',
+        name: 'country',
+        value: 'AUS',
+      }),
+    );
+    history.push(`/debtors/generate/`);
   }, []);
 
   return (
@@ -321,9 +329,11 @@ const DebtorsList = () => {
               <IconButton
                 buttonType="primary"
                 title="format_line_spacing"
+                className="mr-10"
                 buttonTitle="Click to select custom fields"
                 onClick={() => toggleCustomField()}
               />
+              {isDebtorUpdatable && <Button title="Add Debtor" buttonType="success" onClick={generateDebtorClick} />}
             </div>
           </div>
 
