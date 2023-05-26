@@ -80,15 +80,21 @@ export const saveUserColumnListName = ({ userColumnNameList = {}, isReset = fals
         columns: [],
       };
       if (!isReset) {
-        const defaultColumns = userColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = userColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultColumns = userColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = userColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           isReset: false,
           columns: [...defaultColumns, ...customFields],
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopGeneralLoaderOnSuccessOrFail(`UserListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+          stopGeneralLoaderOnSuccessOrFail(
+            `UserListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
           throw Error();
         }
       }
@@ -99,10 +105,14 @@ export const saveUserColumnListName = ({ userColumnNameList = {}, isReset = fals
           data: userColumnNameList,
         });
         successNotification(response?.data?.message ?? 'Columns updated successfully.');
-        stopGeneralLoaderOnSuccessOrFail(`UserListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `UserListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`UserListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `UserListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };

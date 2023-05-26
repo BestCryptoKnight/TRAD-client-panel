@@ -11,7 +11,9 @@ const DebtorConfirmationStep = () => {
   const dispatch = useDispatch();
   const editDebtor = useSelector(({ debtorsManagement }) => debtorsManagement?.editDebtor);
 
-  const { company, documents } = useSelector(({ debtorsManagement }) => debtorsManagement?.editDebtor ?? {});
+  const { company, documents } = useSelector(
+    ({ debtorsManagement }) => debtorsManagement?.editDebtor ?? {}
+  );
   console.log('company-------', company);
   console.log('documents-------', documents);
   console.log('editDebtor-------', editDebtor);
@@ -41,7 +43,7 @@ const DebtorConfirmationStep = () => {
           },
         ];
       }) || [],
-    [documents],
+    [documents]
   );
 
   const confirmationDetails = [
@@ -244,7 +246,9 @@ const DebtorConfirmationStep = () => {
     }
   }, []);
   return (
-    <div className="application-confirmation-step">{confirmationDetails.map(getConfirmationComponentFromType)}</div>
+    <div className="application-confirmation-step">
+      {confirmationDetails.map(getConfirmationComponentFromType)}
+    </div>
   );
 };
 

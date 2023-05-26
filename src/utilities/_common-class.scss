@@ -37,7 +37,8 @@
   width: 100%;
 }
 
-.page-header-name, .tab-content-header {
+.page-header-name,
+.tab-content-header {
   font: $h5 $font-medium;
   color: $primary-color;
 }
@@ -62,7 +63,6 @@
   border-radius: 10px;
 }
 
-
 .common-list-container {
   position: relative;
   width: 100%;
@@ -72,8 +72,8 @@
 }
 
 .common-list-pagination {
-  border-bottom-left-radius: .625rem;
-  border-bottom-right-radius: .625rem;
+  border-bottom-left-radius: 0.625rem;
+  border-bottom-right-radius: 0.625rem;
 }
 
 .filter-modal {
@@ -185,12 +185,12 @@
 }
 
 .disabled-icon {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .disabled {
   color: $field-color !important;
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .disabled-control {
@@ -241,7 +241,6 @@
   }
 }
 
-
 .contacts-grid {
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -267,7 +266,8 @@
   height: 47px !important;
 }
 
-.add-note-class, .add-to-crm-modal {
+.add-note-class,
+.add-to-crm-modal {
   width: 60vw;
 }
 
@@ -292,7 +292,8 @@
   }
 }
 
-.add-notes-popup-container, .modify-credit-limit-container {
+.add-notes-popup-container,
+.modify-credit-limit-container {
   display: grid;
   grid-template-columns: 180px 2fr;
   gap: 15px 5px;
@@ -302,7 +303,8 @@
     color: $primary-color;
   }
 
-  .react-dropdown-select, .upload-document-input {
+  .react-dropdown-select,
+  .upload-document-input {
     width: 180px;
   }
 
@@ -315,25 +317,24 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    border: 0.063rem solid #E7ECF2;
+    border: 0.063rem solid #e7ecf2;
     height: 32px;
     width: 180px;
 
     button {
       border: none;
-      color: #B2B9BF;
+      color: #b2b9bf;
       background: none;
     }
 
     p {
-      color: #B2B9BF;
+      color: #b2b9bf;
     }
-
   }
-
 }
 
-.upload-document-modal, .add-task-modal {
+.upload-document-modal,
+.add-task-modal {
   width: 70vw;
 }
 
@@ -383,21 +384,30 @@
   }
 
   .client-detail {
-    padding: .344rem;
+    padding: 0.344rem;
     min-width: 170px;
     color: $field-color;
     cursor: not-allowed;
   }
 
   input {
-    cursor: default!important;
+    cursor: default !important;
   }
 }
 
-
 /* Loading text three dots blinking starts here */
-@keyframes blink {50% { color: transparent }}
-.loader__dot { animation: 1s blink infinite }
-.loader__dot:nth-child(2) { animation-delay: 250ms }
-.loader__dot:nth-child(3) { animation-delay: 500ms }
+@keyframes blink {
+  50% {
+    color: transparent;
+  }
+}
+.loader__dot {
+  animation: 1s blink infinite;
+}
+.loader__dot:nth-child(2) {
+  animation-delay: 250ms;
+}
+.loader__dot:nth-child(3) {
+  animation-delay: 500ms;
+}
 /* Loading text three dots blinking ends here */

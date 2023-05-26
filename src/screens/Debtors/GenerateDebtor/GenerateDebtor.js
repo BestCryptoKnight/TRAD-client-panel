@@ -41,46 +41,52 @@ const GenerateDebtor = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { debtorStage, ...editDebtorData } = useSelector(
-    ({ debtorsManagement }) => debtorsManagement?.editDebtor ?? {},
+    ({ debtorsManagement }) => debtorsManagement?.editDebtor ?? {}
   );
 
   console.log('debtorStage______________', debtorStage);
 
   const { debtorId } = useQueryParams();
-  const { generateDebtorPageLoaderAction } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
-  
+  const { generateDebtorPageLoaderAction } = useSelector(
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
+  );
+
   // for stepper components
   const FILTERED_STEP_COMPONENT = useMemo(() => {
     const finalSteps = [...STEP_COMPONENT];
-    if (!['PARTNERSHIP', 'TRUST', 'SOLE_TRADER'].includes(editDebtorData?.company?.entityType?.value ?? '')) {
+    if (
+      !['PARTNERSHIP', 'TRUST', 'SOLE_TRADER'].includes(
+        editDebtorData?.company?.entityType?.value ?? ''
+      )
+    ) {
       // finalSteps.splice(1, 1);
     }
-    
+
     console.log('finalSteps______', finalSteps);
     return finalSteps;
   }, [editDebtorData?.company?.entityType, STEP_COMPONENT]);
-  
+
   // for stepper headings
-  
+
   const FILTERED_STEPS = useMemo(() => {
     let finalSteps = [...steps];
     const entityType = editDebtorData?.company?.entityType?.value ?? '';
-    
+
     if (!['PARTNERSHIP', 'TRUST', 'SOLE_TRADER'].includes(entityType)) {
       // finalSteps.splice(1, 1);
     } else {
       finalSteps = finalSteps.map(step => {
         // if (step.text === 'Person')
         //   return {
-          //     ...step,
-          //     text: editDebtorData?.company?.entityType?.label ?? '',
-          //   };
-          return step;
-        });
-      }
-      
-      return finalSteps;
-    }, [editDebtorData?.company?.entityType, steps]);
+        //     ...step,
+        //     text: editDebtorData?.company?.entityType?.label ?? '',
+        //   };
+        return step;
+      });
+    }
+
+    return finalSteps;
+  }, [editDebtorData?.company?.entityType, steps]);
 
   const onChangeIndex = useCallback(newIndex => {
     console.log('changeIndex__________', newIndex);
@@ -125,12 +131,19 @@ const GenerateDebtor = () => {
     const data = editDebtorData?.[FILTERED_STEPS?.[debtorStage ?? 0]?.name];
     console.log('data_______', data);
     console.log('debtorStage_________', debtorStage);
-    console.log('FILTERED_STEPS?.[debtorStage ?? 0]?.name____', FILTERED_STEPS?.[debtorStage ?? 0]?.name);
+    console.log(
+      'FILTERED_STEPS?.[debtorStage ?? 0]?.name____',
+      FILTERED_STEPS?.[debtorStage ?? 0]?.name
+    );
     try {
       switch (FILTERED_STEPS?.[debtorStage ?? 0]?.name) {
         case 'company': {
           console.log('hello________________');
-          const validationResult = await debtorCompanyStepValidations(dispatch, data, editDebtorData);
+          const validationResult = await debtorCompanyStepValidations(
+            dispatch,
+            data,
+            editDebtorData
+          );
           console.log('validationResult+_++++++', validationResult);
           return validationResult;
         }

@@ -60,14 +60,18 @@ const ViewInsurer = () => {
   }, []);
 
   const viewDebtorActiveTabIndex = useSelector(
-    ({ debtorsManagement }) => debtorsManagement?.viewDebtorActiveTabIndex ?? 0,
+    ({ debtorsManagement }) => debtorsManagement?.viewDebtorActiveTabIndex ?? 0
   );
 
-  const debtorData = useSelector(({ debtorsManagement }) => debtorsManagement?.selectedDebtorData ?? {});
-  const dropdownData = useSelector(({ debtorsManagement }) => debtorsManagement?.dropdownData ?? {});
+  const debtorData = useSelector(
+    ({ debtorsManagement }) => debtorsManagement?.selectedDebtorData ?? {}
+  );
+  const dropdownData = useSelector(
+    ({ debtorsManagement }) => debtorsManagement?.dropdownData ?? {}
+  );
 
   const { viewDebtorUpdateDebtorButtonLoaderAction, viewDebtorPageLoader } = useSelector(
-    ({ generalLoaderReducer }) => generalLoaderReducer ?? false,
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
   const [isAUSOrNZL, setIsAUSOrNAL] = useState(false);
@@ -152,11 +156,12 @@ const ViewInsurer = () => {
   ];
   const access = useCallback(
     accessFor => {
-      const availableAccess = userPrivilegesData.filter(module => module.accessTypes.length > 0) ?? [];
+      const availableAccess =
+        userPrivilegesData.filter(module => module.accessTypes.length > 0) ?? [];
       const isAccessible = availableAccess.filter(module => module?.name === accessFor);
       return isAccessible?.length > 0;
     },
-    [userPrivilegesData],
+    [userPrivilegesData]
   );
   const finalTabs = useMemo(() => {
     const tabs = [...DEBTOR_TABS_CONSTANTS];
@@ -341,7 +346,7 @@ const ViewInsurer = () => {
         value: debtorData?.riskRating || '-',
       },
     ],
-    [debtorData, dropdownData],
+    [debtorData, dropdownData]
   );
 
   const finalInputs = useMemo(() => {
@@ -385,21 +390,21 @@ const ViewInsurer = () => {
       const { name, value } = e.target;
       handleOnChange(name, value);
     },
-    [handleOnChange],
+    [handleOnChange]
   );
 
   const handleOnSelectInputChange = useCallback(
     data => {
       handleOnChange(data?.name, data);
     },
-    [handleOnChange],
+    [handleOnChange]
   );
 
   const handleOnDateChange = useCallback(
     (name, date) => {
       handleOnChange(name, moment(date).format('YYYY-MM-DD 00:00:00'));
     },
-    [handleOnChange],
+    [handleOnChange]
   );
 
   const onClickUpdateDebtor = useCallback(() => {
@@ -413,7 +418,8 @@ const ViewInsurer = () => {
     if (debtorData?.unitNumber) finalData.address.unitNumber = debtorData?.unitNumber?.trim();
     if (debtorData?.streetNumber) finalData.address.streetNumber = debtorData?.streetNumber?.trim();
     if (debtorData?.streetName) finalData.address.streetName = debtorData?.streetName?.trim();
-    if (debtorData?.streetType) finalData.address.streetType = debtorData?.streetType?.value?.trim();
+    if (debtorData?.streetType)
+      finalData.address.streetType = debtorData?.streetType?.value?.trim();
     if (debtorData?.suburb) finalData.address.suburb = debtorData?.suburb?.trim();
     if (debtorData?.postCode) finalData.address.postCode = debtorData?.postCode?.trim();
     if (debtorData?.reviewDate) finalData.reviewDate = debtorData?.reviewDate;
@@ -451,7 +457,9 @@ const ViewInsurer = () => {
                 <span className="view-debtor-value">{input?.value?.label}</span>
               ) : (
                 <Select
-                  className={`select-client-list-container ${action === 'view' && 'disabled-control'}`}
+                  className={`select-client-list-container ${
+                    action === 'view' && 'disabled-control'
+                  }`}
                   name={input.name}
                   placeholder={action === 'view' || !input.isEditable ? '-' : input.placeholder}
                   options={input.data}
@@ -496,7 +504,7 @@ const ViewInsurer = () => {
         </>
       );
     },
-    [debtorData, editDebtorClick, action, handleOnChange, handleOnDateChange],
+    [debtorData, editDebtorClick, action, handleOnChange, handleOnDateChange]
   );
 
   useEffect(() => {

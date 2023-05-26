@@ -7,8 +7,10 @@ const DebtorsApiServices = {
     ApiService.getData(DEBTORS_URLS.DEBTORS_COLUMNS_NAME_LIST_URL, { params }),
   updateDebtorsColumnNameList: data =>
     ApiService.putData(DEBTORS_URLS.DEBTORS_COLUMNS_NAME_LIST_URL, data),
-  getDebtorDetailById: id => ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_BY_ID_URL}${id}`),
-  getDebtorDetail: debtorId => ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_URL}${debtorId}`),
+  getDebtorDetailById: id =>
+    ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_BY_ID_URL}${id}`),
+  getDebtorDetail: debtorId =>
+    ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_URL}${debtorId}`),
   getDebtorDropdownDataList: () => ApiService.getData(DEBTORS_URLS.DROP_DOWN_DATA_URL),
   updateDebtorDetailById: (id, data) =>
     ApiService.putData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_URL}${id}`, data),
@@ -30,6 +32,7 @@ const DebtorsApiServices = {
         timeout: 60000,
       }),
   },
-  saveDebtorStepDataToBackend: data => ApiService.putData(`${DEBTORS_URLS.DEBTORS_SAVE_STEP_DATA}`, data),
+  saveDebtorStepDataToBackend: data =>
+    ApiService.putData(`${DEBTORS_URLS.DEBTORS_SAVE_STEP_DATA}`, data),
 };
 export default DebtorsApiServices;

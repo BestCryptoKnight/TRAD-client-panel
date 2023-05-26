@@ -31,7 +31,8 @@ input[type='radio']:disabled ~ .radio-button {
 }
 
 /* appearance of checked radiobutton */
-input[type='radio']:checked + .radio-button:before, input[type='radio']:checked:disabled + .radio-button:before {
+input[type='radio']:checked + .radio-button:before,
+input[type='radio']:checked:disabled + .radio-button:before {
   background-color: $primary-color;
   border-color: $primary-color;
 }

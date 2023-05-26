@@ -50,10 +50,7 @@ const DebtorDocumentStep = () => {
   const { documentTypeList, uploadDocumentDebtorData } = useSelector(
     ({ debtorsManagement }) => debtorsManagement.editDebtor?.documents
   );
-  const documentData = useMemo(
-    () => uploadDocumentDebtorData,
-    [uploadDocumentDebtorData]
-  );
+  const documentData = useMemo(() => uploadDocumentDebtorData, [uploadDocumentDebtorData]);
 
   const dispatch = useDispatch();
   const [fileData, setFileData] = useState('');
@@ -74,10 +71,8 @@ const DebtorDocumentStep = () => {
     [selectedDebtorDocuments]
   );
 
-  const {
-    viewDebtorUploadDocumentButtonLoaderAction,
-    viewDebtorDeleteDocumentButtonLoaderAction,
-  } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
+  const { viewDebtorUploadDocumentButtonLoaderAction, viewDebtorDeleteDocumentButtonLoaderAction } =
+    useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const [uploadModel, setUploadModel] = useState(false);
   const [fileExtensionErrorMessage, setFileExtensionErrorMessage] = useState(false);
@@ -88,16 +83,16 @@ const DebtorDocumentStep = () => {
   );
 
   const documentTypeOptions = useMemo(() => {
-    console.log("finalData DocumentTypeList____________", documentTypeList);
+    console.log('finalData DocumentTypeList____________', documentTypeList);
     const finalData = documentTypeList ?? [];
-    
-    try{
+
+    try {
       return finalData.map(e => ({
         name: 'documentType',
         label: e.documentTitle,
         value: e._id,
       }));
-    }catch(ex) {
+    } catch (ex) {
       return finalData?.docs.map(e => ({
         name: 'documentType',
         label: e.documentTitle,
@@ -213,21 +208,21 @@ const DebtorDocumentStep = () => {
             'content-type': 'multipart/form-data',
           },
         };
-      console.log(44444444);
-      console.log(formData);
-      console.log(config);
+        console.log(44444444);
+        console.log(formData);
+        console.log(config);
         await dispatch(uploadDocument(formData, config));
-      console.log(55555555);
-      dispatchSelectedDebtorDocuments({
+        console.log(55555555);
+        dispatchSelectedDebtorDocuments({
           type: DEBTOR_DOCUMENT_REDUCER_ACTIONS.RESET_STATE,
         });
-      console.log(666666666666666);
-      getDebtorDocumentDataList();
-      console.log(777777777777);
-      setFileData('');
-      console.log(8888888888);
-      toggleUploadModel();
-      console.log(999999999999999);
+        console.log(666666666666666);
+        getDebtorDocumentDataList();
+        console.log(777777777777);
+        setFileData('');
+        console.log(8888888888);
+        toggleUploadModel();
+        console.log(999999999999999);
       } catch (e) {
         /**/
       }
@@ -251,15 +246,11 @@ const DebtorDocumentStep = () => {
         isLoading: viewDebtorUploadDocumentButtonLoaderAction,
       },
     ],
-    [
-      onCloseUploadDocumentButton,
-      onClickUploadDocument,
-      viewDebtorUploadDocumentButtonLoaderAction,
-    ]
+    [onCloseUploadDocumentButton, onClickUploadDocument, viewDebtorUploadDocumentButtonLoaderAction]
   );
 
   useEffect(() => {
-    console.log("useEffect____________useEffect to getDocumentList");
+    console.log('useEffect____________useEffect to getDocumentList');
     dispatch(getDocumentTypeList());
   }, []);
 
@@ -344,7 +335,7 @@ const DebtorDocumentStep = () => {
         <span className="font-primary mr-15">Upload your documents here</span>
         <IconButton buttonType="primary" title="cloud_upload" onClick={() => toggleUploadModel()} />
       </div>
-      {console.log("documentData?.length_______________",documentData?.length)}
+      {console.log('documentData?.length_______________', documentData?.length)}
       {documentData?.length > 0 && (
         <table className="documents-table">
           <tbody>
@@ -353,7 +344,7 @@ const DebtorDocumentStep = () => {
               <th align="left">Description</th>
               <th />
             </tr>
-            {documentData?.map((document) => (
+            {documentData?.map(document => (
               <tr>
                 <td>
                   {document?.documentTypeId?.length > 50 ? (
