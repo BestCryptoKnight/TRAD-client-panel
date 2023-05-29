@@ -2,11 +2,11 @@ name: deploy-test
 on:
   push:
     branches:
-      - "staging"
+      - 'staging'
 
 jobs:
   deploy-on-test:
-    name: "Deploy on test"
+    name: 'Deploy on test'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -14,7 +14,7 @@ jobs:
       - name: Prepare Node Environment
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: '14'
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:

@@ -1,18 +1,18 @@
-.button.icon-button.download-decision-letter-icon{
+.button.icon-button.download-decision-letter-icon {
   display: inline-flex;
   padding: 3px 15px;
   background-color: #ffffff;
-  white-space: nowrap ;
+  white-space: nowrap;
   border-radius: 8px;
   border: 1px solid $primary-color;
 }
-.button.icon-button.download-decision-letter-icon:hover{
+.button.icon-button.download-decision-letter-icon:hover {
   background-color: $border-color;
 }
 
 .button.icon-button.download-decision-letter-icon.disable-download-button {
   background-color: $border-color;
-  opacity: .3;
+  opacity: 0.3;
 }
 
 .credit-limit-custom-select .custom-select__control {
@@ -21,15 +21,15 @@
 }
 
 .disable-delete-button {
-  opacity: .3;
+  opacity: 0.3;
   cursor: not-allowed;
 }
-.disclaimer-title{
+.disclaimer-title {
   font: 14px $font-medium;
-  color: rgba(0,58,120, .85);
+  color: rgba(0, 58, 120, 0.85);
   padding-left: 10px;
 }
-.disclaimer-body{
+.disclaimer-body {
   padding: 5px 10px 0;
   text-align: justify;
   color: $field-color;

@@ -3,7 +3,8 @@
   font-size: $subtitle;
   color: $field-color;
   border-collapse: collapse;
-  td, th {
+  td,
+  th {
     max-width: 350px;
     padding: 0.313rem 1.25rem;
     overflow: hidden;
@@ -13,11 +14,11 @@
 }
 
 .documents-table tr:nth-child(even) {
-background-color: $background-color;
+  background-color: $background-color;
 }
 
 .documents-table tr:nth-child(odd) {
-background-color: #ffffff;
+  background-color: #ffffff;
 }
 .document-upload-popup-container {
   display: grid;
@@ -29,31 +30,30 @@ background-color: #ffffff;
     color: $primary-color;
   }
 
-  .react-dropdown-select, .upload-document-input {
+  .react-dropdown-select,
+  .upload-document-input {
     width: 180px;
   }
   .switch-container {
     width: 180px;
   }
-  .document-upload-input{
+  .document-upload-input {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    border: 0.063rem solid #E7ECF2;
+    border: 0.063rem solid #e7ecf2;
     height: 32px;
     width: 180px;
-    button{
+    button {
       border: none;
-      color: #B2B9BF;
+      color: #b2b9bf;
       background: none;
     }
-    p{
-      color: #B2B9BF;
+    p {
+      color: #b2b9bf;
     }
-
   }
-
 }
 .upload-document-modal {
   width: 60vw;

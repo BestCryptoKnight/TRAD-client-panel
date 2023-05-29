@@ -21,9 +21,11 @@ import Loader from '../../../common/Loader/Loader';
 import DebtorsCreditLimitTab from '../components/DebtorsCreditLimitTab';
 import DebtorsApplicationTab from '../components/DebtorsApplicationTab';
 import DebtorOverdueTab from '../components/DebtorOverdueTab';
+// import DebtorsTasksTab from '../components/DebtorsTasksTab';
 import DebtorsDocumentsTab from '../components/DebtorsDocumentsTab';
 import DebtorsNotesTab from '../components/DebtorsNotesTab';
 import DebtorsStakeHolderTab from '../components/StakeHolder/DebtorsStakeHolderTab';
+// import DebtorsReportsTab from '../components/DebtorsReportsTab';
 import DebtorsAlertsTab from '../components/DebtorsAlertsTab';
 import Select from '../../../common/Select/Select';
 import { DEBTORS_REDUX_CONSTANTS } from '../redux/DebtorsReduxConstants';
@@ -32,6 +34,7 @@ const DEBTOR_TABS_CONSTANTS = [{ label: 'Credit Limits', component: <DebtorsCred
 const DEBTOR_TABS_WITH_ACCESS = [
   { label: 'Application', component: <DebtorsApplicationTab />, name: 'application' },
   { label: 'Overdues', component: <DebtorOverdueTab />, name: 'overdue' },
+  // { label: 'Tasks', component: <DebtorsTasksTab />, name: 'task' },
   { label: 'Documents', component: <DebtorsDocumentsTab />, name: 'document' },
   { label: 'Notes', component: <DebtorsNotesTab />, name: 'note' },
 ];
@@ -174,6 +177,13 @@ const ViewInsurer = () => {
         name: 'stakeHolder',
       });
     }
+    // if (isAUSOrNZL && access('credit-report')) {
+    //   tabs.push({
+    //     label: 'Reports',
+    //     component: <DebtorsReportsTab />,
+    //     name: 'credit-report',
+    //   });
+    // }
     tabs.push({ label: 'Alerts', component: <DebtorsAlertsTab />, name: 'alerts' });
     return tabs ?? [];
   }, [debtorData?.entityType, isAUSOrNZL, DEBTOR_TABS_CONSTANTS, access, DEBTOR_TABS_WITH_ACCESS]);
@@ -187,6 +197,14 @@ const ViewInsurer = () => {
         type: 'text',
         name: 'debtorCode',
         value: debtorData?.debtorCode || '-',
+      },
+      {
+        isEditable: false,
+        label: 'Status',
+        placeholder: '-',
+        type: 'text',
+        name: 'status',
+        value: debtorData?.status || 'SUBMITTED',
       },
       {
         isEditable: false,

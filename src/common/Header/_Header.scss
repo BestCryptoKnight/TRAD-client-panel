@@ -1,4 +1,4 @@
-@import "../../screens/Application/ViewApplication/ViewApplication";
+@import '../../screens/Application/ViewApplication/ViewApplication';
 
 .header-container {
   display: flex;
@@ -30,7 +30,7 @@
 }
 
 .user-dp:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
 
 .user-settings {
@@ -76,7 +76,7 @@
   border: 1px solid $border-color;
   border-radius: 10px;
 
-  >div:first-child {
+  > div:first-child {
     display: flex;
     align-items: center;
     width: 100%;
@@ -96,7 +96,7 @@
     outline: none;
   }
 
-  .ga-search-icon{
+  .ga-search-icon {
     margin-left: 10px;
     padding: 5px;
     font-size: $h4;
@@ -112,7 +112,7 @@
 
 .header-search-container-focused {
   border-color: transparent;
-  box-shadow: 0px 0px 10px #3D3D3D29;
+  box-shadow: 0px 0px 10px #3d3d3d29;
 }
 
 .got-search-results {
@@ -127,21 +127,21 @@
   right: -1px;
   background-color: white;
   border-radius: 0 0 10px 10px;
-  box-shadow: 0px 10px 10px -1px #3D3D3D29;
-  -webkit-box-shadow: 0px 10px 10px -1px #3D3D3D29;
-  -moz-box-shadow: 0px 10px 13px -1px #3D3D3D29;
+  box-shadow: 0px 10px 10px -1px #3d3d3d29;
+  -webkit-box-shadow: 0px 10px 10px -1px #3d3d3d29;
+  -moz-box-shadow: 0px 10px 13px -1px #3d3d3d29;
   z-index: 1000;
-  
+
   ul {
-  min-height: 70px;
-  max-height: 200px;
-  margin: 0;
-  padding: 0 0 10px 0;
-  list-style-type:none;
-  overflow: auto;
+    min-height: 70px;
+    max-height: 200px;
+    margin: 0;
+    padding: 0 0 10px 0;
+    list-style-type: none;
+    overflow: auto;
   }
 
-  li{
+  li {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -149,17 +149,17 @@
     height: 35px;
     padding: 5px 10px;
     cursor: pointer;
-    .gs-value{
+    .gs-value {
       max-width: 250px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-    .gs-tag{
+    .gs-tag {
       color: $primary-color;
       padding: 5px 12px;
       border-radius: 5px;
-      background: #E2E9F0 0% 0% no-repeat padding-box;
+      background: #e2e9f0 0% 0% no-repeat padding-box;
       opacity: 1;
     }
   }
@@ -226,27 +226,27 @@
   }
 }
 
-.edit-profile-dialog{
+.edit-profile-dialog {
   width: 470px;
 }
-.edit-profile-grid{
+.edit-profile-grid {
   display: grid;
   align-items: center;
   grid-template-columns: 40% 60%;
   gap: 20px 10px;
   width: 100%;
-  .form-title{
+  .form-title {
     font-size: 14px;
     min-width: 100px;
     font-family: 'GoogleSans-Regular', serif;
     font-weight: normal;
   }
-  .user-dp{
+  .user-dp {
     height: 40px;
     width: 40px;
     margin-left: 0;
   }
-  .user-fields{
+  .user-fields {
     color: $secondary-color;
     max-width: 200px;
     font-size: 14px;
@@ -254,7 +254,7 @@
     overflow: hidden;
     line-height: 32px;
   }
-  .input-container{
+  .input-container {
     max-width: 230px;
     height: 32px;
     font-size: 14px;
@@ -293,7 +293,8 @@
   align-items: center;
 }
 
-.page-header-name, .tab-content-header {
+.page-header-name,
+.tab-content-header {
   font: $h5 $font-medium;
   color: $primary-color;
 }
@@ -302,29 +303,29 @@
   display: flex;
 }
 
-.notification-item-wrapper{
+.notification-item-wrapper {
   margin-bottom: 10px;
   padding: 10px;
   font-size: $text;
   border-radius: 5px;
   cursor: pointer;
 
-  .notification-date-row{
+  .notification-date-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .notification-date-row-left{
+    .notification-date-row-left {
       display: flex;
       align-items: center;
     }
   }
 
   &.secondary-tag:hover {
-    background-color: #F9D0AC ;
+    background-color: #f9d0ac;
   }
 
   &.red-tag:hover {
-    background-color: #FEC4C4;
+    background-color: #fec4c4;
   }
 }
 
@@ -347,5 +348,3 @@
     }
   }
 }
-
-
