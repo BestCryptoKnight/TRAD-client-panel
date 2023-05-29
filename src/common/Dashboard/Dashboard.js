@@ -9,7 +9,7 @@ import { NumberCommaSeparator } from '../../helpers/NumberCommaSeparator';
 import { usdConverter } from '../../helpers/usdConverter';
 import Loader from '../Loader/Loader';
 import DashBoardNotification from './components/DashBoardNotification';
-import DashboardTask from './components/DashboardTask';
+// import DashboardTask from './components/DashboardTask';
 import { getDashboardDetails, resetDashboardDetails } from './redux/DashboardActions';
 
 const Dashboard = () => {
@@ -296,7 +296,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                <DashboardTask />
+                {/* <DashboardTask /> */}
                 <DashBoardNotification />
               </div>
             </>
