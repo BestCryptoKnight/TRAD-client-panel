@@ -43,7 +43,7 @@ const Dashboard = () => {
             : [
                 endorsedLimit?.totalCount === 0 || endorsedLimit?.endorsedLimitCount === 0
                   ? 0
-                  : endorsedLimit?.totalCount - endorsedLimit?.endorsedLimitCount,
+                  : endorsedLimit?.endorsedLimitCount,
                 endorsedLimit?.totalCount === 0 ? 1 : endorsedLimit?.totalCount,
               ],
         backgroundColor: ['#003A78', '#CBD7E4'],
