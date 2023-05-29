@@ -83,7 +83,6 @@ const DebtorDocumentStep = () => {
   );
 
   const documentTypeOptions = useMemo(() => {
-    console.log('finalData DocumentTypeList____________', documentTypeList);
     const finalData = documentTypeList ?? [];
 
     try {
@@ -190,17 +189,11 @@ const DebtorDocumentStep = () => {
       errorNotification('Select document to upload');
     } else {
       const formData = new FormData();
-      console.log(selectedDebtorDocuments.description);
       formData.append('description', selectedDebtorDocuments.description);
-      console.log(selectedDebtorDocuments.isPublic);
       formData.append('isPublic', selectedDebtorDocuments.isPublic);
-      console.log(selectedDebtorDocuments.documentType.value);
       formData.append('documentType', selectedDebtorDocuments.documentType.value);
-      console.log(selectedDebtorDocuments.fileData);
       formData.append('document', selectedDebtorDocuments.fileData);
-      console.log(editDebtor?._id);
       formData.append('entityId', editDebtor?._id);
-      console.log(33333333);
       formData.append('documentFor', 'debtor');
       try {
         const config = {
@@ -208,21 +201,13 @@ const DebtorDocumentStep = () => {
             'content-type': 'multipart/form-data',
           },
         };
-        console.log(44444444);
-        console.log(formData);
-        console.log(config);
         await dispatch(uploadDocument(formData, config));
-        console.log(55555555);
         dispatchSelectedDebtorDocuments({
           type: DEBTOR_DOCUMENT_REDUCER_ACTIONS.RESET_STATE,
         });
-        console.log(666666666666666);
         getDebtorDocumentDataList();
-        console.log(777777777777);
         setFileData('');
-        console.log(8888888888);
         toggleUploadModel();
-        console.log(999999999999999);
       } catch (e) {
         /**/
       }
@@ -250,7 +235,6 @@ const DebtorDocumentStep = () => {
   );
 
   useEffect(() => {
-    console.log('useEffect____________useEffect to getDocumentList');
     dispatch(getDocumentTypeList());
   }, []);
 
@@ -335,7 +319,6 @@ const DebtorDocumentStep = () => {
         <span className="font-primary mr-15">Upload your documents here</span>
         <IconButton buttonType="primary" title="cloud_upload" onClick={() => toggleUploadModel()} />
       </div>
-      {console.log('documentData?.length_______________', documentData?.length)}
       {documentData?.length > 0 && (
         <table className="documents-table">
           <tbody>

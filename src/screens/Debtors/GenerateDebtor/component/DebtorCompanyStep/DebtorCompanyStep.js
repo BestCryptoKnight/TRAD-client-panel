@@ -202,7 +202,6 @@ const DebtorCompanyStep = () => {
         }
       } else {
         updateSingleCompanyState(data?.name, data);
-        console.log('handleSelectInputChange___data', data);
       }
     },
     [updateSingleCompanyState, updateCompanyState, companyState, errors, partners?.length]
@@ -241,7 +240,6 @@ const DebtorCompanyStep = () => {
   );
 
   const handleOnSelectSearchInputChange = useCallback((searchEntity, text) => {
-    console.log('handleOnSelectSearchInputChange_______');
     const options = {
       searchString: text,
       entityType: searchEntity,

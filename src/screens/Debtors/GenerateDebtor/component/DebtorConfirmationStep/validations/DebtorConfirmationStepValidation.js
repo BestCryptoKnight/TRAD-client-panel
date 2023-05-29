@@ -15,15 +15,12 @@ export const debtorConfirmationStepValidations = async (
     try {
       await dispatch(saveDebtorStepDataToBackend(finalData));
       history.replace('/debtors');
-      console.log('hehehhehehehehehe=================');
       await dispatch(getDebtorFilter());
-      console.log('hihihihihihihihihihi=================');
     } catch (e) {
       throw Error();
     }
     validated = true;
   }
 
-  console.log('validated_____________hereherehere', validated);
   return validated;
 };

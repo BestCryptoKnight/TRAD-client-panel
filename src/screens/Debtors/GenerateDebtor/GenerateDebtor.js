@@ -44,8 +44,6 @@ const GenerateDebtor = () => {
     ({ debtorsManagement }) => debtorsManagement?.editDebtor ?? {}
   );
 
-  console.log('debtorStage______________', debtorStage);
-
   const { debtorId } = useQueryParams();
   const { generateDebtorPageLoaderAction } = useSelector(
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
@@ -62,7 +60,6 @@ const GenerateDebtor = () => {
       // finalSteps.splice(1, 1);
     }
 
-    console.log('finalSteps______', finalSteps);
     return finalSteps;
   }, [editDebtorData?.company?.entityType, STEP_COMPONENT]);
 
@@ -89,7 +86,6 @@ const GenerateDebtor = () => {
   }, [editDebtorData?.company?.entityType, steps]);
 
   const onChangeIndex = useCallback(newIndex => {
-    console.log('changeIndex__________', newIndex);
     dispatch(changeEditDebtorFieldValue('debtorStage', newIndex));
   }, []);
 
@@ -126,25 +122,15 @@ const GenerateDebtor = () => {
   }, []);
 
   const onNextClick = useCallback(async () => {
-    console.log('editDebtorData_________', editDebtorData);
-    console.log('FILTERED_STEPS________', FILTERED_STEPS);
     const data = editDebtorData?.[FILTERED_STEPS?.[debtorStage ?? 0]?.name];
-    console.log('data_______', data);
-    console.log('debtorStage_________', debtorStage);
-    console.log(
-      'FILTERED_STEPS?.[debtorStage ?? 0]?.name____',
-      FILTERED_STEPS?.[debtorStage ?? 0]?.name
-    );
     try {
       switch (FILTERED_STEPS?.[debtorStage ?? 0]?.name) {
         case 'company': {
-          console.log('hello________________');
           const validationResult = await debtorCompanyStepValidations(
             dispatch,
             data,
             editDebtorData
           );
-          console.log('validationResult+_++++++', validationResult);
           return validationResult;
         }
         case 'documents':

@@ -16,7 +16,6 @@ export const debtorCompanyStepValidations = async (dispatch, data, editDebtorDat
       validated = false;
       errors.acn = 'Please enter ABN or ACN number before continue';
     }
-    console.log('validation_11111111111111');
     if (
       data?.abn &&
       (!NUMBER_REGEX.test(data?.abn?.toString()?.trim()) ||
@@ -26,7 +25,6 @@ export const debtorCompanyStepValidations = async (dispatch, data, editDebtorDat
       validated = false;
       errors.abn = 'Please enter valid ABN number';
     }
-    console.log('validation_2');
     if (
       data?.acn &&
       (!NUMBER_REGEX.test(data?.acn?.toString()?.trim()) ||
@@ -36,7 +34,6 @@ export const debtorCompanyStepValidations = async (dispatch, data, editDebtorDat
       validated = false;
       errors.acn = 'Please enter valid ACN number';
     }
-    console.log('validation_3');
   } else if (!data?.registrationNumber || data?.registrationNumber?.trim().length <= 0) {
     validated = false;
     errors.registrationNumber = 'Please enter registration number before continue';
@@ -87,7 +84,6 @@ export const debtorCompanyStepValidations = async (dispatch, data, editDebtorDat
       errors.state = 'Please enter state before continue';
     }
   }
-  console.log('validation_4');
   if (
     !['AUS', 'NZL'].includes(data?.country?.value) &&
     data?.state &&
@@ -120,7 +116,6 @@ export const debtorCompanyStepValidations = async (dispatch, data, editDebtorDat
     validated = false;
     errors.contactNumber = 'Phone number should be number';
   }
-  console.log('validation_5', validated, errors);
   if (validated) {
     const {
       postCode,
@@ -167,19 +162,14 @@ export const debtorCompanyStepValidations = async (dispatch, data, editDebtorDat
       finalData.registrationNumber = registrationNumber ?? '';
     }
 
-    console.log('validation___8888888888', finalData);
     try {
       await dispatch(saveDebtorStepDataToBackend(finalData));
       validated = true;
-      console.log('validated111111111_______', validated);
     } catch (e) {
       validated = false;
-      console.log('validated222222222_______', validated, e);
       throw Error();
     }
   }
-  console.log('validated333333333333333333333333_______', validated);
   dispatch(updateEditDebtorData('company', { errors }));
-  console.log('validated444444444444444444444444_______', validated);
   return validated;
 };

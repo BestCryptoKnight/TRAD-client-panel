@@ -14,9 +14,6 @@ const DebtorConfirmationStep = () => {
   const { company, documents } = useSelector(
     ({ debtorsManagement }) => debtorsManagement?.editDebtor ?? {}
   );
-  console.log('company-------', company);
-  console.log('documents-------', documents);
-  console.log('editDebtor-------', editDebtor);
   // const { debtorId } = useQueryParams();
 
   /*

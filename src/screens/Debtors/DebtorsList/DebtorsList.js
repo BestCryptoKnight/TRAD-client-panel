@@ -273,7 +273,6 @@ const DebtorsList = () => {
     });
     await getDebtorsListByFilter({ ...params, ...filters });
     dispatch(getDebtorsColumnNameList());
-    console.log('getDebtorDropDownData________________');
     dispatch(getDebtorDropdownData());
   }, []);
 
