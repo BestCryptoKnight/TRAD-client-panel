@@ -101,7 +101,7 @@
 
   span {
     font: $h5 $font-medium;
-    color: $field-color
+    color: $field-color;
   }
 }
 
@@ -111,7 +111,7 @@
 
 .discretionary-limit {
   margin-top: 5px;
-  color: $light-orange-variant-color
+  color: $light-orange-variant-color;
 }
 
 .approved-amount-ratio {
@@ -126,7 +126,7 @@
   span {
     margin-left: 10px;
     font: $h5 $font-medium;
-    color: $field-color
+    color: $field-color;
   }
 }
 
@@ -163,15 +163,16 @@
 }
 
 .fully-approved-stripe {
-  background: transparent linear-gradient(90deg, $success-color 0%, #F2F5F8 100%) 0% 0% no-repeat padding-box;
+  background: transparent linear-gradient(90deg, $success-color 0%, #f2f5f8 100%) 0% 0% no-repeat padding-box;
 }
 
 .partially-approved-stripe {
-  background: transparent linear-gradient(90deg, $light-orange-variant-color 0%, #F2F5F8 100%) 0% 0% no-repeat padding-box;
+  background: transparent linear-gradient(90deg, $light-orange-variant-color 0%, #f2f5f8 100%) 0% 0% no-repeat
+    padding-box;
 }
 
 .rejected-stripe {
-  background: transparent linear-gradient(90deg, $error-color 0%, #F2F5F8 100%) 0% 0% no-repeat padding-box;
+  background: transparent linear-gradient(90deg, $error-color 0%, #f2f5f8 100%) 0% 0% no-repeat padding-box;
 }
 
 .approved-application-sign {
@@ -189,7 +190,7 @@
 }
 
 .fully-approved-sign {
-  background-color: $success-color
+  background-color: $success-color;
 }
 
 .partially-approved-sign {
