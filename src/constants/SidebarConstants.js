@@ -1,6 +1,7 @@
 export const SIDEBAR_NAMES = {
   DASHBOARD: 'dashboard',
   APPLICATION: 'application',
+  ALERTS: 'alerts',
   DEBTOR: 'debtor',
   CREDIT_LIMITS: 'credit-limits',
   CLAIM: 'claims',
@@ -24,6 +25,13 @@ export const SIDEBAR_URLS = [
     icon: 'business_center',
     url: '/applications',
     name: SIDEBAR_NAMES.APPLICATION,
+  },
+  {
+    label: 'Alerts',
+    title: 'Alerts',
+    icon: 'notifications_active',
+    url: '/alerts',
+    name: SIDEBAR_NAMES.ALERTS,
   },
   {
     label: 'Debtors',
