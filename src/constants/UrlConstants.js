@@ -80,6 +80,17 @@ export const APPLICATION_URLS = {
   },
 };
 
+export const ALERTS_URLS = {
+  GET_ALERTS_LIST: `${BASE_URL}alerts`,
+  GET_ALERTS_COLUMN_LIST: `${BASE_URL}alerts/column-name`,
+  UPDATE_ALERTS_COLUMN_LIST: `${BASE_URL}alerts/column-name`,
+  GET_ALERT_CLIENT_LIST: `${BASE_URL}alerts/entity-list`,
+  DOWNLOAD_ALERT: `${BASE_URL}alerts/download`,
+  GET_ALERT_FILTER_DATA: `${BASE_URL}alerts/alert-entity-list`,
+  GET_ALERT_DETAIL: `${BASE_URL}alerts/detail/`,
+  UPDATE_ALERT_STATUS: `${BASE_URL}alerts/detail/`,
+};
+
 export const DEBTORS_URLS = {
   DEBTORS_LIST_URL: `${BASE_URL}debtor/`,
   DEBTORS_COLUMNS_NAME_LIST_URL: `${BASE_URL}debtor/column-name/`,

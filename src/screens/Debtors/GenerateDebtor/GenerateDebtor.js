@@ -52,38 +52,15 @@ const GenerateDebtor = () => {
   // for stepper components
   const FILTERED_STEP_COMPONENT = useMemo(() => {
     const finalSteps = [...STEP_COMPONENT];
-    if (
-      !['PARTNERSHIP', 'TRUST', 'SOLE_TRADER'].includes(
-        editDebtorData?.company?.entityType?.value ?? ''
-      )
-    ) {
-      // finalSteps.splice(1, 1);
-    }
-
     return finalSteps;
-  }, [editDebtorData?.company?.entityType, STEP_COMPONENT]);
+  }, [STEP_COMPONENT]);
 
   // for stepper headings
 
   const FILTERED_STEPS = useMemo(() => {
-    let finalSteps = [...steps];
-    const entityType = editDebtorData?.company?.entityType?.value ?? '';
-
-    if (!['PARTNERSHIP', 'TRUST', 'SOLE_TRADER'].includes(entityType)) {
-      // finalSteps.splice(1, 1);
-    } else {
-      finalSteps = finalSteps.map(step => {
-        // if (step.text === 'Person')
-        //   return {
-        //     ...step,
-        //     text: editDebtorData?.company?.entityType?.label ?? '',
-        //   };
-        return step;
-      });
-    }
-
+    const finalSteps = [...steps];
     return finalSteps;
-  }, [editDebtorData?.company?.entityType, steps]);
+  }, [steps]);
 
   const onChangeIndex = useCallback(newIndex => {
     dispatch(changeEditDebtorFieldValue('debtorStage', newIndex));
