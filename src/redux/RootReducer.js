@@ -21,6 +21,7 @@ import { listFilterReducer } from '../common/ListFilters/redux/ListFiltersReduce
 import { debtorsManagement } from '../screens/Debtors/redux/DebtorsReducer';
 import { reportAllFilters } from '../screens/Reports/redux/reportFilterReducer';
 import { userPrivileges } from '../screens/Users/redux/UserManagementReducer';
+import { alerts, alertAllFilters } from '../screens/Alerts/redux/AlertsReducer';
 
 const filterPersistConfig = {
   key: 'allFilters',
@@ -45,6 +46,8 @@ const appReducer = combineReducers({
   claims,
   loggedUserProfile,
   application,
+  alerts,
+  alertAllFilters,
   employee,
   companyProfile,
   support,

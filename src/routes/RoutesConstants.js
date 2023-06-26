@@ -12,6 +12,7 @@ const ViewClientTask = lazy(() => import('../common/Dashboard/components/ViewCli
 const ApplicationList = lazy(() =>
   import('../screens/Application/ApplicationList/ApplicationList')
 );
+const AlertList = lazy(() => import('../screens/Alerts/AlertList/AlertList'));
 const GenerateApplication = lazy(() =>
   import('../screens/Application/GenerateApplication/GenerateApplication')
 );
@@ -89,6 +90,11 @@ export const ROUTES_CONSTANTS = [
   {
     path: '/applications/detail/:action/:id',
     component: ViewApplication,
+    authenticated: true,
+  },
+  {
+    path: '/alerts',
+    component: AlertList,
     authenticated: true,
   },
   {
