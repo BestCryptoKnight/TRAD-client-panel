@@ -3,13 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import BigInput from '../../../common/BigInput/BigInput';
-import Table from '../../../common/Table/Table';
-import Pagination from '../../../common/Pagination/Pagination';
 import Loader from '../../../common/Loader/Loader';
 import { errorNotification } from '../../../common/Toast';
 import {
   clearAlertDetails,
-  getDebtorAlertsDetail,
   getDebtorsAlertsListData,
 } from '../redux/DebtorsAction';
 import Modal from '../../../common/Modal/Modal';
@@ -29,7 +26,7 @@ const DebtorsAlertsTab = () => {
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
-  const { total, headers, pages, docs, page, limit } = useMemo(
+  const { docs, page, limit } = useMemo(
     () => alertsList ?? {},
     [alertsList]
   );
@@ -49,27 +46,6 @@ const DebtorsAlertsTab = () => {
     [page, limit, id]
   );
 
-  const onSelectLimit = useCallback(
-    newLimit => {
-      getDebtorAlertsList({ page: 1, limit: newLimit });
-    },
-    [getDebtorAlertsList]
-  );
-
-  const pageActionClick = useCallback(
-    newPage => {
-      getDebtorAlertsList({ page: newPage, limit });
-    },
-    [limit, getDebtorAlertsList]
-  );
-
-  const onSelectRecord = useCallback(
-    alertId => {
-      dispatch(getDebtorAlertsDetail(alertId));
-      setIsAlertModal(true);
-    },
-    [id]
-  );
 
   const onCloseAlertModal = useCallback(() => {
     setIsAlertModal(false);
@@ -118,30 +94,9 @@ const DebtorsAlertsTab = () => {
       {/* eslint-disable-next-line no-nested-ternary */}
       {!debtorAlertListLoader && docs ? (
         docs.length > 0 ? (
-          <>
-            <div className="tab-table-container">
-              <Table
-                align="left"
-                valign="center"
-                tableClass="white-header-table"
-                data={docs}
-                headers={headers}
-                rowClass="cursor-pointer"
-                recordSelected={onSelectRecord}
-              />
-            </div>
-            <Pagination
-              className="common-list-pagination"
-              total={total}
-              pages={pages}
-              page={page}
-              limit={limit}
-              pageActionClick={pageActionClick}
-              onSelectLimit={onSelectLimit}
-            />
-          </>
+          <div className="no-record-found">Yes</div>
         ) : (
-          <div className="no-record-found">No record found</div>
+          <div className="no-record-found">No</div>
         )
       ) : (
         <Loader />

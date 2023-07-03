@@ -113,6 +113,7 @@ export const saveCreditLimitColumnList = ({ creditLimitsColumnList = {}, isReset
           throw Error();
         }
       }
+      console.log("data", data);
       const response = await CreditLimitsApiService.updateCreditLimitsColumnList(data);
       if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
