@@ -4,8 +4,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import BigInput from '../../../common/BigInput/BigInput';
-import Table from '../../../common/Table/Table';
-import Pagination from '../../../common/Pagination/Pagination';
 import Loader from '../../../common/Loader/Loader';
 import { errorNotification } from '../../../common/Toast';
 import Button from '../../../common/Button/Button';
@@ -37,7 +35,7 @@ const ClientOverdueTab = () => {
   const overdueListWithPageData = useSelector(
     ({ debtorsManagement }) => debtorsManagement?.overdue?.overdueList ?? {}
   );
-  const { total, pages, page, limit, docs, headers } = useMemo(
+  const { page, limit, docs } = useMemo(
     () => overdueListWithPageData,
     [overdueListWithPageData]
   );
@@ -72,18 +70,6 @@ const ClientOverdueTab = () => {
     await getOverdueListByFilter();
   }, [id]);
 
-  const pageActionClick = useCallback(
-    async newPage => {
-      await getOverdueListByFilter({ page: newPage, limit });
-    },
-    [getOverdueListByFilter, limit]
-  );
-  const onSelectLimit = useCallback(
-    async newLimit => {
-      await getOverdueListByFilter({ page: 1, limit: newLimit });
-    },
-    [getOverdueListByFilter]
-  );
 
   const onAddNewSubmission = useCallback(() => {
     if (
@@ -165,30 +151,9 @@ const ClientOverdueTab = () => {
             </div>
           </div>
           {docs?.length > 0 ? (
-            <>
-              <div className="common-list-container">
-                <Table
-                  isExpandable
-                  tableClass="main-list-table white-header-table"
-                  data={docs}
-                  headers={headers}
-                  listFor={{ module: 'debtor', subModule: 'overdue' }}
-                  refreshData={getOverdueListByFilter}
-                  rowClass="cursor-pointer"
-                />
-              </div>
-              <Pagination
-                className="common-list-pagination"
-                total={total}
-                pages={pages}
-                page={page}
-                limit={limit}
-                pageActionClick={pageActionClick}
-                onSelectLimit={onSelectLimit}
-              />
-            </>
+            <div className="no-record-found">Yes</div>  
           ) : (
-            <div className="no-record-found">No record found</div>
+            <div className="no-record-found">No</div>
           )}
           {newSubmissionModal && (
             <Modal
