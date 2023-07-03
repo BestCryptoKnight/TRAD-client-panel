@@ -19,10 +19,7 @@ import Button from '../../../common/Button/Button';
 import Input from '../../../common/Input/Input';
 import Loader from '../../../common/Loader/Loader';
 import DebtorsCreditLimitTab from '../components/DebtorsCreditLimitTab';
-import DebtorsApplicationTab from '../components/DebtorsApplicationTab';
 import DebtorOverdueTab from '../components/DebtorOverdueTab';
-// import DebtorsTasksTab from '../components/DebtorsTasksTab';
-import DebtorsDocumentsTab from '../components/DebtorsDocumentsTab';
 import DebtorsNotesTab from '../components/DebtorsNotesTab';
 import DebtorsStakeHolderTab from '../components/StakeHolder/DebtorsStakeHolderTab';
 // import DebtorsReportsTab from '../components/DebtorsReportsTab';
@@ -32,10 +29,7 @@ import { DEBTORS_REDUX_CONSTANTS } from '../redux/DebtorsReduxConstants';
 
 const DEBTOR_TABS_CONSTANTS = [{ label: 'Credit Limits', component: <DebtorsCreditLimitTab /> }];
 const DEBTOR_TABS_WITH_ACCESS = [
-  { label: 'Application', component: <DebtorsApplicationTab />, name: 'application' },
   { label: 'Overdues', component: <DebtorOverdueTab />, name: 'overdue' },
-  // { label: 'Tasks', component: <DebtorsTasksTab />, name: 'task' },
-  { label: 'Documents', component: <DebtorsDocumentsTab />, name: 'document' },
   { label: 'Notes', component: <DebtorsNotesTab />, name: 'note' },
 ];
 
@@ -330,14 +324,6 @@ const ViewInsurer = () => {
         value: debtorData?.postCode || '-',
       },
       {
-        isEditable: true,
-        label: 'Review Date',
-        placeholder: 'Select review date',
-        type: 'date',
-        name: 'reviewDate',
-        value: debtorData?.reviewDate || null,
-      },
-      {
         isEditable: false,
         label: 'Risk Rating',
         placeholder: 'Enter risk rating',
@@ -526,7 +512,7 @@ const ViewInsurer = () => {
                 <UserPrivilegeWrapper moduleName={SIDEBAR_NAMES.DEBTOR}>
                   <div className="buttons-row">
                     {action === 'view' ? (
-                      <Button buttonType="primary" title="Edit" onClick={editDebtorClick} />
+                      <></>
                     ) : (
                       <>
                         <Button buttonType="primary-1" title="Close" onClick={backToDebtor} />
