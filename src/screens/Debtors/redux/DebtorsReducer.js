@@ -7,6 +7,8 @@ import {
 const initialDebtorState = {
   debtorsList: { docs: [], total: 1, limit: 15, page: 1, pages: 1, isLoading: true, error: null },
 
+  globalDebtorsList: [],
+
   viewDebtorActiveTabIndex: 0,
 
   notes: {
@@ -297,7 +299,7 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
       };
       const { type, name, value } = action?.data;
       debtorsColumnNameList[`${type}`] = debtorsColumnNameList[`${type}`].map(e =>
-        e.name === name ? { ...e, isChecked: value } : e
+        e.name === name ? { ...e, isChecked: value } : e,
       );
       return {
         ...state,
@@ -479,7 +481,7 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
               ...e,
               isChecked: value,
             }
-          : e
+          : e,
       );
       return {
         ...state,
@@ -594,7 +596,7 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
       // eslint-disable-next-line no-shadow
       const { name, type, value } = action?.data;
       debtorsTaskColumnNameList[`${type}`] = debtorsTaskColumnNameList[`${type}`].map(e =>
-        e.name === name ? { ...e, isChecked: value } : e
+        e.name === name ? { ...e, isChecked: value } : e,
       );
       return {
         ...state,
@@ -749,9 +751,9 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
       };
       // eslint-disable-next-line no-shadow
       const { name, type, value } = action?.data;
-      debtorsApplicationColumnNameList[`${type}`] = debtorsApplicationColumnNameList?.[
-        `${type}`
-      ]?.map(e => (e.name === name ? { ...e, isChecked: value } : e));
+      debtorsApplicationColumnNameList[`${type}`] = debtorsApplicationColumnNameList?.[`${type}`]?.map(e =>
+        e.name === name ? { ...e, isChecked: value } : e,
+      );
       return {
         ...state,
         application: {
@@ -820,9 +822,9 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
       };
       // eslint-disable-next-line no-shadow
       const { type, name, value } = action?.data;
-      debtorsCreditLimitColumnNameList[`${type}`] = debtorsCreditLimitColumnNameList?.[
-        `${type}`
-      ]?.map(e => (e.name === name ? { ...e, isChecked: value } : e));
+      debtorsCreditLimitColumnNameList[`${type}`] = debtorsCreditLimitColumnNameList?.[`${type}`]?.map(e =>
+        e.name === name ? { ...e, isChecked: value } : e,
+      );
       return {
         ...state,
         creditLimit: {
@@ -891,9 +893,9 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
       };
       // eslint-disable-next-line no-shadow
       const { name, type, value } = action?.data;
-      debtorsStakeHolderColumnNameList[`${type}`] = debtorsStakeHolderColumnNameList?.[
-        `${type}`
-      ]?.map(e => (e.name === name ? { ...e, isChecked: value } : e));
+      debtorsStakeHolderColumnNameList[`${type}`] = debtorsStakeHolderColumnNameList?.[`${type}`]?.map(e =>
+        e.name === name ? { ...e, isChecked: value } : e,
+      );
       return {
         ...state,
         stakeHolder: {
@@ -902,8 +904,7 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
         },
       };
     }
-    case DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
-      .CHANGE_DEBTOR_STAKE_HOLDER_PERSON_TYPE:
+    case DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.CHANGE_DEBTOR_STAKE_HOLDER_PERSON_TYPE:
       return {
         ...state,
         stakeHolder: {
@@ -925,8 +926,7 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
           },
         },
       };
-    case DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
-      .UPDATE_STAKE_HOLDER_COMPANY_ALL_DATA:
+    case DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.UPDATE_STAKE_HOLDER_COMPANY_ALL_DATA:
       return {
         ...state,
         stakeHolder: {
@@ -1123,7 +1123,7 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
       // eslint-disable-next-line no-shadow
       const { name, type, value } = action?.data;
       debtorsReportsColumnNameList[`${type}`] = debtorsReportsColumnNameList?.[`${type}`]?.map(e =>
-        e.name === name ? { ...e, isChecked: value } : e
+        e.name === name ? { ...e, isChecked: value } : e,
       );
       return {
         ...state,
@@ -1258,6 +1258,18 @@ export const debtorsManagement = (state = initialDebtorState, action) => {
         companyData,
       };
     }
+    // Global Debtors Data
+    case DEBTORS_REDUX_CONSTANTS.FETCH_GLOBAL_DEBTORS_LIST_SUCCESS:
+      return {
+        ...state,
+        globalDebtorsList: action?.data,
+      };
+    case DEBTORS_REDUX_CONSTANTS.FETCH_GLOBAL_DEBTORS_LIST_FAILURE:
+      return {
+        ...state,
+        globalDebtorsList: [],
+      };
+
     default:
       return state;
   }
