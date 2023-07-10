@@ -36,7 +36,6 @@ export const getCreditLimitsList = (params = { page: 1, limit: 15 }) => {
     try {
       startGeneralLoaderOnRequest('creditLimitListPageLoaderAction');
       const response = await CreditLimitsApiService.getAllCreditLimitsList(finalParams);
-      console.log("response", response);
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: CREDIT_LIMITS_REDUX_CONSTANTS.CREDIT_LIMITS_LIST_ACTION,

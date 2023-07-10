@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import IconButton from '../../../common/IconButton/IconButton';
 import BigInput from '../../../common/BigInput/BigInput';
@@ -28,6 +28,7 @@ import { downloadAll } from '../../../helpers/DownloadHelper';
 import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
 
 const DebtorsCreditLimitTab = () => {
+  const history = useHistory();
   const { id } = useParams();
   const dispatch = useDispatch();
   const searchInputRef = useRef();
@@ -347,6 +348,10 @@ const DebtorsCreditLimitTab = () => {
     [toggleSurrenderModal, surrenderLimit, ViewDebtorSurrenderCreditLimitButtonLoaderAction]
   );
 
+  const onGenerateNewApplication = () => {
+    history.push(`/applications/application/generate/`);
+  }
+
   return (
     <>
       <div className="tab-content-header-row">
@@ -373,6 +378,10 @@ const DebtorsCreditLimitTab = () => {
             onClick={onClickDownloadButton}
             isLoading={viewDebtorDownloadCreditLimitCSVButtonLoaderAction}
           />
+          {!isLoading && docs && docs.length <= 0 && (
+            <Button title="Generate" buttonType="success" onClick={onGenerateNewApplication} />
+          )
+          }
         </div>
       </div>
       {/* eslint-disable-next-line no-nested-ternary */}
