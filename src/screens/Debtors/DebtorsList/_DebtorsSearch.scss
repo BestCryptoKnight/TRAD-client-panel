@@ -1,6 +1,93 @@
-.globa-debtors-search-container {
+.global-debtors-search-container {
   width: 100%;
 
   display: flex;
   justify-content: center;
+}
+
+.global-debtors-search-width {
+  width: 80%;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+
+  .global-debtors-search-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 56px;
+
+    input {
+      width: 100%;
+      padding: 5px 10px;
+      border: none;
+      outline: none;
+      font: $subtitle $font-regular;
+      color: $primary-color;
+    }
+
+    span {
+      width: 250px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #38c976;
+      border-color: #38c976;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #62d493;
+        border-color: #62d493;
+      }
+    }
+  }
+}
+
+.global-debtors-search-results {
+  ul {
+    min-height: 70px;
+    max-height: 200px;
+    margin: 0;
+    padding: 0 0 10px 0;
+    list-style-type: none;
+    overflow: auto;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 35px;
+    padding: 5px 10px;
+    cursor: pointer;
+    .gs-value {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .gs-tag {
+      color: $primary-color;
+      padding: 5px 12px;
+      border-radius: 5px;
+      background: #e2e9f0 0% 0% no-repeat padding-box;
+      opacity: 1;
+    }
+  }
+
+  .global-search-loading-text {
+    display: block;
+    margin: 10px;
+    color: $field-color;
+  }
+
+  li:hover {
+    background-color: #f5f6f8;
+  }
+
+  .header-active-search {
+    background-color: #f5f6f8;
+  }
 }
