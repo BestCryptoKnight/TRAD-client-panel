@@ -1,12 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-// import { handleGlobalSearchSelect } from '../../../helpers/GlobalSearchHelper';
 import { useOnClickOutside } from '../../../hooks/UserClickOutsideHook';
-import { searchGlobalDebtors } from '../redux/DebtorsAction';
+import { searchGlobalDebtors, updateEditDebtorField } from '../redux/DebtorsAction';
 import { DEBTORS_REDUX_CONSTANTS } from '../redux/DebtorsReduxConstants';
-
-import './_DebtorsSearch.scss';
+import Button from '../../../common/Button/Button';
+import { useModulePrivileges } from '../../../hooks/userPrivileges/useModulePrivilegesHook';
+import { SIDEBAR_NAMES } from '../../../constants/SidebarConstants';
 
 const DebtorsSearch = () => {
   const history = useHistory();
@@ -26,6 +26,8 @@ const DebtorsSearch = () => {
     setHeaderSearchFocused(false);
   };
   useOnClickOutside(headerSearchRef, searchOutsideClick);
+
+  const isDebtorUpdatable = useModulePrivileges(SIDEBAR_NAMES.DEBTOR).hasWriteAccess;
 
   const target = document.getElementsByClassName('header-search-results')?.[0];
 
@@ -95,20 +97,32 @@ const DebtorsSearch = () => {
     history.replace(`debtors/debtor/view/${_id}`);
   }, []);
 
+  const generateDebtorClick = useCallback(() => {
+    dispatch(
+      updateEditDebtorField('company', 'country', {
+        label: 'Australia',
+        name: 'country',
+        value: 'AUS',
+      }),
+    );
+    history.push(`/debtors/generate/`);
+  }, []);
+
   return (
     <>
       <div className="page-header">
         <div className="page-header-name">Debtor List</div>
+        <div className="page-header-button-container">
+          {isDebtorUpdatable && <Button title="Add Debtor" buttonType="success" onClick={generateDebtorClick} />}
+        </div>
       </div>
 
-      <div className="globa-debtors-search-container">
+      <div className="global-debtors-search-container">
         <div
           ref={headerSearchRef}
-          className={`header-search-container ${headerSearchFocused && 'header-search-container-focused'} ${
-            searchStart && 'got-search-results'
-          }`}
+          className={`global-debtors-search-width ${headerSearchFocused && ''} ${searchStart && 'got-search-results'}`}
         >
-          <div>
+          <div className="global-debtors-search-content">
             <input
               ref={globalSearchInputRef}
               type="text"
@@ -118,12 +132,12 @@ const DebtorsSearch = () => {
               onChange={handleOnSearchChange}
               value={searchedString}
             />
-            <span className="material-icons-round ga-search-icon" onClick={onSearchButtonClick}>
-              search
+            <span className="" onClick={onSearchButtonClick}>
+              Search
             </span>
           </div>
           {searchStart && (
-            <div className="header-search-results">
+            <div className="global-debtors-search-results">
               {gloabalSearchLoaderAction ? (
                 <div className="global-search-loading-text">
                   Loading
