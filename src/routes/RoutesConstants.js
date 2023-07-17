@@ -10,7 +10,7 @@ const ForbiddenAccessPage = lazy(() => import('../common/ForbiddenAccessPage/For
 const Dashboard = lazy(() => import('../common/Dashboard/Dashboard'));
 const ViewClientTask = lazy(() => import('../common/Dashboard/components/ViewClientTask'));
 const ApplicationList = lazy(() => import('../screens/Application/ApplicationList/ApplicationList'));
-const AlertList = lazy(() => import('../screens/Alerts/AlertList/AlertList'));
+// const AlertList = lazy(() => import('../screens/Alerts/AlertList/AlertList'));
 const GenerateApplication = lazy(() => import('../screens/Application/GenerateApplication/GenerateApplication'));
 const ViewApplication = lazy(() => import('../screens/Application/ViewApplication/ViewApplication'));
 const CreditLimitsList = lazy(() => import('../screens/CreditLimits/CreditLimitsList/CreditLimitsList'));
@@ -83,11 +83,11 @@ export const ROUTES_CONSTANTS = [
     component: ViewApplication,
     authenticated: true,
   },
-  {
-    path: '/alerts',
-    component: AlertList,
-    authenticated: true,
-  },
+  // {
+  //   path: '/alerts',
+  //   component: AlertList,
+  //   authenticated: true,
+  // },
   {
     path: '/debtors',
     // component: DebtorsList,
