@@ -3,17 +3,12 @@ import { DEBTORS_URLS } from '../../../constants/UrlConstants';
 
 const DebtorsApiServices = {
   getAllDebtorsList: params => ApiService.getData(DEBTORS_URLS.DEBTORS_LIST_URL, { params }),
-  getDebtorsColumnNameList: params =>
-    ApiService.getData(DEBTORS_URLS.DEBTORS_COLUMNS_NAME_LIST_URL, { params }),
-  updateDebtorsColumnNameList: data =>
-    ApiService.putData(DEBTORS_URLS.DEBTORS_COLUMNS_NAME_LIST_URL, data),
-  getDebtorDetailById: id =>
-    ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_BY_ID_URL}${id}`),
-  getDebtorDetail: debtorId =>
-    ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_URL}${debtorId}`),
+  getDebtorsColumnNameList: params => ApiService.getData(DEBTORS_URLS.DEBTORS_COLUMNS_NAME_LIST_URL, { params }),
+  updateDebtorsColumnNameList: data => ApiService.putData(DEBTORS_URLS.DEBTORS_COLUMNS_NAME_LIST_URL, data),
+  getDebtorDetailById: id => ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_BY_ID_URL}${id}`),
+  getDebtorDetail: debtorId => ApiService.getData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_URL}${debtorId}`),
   getDebtorDropdownDataList: () => ApiService.getData(DEBTORS_URLS.DROP_DOWN_DATA_URL),
-  updateDebtorDetailById: (id, data) =>
-    ApiService.putData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_URL}${id}`, data),
+  updateDebtorDetailById: (id, data) => ApiService.putData(`${DEBTORS_URLS.SELECTED_DEBTOR_DETAILS_URL}${id}`, data),
   getDebtorFilter: () => ApiService.getData(DEBTORS_URLS.DROP_DOWN_DATA_URL),
   downloadDebtorList: params =>
     ApiService.request({
@@ -32,7 +27,10 @@ const DebtorsApiServices = {
         timeout: 60000,
       }),
   },
-  saveDebtorStepDataToBackend: data =>
-    ApiService.putData(`${DEBTORS_URLS.DEBTORS_SAVE_STEP_DATA}`, data),
+  saveDebtorStepDataToBackend: data => ApiService.putData(`${DEBTORS_URLS.DEBTORS_SAVE_STEP_DATA}`, data),
+
+  globalDebtorsApiServices: {
+    getGlobalDebtorsData: params => ApiService.getData(`${DEBTORS_URLS.GLOBAL_DEBTORS_SEARCH}`, { params }),
+  },
 };
 export default DebtorsApiServices;

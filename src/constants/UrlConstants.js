@@ -100,6 +100,8 @@ export const DEBTORS_URLS = {
   DOWNLOAD_DEBTOR: `${BASE_URL}debtor/download/`,
   DEBTORS_SAVE_STEP_DATA: `${BASE_URL}debtor/generate/`,
 
+  GLOBAL_DEBTORS_SEARCH: `${BASE_URL}debtor/global`,
+
   NOTES: {
     NOTES_LIST: `${BASE_URL}note/`,
   },

@@ -9,22 +9,12 @@ const VerifyOtp = lazy(() => import('../screens/auth/otpScreen/VerifyOtp'));
 const ForbiddenAccessPage = lazy(() => import('../common/ForbiddenAccessPage/ForbiddenAccessPage'));
 const Dashboard = lazy(() => import('../common/Dashboard/Dashboard'));
 const ViewClientTask = lazy(() => import('../common/Dashboard/components/ViewClientTask'));
-const ApplicationList = lazy(() =>
-  import('../screens/Application/ApplicationList/ApplicationList')
-);
-const AlertList = lazy(() => import('../screens/Alerts/AlertList/AlertList'));
-const GenerateApplication = lazy(() =>
-  import('../screens/Application/GenerateApplication/GenerateApplication')
-);
-const ViewApplication = lazy(() =>
-  import('../screens/Application/ViewApplication/ViewApplication')
-);
-const CreditLimitsList = lazy(() =>
-  import('../screens/CreditLimits/CreditLimitsList/CreditLimitsList')
-);
-const ViewCreditLimits = lazy(() =>
-  import('../screens/CreditLimits/ViewCreditLimits/ViewCreditLimits')
-);
+const ApplicationList = lazy(() => import('../screens/Application/ApplicationList/ApplicationList'));
+// const AlertList = lazy(() => import('../screens/Alerts/AlertList/AlertList'));
+const GenerateApplication = lazy(() => import('../screens/Application/GenerateApplication/GenerateApplication'));
+const ViewApplication = lazy(() => import('../screens/Application/ViewApplication/ViewApplication'));
+const CreditLimitsList = lazy(() => import('../screens/CreditLimits/CreditLimitsList/CreditLimitsList'));
+const ViewCreditLimits = lazy(() => import('../screens/CreditLimits/ViewCreditLimits/ViewCreditLimits'));
 const OverduesList = lazy(() => import('../screens/Overdues/OverduesList/OverduesList'));
 const AddOverdues = lazy(() => import('../screens/Overdues/OverduesList/AddOverdues/AddOverdues'));
 const ClaimsList = lazy(() => import('../screens/Claims/ClaimsList/ClaimsList'));
@@ -33,7 +23,8 @@ const EmployeeList = lazy(() => import('../screens/Employee/EmployeeList/Employe
 const CompanyProfile = lazy(() => import('../screens/CompanyProfile/CompanyProfile'));
 const Support = lazy(() => import('../screens/Support/Support'));
 const PageNotFound = lazy(() => import('../common/PageNotFound/PageNotFound'));
-const DebtorsList = lazy(() => import('../screens/Debtors/DebtorsList/DebtorsList'));
+// const DebtorsList = lazy(() => import('../screens/Debtors/DebtorsList/DebtorsList'));
+const DebtorsSearch = lazy(() => import('../screens/Debtors/DebtorsList/DebtorsSearch'));
 const ViewDebtor = lazy(() => import('../screens/Debtors/ViewDebtor/ViewDebtor'));
 const GenerateDebtor = lazy(() => import('../screens/Debtors/GenerateDebtor/GenerateDebtor'));
 
@@ -92,14 +83,15 @@ export const ROUTES_CONSTANTS = [
     component: ViewApplication,
     authenticated: true,
   },
-  {
-    path: '/alerts',
-    component: AlertList,
-    authenticated: true,
-  },
+  // {
+  //   path: '/alerts',
+  //   component: AlertList,
+  //   authenticated: true,
+  // },
   {
     path: '/debtors',
-    component: DebtorsList,
+    // component: DebtorsList,
+    component: DebtorsSearch,
     authenticated: true,
   },
   {
