@@ -10,6 +10,7 @@ import {
 } from '../redux/CreditLimitsAction';
 import Loader from '../../../common/Loader/Loader';
 import Tab from '../../../common/Tab/Tab';
+import CreditLimitTab from '../CreditLimitsTabs/CreditLimitTab';
 import CreditLimitsApplicationTab from '../CreditLimitsTabs/CreditLimitsApplicationTab';
 import CreditLimitsTasksTab from '../CreditLimitsTabs/CreditLimitsTasksTab';
 import CreditLimitsDocumentsTab from '../CreditLimitsTabs/CreditLimitsDocumentsTab';
@@ -27,18 +28,14 @@ const ViewCreditLimits = () => {
     setActiveTabIndex(index);
   };
   const viewCreditLimitActiveTabIndex = useSelector(
-    ({ creditLimits }) => creditLimits?.viewCreditLimitActiveTabIndex ?? 0
+    ({ creditLimits }) => creditLimits?.viewCreditLimitActiveTabIndex ?? 0,
   );
 
-  const creditLimitsDetails = useSelector(
-    ({ creditLimits }) => creditLimits?.selectedCreditLimitData
-  );
+  const creditLimitsDetails = useSelector(({ creditLimits }) => creditLimits?.selectedCreditLimitData);
 
   const { _id } = useMemo(() => creditLimitsDetails ?? '', [creditLimitsDetails]);
 
-  const { viewCreditLimitPageLoaderAction } = useSelector(
-    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
-  );
+  const { viewCreditLimitPageLoaderAction } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
   const backToCreditLimit = useCallback(() => {
     history.replace('/credit-limits');
@@ -122,7 +119,7 @@ const ViewCreditLimits = () => {
         value: creditLimitsDetails?.riskRating,
       },
     ],
-    [creditLimitsDetails]
+    [creditLimitsDetails],
   );
 
   const finalInputs = useMemo(() => {
@@ -138,9 +135,10 @@ const ViewCreditLimits = () => {
     return filteredData;
   }, [INPUTS, creditLimitsDetails?.country]);
 
-  const tabs = ['Application', 'Stakeholder', 'Tasks', 'Documents', 'Notes'];
+  const tabs = ['Credit Limit', 'Application', 'Stakeholder', 'Tasks', 'Documents', 'Notes'];
 
   const VIEW_CREDIT_LIMITS_TABS = [
+    <CreditLimitTab id={_id} />,
     <CreditLimitsApplicationTab id={_id} />,
     <CreditLimitStakeHolderTab id={_id} />,
     <CreditLimitsTasksTab id={_id} />,
@@ -192,15 +190,8 @@ const ViewCreditLimits = () => {
                   )}
                 </div>
               )}
-              <Tab
-                tabs={tabs}
-                tabActive={tabActive}
-                activeTabIndex={activeTabIndex}
-                className="mt-15"
-              />
-              <div className="common-white-container">
-                {VIEW_CREDIT_LIMITS_TABS[activeTabIndex]}
-              </div>
+              <Tab tabs={tabs} tabActive={tabActive} activeTabIndex={activeTabIndex} className="mt-15" />
+              <div className="common-white-container">{VIEW_CREDIT_LIMITS_TABS[activeTabIndex]}</div>
             </>
           ) : (
             <div className="no-record-found">No record found</div>
