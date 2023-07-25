@@ -1961,7 +1961,7 @@ export const searchGlobalDebtors = value => {
       }
     } catch (e) {
       stopGeneralLoaderOnSuccessOrFail('gloabalDebtorsSearchLoaderAction');
-      errorNotification(e);
+      errorNotification('Debtors search string is wrong!');
     }
   };
 };
