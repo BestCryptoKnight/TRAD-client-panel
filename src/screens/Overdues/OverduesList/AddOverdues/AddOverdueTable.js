@@ -20,7 +20,7 @@ const AddOverdueTable = props => {
   const [showActionConfirmModal, setShowActionConfirmModal] = useState(false);
   const toggleActionConfirmModal = useCallback(
     value => setShowActionConfirmModal(value !== undefined ? value : e => !e),
-    [setShowActionConfirmModal]
+    [setShowActionConfirmModal],
   );
 
   const [actionToSet, setActionToSet] = useState({});
@@ -36,7 +36,7 @@ const AddOverdueTable = props => {
         /**/
       }
     },
-    [setActionToSet, toggleActionConfirmModal]
+    [setActionToSet, toggleActionConfirmModal],
   );
   const onClickAmend = useCallback(
     id => {
@@ -48,7 +48,7 @@ const AddOverdueTable = props => {
         /**/
       }
     },
-    [toggleOverdueFormModal, setIsAmendOverdueModal]
+    [toggleOverdueFormModal, setIsAmendOverdueModal],
   );
   const onClickUnChanged = useCallback(
     async (id, currentAction) => {
@@ -61,7 +61,7 @@ const AddOverdueTable = props => {
         /**/
       }
     },
-    [setActionToSet, toggleActionConfirmModal]
+    [setActionToSet, toggleActionConfirmModal],
   );
 
   const onClickOverdueActionButtons = useCallback(
@@ -70,7 +70,7 @@ const AddOverdueTable = props => {
       if (button?.status === 'AMEND') await onClickAmend(id);
       if (button?.status === 'UNCHANGED') await onClickUnChanged(id, currentAction);
     },
-    [onClickMarkAsPaid, onClickAmend, onClickUnChanged]
+    [onClickMarkAsPaid, onClickAmend, onClickUnChanged],
   );
 
   const overdueActionModalButtons = useMemo(
@@ -89,7 +89,7 @@ const AddOverdueTable = props => {
         },
       },
     ],
-    [toggleActionConfirmModal, actionToSet]
+    [toggleActionConfirmModal, actionToSet],
   );
 
   return (
@@ -104,11 +104,7 @@ const AddOverdueTable = props => {
 
       {docs?.length > 0 ? (
         <div className="common-list-container">
-          <table
-            className="table-class main-list-table add-overdue-table"
-            width={100}
-            cellSpacing={0}
-          >
+          <table className="table-class main-list-table add-overdue-table" width={100} cellSpacing={0}>
             <thead>
               <tr className="bg-background-color">
                 <th>Debtor Name</th>
@@ -123,27 +119,18 @@ const AddOverdueTable = props => {
                 <td>{overdue?.debtorId?.label ?? '-'}</td>
                 <td>{overdue?.overdueType?.label ?? '-'}</td>
                 <td>{overdue?.status?.label ?? '-'}</td>
-                <td>
-                  {overdue?.outstandingAmount
-                    ? NumberCommaSeparator(overdue?.outstandingAmount)
-                    : '-'}
-                </td>
+                <td>{overdue?.outstandingAmount ? NumberCommaSeparator(overdue?.outstandingAmount) : '-'}</td>
                 <td className="add-overdue-buttons">
                   {overdueActionButtons?.map(button => (
                     <Button
-                      buttonType={`${
-                        button?.status === overdue?.overdueAction ? 'primary' : 'outlined-primary'
-                      }`}
+                      buttonType={button?.status === overdue?.overdueAction ? 'primary' : 'outlined-primary'}
                       className="small-button"
                       title={
-                        overdue?.overdueAction === 'MARK_AS_PAID' &&
-                        button.status === 'MARK_AS_PAID'
+                        overdue?.overdueAction === 'MARK_AS_PAID' && button.status === 'MARK_AS_PAID'
                           ? 'Paid'
                           : button?.title
                       }
-                      onClick={() =>
-                        onClickOverdueActionButtons(overdue?.index, button, overdue?.overdueAction)
-                      }
+                      onClick={() => onClickOverdueActionButtons(overdue?.index, button, overdue?.overdueAction)}
                     />
                   ))}
                 </td>
