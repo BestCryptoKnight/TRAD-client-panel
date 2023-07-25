@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import IconButton from '../../../common/IconButton/IconButton';
 import BigInput from '../../../common/BigInput/BigInput';
@@ -29,12 +29,13 @@ import { NumberCommaSeparator } from '../../../helpers/NumberCommaSeparator';
 
 const CreditLimitTab = () => {
   const history = useHistory();
-  const { id } = useParams();
+  // const { id } = useParams();
   const dispatch = useDispatch();
   const searchInputRef = useRef();
   const { creditLimitList, debtorsCreditLimitColumnNameList, debtorsCreditLimitDefaultColumnNameList } = useSelector(
     ({ debtorsManagement }) => debtorsManagement?.creditLimit ?? {},
   );
+  const id = useSelector(({ creditLimits }) => creditLimits?.selectedCreditLimitData?._id);
 
   const {
     viewDebtorCreditLimitColumnSaveButtonLoaderAction,
