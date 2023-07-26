@@ -46,10 +46,15 @@ const CreditLimitTab = () => {
     decisionLetterDownloadButtonLoaderAction,
   } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
 
-  const { total, headers, pages, docs, page, limit, isLoading } = useMemo(
-    () => creditLimitList ?? {},
-    [creditLimitList],
-  );
+  const { total, headers, pages, docs, page, limit, isLoading } = useMemo(() => {
+    if (creditLimitList) {
+      return {
+        ...creditLimitList,
+        headers: [...(creditLimitList.headers ? creditLimitList.headers.slice(1) : [])],
+      };
+    }
+    return creditLimitList ?? {};
+  }, [creditLimitList]);
 
   const getCreditLimitList = useCallback(
     (params = {}, cb) => {
@@ -131,10 +136,19 @@ const CreditLimitTab = () => {
     toggleCustomField();
   }, [debtorsCreditLimitDefaultColumnNameList, toggleCustomField]);
 
-  const { defaultFields, customFields } = useMemo(
-    () => debtorsCreditLimitColumnNameList || { defaultFields: [], customFields: [] },
-    [debtorsCreditLimitColumnNameList],
-  );
+  const { defaultFields, customFields } = useMemo(() => {
+    if (debtorsCreditLimitColumnNameList) {
+      return {
+        ...debtorsCreditLimitColumnNameList,
+        defaultFields: [
+          ...(debtorsCreditLimitColumnNameList.defaultFields
+            ? debtorsCreditLimitColumnNameList.defaultFields.slice(1)
+            : []),
+        ],
+      };
+    }
+    return { defaultFields: [], customFields: [] };
+  }, [debtorsCreditLimitColumnNameList]);
 
   const buttons = useMemo(
     () => [
