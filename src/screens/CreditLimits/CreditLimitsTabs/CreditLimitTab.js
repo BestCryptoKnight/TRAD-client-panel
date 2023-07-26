@@ -50,7 +50,7 @@ const CreditLimitTab = () => {
     if (creditLimitList) {
       return {
         ...creditLimitList,
-        headers: [...(creditLimitList.headers ? creditLimitList.headers.slice(1) : [])],
+        headers: [...(creditLimitList.headers ? creditLimitList.headers.filter(header => header.name !== 'name') : [])],
       };
     }
     return creditLimitList ?? {};
@@ -142,7 +142,7 @@ const CreditLimitTab = () => {
         ...debtorsCreditLimitColumnNameList,
         defaultFields: [
           ...(debtorsCreditLimitColumnNameList.defaultFields
-            ? debtorsCreditLimitColumnNameList.defaultFields.slice(1)
+            ? debtorsCreditLimitColumnNameList.defaultFields.filter(field => field.name !== 'name')
             : []),
         ],
       };
