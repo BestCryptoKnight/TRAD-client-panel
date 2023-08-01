@@ -5,10 +5,7 @@ import _ from 'lodash';
 import BigInput from '../../../common/BigInput/BigInput';
 import Loader from '../../../common/Loader/Loader';
 import { errorNotification } from '../../../common/Toast';
-import {
-  clearAlertDetails,
-  getDebtorsAlertsListData,
-} from '../redux/DebtorsAction';
+import { clearAlertDetails, getDebtorsAlertsListData } from '../redux/DebtorsAction';
 import Modal from '../../../common/Modal/Modal';
 import { ALERT_TYPE_ROW, checkAlertValue } from '../../../helpers/AlertHelper';
 
@@ -26,10 +23,7 @@ const DebtorsAlertsTab = () => {
     ({ generalLoaderReducer }) => generalLoaderReducer ?? false
   );
 
-  const { docs, page, limit } = useMemo(
-    () => alertsList ?? {},
-    [alertsList]
-  );
+  const { docs, page, limit } = useMemo(() => alertsList ?? {}, [alertsList]);
 
   const getDebtorAlertsList = useCallback(
     (params = {}, cb) => {
@@ -45,7 +39,6 @@ const DebtorsAlertsTab = () => {
     },
     [page, limit, id]
   );
-
 
   const onCloseAlertModal = useCallback(() => {
     setIsAlertModal(false);

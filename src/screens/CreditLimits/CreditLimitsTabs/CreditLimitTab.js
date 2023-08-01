@@ -32,9 +32,11 @@ const CreditLimitTab = () => {
   // const { id } = useParams();
   const dispatch = useDispatch();
   const searchInputRef = useRef();
-  const { creditLimitList, debtorsCreditLimitColumnNameList, debtorsCreditLimitDefaultColumnNameList } = useSelector(
-    ({ debtorsManagement }) => debtorsManagement?.creditLimit ?? {},
-  );
+  const {
+    creditLimitList,
+    debtorsCreditLimitColumnNameList,
+    debtorsCreditLimitDefaultColumnNameList,
+  } = useSelector(({ debtorsManagement }) => debtorsManagement?.creditLimit ?? {});
   const id = useSelector(({ creditLimits }) => creditLimits?.selectedCreditLimitData?._id);
 
   const {
@@ -50,7 +52,11 @@ const CreditLimitTab = () => {
     if (creditLimitList) {
       return {
         ...creditLimitList,
-        headers: [...(creditLimitList.headers ? creditLimitList.headers.filter(header => header.name !== 'name') : [])],
+        headers: [
+          ...(creditLimitList.headers
+            ? creditLimitList.headers.filter(header => header.name !== 'name')
+            : []),
+        ],
       };
     }
     return creditLimitList ?? {};
@@ -68,21 +74,21 @@ const CreditLimitTab = () => {
         cb();
       }
     },
-    [page, limit, id],
+    [page, limit, id]
   );
 
   const onSelectLimit = useCallback(
     newLimit => {
       getCreditLimitList({ page: 1, limit: newLimit });
     },
-    [getCreditLimitList],
+    [getCreditLimitList]
   );
 
   const pageActionClick = useCallback(
     newPage => {
       getCreditLimitList({ page: newPage, limit });
     },
-    [limit, getCreditLimitList],
+    [limit, getCreditLimitList]
   );
 
   const [customFieldModal, setCustomFieldModal] = React.useState(false);
@@ -93,7 +99,7 @@ const CreditLimitTab = () => {
       const data = { type, name, value };
       dispatch(changeDebtorCreditLimitColumnListStatus(data));
     },
-    [dispatch],
+    [dispatch]
   );
 
   const onClickResetDefaultColumnSelection = useCallback(async () => {
@@ -109,7 +115,10 @@ const CreditLimitTab = () => {
 
   const onClickSaveColumnSelection = useCallback(async () => {
     try {
-      const isBothEqual = _.isEqual(debtorsCreditLimitColumnNameList, debtorsCreditLimitDefaultColumnNameList);
+      const isBothEqual = _.isEqual(
+        debtorsCreditLimitColumnNameList,
+        debtorsCreditLimitDefaultColumnNameList
+      );
       if (!isBothEqual) {
         await dispatch(saveDebtorCreditLimitColumnNameList({ debtorsCreditLimitColumnNameList }));
         getCreditLimitList();
@@ -172,7 +181,7 @@ const CreditLimitTab = () => {
       onClickSaveColumnSelection,
       viewDebtorCreditLimitColumnSaveButtonLoaderAction,
       viewDebtorCreditLimitColumnResetButtonLoaderAction,
-    ],
+    ]
   );
 
   useEffect(() => {
@@ -209,7 +218,7 @@ const CreditLimitTab = () => {
         errorNotification('You have no records to download');
       }
     },
-    [id],
+    [id]
   );
 
   const checkIfEnterKeyPressed = e => {
@@ -273,7 +282,9 @@ const CreditLimitTab = () => {
             buttonType="outlined-primary-small"
             title="Modify"
             onClick={() => {
-              setCurrentCreditLimitData(docs?.length > 0 && docs.find(record => record?._id === data.id));
+              setCurrentCreditLimitData(
+                docs?.length > 0 && docs.find(record => record?._id === data.id)
+              );
               toggleModifyLimitModal();
             }}
           />
@@ -294,7 +305,7 @@ const CreditLimitTab = () => {
       toggleSurrenderModal,
       setCurrentCreditLimitData,
       decisionLetterDownloadButtonLoaderAction,
-    ],
+    ]
   );
 
   const modifyLimit = useCallback(async () => {
@@ -341,7 +352,7 @@ const CreditLimitTab = () => {
         isLoading: ViewDebtorModifyCreditLimitButtonLoaderAction,
       },
     ],
-    [toggleModifyLimitModal, modifyLimit, ViewDebtorModifyCreditLimitButtonLoaderAction],
+    [toggleModifyLimitModal, modifyLimit, ViewDebtorModifyCreditLimitButtonLoaderAction]
   );
   const surrenderLimitButtons = useMemo(
     () => [
@@ -353,7 +364,7 @@ const CreditLimitTab = () => {
         isLoading: ViewDebtorSurrenderCreditLimitButtonLoaderAction,
       },
     ],
-    [toggleSurrenderModal, surrenderLimit, ViewDebtorSurrenderCreditLimitButtonLoaderAction],
+    [toggleSurrenderModal, surrenderLimit, ViewDebtorSurrenderCreditLimitButtonLoaderAction]
   );
 
   const onGenerateNewApplication = () => {
@@ -375,7 +386,11 @@ const CreditLimitTab = () => {
             placeholder="Search here"
             onKeyUp={checkIfEnterKeyPressed}
           />
-          <IconButton buttonType="primary" title="format_line_spacing" onClick={toggleCustomField} />
+          <IconButton
+            buttonType="primary"
+            title="format_line_spacing"
+            onClick={toggleCustomField}
+          />
           <IconButton
             buttonType="primary-1"
             title="cloud_download"
@@ -429,13 +444,19 @@ const CreditLimitTab = () => {
         />
       )}
       {modifyLimitModal && (
-        <Modal header="Modify Credit Limit" buttons={modifyLimitButtons} hideModal={toggleModifyLimitModal}>
+        <Modal
+          header="Modify Credit Limit"
+          buttons={modifyLimitButtons}
+          hideModal={toggleModifyLimitModal}
+        >
           <div className="modify-credit-limit-container align-center">
             <span>Credit Limit</span>
             <Input
               type="text"
               value={
-                currentCreditLimitData?.creditLimit ? NumberCommaSeparator(currentCreditLimitData?.creditLimit) : 0
+                currentCreditLimitData?.creditLimit
+                  ? NumberCommaSeparator(currentCreditLimitData?.creditLimit)
+                  : 0
               }
               disabled
               borderClass="disabled-control"
@@ -451,7 +472,7 @@ const CreditLimitTab = () => {
                 setNewCreditLimit(
                   e.target.value * 1 === 0
                     ? e.target.value.replace(/^0+(\d)/, '$1')
-                    : e.target.value.toString().replaceAll(',', ''),
+                    : e.target.value.toString().replaceAll(',', '')
                 )
               }
             />
@@ -459,8 +480,14 @@ const CreditLimitTab = () => {
         </Modal>
       )}
       {surrenderModal && (
-        <Modal header="Modify Credit Limit" buttons={surrenderLimitButtons} hideModal={toggleSurrenderModal}>
-          <span className="confirmation-message">Are you sure you want to surrender this credit limit?</span>
+        <Modal
+          header="Modify Credit Limit"
+          buttons={surrenderLimitButtons}
+          hideModal={toggleSurrenderModal}
+        >
+          <span className="confirmation-message">
+            Are you sure you want to surrender this credit limit?
+          </span>
         </Modal>
       )}
     </>

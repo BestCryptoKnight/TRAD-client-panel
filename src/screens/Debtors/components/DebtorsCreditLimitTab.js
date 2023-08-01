@@ -350,7 +350,7 @@ const DebtorsCreditLimitTab = () => {
 
   const onGenerateNewApplication = () => {
     history.push(`/applications/application/generate/`);
-  }
+  };
 
   return (
     <>
@@ -380,8 +380,7 @@ const DebtorsCreditLimitTab = () => {
           />
           {!isLoading && docs && docs.length <= 0 && (
             <Button title="Generate" buttonType="success" onClick={onGenerateNewApplication} />
-          )
-          }
+          )}
         </div>
       </div>
       {/* eslint-disable-next-line no-nested-ternary */}

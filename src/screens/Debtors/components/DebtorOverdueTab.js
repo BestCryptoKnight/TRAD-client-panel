@@ -35,10 +35,7 @@ const ClientOverdueTab = () => {
   const overdueListWithPageData = useSelector(
     ({ debtorsManagement }) => debtorsManagement?.overdue?.overdueList ?? {}
   );
-  const { page, limit, docs } = useMemo(
-    () => overdueListWithPageData,
-    [overdueListWithPageData]
-  );
+  const { page, limit, docs } = useMemo(() => overdueListWithPageData, [overdueListWithPageData]);
 
   const getOverdueListByFilter = useCallback(
     async (params = {}, cb) => {
@@ -69,7 +66,6 @@ const ClientOverdueTab = () => {
   useEffect(async () => {
     await getOverdueListByFilter();
   }, [id]);
-
 
   const onAddNewSubmission = useCallback(() => {
     if (
@@ -151,7 +147,7 @@ const ClientOverdueTab = () => {
             </div>
           </div>
           {docs?.length > 0 ? (
-            <div className="no-record-found">Yes</div>  
+            <div className="no-record-found">Yes</div>
           ) : (
             <div className="no-record-found">No</div>
           )}
