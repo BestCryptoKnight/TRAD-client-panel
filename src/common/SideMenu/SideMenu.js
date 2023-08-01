@@ -19,7 +19,7 @@ const SideMenu = () => {
       </div>
       <div className="menu-container">
         {SIDEBAR_URLS.map(item => (
-          <NavLink className="menu" to={item.url} replace>
+          <NavLink className="menu" to={item.url} key={item.url} replace>
             <span className="material-icons-round">{item.icon}</span>
             {item.label}
           </NavLink>
