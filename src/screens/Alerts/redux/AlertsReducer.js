@@ -1,6 +1,6 @@
-import { LOGIN_REDUX_CONSTANTS } from "../../auth/login/redux/LoginReduxConstants";
-import { ALERTS_REDUX_CONSTANTS } from "./AlertsReduxConstants";
-import { REPORTS_FIELD_NAME_BY_ENTITIES } from "../../../constants/EntitySearchConstants";
+import { LOGIN_REDUX_CONSTANTS } from '../../auth/login/redux/LoginReduxConstants';
+import { ALERTS_REDUX_CONSTANTS } from './AlertsReduxConstants';
+import { REPORTS_FIELD_NAME_BY_ENTITIES } from '../../../constants/EntitySearchConstants';
 
 const initialAlerts = {
   alertsList: {
@@ -26,7 +26,7 @@ const initialAlerts = {
     {
       label: 'Processed',
       name: 'status',
-      value: 'Processed'
+      value: 'Processed',
     },
   ],
 };
@@ -84,7 +84,7 @@ export const alerts = (state = initialAlerts, action) => {
       return {
         ...state,
         alertEntityListData,
-      }
+      };
     }
 
     case ALERTS_REDUX_CONSTANTS.GET_DROPDOWN_LIST_BY_SEARCH: {
@@ -139,26 +139,26 @@ export const alerts = (state = initialAlerts, action) => {
         ...state,
         alertDetail: {
           ...state.alertDetail,
-          alertDetails: state?.alertDetail?.alertDetails.map((i) => {
+          alertDetails: state?.alertDetail?.alertDetails.map(i => {
             if (i.label === 'Status') {
               const temp = i;
               temp.value = action.data;
               return temp;
             }
             return i;
-          })
+          }),
         },
         alertsList: {
           ...state.alertsList,
-          docs: state.alertsList.docs.map((i) => {
+          docs: state.alertsList.docs.map(i => {
             if (i._id === state.alertId) {
               const temp = i;
               temp.status = action.data;
               return temp;
             }
             return i;
-          })
-        }
+          }),
+        },
       };
     default:
       return state;
@@ -227,7 +227,7 @@ export const alertAllFilters = (state = initialFilterState, action) => {
       return {
         ...state,
         tempFilter: state?.finalFilter,
-      }
+      };
     case ALERTS_REDUX_CONSTANTS.RESET_ALERT_FILTER:
       return initialFilterState;
     case LOGIN_REDUX_CONSTANTS.LOGOUT_USER_ACTION:
@@ -235,4 +235,4 @@ export const alertAllFilters = (state = initialFilterState, action) => {
     default:
       return state;
   }
-}
+};

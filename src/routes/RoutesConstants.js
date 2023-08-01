@@ -9,12 +9,22 @@ const VerifyOtp = lazy(() => import('../screens/auth/otpScreen/VerifyOtp'));
 const ForbiddenAccessPage = lazy(() => import('../common/ForbiddenAccessPage/ForbiddenAccessPage'));
 const Dashboard = lazy(() => import('../common/Dashboard/Dashboard'));
 const ViewClientTask = lazy(() => import('../common/Dashboard/components/ViewClientTask'));
-const ApplicationList = lazy(() => import('../screens/Application/ApplicationList/ApplicationList'));
+const ApplicationList = lazy(() =>
+  import('../screens/Application/ApplicationList/ApplicationList')
+);
 // const AlertList = lazy(() => import('../screens/Alerts/AlertList/AlertList'));
-const GenerateApplication = lazy(() => import('../screens/Application/GenerateApplication/GenerateApplication'));
-const ViewApplication = lazy(() => import('../screens/Application/ViewApplication/ViewApplication'));
-const CreditLimitsList = lazy(() => import('../screens/CreditLimits/CreditLimitsList/CreditLimitsList'));
-const ViewCreditLimits = lazy(() => import('../screens/CreditLimits/ViewCreditLimits/ViewCreditLimits'));
+const GenerateApplication = lazy(() =>
+  import('../screens/Application/GenerateApplication/GenerateApplication')
+);
+const ViewApplication = lazy(() =>
+  import('../screens/Application/ViewApplication/ViewApplication')
+);
+const CreditLimitsList = lazy(() =>
+  import('../screens/CreditLimits/CreditLimitsList/CreditLimitsList')
+);
+const ViewCreditLimits = lazy(() =>
+  import('../screens/CreditLimits/ViewCreditLimits/ViewCreditLimits')
+);
 const OverduesList = lazy(() => import('../screens/Overdues/OverduesList/OverduesList'));
 const AddOverdues = lazy(() => import('../screens/Overdues/OverduesList/AddOverdues/AddOverdues'));
 const ClaimsList = lazy(() => import('../screens/Claims/ClaimsList/ClaimsList'));
