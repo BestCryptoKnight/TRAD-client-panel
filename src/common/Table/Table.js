@@ -544,10 +544,10 @@ function TableLinkDrawer(props) {
     >
       <div className="contacts-grid">
         {drawerState?.data?.map(row => (
-          <>
+          <React.Fragment key={row?.label + Math.random() * 10000000}>
             <div className="title">{row?.label}</div>
             <div>{checkValue(row)}</div>
-          </>
+          </React.Fragment>
         ))}
       </div>
     </Drawer>

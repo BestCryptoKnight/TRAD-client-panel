@@ -133,7 +133,7 @@ const HeaderNotification = () => {
           )}
           {sortedNotificationList?.length > 0
             ? sortedNotificationList?.map(notification => (
-                <div className="notification-set">
+                <div className="notification-set" key={notification?._id}>
                   <div className="notification-set-title">
                     {moment(notification?.createdAt, DATE_FORMAT).calendar(
                       null,

@@ -18,8 +18,12 @@ const DebtorsSearch = () => {
   const [searchStart, setSearchStart] = useState(false);
   const [cursor, setCursor] = useState(-1);
 
-  const globalSearchResult = useSelector(({ debtorsManagement }) => debtorsManagement?.globalDebtorsList ?? []);
-  const { gloabalSearchLoaderAction } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
+  const globalSearchResult = useSelector(
+    ({ debtorsManagement }) => debtorsManagement?.globalDebtorsList ?? []
+  );
+  const { gloabalSearchLoaderAction } = useSelector(
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
+  );
   const searchOnFocus = () => setHeaderSearchFocused(true);
   const searchOutsideClick = () => {
     setSearchStart(false);
@@ -69,7 +73,7 @@ const DebtorsSearch = () => {
         }
       }
     },
-    [setSearchStart, cursor, globalSearchResult?.length, headerSearchFocused, target],
+    [setSearchStart, cursor, globalSearchResult?.length, headerSearchFocused, target]
   );
 
   const onSearchButtonClick = () => {
@@ -103,7 +107,7 @@ const DebtorsSearch = () => {
         label: 'Australia',
         name: 'country',
         value: 'AUS',
-      }),
+      })
     );
     history.push(`/debtors/generate/`);
   }, []);
@@ -113,14 +117,18 @@ const DebtorsSearch = () => {
       <div className="page-header">
         <div className="page-header-name">Debtor List</div>
         <div className="page-header-button-container">
-          {isDebtorUpdatable && <Button title="Add Debtor" buttonType="success" onClick={generateDebtorClick} />}
+          {isDebtorUpdatable && (
+            <Button title="Add Debtor" buttonType="success" onClick={generateDebtorClick} />
+          )}
         </div>
       </div>
 
       <div className="global-debtors-search-container">
         <div
           ref={headerSearchRef}
-          className={`global-debtors-search-width ${headerSearchFocused && ''} ${searchStart && 'got-search-results'}`}
+          className={`global-debtors-search-width ${headerSearchFocused && ''} ${
+            searchStart && 'got-search-results'
+          }`}
         >
           <div className="global-debtors-search-content">
             <input
@@ -161,7 +169,8 @@ const DebtorsSearch = () => {
                         >
                           <span className="gs-value">{searchResult?.title}</span>
                           <span className="gs-tag">
-                            {searchResult?.module?.charAt(0)?.toUpperCase() + searchResult?.module?.substring(1)}
+                            {searchResult?.module?.charAt(0)?.toUpperCase() +
+                              searchResult?.module?.substring(1)}
                           </span>
                         </li>
                       ))}

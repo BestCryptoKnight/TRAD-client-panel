@@ -28,14 +28,18 @@ const ViewCreditLimits = () => {
     setActiveTabIndex(index);
   };
   const viewCreditLimitActiveTabIndex = useSelector(
-    ({ creditLimits }) => creditLimits?.viewCreditLimitActiveTabIndex ?? 0,
+    ({ creditLimits }) => creditLimits?.viewCreditLimitActiveTabIndex ?? 0
   );
 
-  const creditLimitsDetails = useSelector(({ creditLimits }) => creditLimits?.selectedCreditLimitData);
+  const creditLimitsDetails = useSelector(
+    ({ creditLimits }) => creditLimits?.selectedCreditLimitData
+  );
 
   const { _id } = useMemo(() => creditLimitsDetails ?? '', [creditLimitsDetails]);
 
-  const { viewCreditLimitPageLoaderAction } = useSelector(({ generalLoaderReducer }) => generalLoaderReducer ?? false);
+  const { viewCreditLimitPageLoaderAction } = useSelector(
+    ({ generalLoaderReducer }) => generalLoaderReducer ?? false
+  );
 
   const backToCreditLimit = useCallback(() => {
     history.replace('/credit-limits');
@@ -119,7 +123,7 @@ const ViewCreditLimits = () => {
         value: creditLimitsDetails?.riskRating,
       },
     ],
-    [creditLimitsDetails],
+    [creditLimitsDetails]
   );
 
   const finalInputs = useMemo(() => {
@@ -190,8 +194,15 @@ const ViewCreditLimits = () => {
                   )}
                 </div>
               )}
-              <Tab tabs={tabs} tabActive={tabActive} activeTabIndex={activeTabIndex} className="mt-15" />
-              <div className="common-white-container">{VIEW_CREDIT_LIMITS_TABS[activeTabIndex]}</div>
+              <Tab
+                tabs={tabs}
+                tabActive={tabActive}
+                activeTabIndex={activeTabIndex}
+                className="mt-15"
+              />
+              <div className="common-white-container">
+                {VIEW_CREDIT_LIMITS_TABS[activeTabIndex]}
+              </div>
             </>
           ) : (
             <div className="no-record-found">No record found</div>

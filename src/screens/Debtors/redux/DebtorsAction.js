@@ -79,15 +79,21 @@ export const changeDebtorsColumnListStatus = data => {
 export const saveDebtorsColumnListName = ({ debtorsColumnNameList = {}, isReset = false }) => {
   return async dispatch => {
     try {
-      startGeneralLoaderOnRequest(`DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      startGeneralLoaderOnRequest(
+        `DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         columns: [],
         isReset: true,
         columnFor: 'debtor',
       };
       if (!isReset) {
-        const defaultFields = debtorsColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = debtorsColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultFields = debtorsColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = debtorsColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           columns: [...defaultFields, ...customFields],
           isReset: false,
@@ -95,7 +101,9 @@ export const saveDebtorsColumnListName = ({ debtorsColumnNameList = {}, isReset 
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopGeneralLoaderOnSuccessOrFail(`DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+          stopGeneralLoaderOnSuccessOrFail(
+            `DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
           throw Error();
         }
       }
@@ -106,10 +114,14 @@ export const saveDebtorsColumnListName = ({ debtorsColumnNameList = {}, isReset 
           data: debtorsColumnNameList,
         });
         successNotification(response?.data?.message || 'Columns updated successfully.');
-        stopGeneralLoaderOnSuccessOrFail(`DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `DebtorListColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };
@@ -339,7 +351,8 @@ export const getDebtorDocumentsColumnNamesList = () => {
           data: response?.data?.data,
         });
         dispatch({
-          type: DEBTORS_REDUX_CONSTANTS.DOCUMENTS.DEBTOR_DOCUMENTS_MANAGEMENT_DEFAULT_COLUMN_LIST_ACTION,
+          type: DEBTORS_REDUX_CONSTANTS.DOCUMENTS
+            .DEBTOR_DOCUMENTS_MANAGEMENT_DEFAULT_COLUMN_LIST_ACTION,
           data: response?.data?.data,
         });
       }
@@ -358,10 +371,15 @@ export const changeDebtorDocumentsColumnListStatus = data => {
   };
 };
 
-export const saveDebtorDocumentsColumnListName = ({ debtorsDocumentColumnNameList = {}, isReset = false }) => {
+export const saveDebtorDocumentsColumnListName = ({
+  debtorsDocumentColumnNameList = {},
+  isReset = false,
+}) => {
   return async dispatch => {
     try {
-      startGeneralLoaderOnRequest(`viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      startGeneralLoaderOnRequest(
+        `viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
 
       let data = {
         isReset: true,
@@ -370,8 +388,12 @@ export const saveDebtorDocumentsColumnListName = ({ debtorsDocumentColumnNameLis
       };
 
       if (!isReset) {
-        const defaultColumns = debtorsDocumentColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = debtorsDocumentColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultColumns = debtorsDocumentColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = debtorsDocumentColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           ...data,
           isReset: false,
@@ -379,21 +401,28 @@ export const saveDebtorDocumentsColumnListName = ({ debtorsDocumentColumnNameLis
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopGeneralLoaderOnSuccessOrFail(`viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+          stopGeneralLoaderOnSuccessOrFail(
+            `viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
           throw Error();
         }
       }
       const response = await DebtorsDocumentApiServices.updateDebtorDocumentColumnListName(data);
       if (response && response.data && response?.data?.status === 'SUCCESS') {
         dispatch({
-          type: DEBTORS_REDUX_CONSTANTS.DOCUMENTS.DEBTOR_DOCUMENTS_MANAGEMENT_DEFAULT_COLUMN_LIST_ACTION,
+          type: DEBTORS_REDUX_CONSTANTS.DOCUMENTS
+            .DEBTOR_DOCUMENTS_MANAGEMENT_DEFAULT_COLUMN_LIST_ACTION,
           data: debtorsDocumentColumnNameList,
         });
         successNotification(response?.data?.message || 'Columns updated successfully.');
-        stopGeneralLoaderOnSuccessOrFail(`viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `viewDebtorDocumentColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };
@@ -562,10 +591,15 @@ export const changeDebtorTaskColumnNameListStatus = data => {
   };
 };
 
-export const saveDebtorTaskColumnNameListName = ({ debtorsTaskColumnNameList = {}, isReset = false }) => {
+export const saveDebtorTaskColumnNameListName = ({
+  debtorsTaskColumnNameList = {},
+  isReset = false,
+}) => {
   return async dispatch => {
     try {
-      startGeneralLoaderOnRequest(`viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      startGeneralLoaderOnRequest(
+        `viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         isReset: true,
         columns: [],
@@ -573,8 +607,12 @@ export const saveDebtorTaskColumnNameListName = ({ debtorsTaskColumnNameList = {
       };
 
       if (!isReset) {
-        const defaultColumns = debtorsTaskColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = debtorsTaskColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultColumns = debtorsTaskColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = debtorsTaskColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           ...data,
           isReset: false,
@@ -582,7 +620,9 @@ export const saveDebtorTaskColumnNameListName = ({ debtorsTaskColumnNameList = {
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopGeneralLoaderOnSuccessOrFail(`viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+          stopGeneralLoaderOnSuccessOrFail(
+            `viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
           throw Error();
         }
       }
@@ -594,10 +634,14 @@ export const saveDebtorTaskColumnNameListName = ({ debtorsTaskColumnNameList = {
           data: debtorsTaskColumnNameList,
         });
         successNotification(response?.data?.message || 'Columns updated successfully.');
-        stopGeneralLoaderOnSuccessOrFail(`viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `viewDebtorTaskColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };
@@ -644,7 +688,8 @@ export const getDebtorDefaultEntityDropDownData = params => {
       const response = await DebtorTaskApiService.getEntityDropDownData(params);
       if (response?.data?.status === 'SUCCESS' && response?.data?.data) {
         dispatch({
-          type: DEBTORS_REDUX_CONSTANTS.TASK.ADD_TASK.DEBTOR_DEFAULT_DEBTOR_ENTITY_DROP_DOWN_DATA_ACTION,
+          type: DEBTORS_REDUX_CONSTANTS.TASK.ADD_TASK
+            .DEBTOR_DEFAULT_DEBTOR_ENTITY_DROP_DOWN_DATA_ACTION,
           data: response?.data?.data,
         });
       }
@@ -770,7 +815,9 @@ export const getDebtorApplicationColumnNameList = () => {
       const params = {
         columnFor: 'debtor-application',
       };
-      const response = await DebtorApplicationApiServices.getDebtorApplicationColumnNameList(params);
+      const response = await DebtorApplicationApiServices.getDebtorApplicationColumnNameList(
+        params
+      );
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DEBTORS_REDUX_CONSTANTS.APPLICATION.DEBTOR_APPLICATION_COLUMN_LIST_ACTION,
@@ -796,18 +843,27 @@ export const changeDebtorApplicationColumnListStatus = data => {
   };
 };
 
-export const saveDebtorApplicationColumnNameList = ({ debtorsApplicationColumnNameList = {}, isReset = false }) => {
+export const saveDebtorApplicationColumnNameList = ({
+  debtorsApplicationColumnNameList = {},
+  isReset = false,
+}) => {
   return async dispatch => {
     try {
-      startGeneralLoaderOnRequest(`viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      startGeneralLoaderOnRequest(
+        `viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         isReset: true,
         columns: [],
         columnFor: 'debtor-application',
       };
       if (!isReset) {
-        const defaultFields = debtorsApplicationColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = debtorsApplicationColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultFields = debtorsApplicationColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = debtorsApplicationColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           ...data,
           isReset: false,
@@ -816,23 +872,29 @@ export const saveDebtorApplicationColumnNameList = ({ debtorsApplicationColumnNa
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
           stopGeneralLoaderOnSuccessOrFail(
-            `viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`,
+            `viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
         }
       }
 
-      const response = await DebtorApplicationApiServices.updateDebtorApplicationColumnNameList(data);
+      const response = await DebtorApplicationApiServices.updateDebtorApplicationColumnNameList(
+        data
+      );
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DEBTORS_REDUX_CONSTANTS.APPLICATION.DEBTOR_APPLICATION_DEFAULT_COLUMN_LIST_ACTION,
           data: debtorsApplicationColumnNameList,
         });
         successNotification(response?.data?.message || 'Columns updated successfully');
-        stopGeneralLoaderOnSuccessOrFail(`viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `viewDebtorApplicationColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };
@@ -861,7 +923,9 @@ export const getCreditLimitColumnsNameList = () => {
       const params = {
         columnFor: 'debtor-credit-limit',
       };
-      const response = await DebtorCreditLimitApiServices.getDebtorCreditLimitColumnNameList(params);
+      const response = await DebtorCreditLimitApiServices.getDebtorCreditLimitColumnNameList(
+        params
+      );
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DEBTORS_REDUX_CONSTANTS.CREDIT_LIMIT.DEBTOR_CREDIT_LIMIT_COLUMN_LIST_ACTION,
@@ -887,18 +951,27 @@ export const changeDebtorCreditLimitColumnListStatus = data => {
   };
 };
 
-export const saveDebtorCreditLimitColumnNameList = ({ debtorsCreditLimitColumnNameList = {}, isReset = false }) => {
+export const saveDebtorCreditLimitColumnNameList = ({
+  debtorsCreditLimitColumnNameList = {},
+  isReset = false,
+}) => {
   return async dispatch => {
     try {
-      startGeneralLoaderOnRequest(`viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      startGeneralLoaderOnRequest(
+        `viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         isReset: true,
         columns: [],
         columnFor: 'debtor-credit-limit',
       };
       if (!isReset) {
-        const defaultFields = debtorsCreditLimitColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = debtorsCreditLimitColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultFields = debtorsCreditLimitColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = debtorsCreditLimitColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           isReset: false,
           columns: [...defaultFields, ...customFields],
@@ -907,23 +980,29 @@ export const saveDebtorCreditLimitColumnNameList = ({ debtorsCreditLimitColumnNa
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
           stopGeneralLoaderOnSuccessOrFail(
-            `viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`,
+            `viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
         }
       }
 
-      const response = await DebtorCreditLimitApiServices.updateDebtorCreditLimitColumnNameList(data);
+      const response = await DebtorCreditLimitApiServices.updateDebtorCreditLimitColumnNameList(
+        data
+      );
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DEBTORS_REDUX_CONSTANTS.CREDIT_LIMIT.DEBTOR_CREDIT_LIMIT_DEFAULT_COLUMN_LIST_ACTION,
           data: debtorsCreditLimitColumnNameList,
         });
         successNotification(response?.data?.message || 'Columns updated successfully');
-        stopGeneralLoaderOnSuccessOrFail(`viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `viewDebtorCreditLimitColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };
@@ -1030,7 +1109,9 @@ export const getDebtorStakeHolderColumnNameList = () => {
       const params = {
         columnFor: 'stakeholder',
       };
-      const response = await DebtorStakeHolderApiServices.getDebtorStakeHolderColumnNameList(params);
+      const response = await DebtorStakeHolderApiServices.getDebtorStakeHolderColumnNameList(
+        params
+      );
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.DEBTOR_STAKE_HOLDER_COLUMN_LIST_ACTION,
@@ -1056,18 +1137,27 @@ export const changeDebtorStakeHolderColumnListStatus = data => {
   };
 };
 
-export const saveDebtorStakeHolderColumnNameList = ({ debtorsStakeHolderColumnNameList = {}, isReset = false }) => {
+export const saveDebtorStakeHolderColumnNameList = ({
+  debtorsStakeHolderColumnNameList = {},
+  isReset = false,
+}) => {
   return async dispatch => {
     try {
-      startGeneralLoaderOnRequest(`viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      startGeneralLoaderOnRequest(
+        `viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         isReset: true,
         columns: [],
         columnFor: 'stakeholder',
       };
       if (!isReset) {
-        const defaultFields = debtorsStakeHolderColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = debtorsStakeHolderColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultFields = debtorsStakeHolderColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = debtorsStakeHolderColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           ...data,
           isReset: false,
@@ -1076,22 +1166,28 @@ export const saveDebtorStakeHolderColumnNameList = ({ debtorsStakeHolderColumnNa
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
           stopGeneralLoaderOnSuccessOrFail(
-            `viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`,
+            `viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
           );
           throw Error();
         }
       }
-      const response = await DebtorStakeHolderApiServices.updateDebtorStakeHolderColumnNameList(data);
+      const response = await DebtorStakeHolderApiServices.updateDebtorStakeHolderColumnNameList(
+        data
+      );
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
           type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.DEBTOR_STAKE_HOLDER_DEFAULT_COLUMN_LIST_ACTION,
           data: debtorsStakeHolderColumnNameList,
         });
         successNotification(response?.data?.message || 'Columns updated successfully');
-        stopGeneralLoaderOnSuccessOrFail(`viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `viewDebtorStakeHolderColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };
@@ -1100,7 +1196,8 @@ export const saveDebtorStakeHolderColumnNameList = ({ debtorsStakeHolderColumnNa
 export const changeStakeHolderPersonType = personType => {
   return dispatch => {
     dispatch({
-      type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.CHANGE_DEBTOR_STAKE_HOLDER_PERSON_TYPE,
+      type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
+        .CHANGE_DEBTOR_STAKE_HOLDER_PERSON_TYPE,
       personType,
     });
   };
@@ -1119,10 +1216,12 @@ export const updateStakeHolderDetail = (name, value) => {
 export const getStakeHolderDropDownData = () => {
   return async dispatch => {
     try {
-      const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.getStakeHolderDropdownData();
+      const response =
+        await DebtorStakeHolderApiServices.StakeHolderCRUD.getStakeHolderDropdownData();
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
-          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.GET_STAKEHOLDER_DROPDOWN_DATA,
+          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
+            .GET_STAKEHOLDER_DROPDOWN_DATA,
           data: response.data.data,
         });
       }
@@ -1135,7 +1234,10 @@ export const getStakeHolderDropDownData = () => {
 export const getstakeholderCountryDataFromABNorACN = params => {
   return async () => {
     try {
-      const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.getstakeholderCountryDataFromABNorACN(params);
+      const response =
+        await DebtorStakeHolderApiServices.StakeHolderCRUD.getstakeholderCountryDataFromABNorACN(
+          params
+        );
 
       if (response?.data?.status === 'SUCCESS') {
         return response.data.data;
@@ -1151,7 +1253,8 @@ export const getstakeholderCountryDataFromABNorACN = params => {
 export const updateStakeHolderDataOnValueSelected = data => {
   return dispatch => {
     dispatch({
-      type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.UPDATE_STAKE_HOLDER_COMPANY_ALL_DATA,
+      type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
+        .UPDATE_STAKE_HOLDER_COMPANY_ALL_DATA,
       data,
     });
   };
@@ -1168,11 +1271,15 @@ export const searchstakeholderCountryEntityName = params => {
           errorMessage: '',
         },
       });
-      const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.searchstakeholderCountryEntityName(params);
+      const response =
+        await DebtorStakeHolderApiServices.StakeHolderCRUD.searchstakeholderCountryEntityName(
+          params
+        );
 
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
-          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.STAKE_HOLDER_ENTITY_TYPE_DATA,
+          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
+            .STAKE_HOLDER_ENTITY_TYPE_DATA,
           data: {
             isLoading: false,
             error: false,
@@ -1189,7 +1296,8 @@ export const searchstakeholderCountryEntityName = params => {
           errorNotification('Internal server error');
         } else {
           dispatch({
-            type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.STAKE_HOLDER_ENTITY_TYPE_DATA,
+            type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
+              .STAKE_HOLDER_ENTITY_TYPE_DATA,
             data: {
               isLoading: false,
               error: true,
@@ -1200,7 +1308,8 @@ export const searchstakeholderCountryEntityName = params => {
         }
       } else {
         dispatch({
-          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD.STAKE_HOLDER_ENTITY_TYPE_DATA,
+          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.STAKE_HOLDER_CRUD
+            .STAKE_HOLDER_ENTITY_TYPE_DATA,
           data: {
             isLoading: false,
             error: true,
@@ -1225,7 +1334,10 @@ export const addNewStakeHolder = (id, data, cb) => {
   return async dispatch => {
     try {
       startGeneralLoaderOnRequest(`viewDebtorAddNewStakeHolderButtonLoaderAction`);
-      const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.addNewStakeHolder(id, data);
+      const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.addNewStakeHolder(
+        id,
+        data
+      );
       if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message || 'Stakeholder created successfully');
         dispatch({
@@ -1248,7 +1360,7 @@ export const updateStakeHolder = (debtorId, stakeHolderId, data, cb) => {
       const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.updateStakeHolder(
         debtorId,
         stakeHolderId,
-        data,
+        data
       );
       if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message || 'Stakeholder updated successfully');
@@ -1269,7 +1381,9 @@ export const deleteStakeHolderDetails = (stakeHolderId, cb) => {
   return async () => {
     try {
       startGeneralLoaderOnRequest(`viewDebtorDeleteStakeHolderButtonLoaderAction`);
-      const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.deleteStakeHolder(stakeHolderId);
+      const response = await DebtorStakeHolderApiServices.StakeHolderCRUD.deleteStakeHolder(
+        stakeHolderId
+      );
       if (response?.data?.status === 'SUCCESS') {
         successNotification(response?.data?.message || 'Stakeholder deleted successfully');
         stopGeneralLoaderOnSuccessOrFail(`viewDebtorDeleteStakeHolderButtonLoaderAction`);
@@ -1354,18 +1468,27 @@ export const changeDebtorReportsColumnListStatus = data => {
   };
 };
 
-export const saveDebtorReportsColumnNameList = ({ debtorsReportsColumnNameList = {}, isReset = false }) => {
+export const saveDebtorReportsColumnNameList = ({
+  debtorsReportsColumnNameList = {},
+  isReset = false,
+}) => {
   return async dispatch => {
     try {
-      startGeneralLoaderOnRequest(`viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      startGeneralLoaderOnRequest(
+        `viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       let data = {
         isReset: true,
         columns: [],
         // columnFor: 'debtor-application',
       };
       if (!isReset) {
-        const defaultFields = debtorsReportsColumnNameList.defaultFields.filter(e => e.isChecked).map(e => e.name);
-        const customFields = debtorsReportsColumnNameList.customFields.filter(e => e.isChecked).map(e => e.name);
+        const defaultFields = debtorsReportsColumnNameList.defaultFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
+        const customFields = debtorsReportsColumnNameList.customFields
+          .filter(e => e.isChecked)
+          .map(e => e.name);
         data = {
           ...data,
           isReset: false,
@@ -1373,7 +1496,9 @@ export const saveDebtorReportsColumnNameList = ({ debtorsReportsColumnNameList =
         };
         if (data.columns.length < 1) {
           errorNotification('Please select at least one column to continue.');
-          stopGeneralLoaderOnSuccessOrFail(`viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+          stopGeneralLoaderOnSuccessOrFail(
+            `viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+          );
           throw Error();
         }
       }
@@ -1385,10 +1510,14 @@ export const saveDebtorReportsColumnNameList = ({ debtorsReportsColumnNameList =
           data: debtorsReportsColumnNameList,
         });
         successNotification(response?.data?.message || 'Columns updated successfully');
-        stopGeneralLoaderOnSuccessOrFail(`viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+        stopGeneralLoaderOnSuccessOrFail(
+          `viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+        );
       }
     } catch (e) {
-      stopGeneralLoaderOnSuccessOrFail(`viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`);
+      stopGeneralLoaderOnSuccessOrFail(
+        `viewDebtorReportColumn${isReset ? 'Reset' : 'Save'}ButtonLoaderAction`
+      );
       displayErrors(e);
     }
   };
@@ -1609,7 +1738,8 @@ export const generateRandomRegistrationNumberForDebtorStakeholder = () => {
       const response = await DebtorsCompanyStepApiServices.generateRandomRegistrationNumber();
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
-          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER.GENERATE_RANDOM_REGISTRATION_NUMBER_FOR_STAKEHOLDER,
+          type: DEBTORS_REDUX_CONSTANTS.STAKE_HOLDER
+            .GENERATE_RANDOM_REGISTRATION_NUMBER_FOR_STAKEHOLDER,
           data: response.data.data,
         });
         return response.data.data;
@@ -1727,7 +1857,10 @@ export const getDebtorCompanyDataFromDebtor = (id, params) => {
         ...params,
         requestFrom: 'application',
       };
-      const response = await DebtorsCompanyStepApiServices.getApplicationCompanyDataFromDebtor(id, finalParams);
+      const response = await DebtorsCompanyStepApiServices.getApplicationCompanyDataFromDebtor(
+        id,
+        finalParams
+      );
 
       if (response?.data?.status === 'SUCCESS') {
         dispatch({
@@ -1951,7 +2084,9 @@ export const searchGlobalDebtors = value => {
         searchString: value,
       };
       startGeneralLoaderOnRequest('gloabalDebtorsSearchLoaderAction');
-      const response = await DebtorsApiServices.globalDebtorsApiServices.getGlobalDebtorsData(params);
+      const response = await DebtorsApiServices.globalDebtorsApiServices.getGlobalDebtorsData(
+        params
+      );
       if (response?.data?.status === 'SUCCESS') {
         stopGeneralLoaderOnSuccessOrFail('gloabalDebtorsSearchLoaderAction');
         dispatch({
