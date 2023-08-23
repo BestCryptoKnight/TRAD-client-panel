@@ -23,7 +23,6 @@ const EmployeeList = lazy(() => import('../screens/Employee/EmployeeList/Employe
 const CompanyProfile = lazy(() => import('../screens/CompanyProfile/CompanyProfile'));
 const Support = lazy(() => import('../screens/Support/Support'));
 const PageNotFound = lazy(() => import('../common/PageNotFound/PageNotFound'));
-const DebtorsList = lazy(() => import('../screens/Debtors/DebtorsList/DebtorsList'));
 const DebtorsSearch = lazy(() => import('../screens/Debtors/DebtorsList/DebtorsSearch'));
 const ViewDebtor = lazy(() => import('../screens/Debtors/ViewDebtor/ViewDebtor'));
 const GenerateDebtor = lazy(() => import('../screens/Debtors/GenerateDebtor/GenerateDebtor'));
